@@ -41,6 +41,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;background:rgba(
 .sidebar-nav li{margin-bottom:4px}
 .sidebar-nav a{display:flex;align-items:center;gap:12px;padding:10px 16px;color:var(--slate);text-decoration:none;border-radius:8px;font-size:14px;font-weight:500;transition:all .15s}
 .sidebar-nav a:hover, .sidebar-nav a.active{background:var(--magenta-light);color:var(--magenta-dark)}
+.sidebar-nav a.premium-only{color:var(--text-muted);opacity:0.5;cursor:not-allowed;position:relative}
+.sidebar-nav a.premium-only:hover{background:none;color:var(--text-muted)}
+.sidebar-nav a.premium-only .premium-badge{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:var(--gold);color:white;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;letter-spacing:0.5px}
 .sidebar-nav .icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center}
 
 /* Dashboard Cards */
@@ -109,18 +112,27 @@ nav{padding:0 16px}
         <div class="sidebar-title">Dashboard</div>
         <ul class="sidebar-nav">
           <li><a href="#home" class="nav-link active"><span class="icon">🏠</span> Home</a></li>
-          <li><a href="#meals" class="nav-link"><span class="icon">🍽️</span> Dose Day Meals</a></li>
-          <li><a href="#grocery" class="nav-link"><span class="icon">🛒</span> Grocery Lists</a></li>
-          <li><a href="#symptoms" class="nav-link"><span class="icon">📊</span> Symptom Logger</a></li>
         </ul>
       </div>
       
       <div class="sidebar-section">
-        <div class="sidebar-title">Tools</div>
+        <div class="sidebar-title">Trial Features</div>
         <ul class="sidebar-nav">
-          <li><a href="#recipes" class="nav-link"><span class="icon">👨‍🍳</span> Recipe Engine</a></li>
-          <li><a href="#progress" class="nav-link"><span class="icon">📈</span> Progress Tracking</a></li>
-          <li><a href="#community" class="nav-link"><span class="icon">👥</span> Community</a></li>
+          <li><a href="#meals" class="nav-link trial-feature"><span class="icon">🍽️</span> Dose-day Synchronized Meals</a></li>
+          <li><a href="#grocery" class="nav-link trial-feature"><span class="icon">🛒</span> Weekly Grocery Lists</a></li>
+          <li><a href="#side-effects" class="nav-link trial-feature"><span class="icon">🩺</span> Side Effect Food Guide</a></li>
+          <li><a href="#symptoms" class="nav-link trial-feature"><span class="icon">📊</span> Basic Symptom Logger</a></li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title">Premium Features</div>
+        <ul class="sidebar-nav">
+          <li><a href="#recipes" class="nav-link premium-feature"><span class="icon">🤖</span> Adaptive Recipe Engine<span class="premium-badge">PRO</span></a></li>
+          <li><a href="#feedback" class="nav-link premium-feature"><span class="icon">⭐</span> Meal Rating Feedback Loop<span class="premium-badge">PRO</span></a></li>
+          <li><a href="#matching" class="nav-link premium-feature"><span class="icon">🎯</span> Symptom-to-Food Matching<span class="premium-badge">PRO</span></a></li>
+          <li><a href="#community" class="nav-link premium-feature"><span class="icon">👥</span> Community Access<span class="premium-badge">PRO</span></a></li>
+          <li><a href="#progress" class="nav-link premium-feature"><span class="icon">📈</span> Progress Tracking<span class="premium-badge">PRO</span></a></li>
         </ul>
       </div>
     </aside>
@@ -254,6 +266,84 @@ nav{padding:0 16px}
         </div>
       </div>
 
+      <!-- Side Effects View -->
+      <div id="side-effects-view" class="dashboard-view" style="display:none">
+        <div class="dashboard-header">
+          <h1 class="dashboard-title">Side Effect Food Guide</h1>
+          <p class="dashboard-subtitle">Foods to help manage common GLP-1 side effects</p>
+        </div>
+        <div class="card-grid">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon" style="background:var(--teal);color:white">🤢</div>
+              <div class="card-title">Nausea Management</div>
+            </div>
+            <div class="card-content">
+              <ul style="list-style:none;padding:0">
+                <li style="margin:8px 0">• Ginger tea and crackers</li>
+                <li style="margin:8px 0">• Small, frequent meals</li>
+                <li style="margin:8px 0">• Bland foods (rice, toast)</li>
+                <li style="margin:8px 0">• Avoid fatty or spicy foods</li>
+              </ul>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon" style="background:var(--magenta);color:white">🚫</div>
+              <div class="card-title">Appetite Loss</div>
+            </div>
+            <div class="card-content">
+              <ul style="list-style:none;padding:0">
+                <li style="margin:8px 0">• Protein smoothies</li>
+                <li style="margin:8px 0">• Nutrient-dense snacks</li>
+                <li style="margin:8px 0">• Liquid nutrition when needed</li>
+                <li style="margin:8px 0">• Focus on protein first</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feedback View -->
+      <div id="feedback-view" class="dashboard-view" style="display:none">
+        <div class="dashboard-header">
+          <h1 class="dashboard-title">Meal Rating Feedback Loop</h1>
+          <p class="dashboard-subtitle">Rate your meals to improve future recommendations</p>
+        </div>
+        <div class="card">
+          <div class="card-content">
+            <div style="text-align:center;padding:40px;color:var(--text-muted)">
+              <div style="font-size:48px;margin-bottom:16px">⭐</div>
+              <h3 style="color:var(--gold);margin-bottom:8px">Premium Feature</h3>
+              <p>Rate meals and provide feedback to train your personalized recipe engine. This adaptive system learns your preferences and creates better recommendations over time.</p>
+              <div style="margin-top:24px">
+                <a href="#" class="btn" onclick="showUpgradeModal()">Upgrade to Premium</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Matching View -->
+      <div id="matching-view" class="dashboard-view" style="display:none">
+        <div class="dashboard-header">
+          <h1 class="dashboard-title">Symptom-to-Food Matching</h1>
+          <p class="dashboard-subtitle">AI-powered food recommendations based on your symptoms</p>
+        </div>
+        <div class="card">
+          <div class="card-content">
+            <div style="text-align:center;padding:40px;color:var(--text-muted)">
+              <div style="font-size:48px;margin-bottom:16px">🎯</div>
+              <h3 style="color:var(--gold);margin-bottom:8px">Premium Feature</h3>
+              <p>Advanced AI analyzes your symptom patterns and matches them with optimal food choices. Get personalized recommendations that adapt to your body's responses.</p>
+              <div style="margin-top:24px">
+                <a href="#" class="btn" onclick="showUpgradeModal()">Upgrade to Premium</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div id="community-view" class="dashboard-view" style="display:none">
         <div class="dashboard-header">
           <h1 class="dashboard-title">Community Access</h1>
@@ -261,7 +351,14 @@ nav{padding:0 16px}
         </div>
         <div class="card">
           <div class="card-content">
-            <p>Community features coming soon...</p>
+            <div style="text-align:center;padding:40px;color:var(--text-muted)">
+              <div style="font-size:48px;margin-bottom:16px">👥</div>
+              <h3 style="color:var(--gold);margin-bottom:8px">Premium Feature</h3>
+              <p>Join our exclusive community of GLP-1 users. Share experiences, get support, and learn from others on similar journeys.</p>
+              <div style="margin-top:24px">
+                <a href="#" class="btn" onclick="showUpgradeModal()">Upgrade to Premium</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -314,13 +411,185 @@ function showDashboard(email, name = null, isNewUser = false) {
   document.getElementById('user-name').textContent = displayName;
   document.getElementById('user-avatar').textContent = avatarInitial;
   
+  // Detect subscription tier and apply access controls
+  const subscriptionTier = detectSubscriptionTier();
+  applyAccessControls(subscriptionTier);
+  
   // Show welcome message for new users
   if (isNewUser) {
     showWelcomeMessage(displayName);
   }
   
   // Track successful dashboard access
-  console.log('Dashboard loaded for:', { email, name, isNewUser });
+  console.log('Dashboard loaded for:', { email, name, isNewUser, tier: subscriptionTier });
+}
+
+// Detect subscription tier from URL params or localStorage
+function detectSubscriptionTier() {
+  // Check URL parameters first
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlTier = urlParams.get('tier') || urlParams.get('plan');
+  
+  // Check localStorage for stored subscription info
+  const storedUser = localStorage.getItem('postdoserx_user');
+  let storedTier = null;
+  
+  if (storedUser) {
+    try {
+      const userData = JSON.parse(storedUser);
+      storedTier = userData.tier || userData.plan;
+    } catch (e) {
+      console.log('Error parsing stored user data:', e);
+    }
+  }
+  
+  // Check auth token for subscription info
+  const token = localStorage.getItem('postdoserx_token');
+  let tokenTier = null;
+  
+  if (token && token.startsWith('auth_')) {
+    try {
+      const tokenData = JSON.parse(atob(token.substring(5)));
+      tokenTier = tokenData.tier || (tokenData.isPremium ? 'Premium' : 'Trial');
+    } catch (e) {
+      console.log('Error parsing token data:', e);
+    }
+  }
+  
+  // Priority: URL param > stored data > token data > default to Premium
+  const tier = urlTier || storedTier || tokenTier || 'Premium';
+  
+  // Store the detected tier
+  if (storedUser) {
+    try {
+      const userData = JSON.parse(storedUser);
+      userData.tier = tier;
+      localStorage.setItem('postdoserx_user', JSON.stringify(userData));
+    } catch (e) {
+      // Create new user data if parsing fails
+      localStorage.setItem('postdoserx_user', JSON.stringify({ tier }));
+    }
+  }
+  
+  return tier;
+}
+
+// Apply access controls based on subscription tier
+function applyAccessControls(tier) {
+  const isTrialUser = (tier === 'Trial' || tier === 'trial');
+  
+  console.log(`Applying access controls for ${tier} user`);
+  
+  // Get all premium feature links
+  const premiumFeatures = document.querySelectorAll('.premium-feature');
+  const trialFeatures = document.querySelectorAll('.trial-feature');
+  
+  if (isTrialUser) {
+    // Trial users: Enable trial features, disable premium features
+    trialFeatures.forEach(link => {
+      link.classList.remove('premium-only');
+      link.style.cursor = 'pointer';
+    });
+    
+    premiumFeatures.forEach(link => {
+      link.classList.add('premium-only');
+      link.style.cursor = 'not-allowed';
+      
+      // Add click handler for premium features
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        showUpgradeModal();
+      });
+    });
+    
+    // Update navigation brand for trial users
+    const navBrand = document.querySelector('.nav-brand span');
+    if (navBrand) {
+      navBrand.innerHTML = 'PostDose<span class="brand-rx">RX</span> Trial';
+    }
+    
+  } else {
+    // Premium users: Enable all features
+    trialFeatures.forEach(link => {
+      link.classList.remove('premium-only');
+    });
+    
+    premiumFeatures.forEach(link => {
+      link.classList.remove('premium-only');
+      link.style.cursor = 'pointer';
+      
+      // Remove any existing upgrade click handlers
+      link.replaceWith(link.cloneNode(true));
+    });
+    
+    // Update navigation brand for premium users
+    const navBrand = document.querySelector('.nav-brand span');
+    if (navBrand) {
+      navBrand.innerHTML = 'PostDose<span class="brand-rx">RX</span> Premium';
+    }
+  }
+  
+  // Re-bind navigation event listeners after cloning
+  bindNavigationEvents();
+}
+
+// Show upgrade modal for trial users trying to access premium features
+function showUpgradeModal() {
+  // Create upgrade modal if it doesn't exist
+  let modal = document.getElementById('upgrade-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'upgrade-modal';
+    modal.innerHTML = `
+      <div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000">
+        <div style="background:white;border-radius:16px;padding:32px;max-width:400px;text-align:center;margin:20px">
+          <div style="font-size:48px;margin-bottom:16px">⭐</div>
+          <h2 style="color:var(--navy);margin-bottom:12px">Upgrade to Premium</h2>
+          <p style="color:var(--text-sec);margin-bottom:24px;line-height:1.5">
+            This feature is available to Premium subscribers. Upgrade now to unlock all features including the adaptive recipe engine, community access, and advanced tracking.
+          </p>
+          <div style="display:flex;gap:12px;justify-content:center">
+            <a href="https://postdoserx.com/#signup?plan=Premium" class="btn">Upgrade Now ($10/month)</a>
+            <button onclick="closeUpgradeModal()" style="padding:10px 20px;background:transparent;border:1px solid var(--border);border-radius:8px;cursor:pointer">Maybe Later</button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+  
+  modal.style.display = 'flex';
+}
+
+// Close upgrade modal
+function closeUpgradeModal() {
+  const modal = document.getElementById('upgrade-modal');
+  if (modal) {
+    modal.style.display = 'none';
+  }
+}
+
+// Bind navigation event listeners
+function bindNavigationEvents() {
+  document.querySelectorAll('.nav-link').forEach(link => {
+    // Remove existing listeners by cloning
+    const newLink = link.cloneNode(true);
+    link.parentNode.replaceChild(newLink, link);
+    
+    // Add fresh event listener
+    newLink.addEventListener('click', function(e) {
+      e.preventDefault();
+      
+      // Check if this is a premium feature and user is on trial
+      if (this.classList.contains('premium-only')) {
+        showUpgradeModal();
+        return;
+      }
+      
+      const viewId = this.getAttribute('href').substring(1);
+      showView(viewId);
+    });
+  });
 }
 
 // Show welcome message for new users from checkout flow
@@ -382,28 +651,39 @@ function showView(viewId) {
   });
   
   // Show selected view
-  document.getElementById(viewId + '-view').style.display = 'block';
+  const targetView = document.getElementById(viewId + '-view');
+  if (targetView) {
+    targetView.style.display = 'block';
+  } else {
+    console.warn(`View not found: ${viewId}-view`);
+    // Fallback to home view
+    document.getElementById('home-view').style.display = 'block';
+    viewId = 'home';
+  }
   
   // Add active class to clicked nav link
-  document.querySelector(`a[href="#${viewId}"]`).classList.add('active');
+  const navLink = document.querySelector(`a[href="#${viewId}"]`);
+  if (navLink) {
+    navLink.classList.add('active');
+  }
 }
 
 // Navigation event listeners
 document.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      const viewId = this.getAttribute('href').substring(1);
-      showView(viewId);
-    });
-  });
+  // Navigation events are now handled by bindNavigationEvents()
+  // which is called from applyAccessControls() to handle tier-based access
 });
 
 // Quick action functions
 function showMeals() { showView('meals'); }
+function showGrocery() { showView('grocery'); }
+function showSideEffects() { showView('side-effects'); }
 function showSymptoms() { showView('symptoms'); }
 function showRecipes() { showView('recipes'); }
+function showFeedback() { showView('feedback'); }
+function showMatching() { showView('matching'); }
 function showCommunity() { showView('community'); }
+function showProgress() { showView('progress'); }
 
 function logout() {
   // Clear all user data
