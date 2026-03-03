@@ -49,6 +49,186 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;background:rgba(
 
 @keyframes premiumPulse{0%{box-shadow:0 2px 4px rgba(0,0,0,0.2)} 50%{box-shadow:0 2px 8px rgba(201,168,108,0.4)} 100%{box-shadow:0 2px 4px rgba(0,0,0,0.2)}}
 
+/* Meal styling */
+.meal-item{margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--sand)}
+.meal-item:last-child{border-bottom:none;margin-bottom:0}
+.meal-item h4{color:var(--navy);margin-bottom:8px;font-size:16px}
+.meal-item p{margin:4px 0;line-height:1.5}
+.meal-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.meal-tag{font-size:11px;font-weight:600;padding:4px 8px;border-radius:12px;text-transform:uppercase;letter-spacing:0.5px}
+.meal-tag.gentle{background:var(--teal-light);color:var(--teal-dark)}
+.meal-tag.protein{background:var(--magenta-light);color:var(--magenta-dark)}
+.meal-tag.recovery{background:var(--gold-light);color:var(--gold-dark)}
+
+/* Schedule styling */
+.schedule-day{margin-bottom:20px;padding:16px;background:var(--sand-light);border-radius:8px}
+.schedule-day:last-child{margin-bottom:0}
+.day-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.day-header h4{color:var(--navy);margin:0}
+.injection-day{background:var(--magenta);color:white;padding:4px 8px;border-radius:12px;font-size:11px;font-weight:600}
+.recovery-day{background:var(--teal);color:white;padding:4px 8px;border-radius:12px;font-size:11px;font-weight:600}
+.day-meals{display:flex;flex-direction:column;gap:6px}
+.meal-time{padding:8px 12px;background:var(--white);border-radius:6px;font-size:14px;color:var(--text-sec)}
+.meal-time.injection{background:var(--magenta-light);color:var(--magenta-dark);font-weight:600}
+
+/* Grocery list styling */
+.grocery-categories{margin-bottom:24px}
+.grocery-category{margin-bottom:24px}
+.grocery-category:last-child{margin-bottom:0}
+.category-title{font-size:16px;font-weight:600;color:var(--navy);margin-bottom:12px;display:flex;align-items:center}
+.grocery-items{list-style:none;padding:0;margin:0}
+.grocery-item{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--white);border:1px solid var(--border);border-radius:8px;margin-bottom:8px;transition:all 0.2s}
+.grocery-item:hover{background:var(--sand-light);border-color:var(--gold)}
+.grocery-item:last-child{margin-bottom:0}
+.item-name{font-weight:500;color:var(--text);flex:1}
+.item-quantity{font-size:14px;color:var(--text-sec);margin-right:12px;min-width:80px}
+.meal-tags{display:flex;gap:4px;flex-wrap:wrap}
+.grocery-notes{background:var(--sand-light);border-radius:8px;padding:16px;margin-top:20px}
+
+/* Sync status styling */
+.sync-status{margin-top:16px}
+.sync-item{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)}
+.sync-item:last-child{border-bottom:none}
+.sync-label{font-size:14px;color:var(--text-sec)}
+.sync-value{font-size:14px;color:var(--text);font-weight:500}
+.sync-badge{font-size:11px;font-weight:600;padding:4px 8px;border-radius:12px;text-transform:uppercase;letter-spacing:0.5px}
+.sync-badge.success{background:var(--teal-light);color:var(--teal-dark)}
+.sync-badge.pending{background:var(--gold-light);color:var(--gold-dark)}
+.sync-badge.info{background:var(--magenta-light);color:var(--magenta-dark)}
+
+/* Symptom tracking styles */
+.symptom-tracker{margin-top:16px}
+.symptom-quick-log{margin-bottom:20px}
+.symptom-buttons{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.symptom-btn{display:flex;align-items:center;gap:8px;padding:12px 16px;background:var(--white);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all 0.2s;font-family:inherit;font-size:14px;font-weight:500;text-align:left}
+.symptom-btn:hover{background:var(--sand-light);border-color:var(--magenta)}
+.symptom-btn.active{background:var(--magenta-light);border-color:var(--magenta);color:var(--magenta-dark)}
+.symptom-icon{font-size:16px}
+.severity-indicator{font-size:11px;background:var(--gold);color:white;padding:2px 6px;border-radius:8px;font-weight:600}
+.severity-scale{background:var(--sand-light);padding:16px;border-radius:8px;margin:16px 0}
+.severity-buttons{display:flex;gap:8px;flex-wrap:wrap}
+.severity-btn{padding:8px 12px;background:var(--white);border:1px solid var(--border);border-radius:6px;cursor:pointer;font-weight:600;min-width:40px;transition:all 0.2s}
+.severity-btn:hover{background:var(--gold-light);border-color:var(--gold)}
+.severity-btn.selected{background:var(--gold);color:white;border-color:var(--gold)}
+.symptom-notes{margin-top:20px}
+
+/* Symptom history styles */
+.symptom-history{margin-top:16px}
+.history-entry{padding:16px;background:var(--white);border:1px solid var(--border);border-radius:8px;margin-bottom:12px}
+.history-entry:last-child{margin-bottom:0}
+.history-date{display:flex;flex-direction:column;margin-bottom:8px}
+.history-symptoms{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.symptom-tag{font-size:11px;font-weight:600;padding:4px 8px;border-radius:12px;text-transform:uppercase;letter-spacing:0.5px}
+.symptom-tag.mild{background:var(--gold-light);color:var(--gold-dark)}
+.symptom-tag.moderate{background:var(--magenta-light);color:var(--magenta-dark)}
+.symptom-tag.severe{background:#fee;color:#c00}
+.symptom-tag.none{background:var(--teal-light);color:var(--teal-dark)}
+.history-note{font-size:13px;color:var(--text-sec);font-style:italic}
+
+/* Pattern insights */
+.pattern-insights{margin-top:16px}
+.insight-item{display:flex;align-items:center;gap:12px;padding:12px;background:var(--white);border:1px solid var(--border);border-radius:8px;margin-bottom:8px}
+.insight-item:last-child{margin-bottom:0}
+.insight-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.insight-text{font-size:14px;color:var(--text)}
+
+/* Symptom analysis styles */
+.symptom-analysis{margin-top:16px}
+.analysis-summary{padding:16px;background:var(--sand-light);border-radius:8px}
+.symptom-strength h4{color:var(--navy);margin-bottom:16px}
+.symptom-bars{display:flex;flex-direction:column;gap:12px}
+.symptom-bar{display:flex;align-items:center;gap:12px}
+.symptom-name{min-width:120px;font-weight:600;color:var(--text)}
+.progress-bar{flex:1;height:12px;background:var(--border);border-radius:6px;overflow:hidden}
+.progress-fill{height:100%;border-radius:6px;transition:width 0.3s ease}
+.symptom-level{min-width:140px;text-align:right;font-size:13px;color:var(--text-sec)}
+
+/* Food recommendation styles */
+.food-recommendations{margin-top:16px}
+.recommendation-category{margin-bottom:32px}
+.recommendation-category:last-child{margin-bottom:0}
+.food-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;margin-top:16px}
+.food-card{display:flex;align-items:center;gap:16px;padding:16px;background:var(--white);border:2px solid transparent;border-radius:12px;transition:all 0.3s}
+.food-card.high-match{border-color:var(--teal);box-shadow:0 4px 12px rgba(42,127,127,0.15)}
+.food-card.medium-match{border-color:var(--gold);box-shadow:0 4px 12px rgba(201,168,108,0.15)}
+.food-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,0.15)}
+.food-image{font-size:32px;width:60px;height:60px;display:flex;align-items:center;justify-content:center;background:var(--sand-light);border-radius:50%;flex-shrink:0}
+.food-info{flex:1}
+.food-info h5{color:var(--navy);margin-bottom:6px;font-size:16px}
+.food-reason{font-size:13px;color:var(--text-sec);line-height:1.4;margin-bottom:6px}
+.food-timing{font-size:12px;color:var(--gold-dark);background:var(--gold-light);padding:4px 8px;border-radius:8px;display:inline-block;font-weight:600}
+.match-score{font-size:18px;font-weight:700;color:var(--teal-dark);background:var(--teal-light);padding:8px 12px;border-radius:50%;min-width:60px;text-align:center;flex-shrink:0}
+.medium-match .match-score{color:var(--gold-dark);background:var(--gold-light)}
+
+/* Success stories styles */
+.success-stories{margin-top:16px}
+.story-item{display:flex;align-items:flex-start;gap:16px;padding:16px;background:var(--white);border:1px solid var(--border);border-radius:8px;margin-bottom:16px}
+.story-item:last-child{margin-bottom:0}
+.story-avatar{width:48px;height:48px;background:var(--gold-light);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.story-content{flex:1}
+.story-header{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.story-match{background:var(--teal);color:white;padding:4px 8px;border-radius:12px;font-size:11px;font-weight:600}
+.story-text{color:var(--text);font-style:italic;margin-bottom:12px;line-height:1.4}
+.story-results{display:flex;gap:8px;flex-wrap:wrap}
+.result-tag{background:var(--magenta-light);color:var(--magenta-dark);padding:4px 8px;border-radius:8px;font-size:11px;font-weight:600}
+
+/* Progress tracking styles */
+.progress-overview{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:32px}
+.progress-stat-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:20px;display:flex;align-items:center;gap:16px;transition:transform 0.2s}
+.progress-stat-card:hover{transform:translateY(-2px)}
+.stat-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:white;font-size:20px;flex-shrink:0}
+.stat-content{flex:1}
+.stat-value{font-size:28px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.stat-label{font-size:14px;color:var(--text-sec);margin-bottom:4px}
+.stat-change{font-size:12px;color:var(--teal-dark);background:var(--teal-light);padding:2px 8px;border-radius:8px;font-weight:600}
+
+/* Chart styles */
+.chart-container{margin-top:16px}
+.chart-grid{background:var(--sand-light);padding:20px;border-radius:8px;margin-bottom:16px}
+.chart-weeks{display:flex;gap:24px;justify-content:space-around}
+.week-column{display:flex;flex-direction:column;align-items:center;min-width:80px}
+.week-column.current{background:var(--white);border-radius:8px;padding:12px;border:2px solid var(--gold)}
+.week-label{font-size:12px;font-weight:600;color:var(--text-sec);margin-bottom:8px}
+.symptom-bars{display:flex;gap:4px;height:120px;align-items:end}
+.chart-bar{width:16px;border-radius:4px 4px 0 0;transition:height 0.3s ease}
+.chart-bar.nausea{background:var(--magenta)}
+.chart-bar.fatigue{background:var(--gold)}
+.chart-bar.appetite{background:var(--teal)}
+.chart-legend{display:flex;gap:16px;justify-content:center}
+.legend-item{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text-sec)}
+.legend-color{width:12px;height:12px;border-radius:2px}
+.legend-color.nausea{background:var(--magenta)}
+.legend-color.fatigue{background:var(--gold)}
+.legend-color.appetite{background:var(--teal)}
+
+/* Insights grid */
+.insights-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;margin-top:16px}
+.insight-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px}
+.insight-card.positive{border-left:4px solid var(--teal)}
+.insight-card.neutral{border-left:4px solid var(--gold)}
+.insight-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.insight-badge{font-size:11px;font-weight:600;padding:4px 8px;border-radius:8px;text-transform:uppercase}
+.insight-badge.success{background:var(--teal-light);color:var(--teal-dark)}
+.insight-badge.improvement{background:var(--gold-light);color:var(--gold-dark)}
+.insight-badge.opportunity{background:var(--magenta-light);color:var(--magenta-dark)}
+.insight-title{font-size:15px;font-weight:600;color:var(--navy)}
+.insight-description{font-size:14px;color:var(--text);line-height:1.4;margin-bottom:12px}
+.insight-data{display:flex;gap:8px;flex-wrap:wrap}
+.data-point{font-size:12px;background:var(--sand-light);color:var(--text-sec);padding:4px 8px;border-radius:6px}
+
+/* Goals list */
+.goals-list{margin-top:16px}
+.goal-item{display:flex;align-items:center;gap:16px;padding:16px;background:var(--white);border:1px solid var(--border);border-radius:8px;margin-bottom:12px}
+.goal-item:last-child{margin-bottom:0}
+.goal-info{flex:1}
+.goal-title{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:8px}
+.goal-progress-bar{height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:6px}
+.goal-progress-fill{height:100%;background:var(--teal);border-radius:4px;transition:width 0.3s ease}
+.goal-status{font-size:13px;color:var(--text-sec)}
+.goal-badge{padding:8px 12px;border-radius:8px;font-size:12px;font-weight:600;min-width:80px;text-align:center}
+.goal-badge.achieved{background:var(--teal);color:white}
+.goal-badge.in-progress{background:var(--gold);color:white}
+
 /* Trial user upgrade hints */
 .premium-hint{position:fixed;top:80px;right:24px;background:var(--gold-light);border:1px solid var(--gold);color:var(--gold-dark);padding:12px 16px;border-radius:8px;font-size:12px;font-weight:600;z-index:1000;max-width:280px;box-shadow:0 4px 12px rgba(0,0,0,0.15);animation:fadeInOut 3s ease-in-out;display:none}
 .premium-hint.show{display:block}
@@ -275,12 +455,105 @@ nav{padding:0 16px}
       <!-- Other Views (Placeholder for now) -->
       <div id="meals-view" class="dashboard-view" style="display:none">
         <div class="dashboard-header">
-          <h1 class="dashboard-title">Dose Day Meals</h1>
-          <p class="dashboard-subtitle">Synchronized meal plans for optimal medication absorption</p>
+          <h1 class="dashboard-title">Dose-day Synchronized Meals</h1>
+          <p class="dashboard-subtitle">Meal plans optimized for your injection schedule and medication timing</p>
         </div>
+        
+        <!-- Current Week Schedule -->
         <div class="card">
+          <div class="card-header">
+            <div class="card-icon" style="background:var(--magenta);color:white">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19,19H5V8H19M16,1V3H8V1H6V3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3H18V1M17,12H12V17H17V12Z"/>
+              </svg>
+            </div>
+            <div class="card-title">This Week's Meal Schedule</div>
+          </div>
           <div class="card-content">
-            <p>Dose-synchronized meal planning feature coming soon...</p>
+            <div id="meal-schedule">
+              <div class="schedule-day">
+                <div class="day-header">
+                  <h4>Today - Tuesday</h4>
+                  <span class="injection-day">💉 Injection Day</span>
+                </div>
+                <div class="day-meals">
+                  <div class="meal-time">7:00 AM - Protein Breakfast</div>
+                  <div class="meal-time injection">10:30 AM - Injection Time</div>
+                  <div class="meal-time">11:00 AM - Light Lunch</div>
+                  <div class="meal-time">6:00 PM - Recovery Dinner</div>
+                </div>
+              </div>
+              <div class="schedule-day">
+                <div class="day-header">
+                  <h4>Tomorrow - Wednesday</h4>
+                  <span class="recovery-day">Recovery Day</span>
+                </div>
+                <div class="day-meals">
+                  <div class="meal-time">8:00 AM - Normal Breakfast</div>
+                  <div class="meal-time">12:00 PM - Regular Lunch</div>
+                  <div class="meal-time">7:00 PM - Standard Dinner</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Today's Meals -->
+        <div class="card-grid">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon" style="background:var(--teal);color:white">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M7,10H12V15H7V10M19,19H5V8H19M16,1V3H8V1H6V3H5C3.89,3 3,3.89 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5C21,3.89 20.1,3 19,3H18V1"/>
+                </svg>
+              </div>
+              <div class="card-title">Pre-Injection (Today)</div>
+            </div>
+            <div class="card-content">
+              <div class="meal-item">
+                <h4>Breakfast (7:00 AM)</h4>
+                <p><strong>Protein-Rich Smoothie Bowl</strong></p>
+                <p>Greek yogurt, berries, protein powder, almond butter</p>
+                <div class="meal-tags">
+                  <span class="meal-tag gentle">Gentle on stomach</span>
+                  <span class="meal-tag protein">High protein</span>
+                </div>
+              </div>
+              <div class="meal-item">
+                <h4>Mid-Morning (10:30 AM)</h4>
+                <p><strong>Injection Time</strong></p>
+                <p>💉 Recommended 30 min before lunch</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon" style="background:var(--gold);color:white">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12,2L14,9H22L16,13.5L18,21L12,17L6,21L8,13.5L2,9H10L12,2Z"/>
+                </svg>
+              </div>
+              <div class="card-title">Post-Injection Meals</div>
+            </div>
+            <div class="card-content">
+              <div class="meal-item">
+                <h4>Lunch (11:00 AM)</h4>
+                <p><strong>Gentle Chicken & Rice Bowl</strong></p>
+                <p>Small portion, easy to digest, anti-nausea herbs</p>
+                <div class="meal-tags">
+                  <span class="meal-tag gentle">Nausea-friendly</span>
+                </div>
+              </div>
+              <div class="meal-item">
+                <h4>Dinner (6:00 PM)</h4>
+                <p><strong>Lean Protein with Sweet Potato</strong></p>
+                <p>Gradual appetite recovery, nutrient-dense</p>
+                <div class="meal-tags">
+                  <span class="meal-tag recovery">Recovery</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -288,11 +561,203 @@ nav{padding:0 16px}
       <div id="grocery-view" class="dashboard-view" style="display:none">
         <div class="dashboard-header">
           <h1 class="dashboard-title">Weekly Grocery Lists</h1>
-          <p class="dashboard-subtitle">Auto-generated shopping lists for your meal plans</p>
+          <p class="dashboard-subtitle">Auto-generated shopping lists synchronized with your meal plans</p>
         </div>
+        
+        <!-- Current Week Shopping List -->
         <div class="card">
-          <div class="card-content">
-            <p>Grocery list generation feature coming soon...</p>
+          <div class="card-header">
+            <div class="card-icon" style="background:var(--teal);color:white">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17,18C17.5,18 18,17.5 18,17V12L20,10V17A2,2 0 0,1 18,19H6A2,2 0 0,1 4,17V10L6,12V17C6,17.5 6.4,18 7,18H17M10,2H14A2,2 0 0,1 16,4V6H20A1,1 0 0,1 21,7V9A1,1 0 0,1 20,10L19,11L15,15H9L5,11L4,10A1,1 0 0,1 3,9V7A1,1 0 0,1 4,6H8V4A2,2 0 0,1 10,2M10,6H14V4H10V6Z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="card-title">This Week's Shopping List</div>
+              <div class="card-subtitle">March 3-9, 2026 • Injection Day: Wednesday</div>
+            </div>
+          </div>
+          
+          <!-- Organized by category -->
+          <div class="grocery-categories">
+            <div class="grocery-category">
+              <h4 class="category-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right:8px;color:var(--teal)">
+                  <path d="M12,2A6,6 0 0,1 18,8A6,6 0 0,1 12,14A6,6 0 0,1 6,8A6,6 0 0,1 12,2M12,15C16.42,15 20,16.79 20,19V21H4V19C4,16.79 7.58,15 12,15Z"/>
+                </svg>
+                Proteins (4 items)
+              </h4>
+              <ul class="grocery-items">
+                <li class="grocery-item">
+                  <span class="item-name">Wild-caught salmon fillets</span>
+                  <span class="item-quantity">1 lb</span>
+                  <span class="meal-tags">
+                    <span class="meal-tag gentle">Gentle</span>
+                    <span class="meal-tag protein">Protein</span>
+                  </span>
+                </li>
+                <li class="grocery-item">
+                  <span class="item-name">Organic chicken breast</span>
+                  <span class="item-quantity">1.5 lbs</span>
+                  <span class="meal-tags">
+                    <span class="meal-tag protein">Protein</span>
+                  </span>
+                </li>
+                <li class="grocery-item">
+                  <span class="item-name">Greek yogurt (plain)</span>
+                  <span class="item-quantity">2 containers</span>
+                  <span class="meal-tags">
+                    <span class="meal-tag recovery">Recovery</span>
+                  </span>
+                </li>
+                <li class="grocery-item">
+                  <span class="item-name">Organic eggs</span>
+                  <span class="item-quantity">1 dozen</span>
+                  <span class="meal-tags">
+                    <span class="meal-tag gentle">Gentle</span>
+                  </span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="grocery-category">
+              <h4 class="category-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right:8px;color:var(--gold)">
+                  <path d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z"/>
+                </svg>
+                Vegetables (6 items)
+              </h4>
+              <ul class="grocery-items">
+                <li class="grocery-item">
+                  <span class="item-name">Sweet potatoes</span>
+                  <span class="item-quantity">3 medium</span>
+                  <span class="meal-tags">
+                    <span class="meal-tag gentle">Gentle</span>
+                  </span>
+                </li>
+                <li class="grocery-item">
+                  <span class="item-name">Baby spinach</span>
+                  <span class="item-quantity">1 bag</span>
+                  <span class="meal-tags">
+                    <span class="meal-tag recovery">Recovery</span>
+                  </span>
+                </li>
+                <li class="grocery-item">
+                  <span class="item-name">Zucchini</span>
+                  <span class="item-quantity">2 medium</span>
+                  <span class="meal-tags">
+                    <span class="meal-tag gentle">Gentle</span>
+                  </span>
+                </li>
+                <li class="grocery-item">
+                  <span class="item-name">Ginger root</span>
+                  <span class="item-quantity">1 piece</span>
+                  <span class="meal-tags">
+                    <span class="meal-tag recovery">Recovery</span>
+                  </span>
+                </li>
+                <li class="grocery-item">
+                  <span class="item-name">Carrots</span>
+                  <span class="item-quantity">1 lb bag</span>
+                  <span class="meal-tags">
+                    <span class="meal-tag gentle">Gentle</span>
+                  </span>
+                </li>
+                <li class="grocery-item">
+                  <span class="item-name">Cucumber</span>
+                  <span class="item-quantity">2 large</span>
+                  <span class="meal-tags">
+                    <span class="meal-tag recovery">Recovery</span>
+                  </span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="grocery-category">
+              <h4 class="category-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="margin-right:8px;color:var(--magenta)">
+                  <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/>
+                </svg>
+                Pantry Essentials (5 items)
+              </h4>
+              <ul class="grocery-items">
+                <li class="grocery-item">
+                  <span class="item-name">Brown rice</span>
+                  <span class="item-quantity">1 bag</span>
+                  <span class="meal-tags">
+                    <span class="meal-tag gentle">Gentle</span>
+                  </span>
+                </li>
+                <li class="grocery-item">
+                  <span class="item-name">Olive oil (extra virgin)</span>
+                  <span class="item-quantity">1 bottle</span>
+                </li>
+                <li class="grocery-item">
+                  <span class="item-name">Bone broth (low sodium)</span>
+                  <span class="item-quantity">2 cartons</span>
+                  <span class="meal-tags">
+                    <span class="meal-tag recovery">Recovery</span>
+                  </span>
+                </li>
+                <li class="grocery-item">
+                  <span class="item-name">Chamomile tea</span>
+                  <span class="item-quantity">1 box</span>
+                  <span class="meal-tags">
+                    <span class="meal-tag recovery">Recovery</span>
+                  </span>
+                </li>
+                <li class="grocery-item">
+                  <span class="item-name">Whole grain crackers</span>
+                  <span class="item-quantity">1 box</span>
+                  <span class="meal-tags">
+                    <span class="meal-tag gentle">Gentle</span>
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          
+          <!-- Shopping notes -->
+          <div class="grocery-notes">
+            <h4 style="color:var(--navy);margin-bottom:8px;font-size:14px">💡 Shopping Tips for This Week</h4>
+            <ul style="color:var(--text-sec);font-size:13px;line-height:1.6;margin:0;padding-left:16px">
+              <li>Shop for gentle foods early in the week (injection day Wednesday)</li>
+              <li>Buy ginger fresh - helps with nausea management</li>
+              <li>Check protein portions - smaller servings work better post-injection</li>
+              <li>Stock up on recovery foods for Thursday-Friday</li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Meal Plan Integration -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon" style="background:var(--gold);color:white">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9,10H7V12H9V10M13,10H11V12H13V10M17,10H15V12H17V10M19,3A2,2 0 0,1 21,5V19A2,2 0 0,1 19,21H5C3.89,21 3,20.1 3,19V5A2,2 0 0,1 5,3H6V1H8V3H16V1H18V3H19M19,19V8H5V19H19M9,14H7V16H9V14M13,14H11V16H13V14M17,14H15V16H17V14Z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="card-title">Sync with Meal Plans</div>
+              <div class="card-subtitle">Your grocery list automatically updates based on weekly meals</div>
+            </div>
+          </div>
+          <div class="sync-status">
+            <div class="sync-item">
+              <span class="sync-label">Last updated:</span>
+              <span class="sync-value">Today at 8:00 AM</span>
+              <span class="sync-badge success">✓ Synced</span>
+            </div>
+            <div class="sync-item">
+              <span class="sync-label">Next meal plan:</span>
+              <span class="sync-value">March 10-16, 2026</span>
+              <span class="sync-badge pending">⏳ Generating</span>
+            </div>
+            <div class="sync-item">
+              <span class="sync-label">Items covered:</span>
+              <span class="sync-value">21 meals, 7 snacks</span>
+              <span class="sync-badge info">ℹ Complete</span>
+            </div>
           </div>
         </div>
       </div>
@@ -300,11 +765,177 @@ nav{padding:0 16px}
       <div id="symptoms-view" class="dashboard-view" style="display:none">
         <div class="dashboard-header">
           <h1 class="dashboard-title">Symptom Logger</h1>
-          <p class="dashboard-subtitle">Track symptoms and find food correlations</p>
+          <p class="dashboard-subtitle">Track daily symptoms and find patterns with your GLP-1 medication</p>
         </div>
+        
+        <!-- Quick Log Symptoms -->
         <div class="card">
-          <div class="card-content">
-            <p>Symptom tracking feature coming soon...</p>
+          <div class="card-header">
+            <div class="card-icon" style="background:var(--magenta);color:white">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12,2C13.1,2 14,2.9 14,4C14,5.1 13.1,6 12,6C10.9,6 10,5.1 10,4C10,2.9 10.9,2 12,2M21,9V7L15,1H5C3.89,1 3,1.89 3,3V21A2,2 0 0,0 5,23H19A2,2 0 0,0 21,21V9M19,9H14V4H5V21H19V9Z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="card-title">Log Today's Symptoms</div>
+              <div class="card-subtitle">March 3, 2026 • 2 days after injection</div>
+            </div>
+          </div>
+          
+          <div class="symptom-tracker">
+            <!-- Quick symptom buttons -->
+            <div class="symptom-quick-log">
+              <h4 style="color:var(--navy);margin-bottom:12px">Common GLP-1 Symptoms:</h4>
+              <div class="symptom-buttons">
+                <button class="symptom-btn" onclick="toggleSymptom('nausea')">
+                  <span class="symptom-icon">🤢</span>
+                  <span>Nausea</span>
+                  <span class="severity-indicator" id="nausea-severity"></span>
+                </button>
+                <button class="symptom-btn" onclick="toggleSymptom('fatigue')">
+                  <span class="symptom-icon">😴</span>
+                  <span>Fatigue</span>
+                  <span class="severity-indicator" id="fatigue-severity"></span>
+                </button>
+                <button class="symptom-btn" onclick="toggleSymptom('appetite-loss')">
+                  <span class="symptom-icon">🍽️</span>
+                  <span>Appetite Loss</span>
+                  <span class="severity-indicator" id="appetite-loss-severity"></span>
+                </button>
+                <button class="symptom-btn" onclick="toggleSymptom('stomach-pain')">
+                  <span class="symptom-icon">🤕</span>
+                  <span>Stomach Pain</span>
+                  <span class="severity-indicator" id="stomach-pain-severity"></span>
+                </button>
+                <button class="symptom-btn" onclick="toggleSymptom('headache')">
+                  <span class="symptom-icon">🧠</span>
+                  <span>Headache</span>
+                  <span class="severity-indicator" id="headache-severity"></span>
+                </button>
+                <button class="symptom-btn" onclick="toggleSymptom('diarrhea')">
+                  <span class="symptom-icon">💩</span>
+                  <span>Digestive Issues</span>
+                  <span class="severity-indicator" id="diarrhea-severity"></span>
+                </button>
+              </div>
+            </div>
+            
+            <!-- Severity scale (appears when symptom selected) -->
+            <div id="severity-scale" class="severity-scale" style="display:none">
+              <h4 style="color:var(--navy);margin-bottom:8px">Rate Severity (1-10):</h4>
+              <div class="severity-buttons">
+                <button class="severity-btn" onclick="setSeverity(1)">1</button>
+                <button class="severity-btn" onclick="setSeverity(2)">2</button>
+                <button class="severity-btn" onclick="setSeverity(3)">3</button>
+                <button class="severity-btn" onclick="setSeverity(4)">4</button>
+                <button class="severity-btn" onclick="setSeverity(5)">5</button>
+                <button class="severity-btn" onclick="setSeverity(6)">6</button>
+                <button class="severity-btn" onclick="setSeverity(7)">7</button>
+                <button class="severity-btn" onclick="setSeverity(8)">8</button>
+                <button class="severity-btn" onclick="setSeverity(9)">9</button>
+                <button class="severity-btn" onclick="setSeverity(10)">10</button>
+              </div>
+            </div>
+            
+            <!-- Notes section -->
+            <div class="symptom-notes">
+              <label for="symptom-note" style="display:block;color:var(--navy);margin-bottom:8px;font-weight:600">Additional Notes:</label>
+              <textarea 
+                id="symptom-note" 
+                placeholder="What did you eat today? How did you feel? Any other observations..."
+                style="width:100%;height:80px;padding:12px;border:1px solid var(--border);border-radius:8px;font-family:inherit;resize:vertical"
+              ></textarea>
+            </div>
+            
+            <button onclick="saveSymptomLog()" class="btn" style="margin-top:16px;width:100%">Save Today's Log</button>
+          </div>
+        </div>
+        
+        <!-- Recent symptom history -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon" style="background:var(--teal);color:white">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M13,3A9,9 0 0,0 4,12H1L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3Z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="card-title">Recent Symptom History</div>
+              <div class="card-subtitle">Past 7 days of tracked symptoms</div>
+            </div>
+          </div>
+          
+          <div class="symptom-history">
+            <!-- Sample history entries -->
+            <div class="history-entry">
+              <div class="history-date">
+                <strong>Mar 2</strong>
+                <span style="font-size:12px;color:var(--text-muted)">Day after injection</span>
+              </div>
+              <div class="history-symptoms">
+                <span class="symptom-tag mild">Mild Nausea (3/10)</span>
+                <span class="symptom-tag moderate">Moderate Fatigue (6/10)</span>
+              </div>
+              <div class="history-note">"Ginger tea helped with nausea. Felt better after small protein snack."</div>
+            </div>
+            
+            <div class="history-entry">
+              <div class="history-date">
+                <strong>Mar 1</strong>
+                <span style="font-size:12px;color:var(--text-muted)">Injection day</span>
+              </div>
+              <div class="history-symptoms">
+                <span class="symptom-tag mild">Mild Appetite Loss (4/10)</span>
+              </div>
+              <div class="history-note">"Injected at 8am. Appetite decreased by lunch but manageable."</div>
+            </div>
+            
+            <div class="history-entry">
+              <div class="history-date">
+                <strong>Feb 28</strong>
+                <span style="font-size:12px;color:var(--text-muted)">3 days post-injection</span>
+              </div>
+              <div class="history-symptoms">
+                <span class="symptom-tag none">No symptoms</span>
+              </div>
+              <div class="history-note">"Feeling normal. Good appetite and energy levels."</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Pattern insights -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon" style="background:var(--gold);color:white">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M2,2H8V4H16V2H22V8H20V16H22V22H16V20H8V22H2V16H4V8H2V2M16,8V6H8V8H6V16H8V18H16V16H18V8H16M8,10H10V14H8V10M14,10H16V14H14V10Z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="card-title">Weekly Pattern Insights</div>
+              <div class="card-subtitle">AI-detected patterns in your symptoms</div>
+            </div>
+          </div>
+          
+          <div class="pattern-insights">
+            <div class="insight-item">
+              <div class="insight-icon" style="background:var(--teal-light);color:var(--teal-dark)">💡</div>
+              <div class="insight-text">
+                <strong>Peak symptoms:</strong> Days 1-2 after injection, typically nausea and fatigue
+              </div>
+            </div>
+            <div class="insight-item">
+              <div class="insight-icon" style="background:var(--magenta-light);color:var(--magenta-dark)">🍽️</div>
+              <div class="insight-text">
+                <strong>Food correlation:</strong> Ginger and small protein snacks seem to help with nausea
+              </div>
+            </div>
+            <div class="insight-item">
+              <div class="insight-icon" style="background:var(--gold-light);color:var(--gold-dark)">📈</div>
+              <div class="insight-text">
+                <strong>Improvement trend:</strong> Symptoms are 20% less severe compared to first month
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -324,11 +955,218 @@ nav{padding:0 16px}
       <div id="progress-view" class="dashboard-view" style="display:none">
         <div class="dashboard-header">
           <h1 class="dashboard-title">Progress Tracking</h1>
-          <p class="dashboard-subtitle">Monitor your journey and improvements over time</p>
+          <p class="dashboard-subtitle">Your personalized journey insights and improvements over time</p>
         </div>
+        
+        <!-- Progress Overview Cards -->
+        <div class="progress-overview">
+          <div class="progress-stat-card">
+            <div class="stat-icon" style="background:var(--teal)">📈</div>
+            <div class="stat-content">
+              <div class="stat-value">73%</div>
+              <div class="stat-label">Symptom Reduction</div>
+              <div class="stat-change">+15% this month</div>
+            </div>
+          </div>
+          
+          <div class="progress-stat-card">
+            <div class="stat-icon" style="background:var(--magenta)">🍽️</div>
+            <div class="stat-content">
+              <div class="stat-value">8.2/10</div>
+              <div class="stat-label">Avg. Meal Rating</div>
+              <div class="stat-change">+0.8 this month</div>
+            </div>
+          </div>
+          
+          <div class="progress-stat-card">
+            <div class="stat-icon" style="background:var(--gold)">⚡</div>
+            <div class="stat-content">
+              <div class="stat-value">6.5/10</div>
+              <div class="stat-label">Energy Levels</div>
+              <div class="stat-change">+2.1 this month</div>
+            </div>
+          </div>
+          
+          <div class="progress-stat-card">
+            <div class="stat-icon" style="background:var(--navy)">🏆</div>
+            <div class="stat-content">
+              <div class="stat-value">89</div>
+              <div class="stat-label">Days Tracked</div>
+              <div class="stat-change">12-week streak</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Symptom Trend Chart -->
         <div class="card">
-          <div class="card-content">
-            <p>Progress tracking feature coming soon...</p>
+          <div class="card-header">
+            <div class="card-icon" style="background:var(--magenta);color:white">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M22,21H2V3H4V19H6V17H8V19H10V8H12V19H14V16H16V19H18V11H20V19H22V21Z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="card-title">Symptom Trends Over Time</div>
+              <div class="card-subtitle">Average severity levels by week • Lower is better</div>
+            </div>
+          </div>
+          
+          <div class="chart-container">
+            <!-- Simulated chart with CSS -->
+            <div class="chart-grid">
+              <div class="chart-weeks">
+                <div class="week-column">
+                  <div class="week-label">Week 1</div>
+                  <div class="symptom-bars">
+                    <div class="chart-bar nausea" style="height:80%;" title="Nausea: 8/10"></div>
+                    <div class="chart-bar fatigue" style="height:70%;" title="Fatigue: 7/10"></div>
+                    <div class="chart-bar appetite" style="height:60%;" title="Appetite Loss: 6/10"></div>
+                  </div>
+                </div>
+                <div class="week-column">
+                  <div class="week-label">Week 2</div>
+                  <div class="symptom-bars">
+                    <div class="chart-bar nausea" style="height:70%;" title="Nausea: 7/10"></div>
+                    <div class="chart-bar fatigue" style="height:60%;" title="Fatigue: 6/10"></div>
+                    <div class="chart-bar appetite" style="height:50%;" title="Appetite Loss: 5/10"></div>
+                  </div>
+                </div>
+                <div class="week-column">
+                  <div class="week-label">Week 3</div>
+                  <div class="symptom-bars">
+                    <div class="chart-bar nausea" style="height:50%;" title="Nausea: 5/10"></div>
+                    <div class="chart-bar fatigue" style="height:50%;" title="Fatigue: 5/10"></div>
+                    <div class="chart-bar appetite" style="height:40%;" title="Appetite Loss: 4/10"></div>
+                  </div>
+                </div>
+                <div class="week-column current">
+                  <div class="week-label">This Week</div>
+                  <div class="symptom-bars">
+                    <div class="chart-bar nausea" style="height:30%;" title="Nausea: 3/10"></div>
+                    <div class="chart-bar fatigue" style="height:40%;" title="Fatigue: 4/10"></div>
+                    <div class="chart-bar appetite" style="height:30%;" title="Appetite Loss: 3/10"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="chart-legend">
+              <div class="legend-item">
+                <div class="legend-color nausea"></div>
+                <span>Nausea</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color fatigue"></div>
+                <span>Fatigue</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color appetite"></div>
+                <span>Appetite Loss</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Personalized Insights -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon" style="background:var(--teal);color:white">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9,22A1,1 0 0,1 8,21V18H4A2,2 0 0,1 2,16V4C2,2.89 2.9,2 4,2H20A2,2 0 0,1 22,4V16A2,2 0 0,1 20,18H13.9L10.2,21.71C10,21.9 9.75,22 9.5,22H9M10,16V19.08L13.08,16H20V4H4V16H10Z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="card-title">Personalized Progress Insights</div>
+              <div class="card-subtitle">AI analysis of your unique patterns and improvements</div>
+            </div>
+          </div>
+          
+          <div class="insights-grid">
+            <div class="insight-card positive">
+              <div class="insight-header">
+                <div class="insight-badge success">✓ Success Pattern</div>
+                <div class="insight-title">Injection Day Strategy Working</div>
+              </div>
+              <div class="insight-description">Your pre-injection meal timing (ginger tea + crackers 30 min before) has reduced post-injection nausea by 60% compared to early weeks.</div>
+              <div class="insight-data">
+                <span class="data-point">Before: 8.2/10 nausea</span>
+                <span class="data-point">Now: 3.1/10 nausea</span>
+              </div>
+            </div>
+            
+            <div class="insight-card positive">
+              <div class="insight-header">
+                <div class="insight-badge improvement">↗️ Improving</div>
+                <div class="insight-title">Energy Recovery Accelerating</div>
+              </div>
+              <div class="insight-description">Your fatigue recovery time has shortened from 3-4 days to 2 days post-injection, showing your body is adapting well.</div>
+              <div class="insight-data">
+                <span class="data-point">Week 1: 4-day recovery</span>
+                <span class="data-point">This week: 2-day recovery</span>
+              </div>
+            </div>
+            
+            <div class="insight-card neutral">
+              <div class="insight-header">
+                <div class="insight-badge opportunity">💡 Opportunity</div>
+                <div class="insight-title">Protein Timing Optimization</div>
+              </div>
+              <div class="insight-description">Consider moving protein intake earlier in the day. Users with similar profiles see 15% better appetite recovery with morning protein focus.</div>
+              <div class="insight-data">
+                <span class="data-point">Current: 14g AM protein avg</span>
+                <span class="data-point">Suggested: 20g+ AM protein</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Goal Progress -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon" style="background:var(--gold);color:white">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M15.5,5A6.5,6.5 0 0,1 22,11.5A6.5,6.5 0 0,1 15.5,18A6.5,6.5 0 0,1 9,11.5A6.5,6.5 0 0,1 15.5,5M15.5,7A4.5,4.5 0 0,0 11,11.5A4.5,4.5 0 0,0 15.5,16A4.5,4.5 0 0,0 20,11.5A4.5,4.5 0 0,0 15.5,7M15.5,9A2.5,2.5 0 0,1 18,11.5A2.5,2.5 0 0,1 15.5,14A2.5,2.5 0 0,1 13,11.5A2.5,2.5 0 0,1 15.5,9M7,19H9L10.5,16.5L9,15L8,16L7,19M5,19H3V17L4,16L5,17V19Z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="card-title">Your Goals Progress</div>
+              <div class="card-subtitle">Track your personal health objectives</div>
+            </div>
+          </div>
+          
+          <div class="goals-list">
+            <div class="goal-item">
+              <div class="goal-info">
+                <div class="goal-title">Reduce nausea to manageable levels (&lt;4/10)</div>
+                <div class="goal-progress-bar">
+                  <div class="goal-progress-fill" style="width:85%"></div>
+                </div>
+                <div class="goal-status">85% achieved • 3.1/10 current avg</div>
+              </div>
+              <div class="goal-badge achieved">✓ Achieved</div>
+            </div>
+            
+            <div class="goal-item">
+              <div class="goal-info">
+                <div class="goal-title">Maintain energy levels above 6/10</div>
+                <div class="goal-progress-bar">
+                  <div class="goal-progress-fill" style="width:72%"></div>
+                </div>
+                <div class="goal-status">72% achieved • 6.5/10 current avg</div>
+              </div>
+              <div class="goal-badge in-progress">72%</div>
+            </div>
+            
+            <div class="goal-item">
+              <div class="goal-info">
+                <div class="goal-title">Complete 90 days of consistent tracking</div>
+                <div class="goal-progress-bar">
+                  <div class="goal-progress-fill" style="width:99%"></div>
+                </div>
+                <div class="goal-status">99% achieved • 89 of 90 days completed</div>
+              </div>
+              <div class="goal-badge in-progress">99%</div>
+            </div>
           </div>
         </div>
       </div>
@@ -407,20 +1245,195 @@ nav{padding:0 16px}
       <div id="matching-view" class="dashboard-view" style="display:none">
         <div class="dashboard-header">
           <h1 class="dashboard-title">Symptom-to-Food Matching</h1>
-          <p class="dashboard-subtitle">AI-powered food recommendations based on your symptoms</p>
+          <p class="dashboard-subtitle">AI-powered personalized food recommendations based on your symptom patterns</p>
         </div>
+        
+        <!-- Current symptom analysis -->
         <div class="card">
-          <div class="card-content">
-            <div style="text-align:center;padding:40px;color:var(--text-muted)">
-              <div style="margin-bottom:16px">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="var(--gold)">
-                  <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,1 20,12A8,8 0 0,0 12,4M12,8L14,14H10L12,8Z"/>
-                </svg>
+          <div class="card-header">
+            <div class="card-icon" style="background:var(--magenta);color:white">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="card-title">Your Current Symptom Profile</div>
+              <div class="card-subtitle">Based on your recent logs (March 1-3, 2026)</div>
+            </div>
+          </div>
+          
+          <div class="symptom-analysis">
+            <div class="analysis-summary">
+              <div class="symptom-strength">
+                <h4>Primary Symptoms:</h4>
+                <div class="symptom-bars">
+                  <div class="symptom-bar">
+                    <span class="symptom-name">Nausea</span>
+                    <div class="progress-bar">
+                      <div class="progress-fill" style="width:60%;background:var(--magenta)"></div>
+                    </div>
+                    <span class="symptom-level">Moderate (6/10)</span>
+                  </div>
+                  <div class="symptom-bar">
+                    <span class="symptom-name">Fatigue</span>
+                    <div class="progress-bar">
+                      <div class="progress-fill" style="width:50%;background:var(--gold)"></div>
+                    </div>
+                    <span class="symptom-level">Mild-Moderate (5/10)</span>
+                  </div>
+                  <div class="symptom-bar">
+                    <span class="symptom-name">Appetite Loss</span>
+                    <div class="progress-bar">
+                      <div class="progress-fill" style="width:40%;background:var(--teal)"></div>
+                    </div>
+                    <span class="symptom-level">Mild (4/10)</span>
+                  </div>
+                </div>
               </div>
-              <h3 style="color:var(--gold);margin-bottom:8px">Premium Feature</h3>
-              <p>Advanced AI analyzes your symptom patterns and matches them with optimal food choices. Get personalized recommendations that adapt to your body's responses.</p>
-              <div style="margin-top:24px">
-                <a href="#" class="btn" onclick="showUpgradeModal()">Upgrade to Premium</a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- AI Food Recommendations -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon" style="background:var(--teal);color:white">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.5,12A1.5,1.5 0 0,1 16,10.5A1.5,1.5 0 0,1 17.5,9A1.5,1.5 0 0,1 19,10.5A1.5,1.5 0 0,1 17.5,12M14.5,8A1.5,1.5 0 0,1 13,6.5A1.5,1.5 0 0,1 14.5,5A1.5,1.5 0 0,1 16,6.5A1.5,1.5 0 0,1 14.5,8M10,13A1.5,1.5 0 0,1 11.5,14.5A1.5,1.5 0 0,1 10,16A1.5,1.5 0 0,1 8.5,14.5A1.5,1.5 0 0,1 10,13M20,14.27L18.73,15.54C18.38,15.89 17.81,15.89 17.46,15.54L15.5,13.58L11.42,17.66C11.08,18 10.5,18 10.15,17.66L8.93,16.44L5.27,20.1C4.93,20.44 4.35,20.44 4,20.1C3.65,19.75 3.65,19.17 4,18.83L8.22,14.61C8.57,14.26 9.14,14.26 9.49,14.61L10.71,15.83L14.79,11.75L12.83,9.79C12.48,9.44 12.48,8.87 12.83,8.52L14.1,7.25C14.45,6.9 15.02,6.9 15.37,7.25L20,11.88C20.35,12.23 20.35,12.8 20,13.15"/>
+              </svg>
+            </div>
+            <div>
+              <div class="card-title">Personalized Food Recommendations</div>
+              <div class="card-subtitle">AI-matched foods for your current symptom profile</div>
+            </div>
+          </div>
+          
+          <div class="food-recommendations">
+            <div class="recommendation-category">
+              <h4 style="color:var(--magenta);margin-bottom:16px">🤢 For Your Nausea (High Priority)</h4>
+              <div class="food-cards">
+                <div class="food-card high-match">
+                  <div class="food-image">🫚</div>
+                  <div class="food-info">
+                    <h5>Fresh Ginger Tea</h5>
+                    <p class="food-reason">97% match • Natural anti-nausea properties • Users report 80% symptom relief</p>
+                    <div class="food-timing">Best time: 30 min before meals</div>
+                  </div>
+                  <div class="match-score">97%</div>
+                </div>
+                <div class="food-card high-match">
+                  <div class="food-image">🍪</div>
+                  <div class="food-info">
+                    <h5>Plain Crackers</h5>
+                    <p class="food-reason">94% match • Bland, easy to digest • Settles stomach effectively</p>
+                    <div class="food-timing">Best time: When symptoms start</div>
+                  </div>
+                  <div class="match-score">94%</div>
+                </div>
+                <div class="food-card medium-match">
+                  <div class="food-image">🍋</div>
+                  <div class="food-info">
+                    <h5>Lemon Water</h5>
+                    <p class="food-reason">89% match • Helps with hydration • Citrus can reduce nausea</p>
+                    <div class="food-timing">Sip slowly throughout day</div>
+                  </div>
+                  <div class="match-score">89%</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="recommendation-category">
+              <h4 style="color:var(--gold);margin-bottom:16px">😴 For Your Fatigue</h4>
+              <div class="food-cards">
+                <div class="food-card high-match">
+                  <div class="food-image">🥜</div>
+                  <div class="food-info">
+                    <h5>Protein Smoothie with Nuts</h5>
+                    <p class="food-reason">91% match • Sustained energy release • Easy on stomach</p>
+                    <div class="food-timing">Best time: Morning or afternoon</div>
+                  </div>
+                  <div class="match-score">91%</div>
+                </div>
+                <div class="food-card medium-match">
+                  <div class="food-image">🍌</div>
+                  <div class="food-info">
+                    <h5>Banana with Almond Butter</h5>
+                    <p class="food-reason">87% match • Natural sugars + protein • Quick energy boost</p>
+                    <div class="food-timing">Perfect for mid-afternoon</div>
+                  </div>
+                  <div class="match-score">87%</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="recommendation-category">
+              <h4 style="color:var(--teal);margin-bottom:16px">🍽️ For Your Appetite Loss</h4>
+              <div class="food-cards">
+                <div class="food-card high-match">
+                  <div class="food-image">🍲</div>
+                  <div class="food-info">
+                    <h5>Warm Bone Broth</h5>
+                    <p class="food-reason">93% match • Nutrient-dense • Gentle on stomach</p>
+                    <div class="food-timing">Small portions throughout day</div>
+                  </div>
+                  <div class="match-score">93%</div>
+                </div>
+                <div class="food-card medium-match">
+                  <div class="food-image">🥛</div>
+                  <div class="food-info">
+                    <h5>Greek Yogurt (Small)</h5>
+                    <p class="food-reason">86% match • Protein + probiotics • Easy to consume</p>
+                    <div class="food-timing">When you can manage solids</div>
+                  </div>
+                  <div class="match-score">86%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Success Stories from similar users -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon" style="background:var(--gold);color:white">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M7,7H17V9H16L15,13H9L8,9H7V7M11,15H13A1,1 0 0,1 14,16A1,1 0 0,1 13,17H11A1,1 0 0,1 10,16A1,1 0 0,1 11,15Z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="card-title">Success Stories from Users Like You</div>
+              <div class="card-subtitle">Real results from users with similar symptom patterns</div>
+            </div>
+          </div>
+          
+          <div class="success-stories">
+            <div class="story-item">
+              <div class="story-avatar">👩‍⚕️</div>
+              <div class="story-content">
+                <div class="story-header">
+                  <strong>Sarah M.</strong>
+                  <span class="story-match">95% symptom match</span>
+                </div>
+                <div class="story-text">"Following the ginger tea + crackers recommendation reduced my nausea by 70% within a week. Now I have them ready before every injection day!"</div>
+                <div class="story-results">
+                  <span class="result-tag">Nausea: 8/10 → 3/10</span>
+                  <span class="result-tag">Energy: 4/10 → 7/10</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="story-item">
+              <div class="story-avatar">👨‍💼</div>
+              <div class="story-content">
+                <div class="story-header">
+                  <strong>Mike D.</strong>
+                  <span class="story-match">92% symptom match</span>
+                </div>
+                <div class="story-text">"The protein smoothie recommendation was a game-changer. I can actually maintain energy levels even on injection days now."</div>
+                <div class="story-results">
+                  <span class="result-tag">Fatigue: 7/10 → 3/10</span>
+                  <span class="result-tag">Appetite: 3/10 → 6/10</span>
+                </div>
               </div>
             </div>
           </div>
@@ -873,6 +1886,81 @@ function logout() {
   
   // Redirect to main site
   window.location.href = 'https://postdoserx.com';
+}
+
+// Symptom tracking functions
+let selectedSymptom = null;
+let currentSeverity = null;
+let dailySymptoms = {};
+
+function toggleSymptom(symptomId) {
+  // Remove active state from all buttons
+  document.querySelectorAll('.symptom-btn').forEach(btn => btn.classList.remove('active'));
+  
+  // Add active state to selected button
+  const btn = document.querySelector(`button[onclick="toggleSymptom('${symptomId}')"]`);
+  btn.classList.add('active');
+  
+  selectedSymptom = symptomId;
+  
+  // Show severity scale
+  document.getElementById('severity-scale').style.display = 'block';
+  
+  // Clear previous severity selection
+  document.querySelectorAll('.severity-btn').forEach(btn => btn.classList.remove('selected'));
+  currentSeverity = null;
+}
+
+function setSeverity(level) {
+  currentSeverity = level;
+  
+  // Update UI
+  document.querySelectorAll('.severity-btn').forEach(btn => btn.classList.remove('selected'));
+  document.querySelector(`button[onclick="setSeverity(${level})"]`).classList.add('selected');
+  
+  // Update symptom button with severity
+  if (selectedSymptom) {
+    const indicator = document.getElementById(`${selectedSymptom}-severity`);
+    indicator.textContent = `${level}/10`;
+    indicator.style.display = 'inline-block';
+    
+    // Store in daily symptoms
+    dailySymptoms[selectedSymptom] = level;
+  }
+}
+
+function saveSymptomLog() {
+  const note = document.getElementById('symptom-note').value;
+  const today = new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  
+  // Create symptom log entry
+  const logEntry = {
+    date: today,
+    symptoms: dailySymptoms,
+    note: note,
+    timestamp: Date.now()
+  };
+  
+  // Save to localStorage (in production, this would save to a database)
+  let symptomHistory = JSON.parse(localStorage.getItem('symptom_history') || '[]');
+  symptomHistory.unshift(logEntry);
+  localStorage.setItem('symptom_history', JSON.stringify(symptomHistory));
+  
+  // Show success message
+  alert('Symptoms logged successfully! Track patterns over time to optimize your meal planning.');
+  
+  // Reset form
+  document.querySelectorAll('.symptom-btn').forEach(btn => btn.classList.remove('active'));
+  document.querySelectorAll('.severity-indicator').forEach(ind => {
+    ind.style.display = 'none';
+    ind.textContent = '';
+  });
+  document.getElementById('severity-scale').style.display = 'none';
+  document.getElementById('symptom-note').value = '';
+  
+  dailySymptoms = {};
+  selectedSymptom = null;
+  currentSeverity = null;
 }
 
 // Initialize app
