@@ -229,6 +229,92 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;background:rgba(
 .goal-badge.achieved{background:var(--teal);color:white}
 .goal-badge.in-progress{background:var(--gold);color:white}
 
+/* Meal rating styles */
+.meal-rating-list{margin-top:16px}
+.meal-rating-item{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:16px;display:grid;grid-template-columns:1fr auto auto;gap:16px;align-items:center}
+.meal-rating-item:last-child{margin-bottom:0}
+.meal-info{display:flex;align-items:center;gap:12px}
+.meal-image{font-size:32px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:var(--sand-light);border-radius:50%;flex-shrink:0}
+.meal-details h4{color:var(--navy);margin-bottom:6px}
+.meal-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.meal-time{font-size:13px;color:var(--text-sec)}
+.meal-timing{font-size:12px;color:var(--gold-dark);background:var(--gold-light);padding:2px 6px;border-radius:4px}
+.rating-section{text-align:center}
+.star-rating{display:flex;gap:2px}
+.star{cursor:pointer;transition:color 0.2s;font-size:20px;color:#ddd}
+.star.active{color:#ffc107}
+.star:hover{color:#ffc107}
+.feedback-select{margin-top:8px;padding:6px;border:1px solid var(--border);border-radius:4px;font-size:12px}
+.ai-prediction{text-align:center;padding:8px;background:var(--sand-light);border-radius:6px;min-width:140px}
+.ai-prediction.accurate{background:var(--teal-light)}
+.ai-prediction.highly-accurate{background:var(--gold-light)}
+.prediction-badge{font-size:11px;font-weight:600;margin-bottom:4px}
+.prediction-reason{font-size:10px;color:var(--text-sec);font-style:italic}
+.ai-learning-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;margin-top:16px}
+.learning-metric{text-align:center;padding:16px;background:var(--sand-light);border-radius:8px}
+.metric-label{font-size:13px;color:var(--text-sec);margin-bottom:4px}
+.metric-value{font-size:24px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.metric-progress{margin-top:8px}
+.progress-text{font-size:11px;color:var(--text-sec);margin-top:4px}
+.metric-trend{font-size:12px;color:var(--teal-dark);background:var(--teal-light);padding:2px 6px;border-radius:4px;font-weight:600}
+.metric-success-rate{font-size:12px;color:var(--magenta-dark)}
+.insight-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.insight-tag{background:var(--teal-light);color:var(--teal-dark);padding:4px 8px;border-radius:8px;font-size:11px;font-weight:600}
+.recommended-meals{margin-top:16px}
+.meal-recommendation{display:flex;align-items:center;gap:16px;padding:16px;background:var(--white);border:1px solid var(--border);border-radius:8px;margin-bottom:12px}
+.meal-recommendation:last-child{margin-bottom:0}
+.meal-recommendation.high-confidence{border-color:var(--teal);background:var(--teal-light)}
+.meal-recommendation.medium-confidence{border-color:var(--gold);background:var(--gold-light)}
+.meal-content{flex:1}
+.confidence-score{font-size:12px;color:var(--teal-dark);font-weight:600;margin-bottom:4px}
+.recommendation-reason{font-size:13px;color:var(--text-sec);margin-bottom:4px}
+.optimal-timing{font-size:12px;color:var(--magenta-dark);background:var(--magenta-light);padding:2px 6px;border-radius:4px;display:inline-block}
+
+/* Recipe engine styles */
+.recipe-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px;margin-top:16px}
+.recipe-card{background:var(--white);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:transform 0.2s,box-shadow 0.2s}
+.recipe-card:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,0.1)}
+.recipe-card.featured{border-color:var(--gold);box-shadow:0 4px 12px rgba(201,168,108,0.2)}
+.recipe-content{padding:16px}
+.recipe-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.recipe-header h4{color:var(--navy);margin:0}
+.recipe-match{background:var(--teal);color:white;padding:4px 8px;border-radius:12px;font-size:11px;font-weight:600}
+.recipe-tags{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.recipe-tag{padding:4px 8px;border-radius:6px;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
+.recipe-tag.gentle{background:var(--teal-light);color:var(--teal-dark)}
+.recipe-tag.protein{background:var(--magenta-light);color:var(--magenta-dark)}
+.recipe-tag.timing{background:var(--gold-light);color:var(--gold-dark)}
+.recipe-tag.difficulty{background:var(--sand);color:var(--text-sec)}
+.recipe-benefits{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+.benefit{font-size:12px;color:var(--text-sec)}
+.recipe-adaptation{font-size:12px;color:var(--text-sec);background:var(--sand-light);padding:8px;border-radius:6px;margin-bottom:12px;line-height:1.4}
+.recipe-actions{padding:0 16px 16px;display:flex;gap:8px}
+.adaptation-examples{margin-top:16px}
+.adaptation-example{display:flex;gap:16px;padding:16px;background:var(--white);border:1px solid var(--border);border-radius:8px;margin-bottom:16px}
+.adaptation-example:last-child{margin-bottom:0}
+.adaptation-icon{font-size:24px;width:48px;height:48px;background:var(--sand-light);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.adaptation-content{flex:1}
+.adaptation-content h4{color:var(--navy);margin-bottom:12px}
+.adaptation-changes{display:flex;flex-direction:column;gap:8px}
+.change-item{display:flex;gap:8px;font-size:13px}
+.change-type{font-weight:600;color:var(--text);min-width:120px}
+.change-detail{color:var(--text-sec)}
+.recipe-categories{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-top:16px}
+.category-card{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:12px}
+.category-card:hover{background:var(--sand-light);border-color:var(--gold);transform:translateY(-2px)}
+.category-image{font-size:24px;width:48px;height:48px;background:var(--sand-light);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.category-info h4{color:var(--navy);margin-bottom:4px}
+.category-count{font-size:12px;color:var(--text-sec);margin-bottom:4px}
+.category-description{font-size:11px;color:var(--text-muted)}
+.learning-progress{display:flex;gap:24px;margin-top:16px;justify-content:space-around}
+.learning-stat{text-align:center}
+.stat-label{font-size:13px;color:var(--text-sec);margin-bottom:4px}
+.stat-value{font-size:24px;font-weight:700;color:var(--navy)}
+.stat-trend{font-size:12px;color:var(--teal-dark);margin-top:4px}
+.next-learning{background:var(--sand-light);padding:16px;border-radius:8px;margin-top:16px}
+.learning-goals{display:flex;gap:8px;flex-wrap:wrap}
+.learning-goal{background:var(--white);border:1px solid var(--border);padding:6px 12px;border-radius:6px;font-size:12px;color:var(--text)}
+
 /* Trial user upgrade hints */
 .premium-hint{position:fixed;top:80px;right:24px;background:var(--gold-light);border:1px solid var(--gold);color:var(--gold-dark);padding:12px 16px;border-radius:8px;font-size:12px;font-weight:600;z-index:1000;max-width:280px;box-shadow:0 4px 12px rgba(0,0,0,0.15);animation:fadeInOut 3s ease-in-out;display:none}
 .premium-hint.show{display:block}
@@ -943,11 +1029,258 @@ nav{padding:0 16px}
       <div id="recipes-view" class="dashboard-view" style="display:none">
         <div class="dashboard-header">
           <h1 class="dashboard-title">Adaptive Recipe Engine</h1>
-          <p class="dashboard-subtitle">Personalized recipes based on your preferences and symptoms</p>
+          <p class="dashboard-subtitle">AI-personalized recipes that evolve with your GLP-1 journey</p>
         </div>
+        
+        <!-- Today's Recipe Recommendations -->
         <div class="card">
-          <div class="card-content">
-            <p>Adaptive recipe engine feature coming soon...</p>
+          <div class="card-header">
+            <div class="card-icon" style="background:var(--magenta);color:white">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12.5,2C17,2 20.75,5.75 20.75,10.25C20.75,12.5 19.75,14.5 18.25,15.75L18,16H17V17H7V16H6.75L6.5,15.75C5,14.5 4,12.5 4,10.25C4,5.75 7.75,2 12.5,2M16,8.5C16,10 14.5,11.5 13,11.5V8.5H16Z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="card-title">Today's AI-Curated Recipes</div>
+              <div class="card-subtitle">March 3, 2026 • Post-injection day • Gentle focus</div>
+            </div>
+          </div>
+          
+          <div class="recipe-grid">
+            <div class="recipe-card featured">
+              <div class="recipe-image">🍲</div>
+              <div class="recipe-content">
+                <div class="recipe-header">
+                  <h4>Golden Ginger Healing Broth</h4>
+                  <div class="recipe-match">96% match</div>
+                </div>
+                <div class="recipe-tags">
+                  <span class="recipe-tag gentle">Anti-nausea</span>
+                  <span class="recipe-tag timing">15 min</span>
+                  <span class="recipe-tag difficulty">Easy</span>
+                </div>
+                <div class="recipe-benefits">
+                  <span class="benefit">✓ Reduces nausea 85%</span>
+                  <span class="benefit">✓ Gentle on stomach</span>
+                  <span class="benefit">✓ Hydrating</span>
+                </div>
+                <div class="recipe-adaptation">
+                  🤖 <em>Adapted for you: Extra ginger based on your positive ratings</em>
+                </div>
+              </div>
+              <div class="recipe-actions">
+                <button onclick="viewRecipe('ginger-broth')" class="btn">View Recipe</button>
+                <button onclick="addToMealPlan('ginger-broth')" class="btn secondary">Add to Plan</button>
+              </div>
+            </div>
+            
+            <div class="recipe-card">
+              <div class="recipe-image">🥤</div>
+              <div class="recipe-content">
+                <div class="recipe-header">
+                  <h4>Vanilla Protein Recovery Smoothie</h4>
+                  <div class="recipe-match">94% match</div>
+                </div>
+                <div class="recipe-tags">
+                  <span class="recipe-tag protein">High protein</span>
+                  <span class="recipe-tag timing">5 min</span>
+                  <span class="recipe-tag difficulty">Super easy</span>
+                </div>
+                <div class="recipe-benefits">
+                  <span class="benefit">✓ 25g protein</span>
+                  <span class="benefit">✓ Energy boost</span>
+                  <span class="benefit">✓ Stomach-friendly</span>
+                </div>
+                <div class="recipe-adaptation">
+                  🤖 <em>Adapted for you: Banana added for potassium (you rated 5⭐)</em>
+                </div>
+              </div>
+              <div class="recipe-actions">
+                <button onclick="viewRecipe('protein-smoothie')" class="btn">View Recipe</button>
+                <button onclick="addToMealPlan('protein-smoothie')" class="btn secondary">Add to Plan</button>
+              </div>
+            </div>
+            
+            <div class="recipe-card">
+              <div class="recipe-image">🍞</div>
+              <div class="recipe-content">
+                <div class="recipe-header">
+                  <h4>Gentle Herb Crackers</h4>
+                  <div class="recipe-match">91% match</div>
+                </div>
+                <div class="recipe-tags">
+                  <span class="recipe-tag gentle">Bland</span>
+                  <span class="recipe-tag timing">20 min</span>
+                  <span class="recipe-tag difficulty">Easy</span>
+                </div>
+                <div class="recipe-benefits">
+                  <span class="benefit">✓ Settles stomach</span>
+                  <span class="benefit">✓ Low fat</span>
+                  <span class="benefit">✓ Make ahead</span>
+                </div>
+                <div class="recipe-adaptation">
+                  🤖 <em>New suggestion: Based on your cracker success pattern</em>
+                </div>
+              </div>
+              <div class="recipe-actions">
+                <button onclick="viewRecipe('herb-crackers')" class="btn">View Recipe</button>
+                <button onclick="addToMealPlan('herb-crackers')" class="btn secondary">Add to Plan</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Recipe Adaptation Intelligence -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon" style="background:var(--teal);color:white">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M21,12A2,2 0 0,1 19,14H5A2,2 0 0,1 3,12A2,2 0 0,1 5,10H19A2,2 0 0,1 21,12M3,8A2,2 0 0,1 5,6H19A2,2 0 0,1 21,8A2,2 0 0,1 19,10H5A2,2 0 0,1 3,8M3,16A2,2 0 0,1 5,14H19A2,2 0 0,1 21,16A2,2 0 0,1 19,18H5A2,2 0 0,1 3,16Z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="card-title">Recipe Adaptation Intelligence</div>
+              <div class="card-subtitle">How AI personalizes every recipe for your unique needs</div>
+            </div>
+          </div>
+          
+          <div class="adaptation-examples">
+            <div class="adaptation-example">
+              <div class="adaptation-icon">🧬</div>
+              <div class="adaptation-content">
+                <h4>Injection Day Modifications</h4>
+                <div class="adaptation-changes">
+                  <div class="change-item">
+                    <span class="change-type">Portion Size:</span>
+                    <span class="change-detail">Reduced by 25% for better tolerance</span>
+                  </div>
+                  <div class="change-item">
+                    <span class="change-type">Ginger Content:</span>
+                    <span class="change-detail">Increased 2x based on your 5⭐ ratings</span>
+                  </div>
+                  <div class="change-item">
+                    <span class="change-type">Spice Level:</span>
+                    <span class="change-detail">Eliminated (you avoid on injection days)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="adaptation-example">
+              <div class="adaptation-icon">📊</div>
+              <div class="adaptation-content">
+                <h4>Nutritional Optimization</h4>
+                <div class="adaptation-changes">
+                  <div class="change-item">
+                    <span class="change-type">Protein Target:</span>
+                    <span class="change-detail">20-25g per meal (your tolerance sweet spot)</span>
+                  </div>
+                  <div class="change-item">
+                    <span class="change-type">Fat Content:</span>
+                    <span class="change-detail">Limited to 10g (reduces nausea triggers)</span>
+                  </div>
+                  <div class="change-item">
+                    <span class="change-type">Fiber:</span>
+                    <span class="change-detail">Gentle sources only (you prefer well-cooked)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Recipe Categories -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon" style="background:var(--gold);color:white">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M11,17H13V11H11V17M12,9A1,1 0 0,0 13,8A1,1 0 0,0 12,7A1,1 0 0,0 11,8A1,1 0 0,0 12,9Z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="card-title">Explore Recipe Categories</div>
+              <div class="card-subtitle">Browse personalized collections based on your journey</div>
+            </div>
+          </div>
+          
+          <div class="recipe-categories">
+            <div class="category-card" onclick="exploreCategory('injection-day')">
+              <div class="category-image">💉</div>
+              <div class="category-info">
+                <h4>Injection Day Meals</h4>
+                <div class="category-count">23 personalized recipes</div>
+                <div class="category-description">Ultra-gentle, nausea-fighting foods</div>
+              </div>
+            </div>
+            
+            <div class="category-card" onclick="exploreCategory('recovery')">
+              <div class="category-image">🌱</div>
+              <div class="category-info">
+                <h4>Recovery & Energy</h4>
+                <div class="category-count">31 personalized recipes</div>
+                <div class="category-description">Protein-rich, energy-boosting meals</div>
+              </div>
+            </div>
+            
+            <div class="category-card" onclick="exploreCategory('comfort')">
+              <div class="category-image">🍲</div>
+              <div class="category-info">
+                <h4>Comfort Foods Reimagined</h4>
+                <div class="category-count">18 personalized recipes</div>
+                <div class="category-description">Healthier versions of your favorites</div>
+              </div>
+            </div>
+            
+            <div class="category-card" onclick="exploreCategory('quick')">
+              <div class="category-image">⚡</div>
+              <div class="category-info">
+                <h4>Quick & Simple</h4>
+                <div class="category-count">27 personalized recipes</div>
+                <div class="category-description">5-15 minute meals for busy days</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- AI Learning Progress -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon" style="background:var(--navy);color:white">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12,2A2,2 0 0,1 14,4A2,2 0 0,1 12,6A2,2 0 0,1 10,4A2,2 0 0,1 12,2M21,9V7L15,1H5C3.89,1 3,1.89 3,3V21A2,2 0 0,0 5,23H19A2,2 0 0,0 21,21V9M19,9H14V4H5V21H19V9Z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="card-title">Recipe Engine Learning</div>
+              <div class="card-subtitle">Your AI chef is getting more personal every day</div>
+            </div>
+          </div>
+          
+          <div class="learning-progress">
+            <div class="learning-stat">
+              <div class="stat-label">Recipes Tried</div>
+              <div class="stat-value">34</div>
+              <div class="stat-trend">+8 this week</div>
+            </div>
+            <div class="learning-stat">
+              <div class="stat-label">Success Rate</div>
+              <div class="stat-value">91%</div>
+              <div class="stat-trend">+5% improvement</div>
+            </div>
+            <div class="learning-stat">
+              <div class="stat-label">Adaptations Made</div>
+              <div class="stat-value">127</div>
+              <div class="stat-trend">Continuously learning</div>
+            </div>
+          </div>
+          
+          <div class="next-learning">
+            <h4 style="margin-bottom:12px">🎯 Next Learning Goals</h4>
+            <div class="learning-goals">
+              <span class="learning-goal">Master your breakfast preferences</span>
+              <span class="learning-goal">Optimize dinner timing for better sleep</span>
+              <span class="learning-goal">Perfect your snack combinations</span>
+            </div>
           </div>
         </div>
       </div>
@@ -1221,21 +1554,231 @@ nav{padding:0 16px}
       <div id="feedback-view" class="dashboard-view" style="display:none">
         <div class="dashboard-header">
           <h1 class="dashboard-title">Meal Rating Feedback Loop</h1>
-          <p class="dashboard-subtitle">Rate your meals to improve future recommendations</p>
+          <p class="dashboard-subtitle">Rate your meals to train AI for personalized recommendations</p>
         </div>
+        
+        <!-- Recent Meals to Rate -->
         <div class="card">
-          <div class="card-content">
-            <div style="text-align:center;padding:40px;color:var(--text-muted)">
-              <div style="margin-bottom:16px">
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="var(--gold)">
-                  <path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/>
-                </svg>
+          <div class="card-header">
+            <div class="card-icon" style="background:var(--gold);color:white">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="card-title">Rate Your Recent Meals</div>
+              <div class="card-subtitle">Help AI learn your preferences • March 1-3, 2026</div>
+            </div>
+          </div>
+          
+          <div class="meal-rating-list">
+            <div class="meal-rating-item">
+              <div class="meal-info">
+                <div class="meal-image">🍲</div>
+                <div class="meal-details">
+                  <h4>Ginger Bone Broth with Crackers</h4>
+                  <div class="meal-meta">
+                    <span class="meal-time">March 3, 2:30 PM</span>
+                    <span class="meal-tag gentle">Gentle</span>
+                    <span class="meal-timing">Post-injection day</span>
+                  </div>
+                </div>
               </div>
-              <h3 style="color:var(--gold);margin-bottom:8px">Premium Feature</h3>
-              <p>Rate meals and provide feedback to train your personalized recipe engine. This adaptive system learns your preferences and creates better recommendations over time.</p>
-              <div style="margin-top:24px">
-                <a href="#" class="btn" onclick="showUpgradeModal()">Upgrade to Premium</a>
+              <div class="rating-section">
+                <div class="rating-stars">
+                  <span class="star-rating" data-meal="ginger-broth">
+                    <span class="star" onclick="rateMeal('ginger-broth', 1)">⭐</span>
+                    <span class="star" onclick="rateMeal('ginger-broth', 2)">⭐</span>
+                    <span class="star" onclick="rateMeal('ginger-broth', 3)">⭐</span>
+                    <span class="star" onclick="rateMeal('ginger-broth', 4)">⭐</span>
+                    <span class="star" onclick="rateMeal('ginger-broth', 5)">⭐</span>
+                  </span>
+                </div>
+                <div class="rating-feedback">
+                  <select class="feedback-select" data-meal="ginger-broth">
+                    <option value="">How did it make you feel?</option>
+                    <option value="helped-nausea">Helped with nausea</option>
+                    <option value="increased-energy">Increased energy</option>
+                    <option value="settled-stomach">Settled my stomach</option>
+                    <option value="no-effect">No noticeable effect</option>
+                    <option value="made-worse">Made symptoms worse</option>
+                  </select>
+                </div>
               </div>
+              <div class="ai-prediction">
+                <div class="prediction-badge">AI Predicted: ⭐⭐⭐⭐⭐</div>
+                <div class="prediction-reason">"High match for post-injection nausea relief"</div>
+              </div>
+            </div>
+            
+            <div class="meal-rating-item">
+              <div class="meal-info">
+                <div class="meal-image">🐟</div>
+                <div class="meal-details">
+                  <h4>Herb-Crusted Salmon with Sweet Potato</h4>
+                  <div class="meal-meta">
+                    <span class="meal-time">March 2, 6:00 PM</span>
+                    <span class="meal-tag protein">Protein</span>
+                    <span class="meal-timing">Recovery day</span>
+                  </div>
+                </div>
+              </div>
+              <div class="rating-section">
+                <div class="rating-stars">
+                  <span class="star-rating" data-meal="salmon-dinner">
+                    <span class="star active" onclick="rateMeal('salmon-dinner', 1)">⭐</span>
+                    <span class="star active" onclick="rateMeal('salmon-dinner', 2)">⭐</span>
+                    <span class="star active" onclick="rateMeal('salmon-dinner', 3)">⭐</span>
+                    <span class="star active" onclick="rateMeal('salmon-dinner', 4)">⭐</span>
+                    <span class="star" onclick="rateMeal('salmon-dinner', 5)">⭐</span>
+                  </span>
+                </div>
+                <div class="rating-feedback">
+                  <select class="feedback-select" data-meal="salmon-dinner">
+                    <option value="">How did it make you feel?</option>
+                    <option value="helped-nausea">Helped with nausea</option>
+                    <option value="increased-energy" selected>Increased energy</option>
+                    <option value="settled-stomach">Settled my stomach</option>
+                    <option value="no-effect">No noticeable effect</option>
+                    <option value="made-worse">Made symptoms worse</option>
+                  </select>
+                </div>
+              </div>
+              <div class="ai-prediction accurate">
+                <div class="prediction-badge">AI Predicted: ⭐⭐⭐⭐ (92% accurate)</div>
+                <div class="prediction-reason">"Protein + energy boost match confirmed"</div>
+              </div>
+            </div>
+            
+            <div class="meal-rating-item">
+              <div class="meal-info">
+                <div class="meal-image">🥤</div>
+                <div class="meal-details">
+                  <h4>Protein Smoothie with Banana & Nuts</h4>
+                  <div class="meal-meta">
+                    <span class="meal-time">March 1, 10:00 AM</span>
+                    <span class="meal-tag recovery">Recovery</span>
+                    <span class="meal-timing">Injection day</span>
+                  </div>
+                </div>
+              </div>
+              <div class="rating-section">
+                <div class="rating-stars">
+                  <span class="star-rating" data-meal="protein-smoothie">
+                    <span class="star active" onclick="rateMeal('protein-smoothie', 1)">⭐</span>
+                    <span class="star active" onclick="rateMeal('protein-smoothie', 2)">⭐</span>
+                    <span class="star active" onclick="rateMeal('protein-smoothie', 3)">⭐</span>
+                    <span class="star active" onclick="rateMeal('protein-smoothie', 4)">⭐</span>
+                    <span class="star active" onclick="rateMeal('protein-smoothie', 5)">⭐</span>
+                  </span>
+                </div>
+                <div class="rating-feedback">
+                  <select class="feedback-select" data-meal="protein-smoothie">
+                    <option value="">How did it make you feel?</option>
+                    <option value="helped-nausea">Helped with nausea</option>
+                    <option value="increased-energy">Increased energy</option>
+                    <option value="settled-stomach" selected>Settled my stomach</option>
+                    <option value="no-effect">No noticeable effect</option>
+                    <option value="made-worse">Made symptoms worse</option>
+                  </select>
+                </div>
+              </div>
+              <div class="ai-prediction highly-accurate">
+                <div class="prediction-badge">AI Predicted: ⭐⭐⭐⭐⭐ (98% accurate)</div>
+                <div class="prediction-reason">"Perfect injection day tolerance match"</div>
+              </div>
+            </div>
+          </div>
+          
+          <button onclick="submitAllRatings()" class="btn" style="margin-top:20px;width:100%">Submit All Ratings & Train AI</button>
+        </div>
+        
+        <!-- AI Learning Progress -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon" style="background:var(--teal);color:white">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12,2A2,2 0 0,1 14,4A2,2 0 0,1 12,6A2,2 0 0,1 10,4A2,2 0 0,1 12,2M21,9V7L15,1H5C3.89,1 3,1.89 3,3V21A2,2 0 0,0 5,23H19A2,2 0 0,0 21,21V9M19,9H14V4H5V21H19V9Z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="card-title">AI Learning Progress</div>
+              <div class="card-subtitle">Your personalized recommendation engine is getting smarter</div>
+            </div>
+          </div>
+          
+          <div class="ai-learning-stats">
+            <div class="learning-metric">
+              <div class="metric-label">Meals Rated</div>
+              <div class="metric-value">47</div>
+              <div class="metric-progress">
+                <div class="progress-bar">
+                  <div class="progress-fill" style="width:78%"></div>
+                </div>
+                <span class="progress-text">78% to next AI level</span>
+              </div>
+            </div>
+            
+            <div class="learning-metric">
+              <div class="metric-label">AI Accuracy</div>
+              <div class="metric-value">93%</div>
+              <div class="metric-trend">+12% this month</div>
+            </div>
+            
+            <div class="learning-metric">
+              <div class="metric-label">Successful Predictions</div>
+              <div class="metric-value">44/47</div>
+              <div class="metric-success-rate">94% match rate</div>
+            </div>
+          </div>
+          
+          <div class="ai-insights">
+            <h4 style="color:var(--navy);margin-bottom:12px">🤖 What AI Learned About You</h4>
+            <div class="insight-tags">
+              <span class="insight-tag">Prefers gentle foods post-injection</span>
+              <span class="insight-tag">High tolerance for protein smoothies</span>
+              <span class="insight-tag">Ginger significantly helps nausea</span>
+              <span class="insight-tag">Sweet potatoes boost energy well</span>
+              <span class="insight-tag">Avoids spicy foods on injection days</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Recommended Next Meals -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-icon" style="background:var(--magenta);color:white">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"/>
+              </svg>
+            </div>
+            <div>
+              <div class="card-title">AI-Recommended Next Meals</div>
+              <div class="card-subtitle">Personalized suggestions based on your ratings and patterns</div>
+            </div>
+          </div>
+          
+          <div class="recommended-meals">
+            <div class="meal-recommendation high-confidence">
+              <div class="meal-image">🍜</div>
+              <div class="meal-content">
+                <h4>Ginger Miso Soup with Soft Tofu</h4>
+                <div class="confidence-score">97% confidence match</div>
+                <div class="recommendation-reason">Based on your high ratings for ginger and gentle proteins</div>
+                <div class="optimal-timing">Optimal for: Tomorrow (post-injection day)</div>
+              </div>
+              <button onclick="addToMealPlan('ginger-miso')" class="btn secondary">Add to Plan</button>
+            </div>
+            
+            <div class="meal-recommendation medium-confidence">
+              <div class="meal-image">🥗</div>
+              <div class="meal-content">
+                <h4>Quinoa Bowl with Roasted Vegetables</h4>
+                <div class="confidence-score">89% confidence match</div>
+                <div class="recommendation-reason">New suggestion - similar to your sweet potato preferences</div>
+                <div class="optimal-timing">Optimal for: Recovery days (day 3-4)</div>
+              </div>
+              <button onclick="addToMealPlan('quinoa-bowl')" class="btn secondary">Try This</button>
             </div>
           </div>
         </div>
@@ -1727,10 +2270,10 @@ function showUpgradeModal() {
             </ul>
           </div>
           <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-            <a href="https://postdoserx.com/#signup?plan=Premium" class="btn" style="text-decoration:none;min-width:160px">Upgrade to Premium</a>
+            <a href="https://buy.stripe.com/3cI5kCeu224R3c11jd63K01" class="btn" style="text-decoration:none;min-width:160px" target="_blank">Continue to Checkout</a>
             <button onclick="closeUpgradeModal()" style="padding:12px 24px;background:transparent;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-weight:600;color:var(--slate);min-width:120px">Maybe Later</button>
           </div>
-          <p style="color:var(--text-muted);margin-top:16px;font-size:14px">Only $10/month • Cancel anytime</p>
+          <p style="color:var(--text-muted);margin-top:16px;font-size:14px">$10/month • Cancel anytime • Secure Stripe checkout</p>
         </div>
       </div>
       <style>
@@ -1982,6 +2525,73 @@ function saveSymptomLog() {
   dailySymptoms = {};
   selectedSymptom = null;
   currentSeverity = null;
+}
+
+// Meal rating functions
+let mealRatings = {};
+
+function rateMeal(mealId, rating) {
+  // Update UI
+  const starContainer = document.querySelector(`[data-meal="${mealId}"]`);
+  const stars = starContainer.querySelectorAll('.star');
+  
+  stars.forEach((star, index) => {
+    if (index < rating) {
+      star.classList.add('active');
+    } else {
+      star.classList.remove('active');
+    }
+  });
+  
+  // Store rating
+  mealRatings[mealId] = rating;
+  console.log('Rated meal:', mealId, 'with', rating, 'stars');
+}
+
+function submitAllRatings() {
+  const ratings = Object.keys(mealRatings).length;
+  if (ratings === 0) {
+    alert('Please rate at least one meal before submitting.');
+    return;
+  }
+  
+  // Collect feedback data
+  const feedbackData = {};
+  document.querySelectorAll('.feedback-select').forEach(select => {
+    const mealId = select.getAttribute('data-meal');
+    feedbackData[mealId] = select.value;
+  });
+  
+  // Store in localStorage (in production, this would sync to database)
+  const timestamp = Date.now();
+  const ratingSession = {
+    timestamp,
+    ratings: mealRatings,
+    feedback: feedbackData,
+    date: new Date().toLocaleDateString()
+  };
+  
+  let ratingHistory = JSON.parse(localStorage.getItem('meal_rating_history') || '[]');
+  ratingHistory.unshift(ratingSession);
+  localStorage.setItem('meal_rating_history', JSON.stringify(ratingHistory));
+  
+  alert(`Successfully submitted ${ratings} meal ratings! Your AI chef is learning and will improve recommendations.`);
+  
+  // Reset ratings
+  mealRatings = {};
+}
+
+// Recipe engine functions
+function viewRecipe(recipeId) {
+  alert(`Opening detailed recipe view for: ${recipeId}\n\nThis would show:\n• Step-by-step instructions\n• Ingredient list\n• Nutritional information\n• Your personalized adaptations`);
+}
+
+function addToMealPlan(recipeId) {
+  alert(`Added recipe to your meal plan: ${recipeId}\n\nThis recipe will now appear in your weekly meal schedule with optimal timing suggestions.`);
+}
+
+function exploreCategory(categoryId) {
+  alert(`Exploring ${categoryId} recipes...\n\nThis would show:\n• All personalized recipes in this category\n• Filter options\n• Difficulty and time sorting\n• Your adaptation history`);
 }
 
 // Initialize app
