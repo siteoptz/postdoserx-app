@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PostDoseRX Premium Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream: #FDF8F4; --warm: #FEFCFA; --sand: #F5EDE4; --sand-light: #FAF6F1;
+  --gold: #C9A86C; --gold-light: #E8D5B0; --gold-dark: #8B7341;
+  --navy: #1B2A4A; --navy-light: #2D4166; --slate: #4A5568; --slate-light: #718096;
+  --magenta: #C6168D; --magenta-light: #FEF0F7; --magenta-dark: #9B1170;
+  --teal: #2A7F7F; --teal-light: #E6F5F5; --teal-dark: #1D5C5C;
+  --white: #FFFFFF; --border: #E8E0D6;
+  --text: #2D2D2D; --text-sec: #5A5A5A; --text-muted: #8A8A8A;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Montserrat',-apple-system,sans-serif;color:var(--text);background:var(--cream);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;min-height:100vh}
+
+/* Navigation */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;background:rgba(253,248,244,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 32px}
+.nav-brand{font-family:'DM Serif Display',Georgia,serif;font-size:20px;color:var(--navy);text-decoration:none;display:flex;align-items:center;gap:8px}
+.nav-brand .brand-rx{color:var(--magenta)}
+.nav-user{display:flex;align-items:center;gap:16px}
+.user-avatar{width:36px;height:36px;border-radius:50%;background:var(--magenta);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:14px}
+.logout-btn{color:var(--slate);text-decoration:none;font-size:13px;font-weight:500;padding:6px 12px;border-radius:6px;transition:background .15s}
+.logout-btn:hover{background:var(--sand);color:var(--navy)}
+
+/* Dashboard Layout */
+.dashboard{display:flex;margin-top:64px;min-height:calc(100vh - 64px)}
+.sidebar{width:280px;background:var(--white);border-right:1px solid var(--border);padding:32px 0}
+.main-content{flex:1;padding:32px;overflow-y:auto}
+
+/* Sidebar */
+.sidebar-section{margin-bottom:32px;padding:0 24px}
+.sidebar-title{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-dark);margin-bottom:12px}
+.sidebar-nav{list-style:none}
+.sidebar-nav li{margin-bottom:4px}
+.sidebar-nav a{display:flex;align-items:center;gap:12px;padding:10px 16px;color:var(--slate);text-decoration:none;border-radius:8px;font-size:14px;font-weight:500;transition:all .15s}
+.sidebar-nav a:hover, .sidebar-nav a.active{background:var(--magenta-light);color:var(--magenta-dark)}
+.sidebar-nav .icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center}
+
+/* Dashboard Cards */
+.dashboard-header{margin-bottom:32px}
+.dashboard-title{font-family:'DM Serif Display',Georgia,serif;font-size:36px;color:var(--navy);margin-bottom:8px}
+.dashboard-subtitle{color:var(--text-sec);font-size:16px}
+
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:24px;margin-bottom:32px}
+.card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:24px}
+.card-header{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.card-icon{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px}
+.card-title{font-size:18px;font-weight:600;color:var(--navy)}
+.card-content{color:var(--text-sec);line-height:1.5}
+.card-action{margin-top:16px}
+.btn{display:inline-block;padding:10px 20px;background:var(--magenta);color:white;text-decoration:none;border-radius:8px;font-weight:600;font-size:14px;transition:background .15s;border:none;cursor:pointer}
+.btn:hover{background:var(--magenta-dark)}
+.btn-secondary{background:var(--teal);color:white}
+.btn-secondary:hover{background:var(--teal-dark)}
+
+/* Dose Day Card Special */
+.dose-day-card{background:linear-gradient(135deg,var(--magenta-light),var(--teal-light));border:2px solid var(--magenta)}
+.dose-day-card .card-icon{background:var(--magenta);color:white}
+.dose-countdown{font-size:24px;font-weight:700;color:var(--magenta);margin:8px 0}
+
+/* Loading States */
+.loading{opacity:0.6;pointer-events:none}
+
+/* Auth Check */
+.auth-check{display:flex;align-items:center;justify-content:center;height:100vh;font-size:18px;color:var(--text-sec)}
+
+/* Responsive */
+@media (max-width:768px){
+.dashboard{flex-direction:column}
+.sidebar{width:100%;order:2;padding:16px 0}
+.main-content{padding:16px}
+nav{padding:0 16px}
+.card-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- Auth Check Screen -->
+<div id="auth-loading" class="auth-check">
+  <div style="text-align:center">
+    <div style="width:48px;height:48px;border-radius:50%;background:var(--magenta);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;color:white;font-size:20px">🔒</div>
+    <div>Checking your subscription...</div>
+  </div>
+</div>
+
+<!-- Main Dashboard -->
+<div id="dashboard-app" style="display:none">
+  <nav>
+    <a href="#" class="nav-brand">
+      <span>PostDose<span class="brand-rx">RX</span> Premium</span>
+    </a>
+    <div class="nav-user">
+      <div class="user-avatar" id="user-avatar">U</div>
+      <a href="#" class="logout-btn" onclick="logout()">Sign Out</a>
+    </div>
+  </nav>
+
+  <div class="dashboard">
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">Dashboard</div>
+        <ul class="sidebar-nav">
+          <li><a href="#home" class="nav-link active"><span class="icon">🏠</span> Home</a></li>
+          <li><a href="#meals" class="nav-link"><span class="icon">🍽️</span> Dose Day Meals</a></li>
+          <li><a href="#grocery" class="nav-link"><span class="icon">🛒</span> Grocery Lists</a></li>
+          <li><a href="#symptoms" class="nav-link"><span class="icon">📊</span> Symptom Logger</a></li>
+        </ul>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="sidebar-title">Tools</div>
+        <ul class="sidebar-nav">
+          <li><a href="#recipes" class="nav-link"><span class="icon">👨‍🍳</span> Recipe Engine</a></li>
+          <li><a href="#progress" class="nav-link"><span class="icon">📈</span> Progress Tracking</a></li>
+          <li><a href="#community" class="nav-link"><span class="icon">👥</span> Community</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <!-- Home View -->
+      <div id="home-view" class="dashboard-view">
+        <div class="dashboard-header">
+          <h1 class="dashboard-title">Welcome back, <span id="user-name">User</span>!</h1>
+          <p class="dashboard-subtitle">Your personalized GLP-1 meal planning dashboard</p>
+        </div>
+
+        <div class="card-grid">
+          <!-- Dose Day Card -->
+          <div class="card dose-day-card">
+            <div class="card-header">
+              <div class="card-icon">💉</div>
+              <div class="card-title">Next Injection Day</div>
+            </div>
+            <div class="card-content">
+              <div class="dose-countdown" id="dose-countdown">2 days</div>
+              <p>Your next dose-synchronized meal plan is ready</p>
+              <div class="card-action">
+                <button class="btn" onclick="showMeals()">View Meal Plan</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon" style="background:var(--teal);color:white">📝</div>
+              <div class="card-title">Quick Log</div>
+            </div>
+            <div class="card-content">
+              <p>Track today's symptoms and energy levels</p>
+              <div class="card-action">
+                <button class="btn btn-secondary" onclick="showSymptoms()">Log Symptoms</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- This Week's Focus -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon" style="background:var(--gold);color:white">🎯</div>
+              <div class="card-title">This Week's Focus</div>
+            </div>
+            <div class="card-content">
+              <p><strong>Managing nausea:</strong> Try ginger-based recipes and smaller portions</p>
+              <div class="card-action">
+                <button class="btn" onclick="showRecipes()">Browse Recipes</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Community Highlight -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-icon" style="background:var(--navy);color:white">💬</div>
+              <div class="card-title">Community Spotlight</div>
+            </div>
+            <div class="card-content">
+              <p>"The pre-dose smoothie recipes have been a game changer!" - Sarah M.</p>
+              <div class="card-action">
+                <button class="btn" onclick="showCommunity()">Join Discussion</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Other Views (Placeholder for now) -->
+      <div id="meals-view" class="dashboard-view" style="display:none">
+        <div class="dashboard-header">
+          <h1 class="dashboard-title">Dose Day Meals</h1>
+          <p class="dashboard-subtitle">Synchronized meal plans for optimal medication absorption</p>
+        </div>
+        <div class="card">
+          <div class="card-content">
+            <p>Dose-synchronized meal planning feature coming soon...</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="grocery-view" class="dashboard-view" style="display:none">
+        <div class="dashboard-header">
+          <h1 class="dashboard-title">Weekly Grocery Lists</h1>
+          <p class="dashboard-subtitle">Auto-generated shopping lists for your meal plans</p>
+        </div>
+        <div class="card">
+          <div class="card-content">
+            <p>Grocery list generation feature coming soon...</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="symptoms-view" class="dashboard-view" style="display:none">
+        <div class="dashboard-header">
+          <h1 class="dashboard-title">Symptom Logger</h1>
+          <p class="dashboard-subtitle">Track symptoms and find food correlations</p>
+        </div>
+        <div class="card">
+          <div class="card-content">
+            <p>Symptom tracking feature coming soon...</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="recipes-view" class="dashboard-view" style="display:none">
+        <div class="dashboard-header">
+          <h1 class="dashboard-title">Adaptive Recipe Engine</h1>
+          <p class="dashboard-subtitle">Personalized recipes based on your preferences and symptoms</p>
+        </div>
+        <div class="card">
+          <div class="card-content">
+            <p>Adaptive recipe engine feature coming soon...</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="progress-view" class="dashboard-view" style="display:none">
+        <div class="dashboard-header">
+          <h1 class="dashboard-title">Progress Tracking</h1>
+          <p class="dashboard-subtitle">Monitor your journey and improvements over time</p>
+        </div>
+        <div class="card">
+          <div class="card-content">
+            <p>Progress tracking feature coming soon...</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="community-view" class="dashboard-view" style="display:none">
+        <div class="dashboard-header">
+          <h1 class="dashboard-title">Community Access</h1>
+          <p class="dashboard-subtitle">Connect with other GLP-1 users for support and tips</p>
+        </div>
+        <div class="card">
+          <div class="card-content">
+            <p>Community features coming soon...</p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script>
+// Simple authentication check
+function checkAuth() {
+  // Get URL parameters to check for authentication tokens
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get('token') || localStorage.getItem('postdoserx_token');
+  const email = urlParams.get('email') || localStorage.getItem('postdoserx_email');
+  
+  // For MVP, simulate auth check
+  setTimeout(() => {
+    if (token && email) {
+      // User is authenticated
+      showDashboard(email);
+    } else {
+      // Redirect to login
+      window.location.href = 'https://postdoserx.com/login.html?redirect=' + encodeURIComponent(window.location.href);
+    }
+  }, 1500);
+}
+
+function showDashboard(email) {
+  document.getElementById('auth-loading').style.display = 'none';
+  document.getElementById('dashboard-app').style.display = 'block';
+  
+  // Set user info
+  const userName = email.split('@')[0];
+  document.getElementById('user-name').textContent = userName;
+  document.getElementById('user-avatar').textContent = userName.charAt(0).toUpperCase();
+  
+  // Store auth info
+  if (new URLSearchParams(window.location.search).get('token')) {
+    localStorage.setItem('postdoserx_token', new URLSearchParams(window.location.search).get('token'));
+    localStorage.setItem('postdoserx_email', email);
+  }
+}
+
+// Navigation
+function showView(viewId) {
+  // Hide all views
+  document.querySelectorAll('.dashboard-view').forEach(view => {
+    view.style.display = 'none';
+  });
+  
+  // Remove active class from all nav links
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.classList.remove('active');
+  });
+  
+  // Show selected view
+  document.getElementById(viewId + '-view').style.display = 'block';
+  
+  // Add active class to clicked nav link
+  document.querySelector(`a[href="#${viewId}"]`).classList.add('active');
+}
+
+// Navigation event listeners
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const viewId = this.getAttribute('href').substring(1);
+      showView(viewId);
+    });
+  });
+});
+
+// Quick action functions
+function showMeals() { showView('meals'); }
+function showSymptoms() { showView('symptoms'); }
+function showRecipes() { showView('recipes'); }
+function showCommunity() { showView('community'); }
+
+function logout() {
+  localStorage.removeItem('postdoserx_token');
+  localStorage.removeItem('postdoserx_email');
+  window.location.href = 'https://postdoserx.com';
+}
+
+// Initialize app
+checkAuth();
+</script>
+
+</body>
+</html>
