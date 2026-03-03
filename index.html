@@ -41,9 +41,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;background:rgba(
 .sidebar-nav li{margin-bottom:4px}
 .sidebar-nav a{display:flex;align-items:center;gap:12px;padding:10px 16px;color:var(--slate);text-decoration:none;border-radius:8px;font-size:14px;font-weight:500;transition:all .15s}
 .sidebar-nav a:hover, .sidebar-nav a.active{background:var(--magenta-light);color:var(--magenta-dark)}
-.sidebar-nav a.premium-only{color:var(--text-muted);opacity:0.5;cursor:not-allowed;position:relative}
-.sidebar-nav a.premium-only:hover{background:none;color:var(--text-muted)}
-.sidebar-nav a.premium-only .premium-badge{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:var(--gold);color:white;font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;letter-spacing:0.5px}
+.sidebar-nav a.premium-only{color:var(--text-muted);opacity:0.6;cursor:pointer;position:relative;background:linear-gradient(135deg, rgba(201,168,108,0.05), rgba(201,168,108,0.1));border:1px dashed var(--gold-light);margin:2px 0}
+.sidebar-nav a.premium-only:hover{background:linear-gradient(135deg, rgba(201,168,108,0.1), rgba(201,168,108,0.15));color:var(--gold-dark);transform:translateX(2px);box-shadow:0 2px 8px rgba(201,168,108,0.2)}
+.sidebar-nav a.premium-only .premium-badge{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:linear-gradient(135deg, var(--gold), var(--gold-dark));color:white;font-size:9px;font-weight:700;padding:3px 8px;border-radius:6px;letter-spacing:0.5px;box-shadow:0 2px 4px rgba(0,0,0,0.2)}
+.sidebar-nav a.premium-only .icon{opacity:0.7}
+.sidebar-nav a.premium-only::before{content:"";position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);pointer-events:none}
+
+/* Trial user upgrade hints */
+.premium-hint{position:fixed;top:80px;right:24px;background:var(--gold-light);border:1px solid var(--gold);color:var(--gold-dark);padding:12px 16px;border-radius:8px;font-size:12px;font-weight:600;z-index:1000;max-width:280px;box-shadow:0 4px 12px rgba(0,0,0,0.15);animation:fadeInOut 3s ease-in-out;display:none}
+.premium-hint.show{display:block}
+@keyframes fadeInOut{0%{opacity:0;transform:translateX(100%)} 20%{opacity:1;transform:translateX(0)} 80%{opacity:1;transform:translateX(0)} 100%{opacity:0;transform:translateX(100%)}}
 .sidebar-nav .icon{width:20px;height:20px;display:flex;align-items:center;justify-content:center}
 
 /* Dashboard Cards */
@@ -111,28 +118,78 @@ nav{padding:0 16px}
       <div class="sidebar-section">
         <div class="sidebar-title">Dashboard</div>
         <ul class="sidebar-nav">
-          <li><a href="#home" class="nav-link active"><span class="icon">🏠</span> Home</a></li>
+          <li><a href="#home" class="nav-link active">
+            <span class="icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+              </svg>
+            </span> Home</a></li>
         </ul>
       </div>
       
       <div class="sidebar-section">
         <div class="sidebar-title">Trial Features</div>
         <ul class="sidebar-nav">
-          <li><a href="#meals" class="nav-link trial-feature"><span class="icon">🍽️</span> Dose-day Synchronized Meals</a></li>
-          <li><a href="#grocery" class="nav-link trial-feature"><span class="icon">🛒</span> Weekly Grocery Lists</a></li>
-          <li><a href="#side-effects" class="nav-link trial-feature"><span class="icon">🩺</span> Side Effect Food Guide</a></li>
-          <li><a href="#symptoms" class="nav-link trial-feature"><span class="icon">📊</span> Basic Symptom Logger</a></li>
+          <li><a href="#meals" class="nav-link trial-feature">
+            <span class="icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M2,17H22L20.84,15H3.16L2,17M21.1,21H2.9A0.9,0.9 0 0,1 2,20.1V19A1,1 0 0,1 3,18H21A1,1 0 0,1 22,19V20.1A0.9,0.9 0 0,1 21.1,21M8.5,11.5C8.5,9 10.5,7 13,7C15.5,7 17.5,9 17.5,11.5C17.5,12.83 16.83,14 15.83,14.75L16.25,15H9.75L10.17,14.75C9.17,14 8.5,12.83 8.5,11.5Z"/>
+              </svg>
+            </span> Dose-day Synchronized Meals</a></li>
+          <li><a href="#grocery" class="nav-link trial-feature">
+            <span class="icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17,18C17.85,18 18.55,18.4 18.95,19H19V21H18.95C18.55,21.6 17.85,22 17,22A2,2 0 0,1 15,20A2,2 0 0,1 17,18M1,2V4H3L6.6,11.59L5.24,14.04C5.09,14.32 5,14.65 5,15A2,2 0 0,0 7,17H19V15H7.42A0.25,0.25 0 0,1 7.17,14.75C7.17,14.7 7.18,14.66 7.2,14.63L8.1,13H15.55C16.3,13 16.96,12.58 17.3,11.97L20.88,5H5.21L4.27,3H1M7,18C7.85,18 8.55,18.4 8.95,19H9V21H8.95C8.55,21.6 7.85,22 7,22A2,2 0 0,1 5,20A2,2 0 0,1 7,18Z"/>
+              </svg>
+            </span> Weekly Grocery Lists</a></li>
+          <li><a href="#side-effects" class="nav-link trial-feature">
+            <span class="icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11,2V22C5.9,21.5 2,17.2 2,12C2,6.8 5.9,2.5 11,2M13,2V11H22C22,6.8 18.1,2.5 13,2M13,13V22C18.1,21.5 22,17.2 22,12H13Z"/>
+              </svg>
+            </span> Side Effect Food Guide</a></li>
+          <li><a href="#symptoms" class="nav-link trial-feature">
+            <span class="icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M22,21H2V3H4V19H6V10H10V19H12V6H16V19H18V14H22V21Z"/>
+              </svg>
+            </span> Basic Symptom Logger</a></li>
         </ul>
       </div>
       
       <div class="sidebar-section">
         <div class="sidebar-title">Premium Features</div>
         <ul class="sidebar-nav">
-          <li><a href="#recipes" class="nav-link premium-feature"><span class="icon">🤖</span> Adaptive Recipe Engine<span class="premium-badge">PRO</span></a></li>
-          <li><a href="#feedback" class="nav-link premium-feature"><span class="icon">⭐</span> Meal Rating Feedback Loop<span class="premium-badge">PRO</span></a></li>
-          <li><a href="#matching" class="nav-link premium-feature"><span class="icon">🎯</span> Symptom-to-Food Matching<span class="premium-badge">PRO</span></a></li>
-          <li><a href="#community" class="nav-link premium-feature"><span class="icon">👥</span> Community Access<span class="premium-badge">PRO</span></a></li>
-          <li><a href="#progress" class="nav-link premium-feature"><span class="icon">📈</span> Progress Tracking<span class="premium-badge">PRO</span></a></li>
+          <li><a href="#recipes" class="nav-link premium-feature">
+            <span class="icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z"/>
+              </svg>
+            </span> Adaptive Recipe Engine<span class="premium-badge">PRO</span></a></li>
+          <li><a href="#feedback" class="nav-link premium-feature">
+            <span class="icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/>
+              </svg>
+            </span> Meal Rating Feedback Loop<span class="premium-badge">PRO</span></a></li>
+          <li><a href="#matching" class="nav-link premium-feature">
+            <span class="icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,1 20,12A8,8 0 0,0 12,4M12,8L14,14H10L12,8Z"/>
+              </svg>
+            </span> Symptom-to-Food Matching<span class="premium-badge">PRO</span></a></li>
+          <li><a href="#community" class="nav-link premium-feature">
+            <span class="icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12,5.5A3.5,3.5 0 0,1 15.5,9A3.5,3.5 0 0,1 12,12.5A3.5,3.5 0 0,1 8.5,9A3.5,3.5 0 0,1 12,5.5M5,8C5.56,8 6.08,8.15 6.53,8.42C6.38,9.85 6.8,11.27 7.66,12.38C7.16,13.34 6.16,14 5,14A3,3 0 0,1 2,11A3,3 0 0,1 5,8M19,8A3,3 0 0,1 22,11A3,3 0 0,1 19,14C17.84,14 16.84,13.34 16.34,12.38C17.2,11.27 17.62,9.85 17.47,8.42C17.92,8.15 18.44,8 19,8M5.5,18.25C5.5,16.18 8.41,14.5 12,14.5C15.59,14.5 18.5,16.18 18.5,18.25V20H5.5V18.25M0,20V18.5C0,17.11 1.89,15.94 4.45,15.6C3.86,16.28 3.5,17.22 3.5,18.25V20H0M24,20H20.5V18.25C20.5,17.22 20.14,16.28 19.55,15.6C22.11,15.94 24,17.11 24,18.5V20Z"/>
+              </svg>
+            </span> Community Access<span class="premium-badge">PRO</span></a></li>
+          <li><a href="#progress" class="nav-link premium-feature">
+            <span class="icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M15.5,12L17,17H15L13.5,12M8.5,12L7,17H9L10.5,12M6.5,9L5,3H3L5,9M18.5,9L19,3H21L19,9M9.03,9L12,2L14.97,9H9.03Z"/>
+              </svg>
+            </span> Progress Tracking<span class="premium-badge">PRO</span></a></li>
         </ul>
       </div>
     </aside>
@@ -149,7 +206,11 @@ nav{padding:0 16px}
           <!-- Dose Day Card -->
           <div class="card dose-day-card">
             <div class="card-header">
-              <div class="card-icon">💉</div>
+              <div class="card-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M5.64,18.36L18.36,5.64L17.64,4.93L16.93,5.64L16.22,4.93L15.5,5.64L14.79,4.93L14.07,5.64L13.36,4.93L12.64,5.64L11.93,4.93L11.22,5.64L10.5,4.93L9.79,5.64L9.07,4.93L8.36,5.64L7.64,4.93L6.93,5.64L6.22,4.93L5.5,5.64L4.79,4.93L4.07,5.64L3.36,4.93L2.64,5.64L1.93,4.93L1.22,5.64L2.86,7.29L5.64,18.36M3.27,7.96L4.04,8.73L6.82,19.8L20.07,6.55L19.29,5.78L6.04,19.03L3.27,7.96Z"/>
+                </svg>
+              </div>
               <div class="card-title">Next Injection Day</div>
             </div>
             <div class="card-content">
@@ -178,7 +239,11 @@ nav{padding:0 16px}
           <!-- This Week's Focus -->
           <div class="card">
             <div class="card-header">
-              <div class="card-icon" style="background:var(--gold);color:white">🎯</div>
+              <div class="card-icon" style="background:var(--gold);color:white">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,1 20,12A8,8 0 0,0 12,4M12,8L14,14H10L12,8Z"/>
+                </svg>
+              </div>
               <div class="card-title">This Week's Focus</div>
             </div>
             <div class="card-content">
@@ -275,7 +340,11 @@ nav{padding:0 16px}
         <div class="card-grid">
           <div class="card">
             <div class="card-header">
-              <div class="card-icon" style="background:var(--teal);color:white">🤢</div>
+              <div class="card-icon" style="background:var(--teal);color:white">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M7,9.5C7,8.7 7.7,8 8.5,8C9.3,8 10,8.7 10,9.5C10,10.3 9.3,11 8.5,11C7.7,11 7,10.3 7,9.5M14,9.5C14,8.7 14.7,8 15.5,8C16.3,8 17,8.7 17,9.5C17,10.3 16.3,11 15.5,11C14.7,11 14,10.3 14,9.5M12,17.23C10.25,17.23 8.71,16.5 7.81,15.42L9.23,14C9.68,14.72 10.75,15.23 12,15.23C13.25,15.23 14.32,14.72 14.77,14L16.19,15.42C15.29,16.5 13.75,17.23 12,17.23Z"/>
+                </svg>
+              </div>
               <div class="card-title">Nausea Management</div>
             </div>
             <div class="card-content">
@@ -289,7 +358,11 @@ nav{padding:0 16px}
           </div>
           <div class="card">
             <div class="card-header">
-              <div class="card-icon" style="background:var(--magenta);color:white">🚫</div>
+              <div class="card-icon" style="background:var(--magenta);color:white">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12,2C6.47,2 2,6.47 2,12C2,17.53 6.47,22 12,22A10,10 0 0,0 22,12C22,6.47 17.5,2 12,2M15.5,6L18.5,9H14.5L15.5,6M12,15.5L9,18.5L12,15.5L15,18.5L12,15.5M12,7.5L9,4.5L12,7.5L15,4.5L12,7.5M6.5,9L9.5,6L8.5,9H6.5M18.5,15L15.5,18L17.5,15H18.5M9.5,18L6.5,15H8.5L9.5,18Z"/>
+                </svg>
+              </div>
               <div class="card-title">Appetite Loss</div>
             </div>
             <div class="card-content">
@@ -313,7 +386,11 @@ nav{padding:0 16px}
         <div class="card">
           <div class="card-content">
             <div style="text-align:center;padding:40px;color:var(--text-muted)">
-              <div style="font-size:48px;margin-bottom:16px">⭐</div>
+              <div style="margin-bottom:16px">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="var(--gold)">
+                  <path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/>
+                </svg>
+              </div>
               <h3 style="color:var(--gold);margin-bottom:8px">Premium Feature</h3>
               <p>Rate meals and provide feedback to train your personalized recipe engine. This adaptive system learns your preferences and creates better recommendations over time.</p>
               <div style="margin-top:24px">
@@ -333,7 +410,11 @@ nav{padding:0 16px}
         <div class="card">
           <div class="card-content">
             <div style="text-align:center;padding:40px;color:var(--text-muted)">
-              <div style="font-size:48px;margin-bottom:16px">🎯</div>
+              <div style="margin-bottom:16px">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="var(--gold)">
+                  <path d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,1 20,12A8,8 0 0,0 12,4M12,8L14,14H10L12,8Z"/>
+                </svg>
+              </div>
               <h3 style="color:var(--gold);margin-bottom:8px">Premium Feature</h3>
               <p>Advanced AI analyzes your symptom patterns and matches them with optimal food choices. Get personalized recommendations that adapt to your body's responses.</p>
               <div style="margin-top:24px">
@@ -352,7 +433,11 @@ nav{padding:0 16px}
         <div class="card">
           <div class="card-content">
             <div style="text-align:center;padding:40px;color:var(--text-muted)">
-              <div style="font-size:48px;margin-bottom:16px">👥</div>
+              <div style="margin-bottom:16px">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="var(--gold)">
+                  <path d="M12,5.5A3.5,3.5 0 0,1 15.5,9A3.5,3.5 0 0,1 12,12.5A3.5,3.5 0 0,1 8.5,9A3.5,3.5 0 0,1 12,5.5M5,8C5.56,8 6.08,8.15 6.53,8.42C6.38,9.85 6.8,11.27 7.66,12.38C7.16,13.34 6.16,14 5,14A3,3 0 0,1 2,11A3,3 0 0,1 5,8M19,8A3,3 0 0,1 22,11A3,3 0 0,1 19,14C17.84,14 16.84,13.34 16.34,12.38C17.2,11.27 17.62,9.85 17.47,8.42C17.92,8.15 18.44,8 19,8M5.5,18.25C5.5,16.18 8.41,14.5 12,14.5C15.59,14.5 18.5,16.18 18.5,18.25V20H5.5V18.25M0,20V18.5C0,17.11 1.89,15.94 4.45,15.6C3.86,16.28 3.5,17.22 3.5,18.25V20H0M24,20H20.5V18.25C20.5,17.22 20.14,16.28 19.55,15.6C22.11,15.94 24,17.11 24,18.5V20Z"/>
+                </svg>
+              </div>
               <h3 style="color:var(--gold);margin-bottom:8px">Premium Feature</h3>
               <p>Join our exclusive community of GLP-1 users. Share experiences, get support, and learn from others on similar journeys.</p>
               <div style="margin-top:24px">
@@ -493,12 +578,21 @@ function applyAccessControls(tier) {
     
     premiumFeatures.forEach(link => {
       link.classList.add('premium-only');
-      link.style.cursor = 'not-allowed';
+      link.style.cursor = 'pointer';
       
       // Add click handler for premium features
       link.addEventListener('click', function(e) {
         e.preventDefault();
         showUpgradeModal();
+      });
+      
+      // Add hover hint for premium features
+      link.addEventListener('mouseenter', function(e) {
+        showPremiumHint('Click to upgrade and unlock this premium feature');
+      });
+      
+      link.addEventListener('mouseleave', function(e) {
+        hidePremiumHint();
       });
     });
     
@@ -507,6 +601,11 @@ function applyAccessControls(tier) {
     if (navBrand) {
       navBrand.innerHTML = 'PostDose<span class="brand-rx">RX</span> Trial';
     }
+    
+    // Show initial trial user hint
+    setTimeout(() => {
+      showPremiumHint('💡 Try clicking any PRO feature to see upgrade options', 4000);
+    }, 2000);
     
   } else {
     // Premium users: Enable all features
@@ -541,19 +640,40 @@ function showUpgradeModal() {
     modal = document.createElement('div');
     modal.id = 'upgrade-modal';
     modal.innerHTML = `
-      <div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000">
-        <div style="background:white;border-radius:16px;padding:32px;max-width:400px;text-align:center;margin:20px">
-          <div style="font-size:48px;margin-bottom:16px">⭐</div>
-          <h2 style="color:var(--navy);margin-bottom:12px">Upgrade to Premium</h2>
-          <p style="color:var(--text-sec);margin-bottom:24px;line-height:1.5">
-            This feature is available to Premium subscribers. Upgrade now to unlock all features including the adaptive recipe engine, community access, and advanced tracking.
-          </p>
-          <div style="display:flex;gap:12px;justify-content:center">
-            <a href="https://postdoserx.com/#signup?plan=Premium" class="btn">Upgrade Now ($10/month)</a>
-            <button onclick="closeUpgradeModal()" style="padding:10px 20px;background:transparent;border:1px solid var(--border);border-radius:8px;cursor:pointer">Maybe Later</button>
+      <div style="position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(4px)">
+        <div style="background:white;border-radius:16px;padding:40px;max-width:480px;text-align:center;margin:20px;box-shadow:0 20px 40px rgba(0,0,0,0.2);animation: modalSlideIn 0.3s ease-out">
+          <div style="width:80px;height:80px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border-radius:50%;margin:0 auto 24px;display:flex;align-items:center;justify-content:center">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="white">
+              <path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/>
+            </svg>
           </div>
+          <h2 style="color:var(--navy);margin-bottom:12px;font-size:24px">Unlock Premium Features</h2>
+          <p style="color:var(--text-sec);margin-bottom:28px;line-height:1.6;font-size:16px">
+            This feature requires a Premium subscription. Upgrade now to unlock the adaptive recipe engine, community access, and personalized meal recommendations that learn from your preferences.
+          </p>
+          <div style="background:var(--sand-light);border-radius:12px;padding:20px;margin-bottom:28px;text-align:left">
+            <h3 style="color:var(--navy);margin-bottom:12px;font-size:16px">Premium Features Include:</h3>
+            <ul style="color:var(--text-sec);margin:0;padding-left:20px;line-height:1.8">
+              <li>AI-powered adaptive recipe engine</li>
+              <li>Meal rating feedback system</li>
+              <li>Advanced symptom-to-food matching</li>
+              <li>Exclusive community access</li>
+              <li>Detailed progress tracking</li>
+            </ul>
+          </div>
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+            <a href="https://postdoserx.com/#signup?plan=Premium" class="btn" style="text-decoration:none;min-width:160px">Upgrade to Premium</a>
+            <button onclick="closeUpgradeModal()" style="padding:12px 24px;background:transparent;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-weight:600;color:var(--slate);min-width:120px">Maybe Later</button>
+          </div>
+          <p style="color:var(--text-muted);margin-top:16px;font-size:14px">Only $10/month • Cancel anytime</p>
         </div>
       </div>
+      <style>
+        @keyframes modalSlideIn {
+          from { opacity: 0; transform: scale(0.9) translateY(-20px); }
+          to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+      </style>
     `;
     document.body.appendChild(modal);
   }
@@ -566,6 +686,33 @@ function closeUpgradeModal() {
   const modal = document.getElementById('upgrade-modal');
   if (modal) {
     modal.style.display = 'none';
+  }
+}
+
+// Show premium hint notifications
+function showPremiumHint(message, duration = 2000) {
+  // Remove any existing hints
+  hidePremiumHint();
+  
+  const hint = document.createElement('div');
+  hint.id = 'premium-hint';
+  hint.className = 'premium-hint show';
+  hint.textContent = message;
+  document.body.appendChild(hint);
+  
+  // Auto-hide after duration
+  if (duration > 0) {
+    setTimeout(() => {
+      hidePremiumHint();
+    }, duration);
+  }
+}
+
+// Hide premium hint
+function hidePremiumHint() {
+  const hint = document.getElementById('premium-hint');
+  if (hint) {
+    hint.remove();
   }
 }
 
