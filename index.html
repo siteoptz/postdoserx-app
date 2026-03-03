@@ -460,8 +460,13 @@ function checkAuth() {
   const email = urlParams.get('email') || localStorage.getItem('postdoserx_email');
   const name = urlParams.get('name') || localStorage.getItem('postdoserx_name');
   const isNewUser = urlParams.get('new') === 'true';
+  const tier = urlParams.get('tier');
   
-  console.log('Auth check:', { token: !!token, email, name, isNewUser });
+  console.log('Auth check:', { token: !!token, email, name, isNewUser, tier });
+  
+  // Demo mode for testing - auto-authenticate known emails
+  const demoEmails = ['antonio@siteoptz.com', 'demo@postdoserx.com', 'test@postdoserx.com'];
+  const isDemoEmail = email && demoEmails.includes(email.toLowerCase());
   
   // For MVP, simulate auth check
   setTimeout(() => {
@@ -475,12 +480,28 @@ function checkAuth() {
         localStorage.setItem('postdoserx_email', email);
         if (name) localStorage.setItem('postdoserx_name', name);
         
-        // Clean up URL parameters after storing
-        window.history.replaceState({}, document.title, window.location.pathname);
+        // Clean up URL parameters after storing, but preserve tier
+        const newUrl = tier ? `${window.location.pathname}?tier=${tier}` : window.location.pathname;
+        window.history.replaceState({}, document.title, newUrl);
       }
+    } else if (tier && !token) {
+      // Demo mode for tier testing - create temporary auth
+      const demoEmail = 'demo@postdoserx.com';
+      const demoToken = 'demo_token_' + Date.now();
+      
+      // Store demo credentials
+      localStorage.setItem('postdoserx_token', demoToken);
+      localStorage.setItem('postdoserx_email', demoEmail);
+      localStorage.setItem('postdoserx_tier', tier);
+      
+      console.log('Demo mode activated for tier testing:', tier);
+      showDashboard(demoEmail, 'Demo User', false);
     } else {
-      // Redirect to login
-      window.location.href = 'https://postdoserx.com/login.html?redirect=' + encodeURIComponent(window.location.href);
+      // Redirect to login, preserving tier parameter if it exists
+      const redirectUrl = tier 
+        ? `${window.location.href}`
+        : window.location.href;
+      window.location.href = 'https://postdoserx.com/login.html?redirect=' + encodeURIComponent(redirectUrl);
     }
   }, 1500);
 }
@@ -515,14 +536,17 @@ function detectSubscriptionTier() {
   const urlParams = new URLSearchParams(window.location.search);
   const urlTier = urlParams.get('tier') || urlParams.get('plan');
   
+  // Check localStorage for stored tier (from demo mode or previous sessions)
+  const storedTier = localStorage.getItem('postdoserx_tier');
+  
   // Check localStorage for stored subscription info
   const storedUser = localStorage.getItem('postdoserx_user');
-  let storedTier = null;
+  let userTier = null;
   
   if (storedUser) {
     try {
       const userData = JSON.parse(storedUser);
-      storedTier = userData.tier || userData.plan;
+      userTier = userData.tier || userData.plan;
     } catch (e) {
       console.log('Error parsing stored user data:', e);
     }
@@ -541,10 +565,15 @@ function detectSubscriptionTier() {
     }
   }
   
-  // Priority: URL param > stored data > token data > default to Premium
-  const tier = urlTier || storedTier || tokenTier || 'Premium';
+  // Priority: URL param > stored tier > stored user > token data > default to Premium
+  const tier = urlTier || storedTier || userTier || tokenTier || 'Premium';
   
-  // Store the detected tier
+  console.log('Tier detection:', { urlTier, storedTier, userTier, tokenTier, final: tier });
+  
+  // Store the detected tier for future use
+  localStorage.setItem('postdoserx_tier', tier);
+  
+  // Also update user data if it exists
   if (storedUser) {
     try {
       const userData = JSON.parse(storedUser);
@@ -838,6 +867,7 @@ function logout() {
   localStorage.removeItem('postdoserx_email');
   localStorage.removeItem('postdoserx_name');
   localStorage.removeItem('postdoserx_user');
+  localStorage.removeItem('postdoserx_tier');
   
   // Redirect to main site
   window.location.href = 'https://postdoserx.com';
