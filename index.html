@@ -1469,6 +1469,15 @@ nav{padding:0 16px}
 <script>
 // Enhanced authentication check with Google OAuth support
 function checkAuth() {
+  // Version check - force update if needed
+  const currentVersion = '2.0.1'; // Updated dashboard with comprehensive features
+  const savedVersion = localStorage.getItem('postdoserx_version');
+  
+  if (savedVersion !== currentVersion) {
+    console.log('Dashboard updated to version:', currentVersion);
+    localStorage.setItem('postdoserx_version', currentVersion);
+  }
+  
   // Get URL parameters to check for authentication tokens
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get('token') || localStorage.getItem('postdoserx_token');
@@ -1477,7 +1486,7 @@ function checkAuth() {
   const isNewUser = urlParams.get('new') === 'true';
   const tier = urlParams.get('tier');
   
-  console.log('Auth check:', { token: !!token, email, name, isNewUser, tier });
+  console.log('Auth check v' + currentVersion + ':', { token: !!token, email, name, isNewUser, tier });
   
   // Demo mode for testing - auto-authenticate known emails
   const demoEmails = ['antonio@siteoptz.com', 'demo@postdoserx.com', 'test@postdoserx.com'];
@@ -1499,6 +1508,18 @@ function checkAuth() {
         const newUrl = tier ? `${window.location.pathname}?tier=${tier}` : window.location.pathname;
         window.history.replaceState({}, document.title, newUrl);
       }
+    } else if (isDemoEmail && email) {
+      // Auto-authenticate demo emails
+      const demoToken = 'demo_token_antonio_' + Date.now();
+      
+      // Store demo credentials
+      localStorage.setItem('postdoserx_token', demoToken);
+      localStorage.setItem('postdoserx_email', email);
+      localStorage.setItem('postdoserx_name', name || 'Antonio Mendoza');
+      if (tier) localStorage.setItem('postdoserx_tier', tier);
+      
+      console.log('Demo mode activated for:', email, 'with tier:', tier || 'Premium');
+      showDashboard(email, name || 'Antonio Mendoza', false);
     } else if (tier && !token) {
       // Demo mode for tier testing - create temporary auth
       const demoEmail = 'demo@postdoserx.com';
