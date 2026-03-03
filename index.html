@@ -270,18 +270,32 @@ nav{padding:0 16px}
 </div>
 
 <script>
-// Simple authentication check
+// Enhanced authentication check with Google OAuth support
 function checkAuth() {
   // Get URL parameters to check for authentication tokens
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get('token') || localStorage.getItem('postdoserx_token');
   const email = urlParams.get('email') || localStorage.getItem('postdoserx_email');
+  const name = urlParams.get('name') || localStorage.getItem('postdoserx_name');
+  const isNewUser = urlParams.get('new') === 'true';
+  
+  console.log('Auth check:', { token: !!token, email, name, isNewUser });
   
   // For MVP, simulate auth check
   setTimeout(() => {
     if (token && email) {
       // User is authenticated
-      showDashboard(email);
+      showDashboard(email, name, isNewUser);
+      
+      // Store user data if from URL (new login)
+      if (urlParams.get('token')) {
+        localStorage.setItem('postdoserx_token', token);
+        localStorage.setItem('postdoserx_email', email);
+        if (name) localStorage.setItem('postdoserx_name', name);
+        
+        // Clean up URL parameters after storing
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
     } else {
       // Redirect to login
       window.location.href = 'https://postdoserx.com/login.html?redirect=' + encodeURIComponent(window.location.href);
@@ -289,20 +303,70 @@ function checkAuth() {
   }, 1500);
 }
 
-function showDashboard(email) {
+function showDashboard(email, name = null, isNewUser = false) {
   document.getElementById('auth-loading').style.display = 'none';
   document.getElementById('dashboard-app').style.display = 'block';
   
-  // Set user info
-  const userName = email.split('@')[0];
-  document.getElementById('user-name').textContent = userName;
-  document.getElementById('user-avatar').textContent = userName.charAt(0).toUpperCase();
+  // Set user info - prefer real name over email username
+  const displayName = name || email.split('@')[0];
+  const avatarInitial = name ? name.charAt(0).toUpperCase() : email.charAt(0).toUpperCase();
   
-  // Store auth info
-  if (new URLSearchParams(window.location.search).get('token')) {
-    localStorage.setItem('postdoserx_token', new URLSearchParams(window.location.search).get('token'));
-    localStorage.setItem('postdoserx_email', email);
+  document.getElementById('user-name').textContent = displayName;
+  document.getElementById('user-avatar').textContent = avatarInitial;
+  
+  // Show welcome message for new users
+  if (isNewUser) {
+    showWelcomeMessage(displayName);
   }
+  
+  // Track successful dashboard access
+  console.log('Dashboard loaded for:', { email, name, isNewUser });
+}
+
+// Show welcome message for new users from checkout flow
+function showWelcomeMessage(userName) {
+  // Create a welcome notification
+  const welcomeNotification = document.createElement('div');
+  welcomeNotification.style.cssText = `
+    position: fixed;
+    top: 80px;
+    right: 24px;
+    background: var(--teal-light);
+    border: 1px solid var(--teal);
+    color: var(--teal-dark);
+    padding: 16px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 1000;
+    max-width: 350px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    animation: slideIn 0.3s ease-out;
+  `;
+  
+  welcomeNotification.innerHTML = `
+    🎉 Welcome to PostDoseRX Premium, ${userName}!<br>
+    <span style="font-weight:400;font-size:13px;">Your account has been successfully created. Start exploring your personalized meal plans below.</span>
+  `;
+  
+  document.body.appendChild(welcomeNotification);
+  
+  // Remove notification after 5 seconds
+  setTimeout(() => {
+    welcomeNotification.style.opacity = '0';
+    welcomeNotification.style.transform = 'translateX(100%)';
+    setTimeout(() => welcomeNotification.remove(), 300);
+  }, 5000);
+  
+  // Add animation styles
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+  `;
+  document.head.appendChild(style);
 }
 
 // Navigation
@@ -342,8 +406,13 @@ function showRecipes() { showView('recipes'); }
 function showCommunity() { showView('community'); }
 
 function logout() {
+  // Clear all user data
   localStorage.removeItem('postdoserx_token');
   localStorage.removeItem('postdoserx_email');
+  localStorage.removeItem('postdoserx_name');
+  localStorage.removeItem('postdoserx_user');
+  
+  // Redirect to main site
   window.location.href = 'https://postdoserx.com';
 }
 
