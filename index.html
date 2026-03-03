@@ -2697,10 +2697,11 @@ function handleUnauthenticatedUser() {
   
   // Check if accessing with tier parameter for testing
   const testTier = urlParams.get('tier');
-  if (testTier === 'trial' || testTier === 'premium') {
+  if (testTier && (testTier.toLowerCase() === 'trial' || testTier.toLowerCase() === 'premium')) {
+    const normalizedTier = testTier.toLowerCase();
     userEmail = 'demo@postdoserx.com';
     userName = `${testTier} User`;
-    userTier = testTier;
+    userTier = normalizedTier;
     isAuthenticated = true;
     setupUserDashboard();
     return;
@@ -2711,6 +2712,10 @@ function handleUnauthenticatedUser() {
 }
 
 function setupUserDashboard() {
+  // Hide loading screen and show dashboard
+  document.getElementById('auth-loading').style.display = 'none';
+  document.getElementById('dashboard-app').style.display = 'block';
+  
   // Save user data
   localStorage.setItem('postdoserx_user', JSON.stringify({
     email: userEmail,
