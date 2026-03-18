@@ -7323,6 +7323,14 @@ function updateAchievementsDisplay() {
 async function setupUserDashboard() {
   console.log('🚀 Starting setupUserDashboard...');
   
+  // CRITICAL: Don't setup dashboard during post-checkout flow - let OAuth modal show instead
+  const urlParams = new URLSearchParams(window.location.search);
+  const checkoutStatus = urlParams.get('checkout');
+  if (checkoutStatus === 'success') {
+    console.log('🚨 BLOCKING setupUserDashboard during post-checkout - OAuth modal should be showing');
+    return;
+  }
+  
   try {
     // Hide loading screen and show dashboard
     document.getElementById('auth-loading').style.display = 'none';
