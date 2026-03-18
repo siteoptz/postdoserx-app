@@ -2468,26 +2468,47 @@ function checkAuth() {
       console.log('🔍 Validating user access for:', email);
       
       // First, do a quick validation call to ensure user should have access
-      fetch('https://postdoserx.com/api/verify-customer', {
+      fetch('https://postdoserx.com/api/ghl-integration', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email })
+        body: JSON.stringify({ action: 'validate_tier', email: email })
       })
       .then(response => response.json())
       .then(data => {
-        if (!data.isValidCustomer) {
-          console.log('❌ User not found in GHL, redirecting to signup');
-          window.location.href = 'https://postdoserx.com/#signup';
-          return;
+        console.log('🔍 GHL validation response:', data);
+        
+        if (!data.success) {
+          console.log('❌ User validation failed:', data.error || 'Unknown error');
+          console.log('📊 GHL validation details:', { 
+            email, 
+            expectedTier: tier,
+            fallbackTier: data.fallbackTier 
+          });
+          
+          // For post-checkout users, the contact might still be syncing - give benefit of doubt
+          if (tier && (tier === 'trial' || tier === 'premium')) {
+            console.log('⚠️ Post-checkout user detected, proceeding despite GHL validation failure');
+          } else {
+            console.log('❌ Regular user validation failed, redirecting to signup');
+            window.location.href = 'https://postdoserx.com/#signup';
+            return;
+          }
         }
         
-        console.log('✅ User validated in GHL');
+        console.log('✅ User validated in GHL with tier:', data.tier || 'unknown');
         
         // Set global variables for validated auth flow
         userEmail = email;
         userName = name || '';
-        userTier = tier || 'trial'; // Default to trial, not premium
+        // Prioritize tier from Stripe checkout (URL), then GHL validation, no fallback to trial
+        userTier = tier || data.tier; // Use Stripe checkout tier first, then GHL tier
         isAuthenticated = true;
+        
+        console.log('🎯 Final tier assignment:', { 
+          stripeCheckoutTier: tier, 
+          ghlTier: data.tier, 
+          finalTier: userTier 
+        });
         
         // Store user data if from URL (new login)
         if (urlParams.get('token')) {
@@ -2505,8 +2526,31 @@ function checkAuth() {
       })
       .catch(error => {
         console.error('GHL validation failed:', error);
-        console.log('❌ Validation error, redirecting to signup');
-        window.location.href = 'https://postdoserx.com/#signup';
+        
+        // For post-checkout users, don't redirect on network errors - proceed with login
+        if (tier && (tier === 'trial' || tier === 'premium')) {
+          console.log('⚠️ Post-checkout user with network error, proceeding with auth flow');
+          
+          // Set global variables for post-checkout auth flow
+          userEmail = email;
+          userName = name || '';
+          userTier = tier; // Use the tier from Stripe checkout
+          isAuthenticated = true;
+          
+          // Store user data
+          localStorage.setItem('postdoserx_token', token);
+          localStorage.setItem('postdoserx_email', email);
+          if (name) localStorage.setItem('postdoserx_name', name);
+          localStorage.setItem('postdoserx_tier', tier);
+          
+          // Clean up URL and proceed to dashboard
+          window.history.replaceState({}, document.title, window.location.pathname);
+          setupUserDashboard();
+          
+        } else {
+          console.log('❌ Validation network error for regular user, redirecting to signup');
+          window.location.href = 'https://postdoserx.com/#signup';
+        }
       });
       
     } else {
@@ -3899,7 +3943,7 @@ function showUpgradeModal() {
             </ul>
           </div>
           <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-            <a href="https://buy.stripe.com/28E14mbhQ9xj4g5e5Z63K02?client_reference_id=dashboard_upgrade&success_url=https://app.postdoserx.com?checkout=success&cancel_url=https://app.postdoserx.com?checkout=cancelled" class="btn" style="text-decoration:none;min-width:160px" target="_blank">Continue to Checkout</a>
+            <a href="https://buy.stripe.com/28E14mbhQ9xj4g5e5Z63K02?client_reference_id=dashboard_upgrade&success_url=https://app.postdoserx.com?checkout=success&tier=premium&cancel_url=https://app.postdoserx.com?checkout=cancelled" class="btn" style="text-decoration:none;min-width:160px" target="_blank">Continue to Checkout</a>
             <button onclick="closeUpgradeModal()" style="padding:12px 24px;background:transparent;border:2px solid var(--border);border-radius:8px;cursor:pointer;font-weight:600;color:var(--slate);min-width:120px">Maybe Later</button>
           </div>
           <p style="color:var(--text-muted);margin-top:16px;font-size:14px">$12.99/month • Cancel anytime • Secure Stripe checkout</p>
@@ -7479,7 +7523,7 @@ function createUpgradeModal() {
           </div>
         </div>
         
-        <a href="https://buy.stripe.com/28E14mbhQ9xj4g5e5Z63K02?client_reference_id=dashboard_upgrade&success_url=https://app.postdoserx.com?checkout=success&cancel_url=https://app.postdoserx.com?checkout=cancelled" target="_blank" class="btn" style="display:inline-block; background:var(--magenta); color:white; padding:16px 32px; border-radius:8px; text-decoration:none; font-weight:600; margin-top:16px;">Upgrade to Premium</a>
+        <a href="https://buy.stripe.com/28E14mbhQ9xj4g5e5Z63K02?client_reference_id=dashboard_upgrade&success_url=https://app.postdoserx.com?checkout=success&tier=premium&cancel_url=https://app.postdoserx.com?checkout=cancelled" target="_blank" class="btn" style="display:inline-block; background:var(--magenta); color:white; padding:16px 32px; border-radius:8px; text-decoration:none; font-weight:600; margin-top:16px;">Upgrade to Premium</a>
       </div>
     </div>
   `;
@@ -7976,7 +8020,7 @@ function hideUpgradeModal() {
 
 function redirectToStripeCheckout() {
   // PostDoseRX Premium Plan Stripe Checkout
-  const stripeCheckoutUrl = 'https://buy.stripe.com/28E14mbhQ9xj4g5e5Z63K02?client_reference_id=dashboard_upgrade&success_url=https://app.postdoserx.com?checkout=success&cancel_url=https://app.postdoserx.com?checkout=cancelled'; // Updated Premium Stripe checkout URL
+  const stripeCheckoutUrl = 'https://buy.stripe.com/28E14mbhQ9xj4g5e5Z63K02?client_reference_id=dashboard_upgrade&success_url=https://app.postdoserx.com?checkout=success&tier=premium&cancel_url=https://app.postdoserx.com?checkout=cancelled'; // Updated Premium Stripe checkout URL
   
   // Track conversion attempt
   console.log('🚀 Premium upgrade initiated by user');
