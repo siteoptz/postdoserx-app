@@ -24,10 +24,30 @@ body{font-family:'Montserrat',-apple-system,sans-serif;color:var(--text);backgro
 nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;background:rgba(253,248,244,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 32px}
 .nav-brand{font-family:'DM Serif Display',Georgia,serif;font-size:20px;color:var(--navy);text-decoration:none;display:flex;align-items:center;gap:8px}
 .nav-brand .brand-rx{color:var(--magenta)}
-.nav-user{display:flex;align-items:center;gap:16px}
+.nav-user{position:relative;display:flex;align-items:center;gap:16px}
+.user-profile{display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px;border-radius:8px;transition:background .15s}
+.user-profile:hover{background:var(--sand)}
 .user-avatar{width:36px;height:36px;border-radius:50%;background:var(--magenta);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:14px}
+.dropdown-arrow{font-size:10px;color:var(--slate);transition:transform .15s}
+.user-profile:hover .dropdown-arrow{transform:rotate(180deg)}
 .logout-btn{color:var(--slate);text-decoration:none;font-size:13px;font-weight:500;padding:6px 12px;border-radius:6px;transition:background .15s}
 .logout-btn:hover{background:var(--sand);color:var(--navy)}
+
+/* User Dropdown */
+.user-dropdown{position:absolute;top:100%;right:0;width:280px;background:var(--white);border:1px solid var(--border);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.12);z-index:1000;margin-top:8px}
+.dropdown-header{padding:16px}
+.user-info{text-align:center}
+.user-name{font-size:16px;font-weight:600;color:var(--navy);margin-bottom:4px}
+.user-email{font-size:13px;color:var(--slate);margin-bottom:8px}
+.user-tier{font-size:12px;font-weight:600;color:var(--magenta);background:var(--magenta-light);padding:4px 12px;border-radius:16px;display:inline-block}
+.dropdown-divider{height:1px;background:var(--border);margin:0 16px}
+.dropdown-section{padding:12px 0}
+.section-title{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-dark);margin:0 16px 8px;padding-bottom:4px}
+.dropdown-item{display:flex;align-items:center;gap:12px;padding:10px 16px;color:var(--slate);text-decoration:none;font-size:14px;font-weight:500;transition:all .15s}
+.dropdown-item:hover{background:var(--sand-light);color:var(--navy)}
+.dropdown-item.danger{color:var(--magenta)}
+.dropdown-item.danger:hover{background:var(--magenta-light);color:var(--magenta-dark)}
+.dropdown-icon{font-size:16px;width:20px;text-align:center}
 
 /* Dashboard Layout */
 .dashboard{display:flex;margin-top:64px;min-height:calc(100vh - 64px)}
@@ -376,8 +396,48 @@ nav{padding:0 16px}
       <span>PostDose<span class="brand-rx">RX</span> Premium</span>
     </a>
     <div class="nav-user">
-      <div class="user-avatar" id="user-avatar">U</div>
-      <a href="#" class="logout-btn" onclick="logout()">Sign Out</a>
+      <div class="user-profile" onclick="toggleUserDropdown()">
+        <div class="user-avatar" id="user-avatar">U</div>
+        <span class="dropdown-arrow">▼</span>
+      </div>
+      
+      <!-- User Dropdown -->
+      <div id="user-dropdown" class="user-dropdown" style="display: none;">
+        <div class="dropdown-header">
+          <div class="user-info">
+            <div class="user-name" id="dropdown-user-name">User</div>
+            <div class="user-email" id="dropdown-user-email">user@example.com</div>
+            <div class="user-tier" id="dropdown-user-tier">Trial Plan</div>
+          </div>
+        </div>
+        
+        <div class="dropdown-divider"></div>
+        
+        <div class="dropdown-section">
+          <div class="section-title">Account</div>
+          <a href="#" class="dropdown-item" onclick="showMyProgress()">
+            <span class="dropdown-icon">📊</span>
+            My Progress
+          </a>
+          <a href="#" class="dropdown-item" onclick="showBillingModal()">
+            <span class="dropdown-icon">💳</span>
+            Billing & Subscription
+          </a>
+          <a href="#" class="dropdown-item" onclick="showSettings()">
+            <span class="dropdown-icon">⚙️</span>
+            Settings
+          </a>
+        </div>
+        
+        <div class="dropdown-divider"></div>
+        
+        <div class="dropdown-section">
+          <a href="#" class="dropdown-item danger" onclick="logout()">
+            <span class="dropdown-icon">🚪</span>
+            Sign Out
+          </a>
+        </div>
+      </div>
     </div>
   </nav>
 
@@ -2143,6 +2203,9 @@ function showDashboard(email, name = null, isNewUser = false) {
     showWelcomeMessage(displayName);
   }
   
+  // Populate dropdown with user information
+  populateUserDropdown(email, displayName, subscriptionTier);
+  
   // Track successful dashboard access
   console.log('Dashboard loaded for:', { email, name, isNewUser, tier: subscriptionTier });
 }
@@ -2630,6 +2693,80 @@ function addToMealPlan(recipeId) {
 
 function exploreCategory(categoryId) {
   alert(`Exploring ${categoryId} recipes...\n\nThis would show:\n• All personalized recipes in this category\n• Filter options\n• Difficulty and time sorting\n• Your adaptation history`);
+}
+
+// User Dropdown Functions
+function populateUserDropdown(email, name, tier) {
+  console.log('🔧 populateUserDropdown called with:', { email, name, tier });
+  document.getElementById('dropdown-user-name').textContent = name || 'User';
+  document.getElementById('dropdown-user-email').textContent = email || '';
+  
+  // Format tier display
+  const tierDisplay = tier === 'premium' ? 'Premium Plan' : 'Trial Plan';
+  document.getElementById('dropdown-user-tier').textContent = tierDisplay;
+  
+  console.log('✅ Dropdown populated with:', {
+    nameSet: document.getElementById('dropdown-user-name').textContent,
+    emailSet: document.getElementById('dropdown-user-email').textContent,
+    tierSet: document.getElementById('dropdown-user-tier').textContent
+  });
+}
+
+function toggleUserDropdown() {
+  const dropdown = document.getElementById('user-dropdown');
+  const isVisible = dropdown.style.display === 'block';
+  dropdown.style.display = isVisible ? 'none' : 'block';
+  
+  // Close dropdown when clicking outside
+  if (!isVisible) {
+    setTimeout(() => {
+      document.addEventListener('click', closeDropdownOnOutsideClick);
+    }, 0);
+  }
+}
+
+function closeDropdownOnOutsideClick(event) {
+  const dropdown = document.getElementById('user-dropdown');
+  const userProfile = document.querySelector('.user-profile');
+  
+  if (!dropdown.contains(event.target) && !userProfile.contains(event.target)) {
+    dropdown.style.display = 'none';
+    document.removeEventListener('click', closeDropdownOnOutsideClick);
+  }
+}
+
+function closeUserDropdown() {
+  document.getElementById('user-dropdown').style.display = 'none';
+  document.removeEventListener('click', closeDropdownOnOutsideClick);
+}
+
+// Account Management Functions
+function showMyProgress() {
+  closeUserDropdown();
+  console.log('📊 My Progress clicked - would show progress modal');
+  alert('Progress tracking feature coming soon! This will show your weight loss journey, medication progress, and meal rating insights.');
+}
+
+function showBillingModal() {
+  closeUserDropdown();
+  console.log('💳 Billing clicked - would show billing modal');
+  
+  // Get user tier to show appropriate billing options
+  const currentTier = detectSubscriptionTier();
+  
+  if (currentTier === 'trial') {
+    // Show upgrade modal
+    alert('Upgrade to Premium for unlimited access to personalized meal plans, advanced symptom tracking, and priority support!');
+  } else {
+    // Show billing management
+    alert('Billing Management: View your subscription, update payment method, or manage your account. Integration with Stripe Customer Portal coming soon.');
+  }
+}
+
+function showSettings() {
+  closeUserDropdown();
+  console.log('⚙️ Settings clicked - would show settings modal');
+  alert('Settings: Update your medication info, dietary preferences, notification settings, and privacy options. Full settings panel coming soon.');
 }
 
 // Initialize app
