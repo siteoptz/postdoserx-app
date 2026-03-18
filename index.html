@@ -2433,7 +2433,8 @@ function checkAuth() {
   
   // Check for post-checkout success flow
   if (checkoutStatus === 'success') {
-    console.log('🎯 Post-checkout success detected - clearing auth data and showing sign-in modal');
+    console.log('🎯 POST-CHECKOUT SUCCESS DETECTED - SHOULD SHOW MODAL');
+    console.log('🔍 Debug info:', { checkoutStatus, tier, location: window.location.href });
     
     // Clear any existing auth data to ensure clean post-checkout flow
     localStorage.removeItem('postdoserx_token');
@@ -2462,8 +2463,10 @@ function checkAuth() {
   // Normal authentication flow - no demo bypasses
   
   // CRITICAL: Validate user access with GHL before granting any access
-  setTimeout(() => {
-    if (token && email) {
+  // SKIP during post-checkout flow to allow OAuth modal to show
+  if (checkoutStatus !== 'success') {
+    setTimeout(() => {
+      if (token && email) {
       // SECURITY CHECK: Verify user is actually valid in GHL system
       console.log('🔍 Validating user access for:', email);
       
@@ -2517,6 +2520,7 @@ function checkAuth() {
       window.location.href = 'https://postdoserx.com/login.html?redirect=' + encodeURIComponent(redirectUrl);
     }
   }, 1500);
+  } // End of post-checkout skip check
 }
 
 function showDashboard(email, name = null, isNewUser = false) {
@@ -7538,9 +7542,13 @@ function bindNavigationEvents() {
 
 // Post-checkout sign-in modal
 function showPostCheckoutSignInModal() {
+  console.log('🚨 showPostCheckoutSignInModal() CALLED - Creating modal now!');
+  
   // Hide loading screen, show dashboard background but with modal overlay
   document.getElementById('auth-loading').style.display = 'none';
   document.getElementById('dashboard-app').style.display = 'block';
+  
+  console.log('✅ Loading screen hidden, dashboard shown');
   
   const modalHTML = `
     <div id="post-checkout-modal" class="modal-overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(27, 42, 74, 0.8); z-index:9999; display:flex; justify-content:center; align-items:center;">
@@ -7594,6 +7602,9 @@ function showPostCheckoutSignInModal() {
   `;
   
   document.body.insertAdjacentHTML('beforeend', modalHTML);
+  
+  console.log('🎉 MODAL ADDED TO DOM! Should be visible now.');
+  console.log('🔍 Modal element check:', document.getElementById('post-checkout-modal'));
   
   // Add event listeners
   document.getElementById('post-checkout-signin-form').addEventListener('submit', handlePostCheckoutSignIn);
