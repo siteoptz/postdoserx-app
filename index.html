@@ -2597,9 +2597,9 @@ async function handlePostCheckoutSignIn(e) {
 function handleGoogleSignInCheckout() {
   showSignInMessage('Redirecting to Google sign-in...', 'info');
   
-  // Redirect to the working Google OAuth login page on postdoserx.com
-  // Set a flag so the login page knows this is a signup flow
-  const redirectUrl = 'https://postdoserx.com/login.html?signup=true&redirect=' + encodeURIComponent(window.location.origin);
+  // POST-CHECKOUT FLOW: User has already completed Stripe checkout
+  // Now redirect to Google OAuth for token validation and GHL contact creation
+  const redirectUrl = 'https://postdoserx.com/login.html?post-checkout=true&redirect=' + encodeURIComponent(window.location.origin);
   window.location.href = redirectUrl;
 }
 
@@ -3249,61 +3249,6 @@ async function handlePostCheckoutSignIn(e) {
   }
 }
 
-function handleGoogleSignInCheckout() {
-  showSignInMessage('Google Sign-In will be available soon. Please use email sign-in for now.', 'info');
-}
-
-function showSignInMessage(text, type = 'error') {
-  const container = document.getElementById('signin-message-container');
-  const bgColor = type === 'success' ? 'rgba(40,167,69,.1)' : 
-                  type === 'info' ? 'rgba(23,162,184,.1)' : 
-                  'rgba(220,53,69,.1)';
-  const textColor = type === 'success' ? '#28a745' : 
-                   type === 'info' ? '#17a2b8' : 
-                   '#dc3545';
-  const borderColor = type === 'success' ? 'rgba(40,167,69,.2)' : 
-                     type === 'info' ? 'rgba(23,162,184,.2)' : 
-                     'rgba(220,53,69,.2)';
-  
-  container.innerHTML = `
-    <div style="padding:12px 16px; border-radius:8px; font-size:14px; background:${bgColor}; color:${textColor}; border:1px solid ${borderColor};">
-      ${text}
-    </div>
-  `;
-}
-
-function clearSignInMessage() {
-  document.getElementById('signin-message-container').innerHTML = '';
-}
-
-function showCheckoutCancelledMessage() {
-  // Show a temporary notification that checkout was cancelled
-  const notification = document.createElement('div');
-  notification.style.cssText = `
-    position: fixed;
-    top: 80px;
-    right: 24px;
-    background: var(--gold-light);
-    border: 1px solid var(--gold);
-    color: var(--gold-dark);
-    padding: 16px 20px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    z-index: 1000;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    animation: slideInRight 0.3s ease-out;
-  `;
-  notification.textContent = 'Checkout cancelled. You can try again anytime!';
-  document.body.appendChild(notification);
-  
-  // Remove after 5 seconds
-  setTimeout(() => {
-    if (notification.parentNode) {
-      notification.remove();
-    }
-  }, 5000);
-}
 
 function showWelcomeToPremium() {
   const welcomeModal = `
