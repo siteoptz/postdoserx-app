@@ -2465,12 +2465,6 @@ function checkAuth() {
   // Normal authentication flow - no demo bypasses
   
   // CRITICAL: Validate user access with GHL before granting any access
-  // BUT SKIP this entire flow if we're in post-checkout mode
-  if (checkoutStatus === 'success') {
-    console.log('🚫 Skipping authentication timeout - already handled post-checkout flow');
-    return;
-  }
-  
   setTimeout(() => {
     if (token && email) {
       // SECURITY CHECK: Verify user is actually valid in GHL system
