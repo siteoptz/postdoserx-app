@@ -7450,6 +7450,10 @@ function updateUserUI() {
   if (avatar && userName) {
     avatar.textContent = userName.charAt(0).toUpperCase();
   }
+  
+  // Populate user dropdown with proper data
+  console.log('🔄 Populating user dropdown with:', { email: userEmail, name: userName, tier: userTier });
+  populateUserDropdown(userEmail, userName, userTier);
 }
 
 function applyTierAccessControls() {
@@ -7718,7 +7722,14 @@ async function handlePostCheckoutSignIn(e) {
 }
 
 function handleGoogleSignInCheckout() {
-  showSignInMessage('Google Sign-In will be available soon. Please use email sign-in for now.', 'info');
+  showSignInMessage('Redirecting to Google sign-in...', 'info');
+  
+  // POST-CHECKOUT FLOW: User has already completed Stripe checkout
+  // Now redirect to Google OAuth for token validation and GHL contact creation
+  const urlParams = new URLSearchParams(window.location.search);
+  const tier = urlParams.get('tier') || 'premium'; // Get tier from Stripe checkout
+  const redirectUrl = 'https://postdoserx.com/login.html?post-checkout=true&tier=' + tier + '&redirect=' + encodeURIComponent(window.location.origin);
+  window.location.href = redirectUrl;
 }
 
 function showSignInMessage(text, type = 'error') {
