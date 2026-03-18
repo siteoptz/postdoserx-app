@@ -7995,8 +7995,10 @@ function redirectToStripeCheckout() {
   hideUpgradeModal();
 }
 
-// Initialize app
-checkAuth();
+// Initialize app after DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+  checkAuth();
+});
 
 // Load pattern insights after DOM is ready
 document.addEventListener('DOMContentLoaded', function() {
