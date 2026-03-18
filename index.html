@@ -49,6 +49,41 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;background:rgba(
 .dropdown-item.danger:hover{background:var(--magenta-light);color:var(--magenta-dark)}
 .dropdown-icon{font-size:16px;width:20px;text-align:center}
 
+/* Premium Feature Styling */
+.premium-locked{opacity:0.7;position:relative}
+.premium-locked:hover{opacity:0.9}
+.lock-icon{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--gold-dark)}
+.trial-feature{border-left:3px solid var(--teal);background:linear-gradient(135deg, rgba(42,127,127,0.05), rgba(42,127,127,0.1))}
+.premium-feature{border-left:3px solid var(--gold);background:linear-gradient(135deg, rgba(201,168,108,0.05), rgba(201,168,108,0.1))}
+.premium-locked{border-left:3px solid var(--slate);background:linear-gradient(135deg, rgba(74,85,104,0.05), rgba(74,85,104,0.1));cursor:not-allowed}
+
+/* Upgrade Modal */
+.upgrade-modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:2000;animation:fadeIn 0.3s ease}
+.upgrade-modal{background:var(--white);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.3);max-width:500px;width:90%;max-height:90vh;overflow-y:auto}
+.upgrade-modal .modal-header{display:flex;justify-content:space-between;align-items:center;padding:24px 24px 16px;border-bottom:1px solid var(--border)}
+.upgrade-modal .modal-header h2{margin:0;color:var(--navy);font-size:24px;font-weight:700}
+.close-btn{background:none;border:none;font-size:24px;color:var(--slate);cursor:pointer;padding:4px;border-radius:4px;transition:background 0.15s}
+.close-btn:hover{background:var(--sand)}
+.modal-content{padding:24px}
+.feature-highlight{text-align:center;margin-bottom:32px}
+.feature-icon{width:80px;height:80px;background:linear-gradient(135deg, var(--gold), var(--gold-dark));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 16px;color:white}
+.feature-highlight h3{margin-bottom:8px;color:var(--navy);font-size:20px}
+.feature-highlight p{color:var(--text-sec)}
+.upgrade-benefits h4{color:var(--navy);margin-bottom:16px;font-size:16px;font-weight:600}
+.upgrade-benefits ul{list-style:none;padding:0;margin:0 0 32px 0}
+.upgrade-benefits li{padding:8px 0;color:var(--text);display:flex;align-items:center;gap:12px}
+.upgrade-pricing{text-align:center;margin-bottom:32px;padding:24px;background:var(--gold-light);border-radius:12px}
+.price-box .price{font-size:36px;font-weight:700;color:var(--gold-dark)}
+.price-box .period{font-size:18px;color:var(--slate)}
+.savings{color:var(--gold-dark);font-size:14px;margin-top:8px}
+.modal-actions{display:flex;gap:12px}
+.upgrade-btn{flex:1;background:linear-gradient(135deg, var(--magenta), var(--magenta-dark));color:white;border:none;padding:16px 24px;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;transition:transform 0.15s}
+.upgrade-btn:hover{transform:translateY(-2px)}
+.cancel-btn{flex:1;background:var(--sand);color:var(--slate);border:1px solid var(--border);padding:16px 24px;border-radius:8px;font-size:16px;font-weight:500;cursor:pointer;transition:background 0.15s}
+.cancel-btn:hover{background:var(--sand-light)}
+
+@keyframes fadeIn{from{opacity:0;transform:scale(0.9)} to{opacity:1;transform:scale(1)}}
+
 /* Dashboard Layout */
 .dashboard{display:flex;margin-top:64px;min-height:calc(100vh - 64px)}
 .sidebar{width:280px;background:var(--white);border-right:1px solid var(--border);padding:32px 0}
@@ -2206,6 +2241,9 @@ function showDashboard(email, name = null, isNewUser = false) {
   // Populate dropdown with user information
   populateUserDropdown(email, displayName, subscriptionTier);
   
+  // Set up tier-based navigation
+  setupTierBasedNavigation(subscriptionTier);
+  
   // Track successful dashboard access
   console.log('Dashboard loaded for:', { email, name, isNewUser, tier: subscriptionTier });
 }
@@ -2767,6 +2805,182 @@ function showSettings() {
   closeUserDropdown();
   console.log('⚙️ Settings clicked - would show settings modal');
   alert('Settings: Update your medication info, dietary preferences, notification settings, and privacy options. Full settings panel coming soon.');
+}
+
+// Tier-based Navigation Setup
+function setupTierBasedNavigation(tier) {
+  console.log('🔧 Setting up navigation for tier:', tier);
+  
+  const trialNavItems = [
+    {
+      href: '#home',
+      icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>`,
+      text: 'Home',
+      active: true
+    },
+    {
+      href: '#meals',
+      icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2,17H22L20.84,15H3.16L2,17M21.1,21H2.9A0.9,0.9 0 0,1 2,20.1V19A1,1 0 0,1 3,18H21A1,1 0 0,1 22,19V20.1A0.9,0.9 0 0,1 21.1,21M8.5,11.5C8.5,9 10.5,7 13,7C15.5,7 17.5,9 17.5,11.5C17.5,12.83 16.83,14 15.83,14.75L16.25,15H9.75L10.17,14.75C9.17,14 8.5,12.83 8.5,11.5Z"/></svg>`,
+      text: 'Dose-day Meals',
+      feature: 'trial'
+    },
+    {
+      href: '#grocery',
+      icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17,18C17.85,18 18.55,18.4 18.95,19H19V21H18.95C18.55,21.6 17.85,22 17,22A2,2 0 0,1 15,20A2,2 0 0,1 17,18M1,2V4H3L6.6,11.59L5.24,14.04C5.09,14.32 5,14.65 5,15A2,2 0 0,0 7,17H19V15H7.42A0.25,0.25 0 0,1 7.17,14.75C7.17,14.7 7.18,14.66 7.2,14.63L8.1,13H15.55C16.3,13 16.96,12.58 17.3,11.97L20.88,5H5.21L4.27,3H1M7,18C7.85,18 8.55,18.4 8.95,19H9V21H8.95C8.55,21.6 7.85,22 7,22A2,2 0 0,1 5,20A2,2 0 0,1 7,18Z"/></svg>`,
+      text: 'Basic Grocery Lists',
+      feature: 'trial'
+    },
+    {
+      href: '#symptoms-basic',
+      icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19,3H5C3.9,3 3,3.9 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.9 20.1,3 19,3M19,19H5V5H19V19Z"/></svg>`,
+      text: 'Basic Symptom Log',
+      feature: 'trial'
+    }
+  ];
+  
+  const premiumNavItems = [
+    {
+      href: '#recipes',
+      icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z"/></svg>`,
+      text: 'Adaptive Recipe Engine',
+      feature: 'premium',
+      badge: 'PRO'
+    },
+    {
+      href: '#feedback',
+      icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"/></svg>`,
+      text: 'Meal Rating & AI Learning',
+      feature: 'premium',
+      badge: 'PRO'
+    },
+    {
+      href: '#symptoms-advanced',
+      icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M16,6L18.29,8.29L13.41,13.17L9.41,9.17L2,16.59L3.41,18L9.41,12L13.41,16L19.71,9.71L22,12V6H16Z"/></svg>`,
+      text: 'Advanced Symptom Analytics',
+      feature: 'premium',
+      badge: 'PRO'
+    },
+    {
+      href: '#progress',
+      icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23,10C23,8.89 22.1,8 21,8H14.68L15.64,7.04C16.03,6.65 16.03,6.02 15.64,5.63L10.37,0.36C10.1,0.09 9.75,0 9.39,0C9.03,0 8.68,0.09 8.41,0.36L0.36,8.41C0.09,8.68 0,9.03 0,9.39C0,9.75 0.09,10.1 0.36,10.37L8.41,18.42C8.68,18.69 9.03,18.78 9.39,18.78C9.75,18.78 10.1,18.69 10.37,18.42L15.64,13.15C16.03,12.76 16.03,12.13 15.64,11.74L14.68,10.76H21C22.1,10.76 23,9.86 23,8.76V10Z"/></svg>`,
+      text: 'Comprehensive Progress',
+      feature: 'premium',
+      badge: 'PRO'
+    },
+    {
+      href: '#personalization',
+      icon: `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,6A2,2 0 0,0 10,8A2,2 0 0,0 12,10A2,2 0 0,0 14,8A2,2 0 0,0 12,6M12,13C14.67,13 20,14.33 20,17V20H4V17C4,14.33 9.33,13 12,13M12,14.9C9.03,14.9 5.9,16.36 5.9,17V18.1H18.1V17C18.1,16.36 14.97,14.9 12,14.9Z"/></svg>`,
+      text: 'AI Personalization Hub',
+      feature: 'premium',
+      badge: 'PRO'
+    }
+  ];
+
+  // Get navigation containers
+  const trialSection = document.querySelector('.sidebar-section:nth-child(2) .sidebar-nav');
+  const premiumSection = document.querySelector('.sidebar-section:nth-child(3) .sidebar-nav');
+  
+  if (trialSection) {
+    trialSection.innerHTML = '';
+    trialNavItems.forEach(item => {
+      const li = document.createElement('li');
+      const className = tier === 'premium' || item.feature === 'trial' ? 'nav-link trial-feature' : 'nav-link trial-feature';
+      li.innerHTML = `
+        <a href="${item.href}" class="${className} ${item.active ? 'active' : ''}" onclick="handleNavClick('${item.href}', '${item.feature}')">
+          <span class="icon">${item.icon}</span>
+          ${item.text}
+        </a>
+      `;
+      trialSection.appendChild(li);
+    });
+  }
+
+  if (premiumSection) {
+    premiumSection.innerHTML = '';
+    premiumNavItems.forEach(item => {
+      const li = document.createElement('li');
+      const isLocked = tier !== 'premium';
+      const className = isLocked ? 'nav-link premium-feature premium-locked' : 'nav-link premium-feature';
+      li.innerHTML = `
+        <a href="${item.href}" class="${className}" onclick="handleNavClick('${item.href}', '${item.feature}')">
+          <span class="icon">${item.icon}</span>
+          ${item.text}
+          ${item.badge ? `<span class="premium-badge">${item.badge}</span>` : ''}
+          ${isLocked ? '<span class="lock-icon">🔒</span>' : ''}
+        </a>
+      `;
+      premiumSection.appendChild(li);
+    });
+  }
+
+  console.log('✅ Navigation setup complete for', tier, 'tier');
+}
+
+// Handle navigation clicks with tier checking
+function handleNavClick(href, feature) {
+  const currentTier = detectSubscriptionTier();
+  
+  if (feature === 'premium' && currentTier !== 'premium') {
+    showUpgradeModal(href, feature);
+    return false;
+  }
+  
+  // Handle actual navigation
+  console.log('Navigating to:', href);
+  // You would implement actual view switching here
+  
+  return true;
+}
+
+// Show upgrade modal for premium features
+function showUpgradeModal(feature, featureName) {
+  const modal = document.createElement('div');
+  modal.className = 'upgrade-modal-overlay';
+  modal.innerHTML = `
+    <div class="upgrade-modal">
+      <div class="modal-header">
+        <h2>🚀 Upgrade to Premium</h2>
+        <button onclick="this.parentElement.parentElement.parentElement.remove()" class="close-btn">×</button>
+      </div>
+      <div class="modal-content">
+        <div class="feature-highlight">
+          <div class="feature-icon">⭐</div>
+          <h3>Unlock ${featureName}</h3>
+          <p>This feature is part of our Premium plan with advanced AI-powered insights and personalization.</p>
+        </div>
+        
+        <div class="upgrade-benefits">
+          <h4>Premium Benefits Include:</h4>
+          <ul>
+            <li>🧠 AI-powered meal personalization</li>
+            <li>📊 Advanced symptom pattern analytics</li>
+            <li>🍽️ Unlimited meal ratings & feedback</li>
+            <li>📈 Comprehensive progress tracking</li>
+            <li>⚡ Priority customer support</li>
+            <li>🎯 Injection-day optimization</li>
+          </ul>
+        </div>
+        
+        <div class="upgrade-pricing">
+          <div class="price-box">
+            <div class="price">$29<span class="period">/month</span></div>
+            <div class="savings">Save 30% with annual billing</div>
+          </div>
+        </div>
+        
+        <div class="modal-actions">
+          <button onclick="window.open('https://buy.stripe.com/premium-link', '_blank')" class="upgrade-btn">
+            Upgrade Now
+          </button>
+          <button onclick="this.parentElement.parentElement.parentElement.remove()" class="cancel-btn">
+            Maybe Later
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
 }
 
 // Initialize app

@@ -1,0 +1,37 @@
+{
+  "name": "postdoserx-app",
+  "version": "1.0.0",
+  "description": "PostDoseRX User Dashboard - User-centric meal planning and symptom tracking for GLP-1 medications",
+  "main": "index.html",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'Static site - no build needed'",
+    "deploy": "vercel --prod",
+    "db:setup": "echo 'Run the SQL schema in your Supabase dashboard'"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.4",
+    "jose": "^4.15.4"
+  },
+  "devDependencies": {
+    "@vercel/node": "^3.0.12"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/siteoptz/postdoserx-app.git"
+  },
+  "keywords": [
+    "glp-1",
+    "medication",
+    "meal-planning",
+    "symptom-tracking",
+    "dashboard",
+    "health-tech"
+  ],
+  "author": "SiteOptZ",
+  "license": "MIT"
+}
