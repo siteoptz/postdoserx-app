@@ -6,9 +6,8 @@
   <title>PostDoseRX Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
   
-  <!-- Icon Libraries CDN -->
-  <script src="https://unpkg.com/lucide@0.263.1/dist/umd/lucide.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/heroicons@2.2.0/dist/outline/index.js"></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <style>
     :root {
       /* Core Professional Colors - Mandatory Dark Theme */
@@ -8865,11 +8864,23 @@ For clinical review and treatment optimization.`;
 
   <!-- Initialize Lucide Icons -->
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    function initializeLucideIcons() {
       if (typeof lucide !== 'undefined') {
+        console.log('Lucide library loaded, creating icons...');
         lucide.createIcons();
+        console.log('Lucide icons created');
+      } else {
+        console.log('Lucide library not found, retrying in 100ms...');
+        setTimeout(initializeLucideIcons, 100);
       }
-    });
+    }
+    
+    // Try to initialize immediately and also on DOMContentLoaded
+    initializeLucideIcons();
+    document.addEventListener('DOMContentLoaded', initializeLucideIcons);
+    
+    // Also try after window load as fallback
+    window.addEventListener('load', initializeLucideIcons);
   </script>
 </body>
 </html>
