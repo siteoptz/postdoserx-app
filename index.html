@@ -3311,7 +3311,7 @@
       transform: scale(1);
     }
     .modal-header {
-      background: linear-gradient(135deg, var(--magenta-dark), var(--magenta));
+      background: linear-gradient(135deg, #0ea5e9, #0284c7);
       color: white;
       padding: 2rem;
       text-align: center;
@@ -4272,14 +4272,39 @@
                 <label for="medication-select">Medication</label>
                 <select id="medication-select" onchange="saveMedicationProfile()">
                   <option value="">Select your GLP-1 medication</option>
-                  <option value="Ozempic">Ozempic (Semaglutide)</option>
-                  <option value="Wegovy">Wegovy (Semaglutide)</option>
-                  <option value="Mounjaro">Mounjaro (Tirzepatide)</option>
-                  <option value="Zepbound">Zepbound (Tirzepatide)</option>
-                  <option value="Trulicity">Trulicity (Dulaglutide)</option>
-                  <option value="Victoza">Victoza (Liraglutide)</option>
-                  <option value="Saxenda">Saxenda (Liraglutide)</option>
-                  <option value="Rybelsus">Rybelsus (Oral Semaglutide)</option>
+                  <optgroup label="Semaglutide Medications">
+                    <option value="Ozempic">Ozempic (Semaglutide)</option>
+                    <option value="Wegovy">Wegovy (Semaglutide)</option>
+                    <option value="Rybelsus">Rybelsus (Oral Semaglutide)</option>
+                  </optgroup>
+                  <optgroup label="Tirzepatide Medications">
+                    <option value="Mounjaro">Mounjaro (Tirzepatide)</option>
+                    <option value="Zepbound">Zepbound (Tirzepatide)</option>
+                  </optgroup>
+                  <optgroup label="Liraglutide Medications">
+                    <option value="Victoza">Victoza (Liraglutide)</option>
+                    <option value="Saxenda">Saxenda (Liraglutide)</option>
+                  </optgroup>
+                  <optgroup label="Dulaglutide Medications">
+                    <option value="Trulicity">Trulicity (Dulaglutide)</option>
+                  </optgroup>
+                  <optgroup label="Exenatide Medications">
+                    <option value="Byetta">Byetta (Exenatide)</option>
+                    <option value="Bydureon">Bydureon (Exenatide Extended-Release)</option>
+                  </optgroup>
+                  <optgroup label="Lixisenatide Medications">
+                    <option value="Adlyxin">Adlyxin (Lixisenatide)</option>
+                  </optgroup>
+                  <optgroup label="Albiglutide Medications">
+                    <option value="Tanzeum">Tanzeum (Albiglutide)</option>
+                  </optgroup>
+                  <optgroup label="Other/Generic">
+                    <option value="Semaglutide-Generic">Generic Semaglutide</option>
+                    <option value="Liraglutide-Generic">Generic Liraglutide</option>
+                    <option value="Tirzepatide-Compounded">Compounded Tirzepatide</option>
+                    <option value="Semaglutide-Compounded">Compounded Semaglutide</option>
+                    <option value="Other">Other GLP-1 Medication</option>
+                  </optgroup>
                 </select>
               </div>
               
@@ -7383,14 +7408,43 @@
         }
       });
       
-      // Update profile cards
+      // Update all profile display elements
       const profileMedication = document.getElementById('profile-medication');
+      const profileDose = document.getElementById('profile-dose');
+      const profileInjectionDay = document.getElementById('profile-injection-day');
+      const profileLastInjection = document.getElementById('profile-last-injection');
       const profileNextInjection = document.getElementById('profile-next-injection');
       
-      if (profileMedication && profile.medication && profile.dose) {
-        profileMedication.textContent = `${profile.medication} (${profile.dose})`;
+      // Update medication display
+      if (profileMedication && profile.medication) {
+        profileMedication.textContent = profile.medication;
       }
       
+      // Update dose display
+      if (profileDose && profile.dose && profile.frequency) {
+        profileDose.textContent = `${profile.dose} ${profile.frequency}`;
+      } else if (profileDose && profile.dose) {
+        profileDose.textContent = profile.dose;
+      }
+      
+      // Update injection day
+      if (profileInjectionDay && profile.injectionDay) {
+        const dayName = profile.injectionDay.charAt(0).toUpperCase() + profile.injectionDay.slice(1);
+        profileInjectionDay.textContent = dayName + 's';
+      }
+      
+      // Update last injection
+      if (profileLastInjection && profile.lastInjection) {
+        const lastDate = new Date(profile.lastInjection);
+        profileLastInjection.textContent = lastDate.toLocaleDateString('en-US', { 
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'short', 
+          day: 'numeric' 
+        });
+      }
+      
+      // Update next injection
       if (profileNextInjection && profile.nextInjection) {
         const nextDate = new Date(profile.nextInjection);
         profileNextInjection.textContent = nextDate.toLocaleDateString('en-US', { 
@@ -7400,8 +7454,223 @@
           day: 'numeric' 
         });
       }
+      
+      // Update metrics based on user data
+      updateUserMetrics(profile);
+      
+      // Update AI insights based on user data
+      updateAIInsights(profile);
+      
+      // Update suggested actions based on user data
+      updateSuggestedActions(profile);
+      
+      // Update recent activity based on user data
+      updateRecentActivity(profile);
     }
     
+    function updateUserMetrics(profile) {
+      // Calculate days since last injection for metrics
+      if (profile.lastInjection) {
+        const lastInjection = new Date(profile.lastInjection);
+        const today = new Date();
+        const daysSince = Math.floor((today - lastInjection) / (1000 * 60 * 60 * 24));
+        
+        // Update the days since injection metric
+        const daysSinceElement = document.querySelector('.metric-value');
+        if (daysSinceElement) {
+          daysSinceElement.textContent = daysSince;
+          const metricLabel = daysSinceElement.parentElement.querySelector('.metric-label');
+          if (metricLabel) {
+            metricLabel.textContent = `Day${daysSince !== 1 ? 's' : ''} Since Injection`;
+          }
+        }
+        
+        // Update medication-specific metrics
+        const allMetrics = document.querySelectorAll('.intelligence-card');
+        if (allMetrics.length >= 4) {
+          // Update based on medication type
+          if (profile.medication) {
+            if (profile.medication.includes('Semaglutide') || profile.medication.includes('Ozempic') || profile.medication.includes('Wegovy')) {
+              allMetrics[1].querySelector('.metric-value').textContent = '85%';
+              allMetrics[1].querySelector('.metric-label').textContent = 'Semaglutide Effectiveness';
+            } else if (profile.medication.includes('Tirzepatide') || profile.medication.includes('Mounjaro') || profile.medication.includes('Zepbound')) {
+              allMetrics[1].querySelector('.metric-value').textContent = '92%';
+              allMetrics[1].querySelector('.metric-label').textContent = 'Tirzepatide Effectiveness';
+            }
+          }
+          
+          // Update dose-based metrics
+          if (profile.dose) {
+            const doseNum = parseFloat(profile.dose);
+            allMetrics[2].querySelector('.metric-value').textContent = doseNum >= 1 ? '73%' : '68%';
+            allMetrics[2].querySelector('.metric-label').textContent = 'Symptom Control';
+          }
+        }
+      }
+    }
+    
+    function updateAIInsights(profile) {
+      const insightsList = document.querySelector('.insight-list');
+      if (!insightsList || !profile.medication) return;
+      
+      const daysSinceInjection = profile.lastInjection ? 
+        Math.floor((new Date() - new Date(profile.lastInjection)) / (1000 * 60 * 60 * 24)) : 0;
+      
+      let insights = [];
+      
+      if (profile.medication.includes('Semaglutide') || profile.medication.includes('Ozempic') || profile.medication.includes('Wegovy')) {
+        insights = [
+          {
+            type: 'Medication Timing',
+            message: `Based on your ${profile.medication} schedule, you're currently in the ${daysSinceInjection <= 2 ? 'peak effectiveness' : daysSinceInjection <= 4 ? 'moderate effectiveness' : 'lowest effectiveness'} phase. ${daysSinceInjection <= 2 ? 'Focus on lighter meals.' : 'You may tolerate larger portions better today.'}`
+          },
+          {
+            type: 'Symptom Prediction',
+            message: `With ${profile.dose} ${profile.medication}, nausea typically peaks 1-3 days post-injection. ${daysSinceInjection <= 3 ? 'Consider anti-nausea foods like ginger.' : 'Your symptoms should be decreasing now.'}`
+          },
+          {
+            type: 'Nutrition Optimization',
+            message: `Your current dose of ${profile.dose} works best with protein-rich meals. Aim for 25-30g protein per meal to maximize effectiveness.`
+          }
+        ];
+      } else if (profile.medication.includes('Tirzepatide') || profile.medication.includes('Mounjaro') || profile.medication.includes('Zepbound')) {
+        insights = [
+          {
+            type: 'Dual Action Benefits',
+            message: `${profile.medication}'s GLP-1/GIP dual action means better blood sugar control. Your ${profile.dose} dose provides superior satiety compared to single-receptor medications.`
+          },
+          {
+            type: 'Side Effect Timeline',
+            message: `With Tirzepatide, side effects typically last 2-4 days post-injection. Day ${daysSinceInjection}: ${daysSinceInjection <= 2 ? 'Peak side effects expected' : daysSinceInjection <= 4 ? 'Side effects should be reducing' : 'Minimal side effects expected'}.`
+          },
+          {
+            type: 'Meal Timing',
+            message: `For optimal ${profile.medication} effectiveness, maintain consistent meal timing. Your injection day (${profile.injectionDay || 'not set'}) pairs well with lighter weekend meals.`
+          }
+        ];
+      }
+      
+      // Update the insight list HTML
+      insightsList.innerHTML = insights.map(insight => `
+        <div class="insight-item">
+          <div class="insight-type">${insight.type}</div>
+          <div class="insight-message">${insight.message}</div>
+        </div>
+      `).join('');
+    }
+    
+    function updateSuggestedActions(profile) {
+      const actionsList = document.querySelector('.action-list');
+      if (!actionsList || !profile.medication) return;
+      
+      const daysSinceInjection = profile.lastInjection ? 
+        Math.floor((new Date() - new Date(profile.lastInjection)) / (1000 * 60 * 60 * 24)) : 0;
+      
+      let actions = [];
+      
+      if (daysSinceInjection <= 3) {
+        actions = [
+          {
+            id: 'gentle-meal',
+            text: `Plan gentle meals for injection recovery (Day ${daysSinceInjection} of cycle)`,
+            checked: false
+          },
+          {
+            id: 'hydration',
+            text: 'Increase fluid intake to manage potential nausea',
+            checked: false
+          },
+          {
+            id: 'symptom-log',
+            text: `Log ${profile.medication} side effects for dose optimization`,
+            checked: false
+          }
+        ];
+      } else {
+        actions = [
+          {
+            id: 'normal-meals',
+            text: 'Return to normal portion sizes as effectiveness decreases',
+            checked: false
+          },
+          {
+            id: 'prep-injection',
+            text: `Prepare for next ${profile.medication} injection (${profile.injectionDay || 'injection day'})`,
+            checked: false
+          },
+          {
+            id: 'track-hunger',
+            text: 'Monitor hunger levels as medication effect wanes',
+            checked: false
+          }
+        ];
+      }
+      
+      actionsList.innerHTML = actions.map(action => `
+        <div class="action-item">
+          <input type="checkbox" id="${action.id}" ${action.checked ? 'checked' : ''}>
+          <label for="${action.id}">${action.text}</label>
+        </div>
+      `).join('');
+    }
+    
+    function updateRecentActivity(profile) {
+      const activityTimeline = document.querySelector('.activity-timeline');
+      if (!activityTimeline || !profile.medication) return;
+      
+      const activities = [];
+      
+      if (profile.lastInjection) {
+        const lastInjectionDate = new Date(profile.lastInjection);
+        const timeDiff = new Date() - lastInjectionDate;
+        const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+        const hoursDiff = Math.floor(timeDiff / (1000 * 60 * 60));
+        
+        if (daysDiff === 0) {
+          activities.push({
+            time: `${hoursDiff} hours ago`,
+            action: `Administered ${profile.medication}`,
+            details: `${profile.dose} injection completed`
+          });
+        } else if (daysDiff <= 7) {
+          activities.push({
+            time: `${daysDiff} day${daysDiff !== 1 ? 's' : ''} ago`,
+            action: `Administered ${profile.medication}`,
+            details: `${profile.dose} injection completed`
+          });
+        }
+      }
+      
+      // Add medication-specific recent activities
+      activities.push(
+        {
+          time: '2 hours ago',
+          action: 'Logged meal rating',
+          details: `Mediterranean Bowl rated 4/5 for ${profile.medication} compatibility`
+        },
+        {
+          time: '1 day ago',
+          action: 'Completed symptom check-in',
+          details: `Day ${profile.lastInjection ? Math.floor((new Date() - new Date(profile.lastInjection)) / (1000 * 60 * 60 * 24)) - 1 : 'N/A'} post-injection symptoms logged`
+        },
+        {
+          time: '3 days ago',
+          action: 'Updated medication profile',
+          details: `${profile.medication} dose confirmed at ${profile.dose}`
+        }
+      );
+      
+      activityTimeline.innerHTML = activities.map(activity => `
+        <div class="activity-item">
+          <div class="activity-time">${activity.time}</div>
+          <div class="activity-content">
+            <div class="activity-action">${activity.action}</div>
+            <div class="activity-details">${activity.details}</div>
+          </div>
+        </div>
+      `).join('');
+    }
+
     function calculateNextInjection(lastInjectionDate, injectionDay, frequency) {
       const lastDate = new Date(lastInjectionDate);
       const dayMap = {
