@@ -9331,6 +9331,22 @@ For clinical review and treatment optimization.`;
       if (userEmailElement) {
         document.getElementById('profile-email').value = userEmailElement.textContent;
       }
+      
+      // Load medication profile data
+      const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
+      
+      if (medicationProfile.medication) {
+        document.getElementById('profile-medication').value = medicationProfile.medication;
+      }
+      if (medicationProfile.dose) {
+        document.getElementById('profile-dose').value = medicationProfile.dose;
+      }
+      if (medicationProfile.injectionDay) {
+        document.getElementById('profile-injection-day').value = medicationProfile.injectionDay.toLowerCase();
+      }
+      if (medicationProfile.nextInjection) {
+        document.getElementById('profile-next-injection-input').value = medicationProfile.nextInjection;
+      }
     }
 
     function showCancelConfirmation() {
@@ -9367,11 +9383,23 @@ For clinical review and treatment optimization.`;
             name: document.getElementById('profile-name').value,
             medication: document.getElementById('profile-medication').value,
             dose: document.getElementById('profile-dose').value,
-            injectionDay: document.getElementById('profile-injection-day').value
+            injectionDay: document.getElementById('profile-injection-day').value,
+            nextInjection: document.getElementById('profile-next-injection-input').value
           };
           
-          // Here you would normally send to API
-          console.log('Updating profile:', formData);
+          // Update localStorage with medication profile data
+          const currentProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
+          const updatedProfile = {
+            ...currentProfile,
+            medication: formData.medication,
+            dose: formData.dose,
+            injectionDay: formData.injectionDay,
+            nextInjection: formData.nextInjection
+          };
+          localStorage.setItem('medicationProfile', JSON.stringify(updatedProfile));
+          
+          // Update dashboard with new profile data
+          updateDashboardWithProfile(updatedProfile);
           
           // Update UI
           document.getElementById('dropdown-user-name').textContent = formData.name;
@@ -9472,6 +9500,10 @@ For clinical review and treatment optimization.`;
               <option value="friday">Friday</option>
               <option value="saturday">Saturday</option>
             </select>
+          </div>
+          <div class="form-group">
+            <label for="profile-next-injection">Next Injection Date</label>
+            <input type="date" id="profile-next-injection-input" />
           </div>
           <div class="modal-actions">
             <button type="button" class="btn-secondary" onclick="closeUserModal('profile-modal')">Cancel</button>
