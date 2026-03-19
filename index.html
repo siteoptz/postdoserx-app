@@ -3396,6 +3396,32 @@
       margin-bottom: 0.5rem;
       display: block;
     }
+    /* Modal ingredient items styling */
+    .modal-content .ingredient-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+    }
+    .modal-content .ingredient-item:last-child {
+      margin-bottom: 0;
+    }
+    .modal-content .ingredient-name {
+      font-weight: 500;
+      color: white;
+    }
+    .modal-content .ingredient-amount {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    
+    /* Fallback for other ingredient items */
     .ingredient-item {
       display: flex;
       justify-content: space-between;
@@ -3427,6 +3453,14 @@
       margin-bottom: 1rem;
       line-height: 1.6;
     }
+    .modal-content .instruction-item {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 1rem 1rem 1rem 4rem;
+      color: white;
+      backdrop-filter: blur(10px);
+    }
     .instruction-item::before {
       content: counter(step-counter);
       position: absolute;
@@ -3443,32 +3477,107 @@
       font-weight: 600;
       font-size: 0.875rem;
     }
+    .modal-content .instruction-item::before {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      box-shadow: 0 2px 8px rgba(201, 168, 108, 0.3);
+    }
     .nutrition-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       gap: 1rem;
     }
     .nutrition-item {
-      background: var(--sand-light);
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
       border-radius: 8px;
       padding: 1rem;
       text-align: center;
+      backdrop-filter: blur(10px);
     }
     .nutrition-value {
       font-size: 1.25rem;
       font-weight: 600;
-      color: var(--accent-blue);
+      color: white;
       margin-bottom: 0.25rem;
     }
     .nutrition-label {
       font-size: 0.875rem;
-      color: var(--text-sec);
+      color: rgba(255, 255, 255, 0.8);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-weight: 600;
     }
     .recipe-tags {
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
       margin-top: 1rem;
+    }
+    .modal-content .recipe-tag {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+    }
+    
+    /* Modal tag styling for all tag types */
+    .modal-content .tag {
+      background: rgba(255, 255, 255, 0.2) !important;
+      color: white !important;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(10px);
+    }
+    
+    /* Modal cart summary styling */
+    .modal-content .cart-summary {
+      background: rgba(255, 255, 255, 0.1) !important;
+      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+      backdrop-filter: blur(10px);
+    }
+    
+    .modal-content .cart-summary .card-header,
+    .modal-content .cart-summary .card-body {
+      color: white;
+    }
+    
+    /* Modal upgrade/premium sections */
+    .modal-content .upgrade-section {
+      background: rgba(255, 255, 255, 0.1) !important;
+      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+      backdrop-filter: blur(10px);
+    }
+    
+    .modal-content .upgrade-section h3,
+    .modal-content .upgrade-section p {
+      color: white !important;
+    }
+    
+    /* Modal form group styling */
+    .modal-content .form-group label {
+      color: white;
+      font-weight: 600;
+    }
+    
+    .modal-content .form-group input,
+    .modal-content .form-group select,
+    .modal-content .form-group textarea {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+    
+    /* Modal button styling */
+    .modal-content .btn:not(.btn-primary):not(.btn-secondary):not(.btn-tertiary) {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
     }
     .recipe-tag {
       background: var(--yellow-400);
