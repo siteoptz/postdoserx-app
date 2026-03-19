@@ -3311,7 +3311,7 @@
       transform: scale(1);
     }
     .modal-header {
-      background: linear-gradient(135deg, #0ea5e9, #0284c7);
+      background: linear-gradient(135deg, var(--navy), var(--navy-light));
       color: white;
       padding: 2rem;
       text-align: center;
@@ -9421,10 +9421,40 @@ For clinical review and treatment optimization.`;
           <div class="form-group">
             <label for="profile-medication">Medication</label>
             <select id="profile-medication">
-              <option value="ozempic">Ozempic (Semaglutide)</option>
-              <option value="wegovy">Wegovy (Semaglutide)</option>
-              <option value="mounjaro">Mounjaro (Tirzepatide)</option>
-              <option value="zepbound">Zepbound (Tirzepatide)</option>
+              <option value="">Select your GLP-1 medication</option>
+              <optgroup label="Semaglutide Medications">
+                <option value="Ozempic">Ozempic (Semaglutide)</option>
+                <option value="Wegovy">Wegovy (Semaglutide)</option>
+                <option value="Rybelsus">Rybelsus (Oral Semaglutide)</option>
+              </optgroup>
+              <optgroup label="Tirzepatide Medications">
+                <option value="Mounjaro">Mounjaro (Tirzepatide)</option>
+                <option value="Zepbound">Zepbound (Tirzepatide)</option>
+              </optgroup>
+              <optgroup label="Liraglutide Medications">
+                <option value="Victoza">Victoza (Liraglutide)</option>
+                <option value="Saxenda">Saxenda (Liraglutide)</option>
+              </optgroup>
+              <optgroup label="Dulaglutide Medications">
+                <option value="Trulicity">Trulicity (Dulaglutide)</option>
+              </optgroup>
+              <optgroup label="Exenatide Medications">
+                <option value="Byetta">Byetta (Exenatide)</option>
+                <option value="Bydureon">Bydureon (Exenatide Extended-Release)</option>
+              </optgroup>
+              <optgroup label="Lixisenatide Medications">
+                <option value="Adlyxin">Adlyxin (Lixisenatide)</option>
+              </optgroup>
+              <optgroup label="Albiglutide Medications">
+                <option value="Tanzeum">Tanzeum (Albiglutide)</option>
+              </optgroup>
+              <optgroup label="Other/Generic">
+                <option value="Semaglutide-Generic">Generic Semaglutide</option>
+                <option value="Liraglutide-Generic">Generic Liraglutide</option>
+                <option value="Tirzepatide-Compounded">Compounded Tirzepatide</option>
+                <option value="Semaglutide-Compounded">Compounded Semaglutide</option>
+                <option value="Other">Other GLP-1 Medication</option>
+              </optgroup>
             </select>
           </div>
           <div class="form-group">
