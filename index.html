@@ -4,60 +4,65 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PostDoseRX Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Montserrat:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
   
   <!-- Lucide Icons CDN -->
   <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
   <style>
     :root {
-      /* Core Professional Colors - Mandatory Dark Theme */
-      --midnight: #0D0D0D;      /* Primary background */
-      --charcoal: #1A1A1A;      /* Surface/card backgrounds */
-      --slate-dark: #2A2A2A;    /* Elevated surfaces */
-      --slate: #3A3A3A;         /* Medium surfaces */
-      --ash: #4A4A4A;           /* Disabled states */
-      --steel: #6A6A6A;         /* Tertiary text */
-      --silver: #9A9A9A;        /* Secondary text */
-      --platinum: #CACACA;      /* Light accents */
-      --pearl: #F0F0F0;         /* Very light accents */
-      --white: #ffffff;         /* Primary text */
+      /* PostDoseRX Brand Colors - Matching Main Site */
+      --cream: #FDF8F4;         /* Primary background */
+      --warm: #FEFCFA;          /* Warm background */
+      --sand: #F5EDE4;          /* Sand background */
+      --sand-light: #FAF6F1;   /* Light sand */
       
-      /* Accent Colors */
-      --accent-blue: #2563EB;   /* Primary interactive elements */
-      --accent-emerald: #059669; /* Success states */
-      --accent-amber: #D97706;  /* Warning states */
-      --accent-rose: #DC2626;   /* Error states */
-      --cyan-400: #22d3ee;      /* Links and highlights */
-      --yellow-400: #facc15;    /* Ratings/stars */
-      --green-400: #4ade80;     /* Feature checkmarks */
+      --gold: #C9A86C;          /* Gold accent */
+      --gold-light: #E8D5B0;   /* Light gold */
+      --gold-dark: #8B7341;    /* Dark gold */
       
-      /* Background System - Mandatory Dark Theme */
-      --bg-primary: linear-gradient(to bottom right, #000000 0%, #111111 50%, #000000 100%);
-      --bg-card: #000000;
-      --bg-elevated: linear-gradient(to bottom right, #111111 0%, #0a0a0a 50%, #111111 100%);
-      --bg-button-primary: linear-gradient(to right, #2563EB, #7c3aed);
-      --bg-button-secondary: transparent;
-      --bg-success: #059669;
-      --bg-warning: #D97706;
-      --bg-error: #DC2626;
+      --navy: #1B2A4A;          /* Primary navy */
+      --navy-light: #2D4166;   /* Light navy */
+      --slate: #4A5568;        /* Slate */
+      --slate-light: #718096;  /* Light slate */
       
-      /* Text Colors - Professional Dark Theme */
-      --text-primary: #ffffff;
-      --text-secondary: #CACACA;
-      --text-tertiary: #9A9A9A;
-      --text-accent: #22d3ee;
-      --text-inverse: #000000;
+      --magenta: #C6168D;       /* Primary magenta */
+      --magenta-light: #FEF0F7; /* Light magenta */
+      --magenta-dark: #9B1170;  /* Dark magenta */
       
-      /* Borders & Dividers */
-      --border-primary: #3A3A3A;
-      --border-secondary: #2A2A2A;
-      --border-accent: #4A4A4A;
+      --teal: #2A7F7F;          /* Teal accent */
+      --teal-light: #E6F5F5;   /* Light teal */
+      --teal-dark: #1D5C5C;    /* Dark teal */
       
-      /* Shadows */
-      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
-      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
-      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.25);
+      --white: #FFFFFF;         /* White */
+      --border: #E8E0D6;       /* Border color */
+      
+      /* Text Colors */
+      --text: #2D2D2D;          /* Primary text */
+      --text-sec: #5A5A5A;     /* Secondary text */
+      --text-muted: #8A8A8A;   /* Muted text */
+      
+      /* Background System */
+      --bg-primary: var(--cream);
+      --bg-card: var(--white);
+      --bg-elevated: var(--sand-light);
+      --bg-button-primary: var(--magenta);
+      --bg-button-secondary: var(--teal);
+      --bg-success: var(--teal);
+      --bg-warning: var(--gold);
+      --bg-error: var(--magenta-dark);
+      
+      /* Interactive Colors */
+      --accent-blue: var(--teal);
+      --accent-primary: var(--magenta);
+      --accent-secondary: var(--navy);
+      
+      /* Borders & Shadows */
+      --border-primary: var(--border);
+      --border-light: var(--sand);
+      --shadow-sm: 0 1px 2px 0 rgba(27, 42, 74, 0.1);
+      --shadow-md: 0 4px 6px -1px rgba(27, 42, 74, 0.15);
+      --shadow-lg: 0 10px 15px -3px rgba(27, 42, 74, 0.2);
+      --shadow-xl: 0 20px 25px -5px rgba(27, 42, 74, 0.25);
 
       /* Spacing System (4px Grid) */
       --space-1: 0.25rem;   /* 4px */
@@ -126,12 +131,13 @@
     }
     
     body { 
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
       font-weight: 400;
-      color: var(--text-primary);
+      color: var(--text);
       background: var(--bg-primary);
       background-attachment: fixed;
       -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
       text-rendering: optimizeLegibility;
       letter-spacing: -0.01em;
       overflow-x: hidden;
@@ -142,21 +148,40 @@
       color: var(--text-primary); 
     }
     
-    /* Professional Typography Scale */
-    h1, h2, h3, h4, h5, h6 {
-      font-family: 'Inter', sans-serif;
-      font-weight: 600;
+    /* Typography Scale - Matching Main Site */
+    h1, h2 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-weight: 400;
       line-height: 1.2;
       letter-spacing: -0.02em;
-      color: var(--text-primary);
+      color: var(--navy);
     }
     
-    h1 { font-size: 3rem; font-weight: 700; }        /* 48px */
-    h2 { font-size: 2.25rem; font-weight: 700; }     /* 36px */
-    h3 { font-size: 1.875rem; font-weight: 600; }    /* 30px */
-    h4 { font-size: 1.5rem; font-weight: 600; }      /* 24px */
-    h5 { font-size: 1.25rem; font-weight: 500; }     /* 20px */
-    h6 { font-size: 1.125rem; font-weight: 500; }    /* 18px */
+    h3, h4, h5, h6 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--navy);
+    }
+    
+    h1 { font-size: 2.5rem; }
+    h2 { font-size: 2rem; }
+    h3 { font-size: 1.25rem; }
+    h4 { font-size: 1.1rem; }
+    
+    .serif {
+      font-family: 'DM Serif Display', Georgia, serif;
+    }
+    
+    .label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--gold-dark);
+    }
+    
+    /* Heading styles defined above with brand fonts */
 
     /* Base Text Sizes */
     .text-xs { font-size: 0.75rem; }      /* 12px */
@@ -346,11 +371,11 @@
     /* Sidebar */
     .sidebar {
       width: 320px;
-      background: var(--bg-card);
-      border-right: 1px solid var(--border-primary);
+      background: rgba(253, 248, 244, 0.94);
+      backdrop-filter: blur(12px);
+      border-right: 1px solid var(--border);
       padding: 2rem 0;
-      box-shadow: var(--shadow-lg);
-      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow-sm);
     }
     
     .nav-section {
@@ -482,10 +507,10 @@
       stroke: currentColor;
       stroke-width: 2;
       fill: none;
-      color: var(--text-primary);
+      color: var(--slate);
     }
     .nav-icon:hover {
-      color: var(--accent-blue);
+      color: var(--navy);
     }
 
     /* Main Content */
@@ -652,29 +677,44 @@
     
     /* Button Variants */
     .btn-primary, .primary-btn {
-      background: var(--bg-button-primary);
+      background: var(--magenta);
       border: none;
+      color: var(--white);
+      font-weight: 700;
+      font-size: 14px;
+      padding: 13px 22px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: inherit;
       box-shadow: var(--shadow-sm);
       position: relative;
     }
     
     .btn-primary:hover, .primary-btn:hover {
-      background: linear-gradient(to right, #1d4ed8, #6d28d9);
-      box-shadow: var(--shadow-md);
+      background: var(--magenta-dark);
       transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
     }
     
     .secondary-btn, .btn-secondary {
-      background: var(--bg-button-secondary);
-      border: 1px solid var(--border-primary);
-      color: var(--text-secondary);
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--navy);
+      font-weight: 600;
+      font-size: 14px;
+      padding: 12px 21px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: inherit;
       box-shadow: var(--shadow-sm);
     }
     
     .secondary-btn:hover, .btn-secondary:hover {
-      background: var(--slate-dark);
-      border-color: var(--border-accent);
-      color: var(--text-primary);
+      background: var(--sand-light);
+      border-color: var(--navy);
+      color: var(--navy);
       box-shadow: var(--shadow-md);
       transform: translateY(-1px);
     }
