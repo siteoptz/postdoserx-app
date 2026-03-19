@@ -1,0 +1,6 @@
+<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="80" height="80" rx="12" fill="#1A1A1A"/>
+  <circle cx="40" cy="40" r="20" stroke="#22D3EE" stroke-width="2" fill="none"/>
+  <path d="M30 40L38 48L50 32" stroke="#22D3EE" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="40" y="60" text-anchor="middle" fill="#9A9A9A" font-family="Inter, sans-serif" font-size="8">TOOL</text>
+</svg>
