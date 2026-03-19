@@ -356,6 +356,321 @@
       background: var(--magenta-dark);
       transform: translateY(-1px);
     }
+
+    /* Dashboard Components */
+    .profile-card .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .btn-sm {
+      background: var(--magenta);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+    .profile-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+    .profile-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem;
+      background: var(--sand);
+      border-radius: 6px;
+    }
+    .profile-item label {
+      font-weight: 600;
+      color: var(--text-sec);
+    }
+    .profile-item .highlight {
+      color: var(--magenta);
+      font-weight: 600;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .stat-icon {
+      font-size: 2rem;
+      width: 50px;
+      text-align: center;
+    }
+    .stat-content h4 {
+      margin: 0 0 0.5rem 0;
+      font-size: 0.875rem;
+      color: var(--text-sec);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .stat-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 0.25rem;
+    }
+    .stat-trend {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+    .stat-trend.improving {
+      color: #2e7d32;
+    }
+
+    /* Insights */
+    .insights-card .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .insight-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .insight-item {
+      padding: 1rem;
+      background: var(--magenta-light);
+      border-radius: 8px;
+      border-left: 4px solid var(--magenta);
+    }
+    .insight-type {
+      font-weight: 600;
+      color: var(--magenta);
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+    }
+    .insight-message {
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    /* Actions */
+    .action-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .action-item {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      gap: 1rem;
+    }
+    .action-item label {
+      flex: 1;
+      cursor: pointer;
+    }
+    .btn-action {
+      background: var(--magenta);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      cursor: pointer;
+    }
+
+    /* Activity Timeline */
+    .activity-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .activity-item {
+      display: flex;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--sand);
+      border-radius: 8px;
+    }
+    .activity-time {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      min-width: 100px;
+    }
+    .activity-content {
+      flex: 1;
+      color: var(--text);
+    }
+
+    /* Injection Alert */
+    .injection-alert {
+      background: linear-gradient(135deg, var(--magenta-light), var(--white));
+      border: 2px solid var(--magenta);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .alert-icon {
+      font-size: 2rem;
+    }
+
+    /* Meal Schedule */
+    .planning-controls .week-selector {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+    .week-nav {
+      background: var(--magenta);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .current-week {
+      font-weight: 600;
+      color: var(--navy);
+    }
+
+    .meal-schedule {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    .day-card {
+      background: white;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .day-card.injection-day {
+      border-color: var(--magenta);
+      box-shadow: 0 2px 8px rgba(198, 22, 141, 0.1);
+    }
+    .day-header {
+      background: var(--sand);
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .day-card.injection-day .day-header {
+      background: var(--magenta-light);
+    }
+    .day-label {
+      font-size: 0.875rem;
+      background: var(--gold);
+      color: var(--navy);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+    .day-label.injection {
+      background: var(--magenta);
+      color: white;
+    }
+
+    .day-meals {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .meal-item {
+      display: grid;
+      grid-template-columns: 100px 1fr auto;
+      gap: 1rem;
+      align-items: center;
+      padding: 1rem;
+      background: var(--sand-light);
+      border-radius: 8px;
+    }
+    .meal-item.gentle {
+      background: var(--magenta-light);
+      border-left: 4px solid var(--magenta);
+    }
+    .meal-type {
+      font-weight: 600;
+      color: var(--text-sec);
+      text-transform: uppercase;
+      font-size: 0.875rem;
+    }
+    .meal-content {
+      flex: 1;
+    }
+    .meal-name {
+      font-weight: 600;
+      color: var(--navy);
+      margin-bottom: 0.25rem;
+    }
+    .meal-details {
+      color: var(--text-sec);
+      font-size: 0.875rem;
+      margin-bottom: 0.25rem;
+    }
+    .meal-rating {
+      color: var(--gold-dark);
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    .meal-action {
+      background: var(--magenta);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.875rem;
+    }
+
+    /* Quick Actions */
+    .action-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+    .action-btn {
+      background: white;
+      border: 2px solid var(--magenta);
+      padding: 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .action-btn:hover {
+      background: var(--magenta-light);
+    }
+    .action-icon {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .action-text {
+      font-weight: 600;
+      color: var(--navy);
+    }
   </style>
 </head>
 <body>
@@ -520,24 +835,150 @@
       <!-- Home View -->
       <div id="home" class="view active">
         <div class="view-header">
-          <h1 class="view-title">Welcome back!</h1>
-          <p class="view-subtitle">Your personalized GLP-1 meal planning dashboard</p>
-        </div>
-        
-        <div class="content-card">
-          <h3>Quick Overview</h3>
-          <p>This is your personalized dashboard for managing your GLP-1 journey. Each section contains data specific to your account and medication schedule.</p>
+          <h1 class="view-title">Welcome back, <span id="dashboard-user-name">Demo User</span>!</h1>
+          <p class="view-subtitle">Your personalized <span id="medication-name">GLP-1</span> journey dashboard</p>
         </div>
 
-        <div class="content-card">
-          <h3>Getting Started</h3>
-          <p>Use the navigation menu to explore different features:</p>
-          <ul style="margin: 1rem 0; padding-left: 2rem;">
-            <li><strong>Meals:</strong> View your dose-synchronized meal plans</li>
-            <li><strong>Grocery Lists:</strong> Generated shopping lists from your meals</li>
-            <li><strong>Symptoms:</strong> Track and analyze your side effects</li>
-            <li><strong>Premium Features:</strong> Advanced analytics and personalization</li>
-          </ul>
+        <!-- Medication Profile Card -->
+        <div class="content-card profile-card">
+          <div class="card-header">
+            <h3>💊 Your Medication Profile</h3>
+            <button class="btn-sm" onclick="showView('profile')">Edit Profile</button>
+          </div>
+          <div class="profile-grid">
+            <div class="profile-item">
+              <label>Medication:</label>
+              <span id="profile-medication">Ozempic (Semaglutide)</span>
+            </div>
+            <div class="profile-item">
+              <label>Current Dose:</label>
+              <span id="profile-dose">1.0 mg weekly</span>
+            </div>
+            <div class="profile-item">
+              <label>Injection Day:</label>
+              <span id="profile-injection-day">Sundays</span>
+            </div>
+            <div class="profile-item">
+              <label>Last Injection:</label>
+              <span id="profile-last-injection">Sunday, Mar 10, 2024</span>
+            </div>
+            <div class="profile-item">
+              <label>Next Injection:</label>
+              <span id="profile-next-injection" class="highlight">Sunday, Mar 17, 2024</span>
+            </div>
+            <div class="profile-item">
+              <label>Time on Medication:</label>
+              <span id="profile-duration">12 weeks</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Stats Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-content">
+              <h4>Symptom Score</h4>
+              <div class="stat-value">3.2/10</div>
+              <div class="stat-trend improving">↓ 15% this week</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🍽️</div>
+            <div class="stat-content">
+              <h4>Meal Ratings</h4>
+              <div class="stat-value">4.3/5</div>
+              <div class="stat-trend">24 meals rated</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">⚖️</div>
+            <div class="stat-content">
+              <h4>Weight Progress</h4>
+              <div class="stat-value">-8.5 lbs</div>
+              <div class="stat-trend improving">↓ 2.1 lbs this week</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🎯</div>
+            <div class="stat-content">
+              <h4>Goal Progress</h4>
+              <div class="stat-value">34%</div>
+              <div class="stat-trend">8.5 of 25 lbs</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI Insights Card -->
+        <div class="content-card insights-card">
+          <div class="card-header">
+            <h3>🧠 Today's AI Insights</h3>
+            <span class="pro-badge-gold">PRO</span>
+          </div>
+          <div class="insight-list">
+            <div class="insight-item">
+              <div class="insight-type">Injection Day Prep</div>
+              <div class="insight-message">Tomorrow is your injection day. Consider lighter meals and stay hydrated.</div>
+            </div>
+            <div class="insight-item">
+              <div class="insight-type">Symptom Pattern</div>
+              <div class="insight-message">Your nausea tends to peak 2-3 days post-injection. Ginger tea may help.</div>
+            </div>
+            <div class="insight-item">
+              <div class="insight-type">Meal Recommendation</div>
+              <div class="insight-message">Based on your ratings, protein-rich breakfasts work best for you.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Today's Actions -->
+        <div class="content-card actions-card">
+          <h3>📋 Suggested Actions for Today</h3>
+          <div class="action-list">
+            <div class="action-item">
+              <input type="checkbox" id="action1">
+              <label for="action1">Log today's symptoms</label>
+              <button class="btn-action" onclick="showView('symptoms')">Go →</button>
+            </div>
+            <div class="action-item">
+              <input type="checkbox" id="action2">
+              <label for="action2">Rate yesterday's dinner</label>
+              <button class="btn-action" onclick="showView('feedback')">Go →</button>
+            </div>
+            <div class="action-item">
+              <input type="checkbox" id="action3">
+              <label for="action3">Review tomorrow's meal plan</label>
+              <button class="btn-action" onclick="showView('meals')">Go →</button>
+            </div>
+            <div class="action-item">
+              <input type="checkbox" id="action4">
+              <label for="action4">Update weight tracking</label>
+              <button class="btn-action" onclick="showView('progress')">Go →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="content-card activity-card">
+          <h3>📈 Recent Activity</h3>
+          <div class="activity-timeline">
+            <div class="activity-item">
+              <div class="activity-time">2 hours ago</div>
+              <div class="activity-content">Rated "Grilled Salmon with Asparagus" 5 stars</div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-time">Yesterday</div>
+              <div class="activity-content">Logged symptoms: Mild nausea (2/10)</div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-time">2 days ago</div>
+              <div class="activity-content">Completed injection day check-in</div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-time">3 days ago</div>
+              <div class="activity-content">Generated new weekly meal plan</div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -545,19 +986,188 @@
       <div id="meals" class="view">
         <div class="view-header">
           <h1 class="view-title">Dose-day Synchronized Meals</h1>
-          <p class="view-subtitle">Meal plans optimized for your injection schedule</p>
+          <p class="view-subtitle">Meal plans optimized for your <span class="highlight">Sunday</span> injection schedule</p>
         </div>
 
-        <div class="demo-notice">
-          ✅ <strong>Navigation Working!</strong> This is the Meals view with user-specific content.
+        <!-- Injection Schedule Alert -->
+        <div class="injection-alert">
+          <div class="alert-icon">💉</div>
+          <div class="alert-content">
+            <h4>Injection Day Tomorrow (Sunday)</h4>
+            <p>Your meal plan has been adjusted for reduced portions and gentle foods to minimize side effects.</p>
+          </div>
         </div>
 
-        <div class="content-card">
-          <h3>Your Weekly Meal Plan</h3>
-          <div class="loading">Loading your personalized meal plan...</div>
-          <button class="btn" onclick="alert('Will connect to API: GET /api/meals/plan')">
-            Generate New Plan
-          </button>
+        <!-- Meal Planning Controls -->
+        <div class="content-card planning-controls">
+          <div class="card-header">
+            <h3>🗓️ Weekly Meal Plan</h3>
+            <div class="planning-actions">
+              <button class="btn-sm" onclick="generateMealPlan()">🔄 Regenerate Plan</button>
+              <button class="btn-sm" onclick="customizeMealPlan()">✏️ Customize</button>
+            </div>
+          </div>
+          <div class="week-selector">
+            <button class="week-nav" onclick="previousWeek()">← Previous</button>
+            <span class="current-week">Week of March 11-17, 2024</span>
+            <button class="week-nav" onclick="nextWeek()">Next →</button>
+          </div>
+        </div>
+
+        <!-- Daily Meal Schedule -->
+        <div class="meal-schedule">
+          <!-- Saturday (Pre-injection day) -->
+          <div class="day-card pre-injection">
+            <div class="day-header">
+              <h4>Saturday, March 16</h4>
+              <span class="day-label">Pre-Injection Day</span>
+            </div>
+            <div class="day-meals">
+              <div class="meal-item">
+                <div class="meal-type">Breakfast</div>
+                <div class="meal-content">
+                  <div class="meal-name">Protein Power Bowl</div>
+                  <div class="meal-details">Greek yogurt, berries, granola • 320 cal</div>
+                  <div class="meal-rating">⭐ 4.5 (based on your ratings)</div>
+                </div>
+                <button class="meal-action" onclick="viewRecipe('protein-bowl')">Recipe</button>
+              </div>
+              <div class="meal-item">
+                <div class="meal-type">Lunch</div>
+                <div class="meal-content">
+                  <div class="meal-name">Grilled Chicken Salad</div>
+                  <div class="meal-details">Mixed greens, chicken, avocado • 380 cal</div>
+                  <div class="meal-rating">⭐ 4.2</div>
+                </div>
+                <button class="meal-action" onclick="viewRecipe('chicken-salad')">Recipe</button>
+              </div>
+              <div class="meal-item">
+                <div class="meal-type">Dinner</div>
+                <div class="meal-content">
+                  <div class="meal-name">Baked Salmon with Quinoa</div>
+                  <div class="meal-details">Salmon, quinoa, steamed vegetables • 420 cal</div>
+                  <div class="meal-rating">⭐ 4.8</div>
+                </div>
+                <button class="meal-action" onclick="viewRecipe('salmon-quinoa')">Recipe</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sunday (Injection day) -->
+          <div class="day-card injection-day">
+            <div class="day-header">
+              <h4>Sunday, March 17</h4>
+              <span class="day-label injection">💉 Injection Day</span>
+            </div>
+            <div class="day-meals">
+              <div class="meal-item gentle">
+                <div class="meal-type">Breakfast</div>
+                <div class="meal-content">
+                  <div class="meal-name">Gentle Oatmeal Bowl</div>
+                  <div class="meal-details">Oatmeal, banana, honey • 280 cal</div>
+                  <div class="meal-rating">✨ Gentle option</div>
+                </div>
+                <button class="meal-action" onclick="viewRecipe('gentle-oatmeal')">Recipe</button>
+              </div>
+              <div class="meal-item gentle">
+                <div class="meal-type">Lunch</div>
+                <div class="meal-content">
+                  <div class="meal-name">Light Chicken Soup</div>
+                  <div class="meal-details">Chicken broth, vegetables, crackers • 250 cal</div>
+                  <div class="meal-rating">✨ Easy to digest</div>
+                </div>
+                <button class="meal-action" onclick="viewRecipe('chicken-soup')">Recipe</button>
+              </div>
+              <div class="meal-item gentle">
+                <div class="meal-type">Dinner</div>
+                <div class="meal-content">
+                  <div class="meal-name">Steamed Fish & Rice</div>
+                  <div class="meal-details">White fish, jasmine rice, ginger • 320 cal</div>
+                  <div class="meal-rating">✨ Anti-nausea</div>
+                </div>
+                <button class="meal-action" onclick="viewRecipe('steamed-fish')">Recipe</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Monday (Post-injection day) -->
+          <div class="day-card post-injection">
+            <div class="day-header">
+              <h4>Monday, March 18</h4>
+              <span class="day-label">Post-Injection Recovery</span>
+            </div>
+            <div class="day-meals">
+              <div class="meal-item">
+                <div class="meal-type">Breakfast</div>
+                <div class="meal-content">
+                  <div class="meal-name">Ginger Smoothie Bowl</div>
+                  <div class="meal-details">Yogurt, ginger, mango • 290 cal</div>
+                  <div class="meal-rating">🫚 Settles stomach</div>
+                </div>
+                <button class="meal-action" onclick="viewRecipe('ginger-smoothie')">Recipe</button>
+              </div>
+              <div class="meal-item">
+                <div class="meal-type">Lunch</div>
+                <div class="meal-content">
+                  <div class="meal-name">Turkey & Avocado Wrap</div>
+                  <div class="meal-details">Lean turkey, avocado, spinach • 350 cal</div>
+                  <div class="meal-rating">⭐ 4.1</div>
+                </div>
+                <button class="meal-action" onclick="viewRecipe('turkey-wrap')">Recipe</button>
+              </div>
+              <div class="meal-item">
+                <div class="meal-type">Dinner</div>
+                <div class="meal-content">
+                  <div class="meal-name">Lean Beef Stir-fry</div>
+                  <div class="meal-details">Lean beef, vegetables, brown rice • 400 cal</div>
+                  <div class="meal-rating">⭐ 4.4</div>
+                </div>
+                <button class="meal-action" onclick="viewRecipe('beef-stirfry')">Recipe</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Meal Insights -->
+        <div class="content-card meal-insights">
+          <h3>🧠 AI Meal Insights</h3>
+          <div class="insight-list">
+            <div class="insight-item">
+              <div class="insight-type">Personalization</div>
+              <div class="insight-message">Your plan emphasizes protein-rich breakfasts (avg rating: 4.6/5) and includes ginger-based options for nausea management.</div>
+            </div>
+            <div class="insight-item">
+              <div class="insight-type">Injection Cycle</div>
+              <div class="insight-message">Meal portions reduced 20% on injection day and increased fiber on recovery days based on your symptom patterns.</div>
+            </div>
+            <div class="insight-item">
+              <div class="insight-type">Nutrition Balance</div>
+              <div class="insight-message">This week: 35% protein, 40% carbs, 25% healthy fats - optimized for GLP-1 medication effectiveness.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="content-card quick-actions">
+          <h3>⚡ Quick Actions</h3>
+          <div class="action-buttons">
+            <button class="action-btn" onclick="showView('grocery')">
+              <div class="action-icon">🛒</div>
+              <div class="action-text">View Grocery List</div>
+            </button>
+            <button class="action-btn" onclick="showView('feedback')">
+              <div class="action-icon">⭐</div>
+              <div class="action-text">Rate Previous Meals</div>
+            </button>
+            <button class="action-btn" onclick="showSwapMealModal()">
+              <div class="action-icon">🔄</div>
+              <div class="action-text">Swap a Meal</div>
+            </button>
+            <button class="action-btn" onclick="exportMealPlan()">
+              <div class="action-icon">📄</div>
+              <div class="action-text">Export Plan</div>
+            </button>
+          </div>
         </div>
       </div>
 
