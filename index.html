@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
   
   <!-- Lucide Icons CDN -->
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
   <style>
     :root {
       /* Core Professional Colors - Mandatory Dark Theme */
@@ -8865,22 +8865,33 @@ For clinical review and treatment optimization.`;
   <!-- Initialize Lucide Icons -->
   <script>
     function initializeLucideIcons() {
-      if (typeof lucide !== 'undefined') {
+      console.log('Attempting to initialize Lucide icons...');
+      
+      if (typeof lucide !== 'undefined' && lucide.createIcons) {
         console.log('Lucide library loaded, creating icons...');
-        lucide.createIcons();
-        console.log('Lucide icons created');
+        try {
+          lucide.createIcons();
+          console.log('Lucide icons created successfully');
+        } catch (error) {
+          console.error('Error creating Lucide icons:', error);
+        }
       } else {
-        console.log('Lucide library not found, retrying in 100ms...');
-        setTimeout(initializeLucideIcons, 100);
+        console.log('Lucide library not ready, window.lucide =', typeof lucide);
+        console.log('Available on window:', Object.keys(window).filter(key => key.toLowerCase().includes('lucide')));
+        setTimeout(initializeLucideIcons, 200);
       }
     }
     
-    // Try to initialize immediately and also on DOMContentLoaded
-    initializeLucideIcons();
-    document.addEventListener('DOMContentLoaded', initializeLucideIcons);
-    
-    // Also try after window load as fallback
-    window.addEventListener('load', initializeLucideIcons);
+    // Multiple initialization attempts
+    setTimeout(initializeLucideIcons, 100);
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM loaded, trying Lucide init...');
+      initializeLucideIcons();
+    });
+    window.addEventListener('load', function() {
+      console.log('Window loaded, trying Lucide init...');
+      initializeLucideIcons();
+    });
   </script>
 </body>
 </html>
