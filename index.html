@@ -3537,29 +3537,28 @@
     
     /* Specific tag colors for modals */
     .modal-content .tag.protein,
-    .modal-content .tag:contains("High Protein") {
+    .modal-content .meal-tag.protein {
       background: linear-gradient(135deg, #16a34a, #15803d) !important;
       color: white !important;
       border: 1px solid #22c55e;
     }
     
     .modal-content .tag.light,
-    .modal-content .tag:contains("Light") {
+    .modal-content .meal-tag.light {
       background: linear-gradient(135deg, #0ea5e9, #0284c7) !important;
       color: white !important;
       border: 1px solid #38bdf8;
     }
     
     .modal-content .tag.glp1,
-    .modal-content .tag:contains("GLP-1"),
-    .modal-content .tag:contains("GLP-1 Friendly") {
+    .modal-content .meal-tag.glp1 {
       background: linear-gradient(135deg, #7c3aed, #6d28d9) !important;
       color: white !important;
       border: 1px solid #a855f7;
     }
     
     .modal-content .tag.quick,
-    .modal-content .tag:contains("Quick") {
+    .modal-content .meal-tag.quick {
       background: linear-gradient(135deg, #f59e0b, #d97706) !important;
       color: white !important;
       border: 1px solid #fbbf24;
@@ -8706,6 +8705,36 @@ For clinical review and treatment optimization.`;
       const modal = document.getElementById('meal-modal');
       modal.classList.add('active');
       document.body.style.overflow = 'hidden';
+      
+      // Apply custom tag colors based on text content
+      setTimeout(() => {
+        const tags = modal.querySelectorAll('.recipe-tag, .meal-tag, .tag');
+        tags.forEach(tag => {
+          const text = tag.textContent.trim();
+          
+          // Remove any existing color classes
+          tag.classList.remove('tag-protein', 'tag-light', 'tag-glp1', 'tag-quick');
+          
+          // Apply colors based on text content
+          if (text.toLowerCase().includes('high protein') || text.toLowerCase() === 'protein') {
+            tag.style.background = 'linear-gradient(135deg, #16a34a, #15803d)';
+            tag.style.color = 'white';
+            tag.style.border = '1px solid #22c55e';
+          } else if (text.toLowerCase() === 'light') {
+            tag.style.background = 'linear-gradient(135deg, #0ea5e9, #0284c7)';
+            tag.style.color = 'white';
+            tag.style.border = '1px solid #38bdf8';
+          } else if (text.toLowerCase().includes('glp-1') || text.toLowerCase().includes('glp-1 friendly')) {
+            tag.style.background = 'linear-gradient(135deg, #7c3aed, #6d28d9)';
+            tag.style.color = 'white';
+            tag.style.border = '1px solid #a855f7';
+          } else if (text.toLowerCase() === 'quick' || text.toLowerCase().includes('quick')) {
+            tag.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
+            tag.style.color = 'white';
+            tag.style.border = '1px solid #fbbf24';
+          }
+        });
+      }, 100); // Small delay to ensure DOM is ready
     }
 
     function closeModal() {
