@@ -37,9 +37,10 @@
       --border: #E8E0D6;       /* Border color */
       
       /* Text Colors */
-      --text: #2D2D2D;          /* Primary text */
+      --text: #2D2D2D;          /* Charcoal body text */
       --text-sec: #5A5A5A;     /* Secondary text */
       --text-muted: #8A8A8A;   /* Muted text */
+      --charcoal: #2D2D2D;     /* Charcoal for body text */
       
       /* Background System */
       --bg-primary: var(--cream);
@@ -57,7 +58,8 @@
       --accent-secondary: var(--navy);
       
       /* Borders & Shadows */
-      --border-primary: var(--border);
+      --border-primary: var(--border);    /* Warm beige */
+      --border-accent: var(--magenta);    /* Magenta accent borders */
       --border-light: var(--sand);
       --shadow-sm: 0 1px 2px 0 rgba(27, 42, 74, 0.1);
       --shadow-md: 0 4px 6px -1px rgba(27, 42, 74, 0.15);
@@ -133,11 +135,10 @@
     body { 
       font-family: 'Montserrat', system-ui, -apple-system, sans-serif;
       font-weight: 400;
-      color: var(--text);
+      color: var(--charcoal);
       background: var(--bg-primary);
       background-attachment: fixed;
       -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
       text-rendering: optimizeLegibility;
       letter-spacing: -0.01em;
       overflow-x: hidden;
@@ -383,14 +384,16 @@
     }
     
     .nav-title {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Montserrat', sans-serif;
       font-size: 0.75rem;
-      font-weight: 600;
+      font-weight: 700;
       text-transform: uppercase;
-      color: var(--accent-blue);
+      color: var(--magenta);
       margin: 0 1.5rem 1.5rem;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.14em;
       text-shadow: 0 0 10px rgba(198, 22, 141, 0.3);
+      border-bottom: 2px solid var(--magenta);
+      padding-bottom: 0.75rem;
     }
     
     .nav-list {
@@ -441,15 +444,15 @@
     }
     
     .nav-link.active {
-      background: linear-gradient(135deg, var(--accent-blue), var(--accent-emerald));
-      color: var(--text-primary);
-      border-left-color: var(--accent-blue);
+      background: linear-gradient(135deg, var(--magenta), var(--magenta-dark));
+      color: var(--white);
+      border-left-color: var(--magenta);
       box-shadow: 0 0 20px rgba(198, 22, 141, 0.3);
       font-weight: 600;
     }
     
     .nav-link.active::before {
-      background: var(--accent-blue);
+      background: var(--magenta);
       box-shadow: 0 0 15px rgba(198, 22, 141, 0.8);
     }
     
@@ -504,13 +507,18 @@
       width: 20px;
       height: 20px;
       margin-right: 12px;
-      stroke: currentColor;
+      stroke: white;
       stroke-width: 2;
       fill: none;
-      color: var(--slate);
+      color: white;
+      background: linear-gradient(135deg, var(--magenta), var(--magenta-dark));
+      border-radius: 6px;
+      padding: 4px;
     }
     .nav-icon:hover {
-      color: var(--navy);
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+      transform: scale(1.05);
+      transition: all 0.2s ease;
     }
 
     /* Main Content */
@@ -677,7 +685,7 @@
     
     /* Button Variants */
     .btn-primary, .primary-btn {
-      background: var(--magenta);
+      background: linear-gradient(135deg, var(--magenta), var(--magenta-dark));
       border: none;
       color: var(--white);
       font-weight: 700;
@@ -692,15 +700,15 @@
     }
     
     .btn-primary:hover, .primary-btn:hover {
-      background: var(--magenta-dark);
+      background: linear-gradient(135deg, var(--magenta-dark), var(--magenta));
       transform: translateY(-1px);
       box-shadow: var(--shadow-md);
     }
     
     .secondary-btn, .btn-secondary {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--navy);
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+      border: none;
+      color: var(--white);
       font-weight: 600;
       font-size: 14px;
       padding: 12px 21px;
@@ -712,11 +720,30 @@
     }
     
     .secondary-btn:hover, .btn-secondary:hover {
-      background: var(--sand-light);
-      border-color: var(--navy);
-      color: var(--navy);
-      box-shadow: var(--shadow-md);
+      background: linear-gradient(135deg, var(--teal-dark), var(--teal));
       transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    /* Tertiary Gold Buttons */
+    .btn-tertiary, .tertiary-btn {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      border: none;
+      color: var(--white);
+      font-weight: 600;
+      font-size: 14px;
+      padding: 12px 21px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: inherit;
+      box-shadow: var(--shadow-sm);
+    }
+    
+    .btn-tertiary:hover, .tertiary-btn:hover {
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
     }
     
     .btn-secondary:hover {
@@ -845,13 +872,22 @@
       width: 50px;
       text-align: center;
     }
+    .stat-icon {
+      background: linear-gradient(135deg, var(--magenta), var(--magenta-dark));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+    }
     .stat-icon i {
       width: 2rem;
       height: 2rem;
-      stroke: currentColor;
+      stroke: var(--white);
       stroke-width: 2;
       fill: none;
-      color: var(--accent-blue);
+      color: var(--white);
     }
     .stat-content h4 {
       margin: 0 0 0.5rem 0;
@@ -1116,13 +1152,23 @@
       font-size: 1.5rem;
       margin-bottom: 0.5rem;
     }
+    .action-icon {
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      margin-bottom: 0.5rem;
+    }
     .action-icon i {
       width: 1.5rem;
       height: 1.5rem;
-      stroke: currentColor;
+      stroke: var(--white);
       stroke-width: 2;
       fill: none;
-      color: var(--accent-blue);
+      color: var(--white);
     }
     .action-text {
       font-weight: 600;
@@ -1355,12 +1401,23 @@
     .insight-icon {
       font-size: 1.5rem;
     }
+    .insight-icon {
+      background: linear-gradient(135deg, var(--navy), var(--navy-light));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      margin-right: var(--space-3);
+    }
     .insight-icon i {
       width: 1.5rem;
       height: 1.5rem;
-      stroke: currentColor;
+      stroke: var(--white);
       stroke-width: 2;
       fill: none;
+      color: var(--white);
     }
     .insight-content h4 {
       color: var(--navy);
@@ -1605,20 +1662,44 @@
     .feature-icon i {
       width: 1.5rem;
       height: 1.5rem;
-      stroke: currentColor;
+      stroke: white;
       stroke-width: 2;
       fill: none;
+      color: white;
+      background: linear-gradient(135deg, var(--magenta), var(--magenta-dark));
+      border-radius: 6px;
+      padding: 4px;
+      display: inline-block;
     }
 
     /* Button Icons */
     .btn-icon i {
       width: 1rem;
       height: 1rem;
-      stroke: currentColor;
+      stroke: white;
       stroke-width: 2;
       fill: none;
       margin-right: 0.5rem;
-      color: var(--text-primary);
+      color: white;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      border-radius: 4px;
+      padding: 3px;
+      display: inline-block;
+    }
+    
+    /* Primary button icons with magenta background */
+    .primary-btn .btn-icon i, .btn-primary .btn-icon i {
+      background: linear-gradient(135deg, var(--magenta-dark), var(--magenta));
+    }
+    
+    /* Secondary button icons with teal background */
+    .secondary-btn .btn-icon i, .btn-secondary .btn-icon i {
+      background: linear-gradient(135deg, var(--teal-dark), var(--teal));
+    }
+    
+    /* Tertiary button icons with gold background */
+    .tertiary-btn .btn-icon i, .btn-tertiary .btn-icon i {
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold));
     }
 
     /* Summary Icons */
