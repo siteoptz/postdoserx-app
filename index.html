@@ -191,6 +191,12 @@
     .text-lg { font-size: 1.125rem; }     /* 18px */
     .text-xl { font-size: 1.25rem; }      /* 20px */
     .text-2xl { font-size: 1.5rem; }      /* 24px */
+    
+    /* Global icon styling - ensure all icons are white */
+    [data-lucide] {
+      stroke: white !important;
+      color: white !important;
+    }
 
     /* Font Weights */
     .font-light { font-weight: 300; }
@@ -884,10 +890,10 @@
     .stat-icon i {
       width: 2rem;
       height: 2rem;
-      stroke: var(--white);
+      stroke: white !important;
       stroke-width: 2;
       fill: none;
-      color: var(--white);
+      color: white !important;
     }
     .stat-content h4 {
       margin: 0 0 0.5rem 0;
@@ -1130,22 +1136,22 @@
       gap: 1rem;
     }
     .action-btn {
-      background: linear-gradient(135deg, var(--charcoal) 0%, var(--slate-dark) 50%, var(--charcoal) 100%);
-      border: 2px solid var(--slate);
-      color: var(--text-primary);
+      background: linear-gradient(135deg, var(--magenta), var(--magenta-dark));
+      border: none;
+      color: white;
       padding: 1rem;
       border-radius: 12px;
       cursor: pointer;
       text-align: center;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      box-shadow: var(--shadow-md);
+      font-weight: 600;
       font-family: 'Montserrat', sans-serif;
       font-weight: 500;
     }
     .action-btn:hover {
-      background: linear-gradient(135deg, var(--accent-emerald) 0%, var(--accent-blue) 50%, var(--accent-emerald) 100%);
-      border-color: var(--cyan-400);
-      box-shadow: 0 6px 20px rgba(198, 22, 141, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      background: linear-gradient(135deg, var(--magenta-dark), var(--magenta));
+      box-shadow: var(--shadow-lg);
       transform: translateY(-2px);
     }
     .action-icon {
@@ -1636,8 +1642,8 @@
       font-family: 'Montserrat', sans-serif;
     }
     .action-card .action-btn:hover {
-      background: linear-gradient(135deg, var(--cyan-400) 0%, var(--accent-blue) 100%);
-      box-shadow: 0 4px 12px rgba(198, 22, 141, 0.3);
+      background: linear-gradient(135deg, var(--magenta-dark), var(--magenta));
+      box-shadow: var(--shadow-lg);
       transform: translateY(-1px);
     }
 
@@ -3940,8 +3946,8 @@
       <!-- Home View -->
       <div id="home" class="view active">
         <div class="view-header">
-          <h1 class="view-title">Welcome back, <span id="dashboard-user-name">Demo User</span>!</h1>
-          <p class="view-subtitle">Your personalized <span id="medication-name">GLP-1</span> journey dashboard</p>
+          <h1 class="view-title">Your personalized <span id="medication-name">Wegovy</span> journey dashboard</h1>
+          <p class="view-subtitle">Welcome back, <span id="dashboard-user-name">Demo User</span>!</p>
         </div>
         
         <!-- Medication Profile Setup -->
@@ -4166,8 +4172,8 @@
       <!-- Meals View -->
       <div id="meals" class="view">
         <div class="view-header">
-          <h1 class="view-title">Dose-day Synchronized Meals</h1>
-          <p class="view-subtitle">Meal plans optimized for your <span class="highlight">Sunday</span> injection schedule</p>
+          <h1 class="view-title">Meal plans optimized for your <span class="highlight">Sunday</span> injection schedule</h1>
+          <p class="view-subtitle">Dose-day Synchronized Meals</p>
         </div>
 
         <!-- Injection Schedule Alert -->
@@ -5025,8 +5031,8 @@
       <!-- Grocery View -->
       <div id="grocery" class="view">
         <div class="view-header">
-          <h1 class="view-title">Smart Grocery Lists</h1>
-          <p class="view-subtitle">GLP-1 friendly ingredients organized by category with nutrition facts</p>
+          <h1 class="view-title">GLP-1 friendly ingredients organized by category with nutrition facts</h1>
+          <p class="view-subtitle">Smart Grocery Lists</p>
         </div>
 
         <!-- Calorie Overview -->
@@ -6033,8 +6039,8 @@
       <!-- Recipes View -->
       <div id="recipes" class="view">
         <div class="view-header">
-          <h1 class="view-title">Meal Rating & Recipe Engine</h1>
-          <p class="view-subtitle">Rate your meals and get AI-powered personalized recipe recommendations</p>
+          <h1 class="view-title">Rate your meals and get AI-powered personalized recipe recommendations</h1>
+          <p class="view-subtitle">Meal Rating & Recipe Engine</p>
         </div>
         
         <!-- Rating Intelligence Overview -->
@@ -6421,8 +6427,8 @@
       <!-- Feedback View -->
       <div id="feedback" class="view">
         <div class="view-header">
-          <h1 class="view-title">Meal Rating Feedback</h1>
-          <p class="view-subtitle">Rate your meals to improve recommendations</p>
+          <h1 class="view-title">Rate your meals to improve recommendations</h1>
+          <p class="view-subtitle">Meal Rating Feedback</p>
         </div>
 
         <div class="demo-notice">
@@ -6653,8 +6659,8 @@
       <!-- Comprehensive Progress View -->
       <div id="comprehensive-progress" class="view">
         <div class="view-header">
-          <h1 class="view-title">Comprehensive Progress <span class="pro-badge">PREMIUM</span></h1>
-          <p class="view-subtitle">Advanced analytics, trends, and personalized insights</p>
+          <h1 class="view-title">Advanced analytics, trends, and personalized insights <span class="pro-badge">PREMIUM</span></h1>
+          <p class="view-subtitle">Comprehensive Progress</p>
         </div>
 
         <!-- Advanced Analytics Grid -->
@@ -6902,8 +6908,8 @@
       <!-- AI Personalization Hub View -->
       <div id="ai-personalization" class="view">
         <div class="view-header">
-          <h1 class="view-title">AI Personalization Hub <span class="pro-badge">PREMIUM</span></h1>
-          <p class="view-subtitle">Machine learning-powered meal and lifestyle recommendations</p>
+          <h1 class="view-title">Machine learning-powered meal and lifestyle recommendations <span class="pro-badge">PREMIUM</span></h1>
+          <p class="view-subtitle">AI Personalization Hub</p>
         </div>
 
         <div class="premium-notice">
