@@ -4749,10 +4749,10 @@
           <div class="premium-header">
             <div class="premium-title-section">
               <h3>Today's Insights</h3>
-              <span class="premium-badge">PREMIUM FEATURE</span>
+              <span class="premium-badge">ACTIVE</span>
             </div>
             <div class="premium-value">
-              <span class="savings-badge">AI-powered daily guidance</span>
+              <span class="savings-badge">Personalized daily insights</span>
             </div>
           </div>
           <div class="insight-list">
@@ -6616,10 +6616,10 @@
           <div class="premium-header">
             <div class="premium-title-section">
               <h3>Advanced Symptom Analytics</h3>
-              <span class="premium-badge">PREMIUM FEATURE</span>
+              <span class="premium-badge">ACTIVE</span>
             </div>
             <div class="premium-value">
-              <span class="savings-badge">Save $247/month vs. clinic visits</span>
+              <span class="savings-badge">Analyzing your symptom patterns</span>
             </div>
           </div>
           
@@ -6653,26 +6653,6 @@
               </div>
             </div>
 
-            <div class="upgrade-section">
-              <div class="upgrade-urgency">
-                <div class="urgency-text">JOIN 2,847 PREMIUM USERS</div>
-                <div class="urgency-stats">Average weight loss: 18% more than trial users</div>
-              </div>
-              
-              <div class="upgrade-buttons">
-                <button class="upgrade-btn primary" onclick="showUpgradeModal()">
-                  UPGRADE TO PREMIUM
-                  <span class="btn-subtext">$12.99/month • Cancel anytime</span>
-                </button>
-                <button class="upgrade-btn secondary" onclick="startFreeTrial()">
-                  START 7-DAY FREE TRIAL
-                </button>
-              </div>
-
-              <div class="upgrade-guarantee">
-                30-day money-back guarantee • Cancel anytime • No setup fees
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -6761,13 +6741,19 @@
         </div>
         
         <!-- Quick Meal Rating -->
-        <div class="content-card meal-rating-quick">
-          <div class="card-header">
-            <h3>Rate Your Latest Meal</h3>
-            <div class="rating-context">
-              <span class="recent-meal">Yesterday's Dinner: Mediterranean Bowl</span>
-              <span class="rating-prompt">How did it make you feel?</span>
+        <div class="content-card meal-rating-quick advanced-analytics">
+          <div class="premium-header">
+            <div class="premium-title-section">
+              <h3>Rate Your Latest Meal</h3>
+              <span class="premium-badge">ACTIVE</span>
             </div>
+            <div class="premium-value">
+              <span class="savings-badge">Building your tolerance profile</span>
+            </div>
+          </div>
+          <div class="rating-context" style="padding: 1rem; margin-bottom: 1rem;">
+            <span class="recent-meal" style="color: white; display: block; font-weight: 600;">Yesterday's Dinner: Mediterranean Bowl</span>
+            <span class="rating-prompt" style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">How did it make you feel?</span>
           </div>
           
           <div class="quick-rating-interface">
@@ -7010,13 +6996,19 @@
         </div>
         
         <!-- Meal History & Ratings -->
-        <div class="content-card meal-history">
-          <div class="card-header">
-            <h3>📋 Recent Meal Ratings</h3>
-            <span class="history-controls">
-              <button class="history-btn active" onclick="showMealHistory('week')">This Week</button>
-              <button class="history-btn" onclick="showMealHistory('month')">This Month</button>
-            </span>
+        <div class="content-card meal-history advanced-analytics">
+          <div class="premium-header">
+            <div class="premium-title-section">
+              <h3>📋 Recent Meal Ratings</h3>
+              <span class="premium-badge">ACTIVE</span>
+            </div>
+            <div class="premium-value">
+              <span class="savings-badge">Tracking your progress</span>
+            </div>
+          </div>
+          <div class="history-controls" style="padding: 1rem; margin-bottom: 1rem;">
+            <button class="history-btn active" onclick="showMealHistory('week')" style="background: var(--magenta); color: white; border: none; padding: 8px 16px; border-radius: 6px; margin-right: 0.5rem; cursor: pointer;">This Week</button>
+            <button class="history-btn" onclick="showMealHistory('month')" style="background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.3); padding: 8px 16px; border-radius: 6px; cursor: pointer;">This Month</button>
           </div>
           
           <div class="meal-history-list">
@@ -7070,45 +7062,44 @@
           </div>
         </div>
         
-        <!-- Premium Recipe Analytics -->
+        <!-- Advanced Recipe Analytics -->
         <div class="content-card premium-feature recipe-analytics advanced-analytics">
           <div class="premium-header">
             <div class="premium-title-section">
               <h3>Advanced Recipe Analytics</h3>
-              <span class="premium-badge">PREMIUM FEATURE</span>
+              <span class="premium-badge">ACTIVE</span>
             </div>
             <div class="premium-value">
-              <span class="savings-badge">Save $85/month vs. nutritionist visits</span>
+              <span class="savings-badge">Analyzing your meal patterns</span>
             </div>
           </div>
           <div class="premium-preview">
             <div class="preview-features">
               <div class="preview-feature">
-                <span class="feature-icon"><i data-lucide="database"></i></span>
+                <div class="feature-icon premium-icon"><i data-lucide="database"></i></div>
                 <div class="feature-content">
                   <h4>Nutritional Impact Analysis</h4>
-                  <p>Track how different nutrients affect your symptoms and energy levels</p>
+                  <p>Detailed breakdown of how proteins, carbs, and fats affect your GLP-1 response</p>
+                  <div class="feature-benefit">Last updated: Based on your recent meal ratings</div>
                 </div>
               </div>
               <div class="preview-feature">
-                <span class="feature-icon"><i data-lucide="target"></i></span>
+                <div class="feature-icon premium-icon"><i data-lucide="target"></i></div>
                 <div class="feature-content">
                   <h4>Precision Recipe Matching</h4>
-                  <p>AI-powered ingredient analysis based on your detailed feedback and medical profile</p>
+                  <p>AI analyzes ingredients against your tolerance profile and injection cycle</p>
+                  <div class="feature-benefit">12 new recipes matched to your preferences</div>
                 </div>
               </div>
               <div class="preview-feature">
-                <span class="feature-icon"><i data-lucide="chef-hat"></i></span>
+                <div class="feature-icon premium-icon"><i data-lucide="chef-hat"></i></div>
                 <div class="feature-content">
                   <h4>Custom Recipe Creation</h4>
-                  <p>Generate completely new recipes tailored to your exact preferences and dietary needs</p>
+                  <p>Generate personalized recipes optimized for your symptom patterns and goals</p>
+                  <div class="feature-benefit">3 custom recipes ready for your review</div>
                 </div>
               </div>
             </div>
-            <button class="upgrade-btn" onclick="showUpgradeModal()">
-              <span class="btn-icon"><i data-lucide="star"></i></span>
-              Unlock Recipe Analytics
-            </button>
           </div>
         </div>
       </div>
@@ -7359,10 +7350,10 @@
             <div class="premium-header">
               <div class="premium-title-section">
                 <h3>Advanced Weight Trend Analysis</h3>
-                <span class="premium-badge">PREMIUM FEATURE</span>
+                <span class="premium-badge">ACTIVE</span>
               </div>
               <div class="premium-value">
-                <span class="savings-badge">Medical-grade trend analysis</span>
+                <span class="savings-badge">Tracking your weight patterns</span>
               </div>
             </div>
             
@@ -7432,10 +7423,10 @@
             <div class="premium-header">
               <div class="premium-title-section">
                 <h3>💉 Injection Cycle Analysis</h3>
-                <span class="premium-badge">PREMIUM FEATURE</span>
+                <span class="premium-badge">ACTIVE</span>
               </div>
               <div class="premium-value">
-                <span class="savings-badge">Clinical-grade cycle insights</span>
+                <span class="savings-badge">Analyzing injection patterns</span>
               </div>
             </div>
             
@@ -7511,10 +7502,10 @@
             <div class="premium-header">
               <div class="premium-title-section">
                 <h3>🧠 Symptom-Weight Correlation</h3>
-                <span class="premium-badge">PREMIUM FEATURE</span>
+                <span class="premium-badge">ACTIVE</span>
               </div>
               <div class="premium-value">
-                <span class="savings-badge">AI-powered correlation insights</span>
+                <span class="savings-badge">Finding symptom connections</span>
               </div>
             </div>
             
@@ -7559,10 +7550,10 @@
             <div class="premium-header">
               <div class="premium-title-section">
                 <h3>AI-Powered Recommendations</h3>
-                <span class="premium-badge">PREMIUM FEATURE</span>
+                <span class="premium-badge">ACTIVE</span>
               </div>
               <div class="premium-value">
-                <span class="savings-badge">Personalized AI insights</span>
+                <span class="savings-badge">Customized recommendations</span>
               </div>
             </div>
             
