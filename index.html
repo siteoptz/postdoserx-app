@@ -2229,6 +2229,12 @@
     .rating-intelligence {
       background: linear-gradient(135deg, var(--sand-light), white);
     }
+    /* Enhanced intelligence overrides rating intelligence */
+    .rating-intelligence.enhanced-intelligence {
+      background: linear-gradient(145deg, var(--navy), #1a365d) !important;
+      border: 2px solid var(--magenta) !important;
+      color: white !important;
+    }
     .rating-context {
       display: flex;
       flex-direction: column;
@@ -2274,9 +2280,10 @@
     .star {
       font-size: 2rem;
       cursor: pointer;
-      transition: transform 0.2s ease, color 0.2s ease;
-      opacity: 0.3;
-      color: #fbbf24;
+      transition: transform 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+      opacity: 0.2;
+      color: #d1d5db;
+      user-select: none;
     }
     .star:hover, .star.active {
       transform: scale(1.1);
@@ -2286,6 +2293,11 @@
     .star.selected {
       opacity: 1;
       color: #fbbf24;
+      transform: scale(1.05);
+    }
+    .star.empty {
+      opacity: 0.2;
+      color: #d1d5db;
     }
     .rating-labels {
       display: flex;
@@ -12102,58 +12114,74 @@ For clinical review and treatment optimization.`;
     
     // Star rating functionality
     function initializeStarRating() {
-      const stars = document.querySelectorAll('.star-rating .star');
-      stars.forEach(star => {
-        star.addEventListener('click', function() {
-          const rating = parseInt(this.getAttribute('data-rating'));
-          const starContainer = this.parentElement;
-          
-          // Clear all selected stars in this container
-          starContainer.querySelectorAll('.star').forEach(s => {
-            s.classList.remove('selected');
-          });
-          
-          // Set selected stars up to the clicked rating
-          for(let i = 1; i <= rating; i++) {
-            const currentStar = starContainer.querySelector(`[data-rating="${i}"]`);
-            if(currentStar) {
-              currentStar.classList.add('selected');
-            }
-          }
-          
-          // Store the rating
-          const today = new Date().toISOString().split('T')[0];
-          let mealFeedback = JSON.parse(localStorage.getItem('mealFeedback') || '{}');
-          if (!mealFeedback[today]) {
-            mealFeedback[today] = {};
-          }
-          mealFeedback[today].rating = rating;
-          localStorage.setItem('mealFeedback', JSON.stringify(mealFeedback));
-          
-          console.log(`Meal rating recorded: ${rating} stars`);
+      const starContainers = document.querySelectorAll('.star-rating');
+      
+      starContainers.forEach(container => {
+        const stars = container.querySelectorAll('.star');
+        
+        // Initialize all stars as empty
+        stars.forEach(star => {
+          star.classList.add('empty');
+          star.classList.remove('selected', 'active');
         });
         
-        // Add hover effects
-        star.addEventListener('mouseenter', function() {
-          const rating = parseInt(this.getAttribute('data-rating'));
-          const starContainer = this.parentElement;
-          
-          starContainer.querySelectorAll('.star').forEach(s => {
-            s.classList.remove('active');
+        stars.forEach(star => {
+          star.addEventListener('click', function(e) {
+            e.preventDefault();
+            const rating = parseInt(this.getAttribute('data-rating'));
+            const starContainer = this.parentElement;
+            
+            // Clear all states in this container
+            starContainer.querySelectorAll('.star').forEach(s => {
+              s.classList.remove('selected', 'active', 'empty');
+              s.classList.add('empty');
+            });
+            
+            // Set selected stars up to the clicked rating
+            for(let i = 1; i <= rating; i++) {
+              const currentStar = starContainer.querySelector(`[data-rating="${i}"]`);
+              if(currentStar) {
+                currentStar.classList.remove('empty');
+                currentStar.classList.add('selected');
+              }
+            }
+            
+            // Store the rating
+            const today = new Date().toISOString().split('T')[0];
+            let mealFeedback = JSON.parse(localStorage.getItem('mealFeedback') || '{}');
+            if (!mealFeedback[today]) {
+              mealFeedback[today] = {};
+            }
+            mealFeedback[today].rating = rating;
+            localStorage.setItem('mealFeedback', JSON.stringify(mealFeedback));
+            
+            console.log(`Meal rating recorded: ${rating} stars`);
           });
           
-          for(let i = 1; i <= rating; i++) {
-            const currentStar = starContainer.querySelector(`[data-rating="${i}"]`);
-            if(currentStar) {
-              currentStar.classList.add('active');
+          // Add hover effects
+          star.addEventListener('mouseenter', function() {
+            const rating = parseInt(this.getAttribute('data-rating'));
+            const starContainer = this.parentElement;
+            
+            // Clear active state
+            starContainer.querySelectorAll('.star').forEach(s => {
+              s.classList.remove('active');
+            });
+            
+            // Add active state up to hovered star
+            for(let i = 1; i <= rating; i++) {
+              const currentStar = starContainer.querySelector(`[data-rating="${i}"]`);
+              if(currentStar && !currentStar.classList.contains('selected')) {
+                currentStar.classList.add('active');
+              }
             }
-          }
-        });
-        
-        star.addEventListener('mouseleave', function() {
-          const starContainer = this.parentElement;
-          starContainer.querySelectorAll('.star').forEach(s => {
-            s.classList.remove('active');
+          });
+          
+          star.addEventListener('mouseleave', function() {
+            const starContainer = this.parentElement;
+            starContainer.querySelectorAll('.star').forEach(s => {
+              s.classList.remove('active');
+            });
           });
         });
       });
