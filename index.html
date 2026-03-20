@@ -1488,9 +1488,22 @@
       background: linear-gradient(to bottom, var(--magenta), var(--magenta-dark));
     }
     .card-icon {
-      font-size: 2.5rem;
+      font-size: 1.5rem;
       margin-bottom: 1rem;
-      display: block;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--magenta), var(--magenta-dark));
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(198, 22, 141, 0.3);
+    }
+    .card-icon i {
+      width: 24px;
+      height: 24px;
+      stroke: white !important;
+      color: white !important;
     }
     .metric-section {
       margin-bottom: 1rem;
@@ -1563,18 +1576,55 @@
     .advanced-analytics .recommendation-filters .filter-btn {
       background: rgba(255, 255, 255, 0.1);
       color: white;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      padding: 8px 16px;
-      border-radius: 6px;
-      margin-right: 0.5rem;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      padding: 10px 18px;
+      border-radius: 8px;
+      margin-right: 0.75rem;
+      margin-bottom: 0.5rem;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+    .advanced-analytics .recommendation-filters .filter-btn:nth-child(1) {
+      border-color: #10b981;
+      background: rgba(16, 185, 129, 0.1);
+    }
+    .advanced-analytics .recommendation-filters .filter-btn:nth-child(2) {
+      border-color: #f59e0b;
+      background: rgba(245, 158, 11, 0.1);
+    }
+    .advanced-analytics .recommendation-filters .filter-btn:nth-child(3) {
+      border-color: #8b5cf6;
+      background: rgba(139, 92, 246, 0.1);
+    }
+    .advanced-analytics .recommendation-filters .filter-btn:nth-child(4) {
+      border-color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
     }
     .advanced-analytics .recommendation-filters .filter-btn.active {
-      background: var(--magenta);
-      border-color: var(--magenta);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(198, 22, 141, 0.4);
     }
-    .advanced-analytics .recommendation-filters .filter-btn:hover {
+    .advanced-analytics .recommendation-filters .filter-btn:nth-child(1).active {
+      background: #10b981;
+      border-color: #10b981;
+    }
+    .advanced-analytics .recommendation-filters .filter-btn:nth-child(2).active {
+      background: #f59e0b;
+      border-color: #f59e0b;
+    }
+    .advanced-analytics .recommendation-filters .filter-btn:nth-child(3).active {
+      background: #8b5cf6;
+      border-color: #8b5cf6;
+    }
+    .advanced-analytics .recommendation-filters .filter-btn:nth-child(4).active {
+      background: #ef4444;
+      border-color: #ef4444;
+    }
+    .advanced-analytics .recommendation-filters .filter-btn:hover:not(.active) {
+      transform: translateY(-1px);
+      border-color: white;
       background: rgba(255, 255, 255, 0.2);
     }
     
@@ -1635,6 +1685,16 @@
     }
     .advanced-analytics .meal-date {
       color: rgba(255, 255, 255, 0.7);
+    }
+    .advanced-analytics .meal-info h4 {
+      color: white !important;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    .advanced-analytics .meal-day {
+      color: white !important;
+      background: rgba(198, 22, 141, 0.3) !important;
+      border: 1px solid rgba(198, 22, 141, 0.5);
     }
     
     .advanced-analytics label {
@@ -2518,10 +2578,20 @@
       background: linear-gradient(145deg, var(--slate-dark), var(--slate));
     }
     .recipe-image {
-      font-size: 4rem;
+      font-size: 2rem;
       text-align: center;
       padding: 2rem;
-      background: var(--sand-light);
+      background: linear-gradient(135deg, var(--navy), var(--magenta-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px 8px 0 0;
+    }
+    .recipe-image i {
+      width: 48px;
+      height: 48px;
+      stroke: white !important;
+      color: white !important;
     }
     .recipe-content {
       padding: 1.5rem;
@@ -6852,7 +6922,7 @@
           <div class="intelligence-grid-enhanced">
             <!-- Symptom-Safe Foods -->
             <div class="intelligence-card-enhanced symptom-safe-card">
-              <div class="card-icon">🛡️</div>
+              <div class="card-icon"><i data-lucide="shield-check"></i></div>
               <div class="metric-section">
                 <div class="metric-value" id="safePercentage">--%</div>
                 <div class="metric-label">Symptom-Safe Foods</div>
@@ -6865,7 +6935,7 @@
             
             <!-- Optimal Timing -->
             <div class="intelligence-card-enhanced timing-card">
-              <div class="card-icon">⏰</div>
+              <div class="card-icon"><i data-lucide="clock"></i></div>
               <div class="metric-section">
                 <div class="metric-value" id="optimalTime">--:--</div>
                 <div class="metric-label">Best Meal Timing</div>
@@ -6878,7 +6948,7 @@
             
             <!-- Tolerance Trend -->
             <div class="intelligence-card-enhanced tolerance-card">
-              <div class="card-icon">📈</div>
+              <div class="card-icon"><i data-lucide="trending-up"></i></div>
               <div class="metric-section">
                 <div class="metric-value" id="toleranceTrend">--%</div>
                 <div class="metric-label">Tolerance Improvement</div>
@@ -6891,7 +6961,7 @@
             
             <!-- Smart Recommendations -->
             <div class="intelligence-card-enhanced recommendations-card">
-              <div class="card-icon">🎯</div>
+              <div class="card-icon"><i data-lucide="target"></i></div>
               <div class="metric-section">
                 <div class="metric-value" id="newRecommendations">0</div>
                 <div class="metric-label">New Recommendations</div>
@@ -6904,9 +6974,9 @@
           </div>
           
           <!-- Quick Insights Bar -->
-          <div class="quick-insights-bar" id="quickInsightsBar">
+          <div class="quick-insights-bar" id="quickInsightsBar" onclick="scrollToRating()" style="cursor: pointer;">
             <div class="insight-item">
-              <span class="insight-icon">💡</span>
+              <span class="insight-icon"><i data-lucide="lightbulb" style="width: 20px; height: 20px; stroke: var(--magenta); margin-right: 8px;"></i></span>
               <span class="insight-message" id="primaryInsight">Rate your first meal to unlock personalized insights!</span>
             </div>
           </div>
@@ -6923,9 +6993,13 @@
               <span class="savings-badge">Building your tolerance profile</span>
             </div>
           </div>
-          <div class="rating-context" style="padding: 1rem; margin-bottom: 1rem;">
-            <span class="recent-meal" style="color: white; display: block; font-weight: 600;">Yesterday's Dinner: Mediterranean Bowl</span>
-            <span class="rating-prompt" style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">How did it make you feel?</span>
+          <div class="rating-context" style="padding: 1.5rem; margin-bottom: 1rem; background: rgba(198, 22, 141, 0.1); border-radius: 12px; border: 1px solid rgba(198, 22, 141, 0.3);">
+            <span class="recent-meal" style="color: white; display: block; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem;">Yesterday's Dinner: Mediterranean Bowl</span>
+            <span class="rating-prompt" style="color: white; font-size: 1rem; font-weight: 500;">How did it make you feel?</span>
+            <div style="margin-top: 0.75rem;">
+              <span style="color: rgba(255, 255, 255, 0.9); font-weight: 600; margin-right: 1rem;">Overall Enjoyment</span>
+              <span style="color: rgba(255, 255, 255, 0.9); font-weight: 600;">Additional Notes</span>
+            </div>
           </div>
           
           <div class="quick-rating-interface">
@@ -7017,7 +7091,7 @@
           
           <div class="recommendations-grid">
             <div class="recipe-card high-confidence">
-              <div class="recipe-image">RECIPE</div>
+              <div class="recipe-image"><i data-lucide="bowl"></i></div>
               <div class="recipe-content">
                 <h4>Gentle Quinoa Bowl</h4>
                 <div class="recipe-stats">
@@ -7061,7 +7135,7 @@
             </div>
             
             <div class="recipe-card new-suggestion">
-              <div class="recipe-image">🍝</div>
+              <div class="recipe-image"><i data-lucide="utensils"></i></div>
               <div class="recipe-content">
                 <h4>Light Lemon Pasta</h4>
                 <div class="recipe-stats">
@@ -7186,7 +7260,7 @@
         <div class="content-card meal-history advanced-analytics">
           <div class="premium-header">
             <div class="premium-title-section">
-              <h3>📋 Recent Meal Ratings</h3>
+              <h3><i data-lucide="clipboard-list" class="inline-icon"></i> Recent Meal Ratings</h3>
               <span class="premium-badge">ACTIVE</span>
             </div>
             <div class="premium-value">
@@ -12198,6 +12272,59 @@ For clinical review and treatment optimization.`;
       console.log('Window loaded, trying Lucide init...');
       initializeLucideIcons();
     });
+    
+    // Scroll to rating section function
+    function scrollToRating() {
+      const ratingSection = document.querySelector('.meal-rating-quick');
+      if (ratingSection) {
+        ratingSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Add a highlight effect
+        ratingSection.style.transform = 'scale(1.02)';
+        ratingSection.style.transition = 'transform 0.3s ease';
+        setTimeout(() => {
+          ratingSection.style.transform = 'scale(1)';
+        }, 300);
+      }
+    }
+    
+    // Submit meal rating function
+    function submitMealRating() {
+      const today = new Date().toISOString().split('T')[0];
+      const mealFeedback = JSON.parse(localStorage.getItem('mealFeedback') || '{}');
+      const currentFeedback = mealFeedback[today] || {};
+      
+      // Check if rating exists
+      if (!currentFeedback.rating) {
+        alert('Please rate the meal using the star system before submitting.');
+        return;
+      }
+      
+      // Get notes if available
+      const notesTextarea = document.querySelector('.notes-section textarea');
+      if (notesTextarea && notesTextarea.value.trim()) {
+        currentFeedback.notes = notesTextarea.value.trim();
+      }
+      
+      // Save updated feedback
+      mealFeedback[today] = currentFeedback;
+      localStorage.setItem('mealFeedback', JSON.stringify(mealFeedback));
+      
+      // Show success message
+      alert(`Rating submitted! ⭐ ${currentFeedback.rating}/5 stars\n\nYour personalized recommendations will be updated based on this feedback.`);
+      
+      // Clear the form
+      if (notesTextarea) notesTextarea.value = '';
+      
+      // Reset stars
+      const stars = document.querySelectorAll('.meal-rating-quick .star');
+      stars.forEach(star => {
+        star.classList.remove('selected');
+        star.classList.add('empty');
+      });
+      
+      console.log('Meal rating submitted:', currentFeedback);
+    }
   </script>
 </body>
 </html>
