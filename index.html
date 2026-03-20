@@ -1596,20 +1596,20 @@
       font-weight: 600;
     }
     .advanced-analytics .recommendation-filters .filter-btn:nth-child(1) {
-      border-color: #10b981;
+      border-color: var(--teal);
       background: rgba(16, 185, 129, 0.1);
     }
     .advanced-analytics .recommendation-filters .filter-btn:nth-child(2) {
-      border-color: #f59e0b;
-      background: rgba(245, 158, 11, 0.1);
+      border-color: var(--magenta);
+      background: rgba(198, 22, 141, 0.1);
     }
     .advanced-analytics .recommendation-filters .filter-btn:nth-child(3) {
-      border-color: #8b5cf6;
-      background: rgba(139, 92, 246, 0.1);
+      border-color: var(--navy);
+      background: rgba(0, 51, 102, 0.1);
     }
     .advanced-analytics .recommendation-filters .filter-btn:nth-child(4) {
-      border-color: #ef4444;
-      background: rgba(239, 68, 68, 0.1);
+      border-color: var(--teal);
+      background: rgba(16, 185, 129, 0.1);
     }
     .advanced-analytics .recommendation-filters .filter-btn.active {
       color: white;
@@ -1617,20 +1617,20 @@
       box-shadow: 0 4px 15px rgba(198, 22, 141, 0.4);
     }
     .advanced-analytics .recommendation-filters .filter-btn:nth-child(1).active {
-      background: #10b981;
-      border-color: #10b981;
+      background: var(--teal);
+      border-color: var(--teal);
     }
     .advanced-analytics .recommendation-filters .filter-btn:nth-child(2).active {
-      background: #f59e0b;
-      border-color: #f59e0b;
+      background: var(--magenta);
+      border-color: var(--magenta);
     }
     .advanced-analytics .recommendation-filters .filter-btn:nth-child(3).active {
-      background: #8b5cf6;
-      border-color: #8b5cf6;
+      background: var(--navy);
+      border-color: var(--navy);
     }
     .advanced-analytics .recommendation-filters .filter-btn:nth-child(4).active {
-      background: #ef4444;
-      border-color: #ef4444;
+      background: var(--teal);
+      border-color: var(--teal);
     }
     .advanced-analytics .recommendation-filters .filter-btn:hover:not(.active) {
       transform: translateY(-1px);
@@ -1669,10 +1669,16 @@
     }
     
     .advanced-analytics .insight-box {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 8px;
-      padding: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .advanced-analytics .insight-box:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--teal);
+      transform: translateY(-2px);
     }
     .advanced-analytics .insight-content h4 {
       color: white;
@@ -2747,7 +2753,7 @@
     }
     .flavor-bar {
       height: 12px;
-      background: var(--accent-blue);
+      background: var(--magenta);
       border-radius: 6px;
       transition: width 0.3s ease;
     }
@@ -2815,21 +2821,24 @@
       display: flex;
       gap: 1rem;
       padding: 1.5rem;
-      background: linear-gradient(145deg, var(--slate-dark), var(--slate));
+      background: rgba(255, 255, 255, 0.03);
       border-radius: 12px;
-      border: 2px solid var(--slate);
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     }
     .insight-box .insight-icon {
       font-size: 2rem;
+      background: none;
+      border: none;
+      padding: 0;
     }
     .insight-box .insight-icon i {
       width: 2rem;
       height: 2rem;
-      stroke: white;
+      stroke: var(--teal);
       stroke-width: 2;
       fill: none;
-      color: white;
+      color: var(--teal);
     }
     .insight-box h4 {
       color: var(--navy);
@@ -7003,18 +7012,24 @@
               <span class="savings-badge">Building your tolerance profile</span>
             </div>
           </div>
-          <div class="rating-context" style="padding: 1.5rem; margin-bottom: 1rem; background: rgba(198, 22, 141, 0.1); border-radius: 12px; border: 1px solid rgba(198, 22, 141, 0.3);">
-            <span class="recent-meal" style="color: white; display: block; font-weight: 700; font-size: 1.1rem; margin-bottom: 0.5rem;">Yesterday's Dinner: Mediterranean Bowl</span>
-            <span class="rating-prompt" style="color: white; font-size: 1rem; font-weight: 500;">How did it make you feel?</span>
-            <div style="margin-top: 0.75rem;">
-              <span style="color: rgba(255, 255, 255, 0.9); font-weight: 600; margin-right: 1rem;">Overall Enjoyment</span>
-              <span style="color: rgba(255, 255, 255, 0.9); font-weight: 600;">Additional Notes</span>
+          <div class="meal-context-professional" style="padding: 2rem; margin-bottom: 2rem; background: linear-gradient(135deg, #003366, #0f4f75); border-radius: 16px; border: 2px solid rgba(16, 185, 129, 0.3); box-shadow: 0 8px 32px rgba(0, 51, 102, 0.4);">
+            <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+              <div style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--magenta), #b91c7c); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 1rem; box-shadow: 0 4px 16px rgba(198, 22, 141, 0.3);">
+                <i data-lucide="utensils" style="width: 24px; height: 24px; stroke: white;"></i>
+              </div>
+              <div>
+                <h4 style="color: white; margin: 0; font-size: 1.25rem; font-weight: 600;">Yesterday's Meal Assessment</h4>
+                <p style="color: rgba(255, 255, 255, 0.8); margin: 0; font-size: 0.9rem;">Mediterranean Bowl · 6:30 PM · Day 3 Post-Injection</p>
+              </div>
+            </div>
+            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--teal);">
+              <p style="color: white; margin: 0; font-size: 1rem; font-weight: 500;">Clinical Assessment: How did this meal impact your symptoms and overall well-being?</p>
             </div>
           </div>
           
-          <div class="quick-rating-interface">
-            <div class="rating-section">
-              <label>Overall Enjoyment</label>
+          <div class="professional-rating-interface" style="background: rgba(255, 255, 255, 0.02); padding: 2rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);">
+            <div class="rating-section-professional" style="margin-bottom: 2rem;">
+              <label style="color: white; font-weight: 600; font-size: 1.1rem; display: block; margin-bottom: 1rem;">Meal Satisfaction Score</label>
               <div class="star-rating">
                 <span class="star" data-rating="1">★</span>
                 <span class="star" data-rating="2">★</span>
@@ -7022,14 +7037,14 @@
                 <span class="star" data-rating="4">★</span>
                 <span class="star" data-rating="5">★</span>
               </div>
-              <div class="rating-labels">
-                <span>Didn't like</span>
-                <span>Loved it</span>
+              <div class="rating-labels" style="display: flex; justify-content: space-between; color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; margin-top: 0.5rem;">
+                <span>Poor Experience</span>
+                <span>Excellent Experience</span>
               </div>
             </div>
             
-            <div class="symptom-impact-section">
-              <label>How did this meal affect your symptoms?</label>
+            <div class="symptom-impact-section-professional" style="margin-bottom: 2rem;">
+              <label style="color: white; font-weight: 600; font-size: 1.1rem; display: block; margin-bottom: 1rem;">Symptom Impact Assessment</label>
               <div class="impact-options">
                 <button class="impact-btn positive" onclick="selectImpact('positive')">
                   <span class="impact-icon"><i data-lucide="smile"></i></span>
@@ -7046,8 +7061,8 @@
               </div>
             </div>
             
-            <div class="timing-section">
-              <label>Meal Timing</label>
+            <div class="timing-section-professional" style="margin-bottom: 2rem;">
+              <label style="color: white; font-weight: 600; font-size: 1.1rem; display: block; margin-bottom: 1rem;">Timing Evaluation</label>
               <div class="timing-options">
                 <button class="timing-btn" onclick="selectTiming('perfect')">Perfect Timing</button>
                 <button class="timing-btn" onclick="selectTiming('too-early')">Too Early</button>
@@ -7055,8 +7070,8 @@
               </div>
             </div>
             
-            <div class="portion-section">
-              <label>Portion Size</label>
+            <div class="portion-section-professional" style="margin-bottom: 2rem;">
+              <label style="color: white; font-weight: 600; font-size: 1.1rem; display: block; margin-bottom: 1rem;">Portion Assessment</label>
               <div class="portion-slider">
                 <input type="range" min="1" max="5" value="3" id="portion-size" oninput="updatePortion(this.value)">
                 <div class="portion-labels">
@@ -7068,14 +7083,14 @@
               <div class="portion-value" id="portion-display">Just Right</div>
             </div>
             
-            <div class="notes-section">
-              <label>Additional Notes</label>
-              <textarea placeholder="How did this meal make you feel? Any specific ingredients that stood out? Would you eat this again?"></textarea>
+            <div class="notes-section-professional" style="margin-bottom: 2rem;">
+              <label style="color: white; font-weight: 600; font-size: 1.1rem; display: block; margin-bottom: 1rem;">Clinical Notes</label>
+              <textarea style="width: 100%; min-height: 100px; padding: 1rem; background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: white; font-size: 1rem; resize: vertical;" placeholder="Document meal experience, ingredient reactions, digestive comfort, energy levels, and overall tolerability for clinical tracking..."></textarea>
             </div>
             
-            <button class="primary-btn rating-submit" onclick="submitMealRating()">
-              <span class="btn-icon"><i data-lucide="bar-chart-3"></i></span>
-              Submit Rating & Get Recommendations
+            <button class="professional-submit-btn" style="width: 100%; padding: 1rem 2rem; background: linear-gradient(135deg, var(--teal), #0d9488); color: white; border: none; border-radius: 12px; font-weight: 600; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.75rem; box-shadow: 0 6px 24px rgba(16, 185, 129, 0.3); transition: all 0.3s ease;" onclick="submitMealRating()" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 32px rgba(16, 185, 129, 0.4)'" onmouseout="this.style.transform='translateY(0px)'; this.style.boxShadow='0 6px 24px rgba(16, 185, 129, 0.3)'">
+              <i data-lucide="activity" style="width: 20px; height: 20px;"></i>
+              Complete Clinical Assessment
             </button>
           </div>
         </div>
@@ -7103,7 +7118,6 @@
             <div class="recipe-card high-confidence">
               <div class="recipe-image"><i data-lucide="bowl"></i></div>
               <div class="recipe-content">
-                <h4>Gentle Quinoa Bowl</h4>
                 <div class="recipe-stats">
                   <span class="confidence-score">94% Match</span>
                   <span class="prep-time">15 mins</span>
@@ -7125,7 +7139,6 @@
             <div class="recipe-card medium-confidence">
               <div class="recipe-image"><i data-lucide="chef-hat"></i></div>
               <div class="recipe-content">
-                <h4>Healing Bone Broth Soup</h4>
                 <div class="recipe-stats">
                   <span class="confidence-score">87% Match</span>
                   <span class="prep-time">25 mins</span>
@@ -7147,7 +7160,6 @@
             <div class="recipe-card new-suggestion">
               <div class="recipe-image"><i data-lucide="utensils"></i></div>
               <div class="recipe-content">
-                <h4>Light Lemon Pasta</h4>
                 <div class="recipe-stats">
                   <span class="confidence-score">79% Match</span>
                   <span class="prep-time">20 mins</span>
@@ -7243,24 +7255,24 @@
             <div class="insight-box">
               <div class="insight-icon"><i data-lucide="target"></i></div>
               <div class="insight-content">
-                <h4>Accuracy Improvement</h4>
-                <p>Your recipe satisfaction increased from 67% to 89% over the last month as our AI learned your preferences.</p>
+                <h4>Predictive Accuracy Enhancement</h4>
+                <p>Advanced machine learning analysis shows 89% accuracy in predicting your meal tolerance based on injection cycle timing, previous ratings, and symptom patterns. Our algorithm has identified 12 key factors that influence your food preferences during different treatment phases.</p>
               </div>
             </div>
             
             <div class="insight-box">
               <div class="insight-icon"><i data-lucide="bot"></i></div>
               <div class="insight-content">
-                <h4>Pattern Recognition</h4>
-                <p>We've identified that you prefer lighter portions 2-3 days post-injection and heartier meals on good days.</p>
+                <h4>Clinical Pattern Analysis</h4>
+                <p>Behavioral pattern recognition reveals optimal meal timing correlation with symptom management. Data shows 34% better tolerance when consuming meals 2-3 hours post-medication with portion sizes reduced by 25% during peak symptom days (days 2-4).</p>
               </div>
             </div>
             
             <div class="insight-box">
               <div class="insight-icon"><i data-lucide="book"></i></div>
               <div class="insight-content">
-                <h4>Recipe Discovery</h4>
-                <p>Based on your ratings, we've added 15 new gentle-on-stomach recipes to your recommendation pool.</p>
+                <h4>Personalized Nutrition Intelligence</h4>
+                <p>Our AI has curated 47 evidence-based recipes optimized for your unique metabolic profile and medication regimen. Continuous learning from your feedback has refined recommendations with 92% alignment to your nutritional needs and treatment goals.</p>
               </div>
             </div>
           </div>
@@ -12516,6 +12528,69 @@ For clinical review and treatment optimization.`;
       });
       
       console.log('Meal rating submitted:', currentFeedback);
+    }
+
+    // Recipe filtering functionality
+    function filterRecommendations(category) {
+      // Update active button
+      const filterBtns = document.querySelectorAll('.recommendation-filters .filter-btn');
+      filterBtns.forEach(btn => btn.classList.remove('active'));
+      
+      // Find and activate the clicked button
+      const clickedBtn = Array.from(filterBtns).find(btn => 
+        btn.textContent.toLowerCase().includes(category === 'all' ? 'all recipes' :
+        category === 'gentle' ? 'gentle' :
+        category === 'favorites' ? 'favorites' : 'new')
+      );
+      if (clickedBtn) clickedBtn.classList.add('active');
+
+      // Get all recipe cards
+      const recipeCards = document.querySelectorAll('.recipe-card');
+      
+      recipeCards.forEach(card => {
+        card.style.display = 'block'; // Show all cards by default
+        
+        switch(category) {
+          case 'gentle':
+            // Show only cards with gentle/stomach-friendly tags
+            const hasGentleTag = card.querySelector('.tag.gentle, .recipe-tag:contains("Gentle"), .recipe-tag:contains("Stomach")');
+            if (!hasGentleTag && !card.querySelector('h4').textContent.toLowerCase().includes('gentle') && 
+                !card.querySelector('h4').textContent.toLowerCase().includes('broth')) {
+              card.style.display = 'none';
+            }
+            break;
+            
+          case 'favorites':
+            // Show high-confidence matches and cards with high ratings
+            if (!card.classList.contains('high-confidence') && 
+                !card.querySelector('.confidence-score')?.textContent.includes('9')) {
+              card.style.display = 'none';
+            }
+            break;
+            
+          case 'new':
+            // Show new suggestions and medium confidence cards
+            if (!card.classList.contains('new-suggestion') && 
+                !card.querySelector('.tag.new, .recipe-tag:contains("New")')) {
+              card.style.display = 'none';
+            }
+            break;
+            
+          case 'all':
+          default:
+            // Show all cards
+            break;
+        }
+      });
+      
+      // Add visual feedback
+      const grid = document.querySelector('.recommendations-grid');
+      if (grid) {
+        grid.style.opacity = '0.5';
+        setTimeout(() => {
+          grid.style.opacity = '1';
+        }, 150);
+      }
     }
   </script>
 </body>
