@@ -1542,6 +1542,109 @@
       font-size: 0.95rem;
     }
 
+    /* Text visibility fixes for navy background sections */
+    .advanced-analytics .recommendation-filters .filter-btn {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 8px 16px;
+      border-radius: 6px;
+      margin-right: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .advanced-analytics .recommendation-filters .filter-btn.active {
+      background: var(--magenta);
+      border-color: var(--magenta);
+    }
+    .advanced-analytics .recommendation-filters .filter-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .advanced-analytics .recipe-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      color: white;
+    }
+    .advanced-analytics .recipe-card h4 {
+      color: white;
+    }
+    .advanced-analytics .recipe-description {
+      color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .advanced-analytics .profile-section h4 {
+      color: white;
+      margin-bottom: 1rem;
+    }
+    .advanced-analytics .flavor-name,
+    .advanced-analytics .flavor-score {
+      color: white;
+    }
+    .advanced-analytics .preference-text {
+      color: rgba(255, 255, 255, 0.8);
+    }
+    .advanced-analytics .day-type {
+      background: rgba(198, 22, 141, 0.2);
+      color: var(--magenta);
+      border: 1px solid rgba(198, 22, 141, 0.3);
+    }
+    
+    .advanced-analytics .insight-box {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    .advanced-analytics .insight-content h4 {
+      color: white;
+    }
+    .advanced-analytics .insight-content p {
+      color: rgba(255, 255, 255, 0.8);
+    }
+    
+    .advanced-analytics .meal-history-list {
+      color: white;
+    }
+    .advanced-analytics .history-item {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+    .advanced-analytics .meal-name {
+      color: white;
+      font-weight: 600;
+    }
+    .advanced-analytics .meal-date {
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .advanced-analytics label {
+      color: white;
+      font-weight: 600;
+    }
+    .advanced-analytics .star-rating .star {
+      color: #fbbf24;
+    }
+    .advanced-analytics .rating-labels span {
+      color: rgba(255, 255, 255, 0.7);
+    }
+    .advanced-analytics .portion-value {
+      color: white;
+      font-weight: 600;
+    }
+    .advanced-analytics textarea {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      border-radius: 6px;
+      padding: 0.75rem;
+    }
+    .advanced-analytics textarea::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
     .symptom-logger .injection-context {
       display: flex;
       gap: 1rem;
@@ -6825,10 +6928,15 @@
         </div>
         
         <!-- AI-Powered Recommendations -->
-        <div class="content-card ai-recommendations">
-          <div class="card-header">
-            <h3>Personalized Recipe Recommendations</h3>
-            <span class="recommendation-badge">Updated daily based on your ratings</span>
+        <div class="content-card ai-recommendations advanced-analytics">
+          <div class="premium-header">
+            <div class="premium-title-section">
+              <h3>Personalized Recipe Recommendations</h3>
+              <span class="premium-badge">ACTIVE</span>
+            </div>
+            <div class="premium-value">
+              <span class="savings-badge">Updated daily based on your ratings</span>
+            </div>
           </div>
           
           <div class="recommendation-filters">
@@ -6908,10 +7016,15 @@
         </div>
         
         <!-- Taste Profile Analysis -->
-        <div class="content-card taste-profile">
-          <div class="card-header">
-            <h3>Your Evolving Taste Profile</h3>
-            <span class="profile-note">How your preferences change with your treatment</span>
+        <div class="content-card taste-profile advanced-analytics">
+          <div class="premium-header">
+            <div class="premium-title-section">
+              <h3>Your Evolving Taste Profile</h3>
+              <span class="premium-badge">ACTIVE</span>
+            </div>
+            <div class="premium-value">
+              <span class="savings-badge">How your preferences change with your treatment</span>
+            </div>
           </div>
           
           <div class="profile-analysis">
@@ -6962,10 +7075,15 @@
         </div>
         
         <!-- Recipe Feedback Loop -->
-        <div class="content-card feedback-loop">
-          <div class="card-header">
-            <h3>AI Learning from Your Feedback</h3>
-            <span class="learning-note">See how your ratings improve our recommendations</span>
+        <div class="content-card feedback-loop advanced-analytics">
+          <div class="premium-header">
+            <div class="premium-title-section">
+              <h3>AI Learning from Your Feedback</h3>
+              <span class="premium-badge">ACTIVE</span>
+            </div>
+            <div class="premium-value">
+              <span class="savings-badge">See how your ratings improve our recommendations</span>
+            </div>
           </div>
           
           <div class="feedback-insights">
