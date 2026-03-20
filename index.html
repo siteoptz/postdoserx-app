@@ -1611,10 +1611,12 @@
     }
     .timeline-btn {
       padding: 0.5rem 1rem;
-      background: linear-gradient(135deg, var(--slate-dark) 0%, var(--charcoal) 50%, var(--slate-dark) 100%);
-      color: var(--text-secondary);
+      background: linear-gradient(135deg, var(--navy), #1a365d);
+      color: white;
       border: 1px solid var(--slate);
       border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
       cursor: pointer;
       font-weight: 600;
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1622,16 +1624,25 @@
       font-family: 'Montserrat', sans-serif;
     }
     .timeline-btn.active {
-      background: linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-emerald) 50%, var(--accent-blue) 100%);
+      background: linear-gradient(135deg, var(--magenta), var(--magenta-dark));
       color: white;
-      border-color: var(--cyan-400);
+      border-color: var(--magenta);
       box-shadow: 0 4px 15px rgba(198, 22, 141, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
+    .timeline-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    }
     .timeline-btn.premium-btn {
-      background: linear-gradient(135deg, var(--yellow-400) 0%, var(--accent-amber) 50%, var(--yellow-400) 100%);
-      color: var(--midnight);
-      border-color: var(--yellow-400);
-      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      background: linear-gradient(135deg, #2A7F7F, #1e5f5f);
+      color: white;
+      border-color: #2A7F7F;
+      box-shadow: 0 4px 15px rgba(42, 127, 127, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      font-weight: 600;
+    }
+    .timeline-btn.premium-btn:hover {
+      background: linear-gradient(135deg, #1e5f5f, #2A7F7F);
+      transform: translateY(-1px);
     }
 
     .timeline-visualization {
@@ -1748,7 +1759,7 @@
     }
     .action-card {
       background: linear-gradient(145deg, var(--charcoal), var(--slate-dark));
-      padding: 1.5rem;
+      padding: 1rem;
       border-radius: 12px;
       border: 2px solid var(--slate);
       color: var(--text-primary);
@@ -1762,7 +1773,7 @@
     }
     .action-icon {
       font-size: 2rem;
-      margin-bottom: 1rem;
+      margin-bottom: 0.5rem;
     }
     .action-card .action-icon i {
       width: 2rem;
@@ -1774,12 +1785,14 @@
     }
     .action-card h4 {
       color: var(--navy);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.25rem;
+      margin-top: 0;
       font-weight: 600;
     }
     .action-card p {
       color: var(--text-sec);
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
+      margin-top: 0;
       font-size: 0.875rem;
     }
     .action-card .action-btn {
@@ -1813,12 +1826,32 @@
     }
     .preview-feature {
       display: flex;
+      align-items: center;
       gap: 1rem;
-      padding: 1rem;
-      background: linear-gradient(145deg, var(--slate-dark), var(--slate));
-      border-radius: 8px;
-      border: 1px solid var(--ash);
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+      padding: 1.5rem;
+      background: linear-gradient(145deg, #1a365d, #2563eb);
+      border-radius: 12px;
+      border: 1px solid rgba(198, 22, 141, 0.2);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      color: white;
+    }
+    .preview-feature::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, rgba(198, 22, 141, 0.03), transparent);
+      pointer-events: none;
+    }
+    .preview-feature:hover {
+      transform: translateY(-2px);
+      border-color: rgba(198, 22, 141, 0.4);
+      box-shadow: 0 6px 30px rgba(0, 0, 0, 0.4);
     }
     .feature-icon {
       font-size: 1.5rem;
@@ -1897,14 +1930,15 @@
       margin-right: 0.5rem;
     }
     .feature-content h4 {
-      color: var(--navy);
+      color: white;
       margin-bottom: 0.5rem;
       font-weight: 600;
     }
     .feature-content p {
-      color: var(--text-sec);
+      color: white;
       font-size: 0.875rem;
       line-height: 1.4;
+      opacity: 0.9;
     }
 
     /* Meal Rating & Recipe Styles */
@@ -3834,19 +3868,35 @@
 
     /* Premium Analytics Styles */
     .advanced-analytics {
-      border: 2px solid var(--yellow-400);
-      background: linear-gradient(145deg, var(--charcoal), var(--slate-dark));
+      border: 2px solid var(--magenta);
+      background: linear-gradient(to bottom right, var(--navy), #1a365d, var(--navy));
+      position: relative;
+      overflow: hidden;
+    }
+    .advanced-analytics::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, rgba(198, 22, 141, 0.05), rgba(198, 22, 141, 0.02));
+      pointer-events: none;
     }
     .premium-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: linear-gradient(135deg, rgba(198, 22, 141, 0.1), rgba(198, 22, 141, 0.05));
+      border-radius: 12px;
+      border: 1px solid rgba(198, 22, 141, 0.3);
     }
     .premium-title-section h3 {
       margin: 0 0 0.5rem 0;
       font-size: 1.5rem;
-      color: var(--navy);
+      color: white;
     }
     .premium-badge {
       background: linear-gradient(135deg, var(--gold), var(--gold-dark));
@@ -3871,36 +3921,45 @@
     }
     .analytics-hero {
       text-align: center;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
       padding: 1.5rem;
-      background: white;
+      background: linear-gradient(145deg, var(--navy), #1a365d);
       border-radius: 12px;
-      border: 1px solid var(--yellow-400);
+      border: 1px solid var(--magenta);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     }
     .analytics-hero h4 {
       font-size: 1.75rem;
-      color: var(--navy);
-      margin: 0 0 0.5rem 0;
+      color: white;
+      margin: 0;
+      font-weight: bold;
     }
     .hero-subtitle {
       font-size: 1rem;
-      color: var(--slate);
-      margin: 0;
+      color: white;
+      margin: 0 0 1.5rem 0;
       line-height: 1.5;
+      opacity: 0.9;
+      text-align: center;
     }
     .premium-icon {
-      background: var(--yellow-400);
+      background: var(--magenta);
       color: white;
       font-size: 0.75rem;
       font-weight: 700;
-      padding: 8px;
-      border-radius: 8px;
-      min-width: 40px;
+      padding: 12px;
+      border-radius: 50%;
+      min-width: 48px;
+      min-height: 48px;
       text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
     }
     .feature-benefit {
       font-size: 0.875rem;
-      color: var(--success);
+      color: var(--magenta);
       font-weight: 600;
       margin-top: 0.5rem;
     }
@@ -3945,14 +4004,16 @@
       overflow: hidden;
     }
     .upgrade-btn.primary {
-      background: linear-gradient(135deg, var(--yellow-400), var(--accent-amber));
+      background: linear-gradient(135deg, var(--magenta), var(--magenta-dark));
       color: white;
       font-size: 1.125rem;
+      box-shadow: 0 4px 20px rgba(198, 22, 141, 0.4);
+      border: 2px solid var(--magenta);
     }
     .upgrade-btn.secondary {
       background: transparent;
-      color: var(--yellow-400);
-      border: 2px solid var(--yellow-400);
+      color: var(--magenta);
+      border: 2px solid var(--magenta);
       font-size: 1rem;
     }
     .upgrade-btn:hover {
@@ -6337,7 +6398,7 @@
               </div>
               <div class="legend-item">
                 <div class="legend-color predicted-color"></div>
-                <span>AI Prediction</span>
+                <span>Prediction</span>
               </div>
             </div>
           </div>
@@ -6394,10 +6455,7 @@
           </div>
           
           <div class="premium-preview">
-            <div class="analytics-hero">
-              <h4>Unlock Medical-Grade Analytics</h4>
-              <p class="hero-subtitle">Get the same insights your doctor uses to optimize GLP-1 therapy, delivered instantly to your dashboard</p>
-            </div>
+            <p class="hero-subtitle">Get the same insights your doctor uses to optimize GLP-1 therapy, delivered instantly to your dashboard</p>
 
             <div class="preview-features">
               <div class="preview-feature">
@@ -6435,7 +6493,7 @@
               <div class="upgrade-buttons">
                 <button class="upgrade-btn primary" onclick="showUpgradeModal()">
                   UPGRADE TO PREMIUM
-                  <span class="btn-subtext">$19.99/month • Cancel anytime</span>
+                  <span class="btn-subtext">$12.99/month • Cancel anytime</span>
                 </button>
                 <button class="upgrade-btn secondary" onclick="startFreeTrial()">
                   START 7-DAY FREE TRIAL
@@ -6443,7 +6501,6 @@
               </div>
 
               <div class="upgrade-guarantee">
-                <span class="guarantee-icon"><i data-lucide="check-circle"></i></span>
                 30-day money-back guarantee • Cancel anytime • No setup fees
               </div>
             </div>
@@ -7987,31 +8044,49 @@
     function updateSymptomTimeline() {
       const symptomData = initializeSymptomData();
       const timelineChart = document.querySelector('.timeline-chart');
+      const logs = JSON.parse(localStorage.getItem('symptomLogs') || '[]');
       
       if (!timelineChart) return;
       
-      // Generate last 7 days of data
+      // Generate last 5 days + today + 2 prediction days
       const chartHTML = [];
+      const today = new Date();
       
-      for (let i = 6; i >= 0; i--) {
+      // Past 5 days + today (6 days total)
+      for (let i = 5; i >= 0; i--) {
         const date = new Date();
         date.setDate(date.getDate() - i);
         const dateStr = date.toISOString().split('T')[0];
-        const dayData = symptomData.dailyLogs[dateStr] || {};
+        
+        // Find actual user log for this date
+        const userLog = logs.find(log => log.date === dateStr);
         
         const dayLabel = date.toLocaleDateString('en-US', { weekday: 'short' });
         const dayDate = date.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
         
-        const nauseaHeight = dayData.nausea ? (dayData.nausea.value * 20) : 0;
-        const fatigueHeight = dayData.fatigue ? ((5 - dayData.fatigue.value) * 20) : 0;
+        let nauseaHeight = 0;
+        let fatigueHeight = 0;
+        
+        if (userLog) {
+          // Use actual user data
+          nauseaHeight = userLog.nausea ? (userLog.nausea * 10) : 0;
+          fatigueHeight = userLog.fatigue ? (userLog.fatigue * 10) : 0;
+        } else {
+          // Use fallback pattern data if no user log
+          const dayData = symptomData.dailyLogs[dateStr] || {};
+          nauseaHeight = dayData.nausea ? (dayData.nausea.value * 20) : 0;
+          fatigueHeight = dayData.fatigue ? ((5 - dayData.fatigue.value) * 20) : 0;
+        }
         
         // Check if this is an injection day
         const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
         const isInjectionDay = medicationProfile.lastInjection && 
           date.toDateString() === new Date(medicationProfile.lastInjection).toDateString();
         
+        const isToday = date.toDateString() === today.toDateString();
+        
         chartHTML.push(`
-          <div class="chart-day ${isInjectionDay ? 'injection-day' : ''}">
+          <div class="chart-day ${isInjectionDay ? 'injection-day' : ''} ${isToday ? 'today-marker' : ''}">
             <div class="day-label">${dayLabel}</div>
             <div class="day-date">${dayDate}</div>
             <div class="symptom-bars">
@@ -8019,12 +8094,85 @@
               <div class="symptom-bar fatigue-bar" style="height: ${fatigueHeight}%"></div>
             </div>
             ${isInjectionDay ? '<div class="injection-marker">💉</div>' : ''}
+            ${isToday ? '<div class="today-label">Today</div>' : ''}
             ${nauseaHeight >= 60 ? '<div class="peak-marker">📍 Peak</div>' : ''}
           </div>
         `);
       }
       
+      // Add 1 prediction day based on user pattern
+      const predictions = generateSymptomPredictions(logs);
+      
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      const tomorrowLabel = tomorrow.toLocaleDateString('en-US', { weekday: 'short' });
+      const tomorrowDate = tomorrow.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+      
+      chartHTML.push(`
+        <div class="chart-day prediction">
+          <div class="day-label">${tomorrowLabel}</div>
+          <div class="day-date">${tomorrowDate}</div>
+          <div class="predicted-bars">
+            <div class="symptom-bar nausea-bar predicted" style="height: ${predictions.nausea}%"></div>
+            <div class="symptom-bar fatigue-bar predicted" style="height: ${predictions.fatigue}%"></div>
+          </div>
+          <div class="prediction-label">Predicted</div>
+        </div>
+      `);
+      
       timelineChart.innerHTML = chartHTML.join('');
+    }
+
+    function generateSymptomPredictions(logs) {
+      if (logs.length === 0) {
+        // Default prediction if no data
+        return { nausea: 30, fatigue: 25 };
+      }
+      
+      // Analyze recent patterns (last 7 days)
+      const recentLogs = logs.slice(-7);
+      
+      // Calculate averages and trends
+      let totalNausea = 0;
+      let totalFatigue = 0;
+      let count = 0;
+      
+      recentLogs.forEach(log => {
+        if (log.nausea > 0) {
+          totalNausea += log.nausea;
+          count++;
+        }
+        if (log.fatigue > 0) {
+          totalFatigue += log.fatigue;
+        }
+      });
+      
+      const avgNausea = count > 0 ? totalNausea / count : 3;
+      const avgFatigue = count > 0 ? totalFatigue / count : 3;
+      
+      // Predict based on injection cycle (assume symptoms decrease over time)
+      const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
+      let cycleDayModifier = 0.8; // Default reduction
+      
+      if (medicationProfile.lastInjection) {
+        const daysSinceInjection = Math.floor(
+          (new Date() - new Date(medicationProfile.lastInjection)) / (1000 * 60 * 60 * 24)
+        );
+        
+        // Symptom pattern: peak around day 2-3, then decline
+        if (daysSinceInjection <= 1) {
+          cycleDayModifier = 1.2; // Symptoms increasing
+        } else if (daysSinceInjection <= 3) {
+          cycleDayModifier = 0.9; // Near peak
+        } else {
+          cycleDayModifier = 0.7; // Declining
+        }
+      }
+      
+      return {
+        nausea: Math.max(10, Math.min(90, avgNausea * 10 * cycleDayModifier)),
+        fatigue: Math.max(10, Math.min(90, avgFatigue * 10 * cycleDayModifier))
+      };
     }
 
     function initializeSymptomLogger() {
@@ -10712,8 +10860,50 @@ For clinical review and treatment optimization.`;
     }
     
     function showUpgradeModal() {
-      // In a real app, this would show upgrade modal with Stripe integration
-      alert('Upgrade modal would appear here with Stripe checkout for Premium subscription');
+      const title = '🚀 Advanced Symptom Analytics';
+      const content = `
+        <div style="text-align: center; background: linear-gradient(to bottom right, var(--navy), #1a365d, var(--navy)); padding: 2rem; border-radius: 12px; color: white;">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">💎</div>
+          <h2 style="color: var(--magenta); margin-bottom: 1rem; font-size: 2rem; font-weight: bold;">Advanced Symptom Analytics</h2>
+          <p style="color: white; margin-bottom: 2rem; font-size: 1.125rem;">Get medical-grade insights that optimize your GLP-1 journey</p>
+          
+          <div style="background: rgba(198, 22, 141, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border: 1px solid rgba(198, 22, 141, 0.3);">
+            <div style="font-size: 3rem; font-weight: bold; color: var(--magenta); margin-bottom: 0.5rem;">$12.99</div>
+            <div style="color: #e5e7eb; font-size: 1rem;">per month • Cancel anytime</div>
+            <div style="color: #10b981; font-size: 0.875rem; margin-top: 0.5rem;">💰 Save $247/month vs. clinic visits</div>
+          </div>
+
+          <div style="text-align: left; margin-bottom: 2rem;">
+            <h4 style="color: var(--magenta); margin-bottom: 1rem;">✨ Premium Features Include:</h4>
+            <ul style="color: white; list-style: none; padding: 0;">
+              <li style="margin-bottom: 0.75rem;">🔬 <strong>Advanced Correlation Analysis</strong> - See how diet, sleep & exercise affect symptoms</li>
+              <li style="margin-bottom: 0.75rem;">🤖 <strong>AI Symptom Predictions</strong> - Prevent side effects before they happen</li>
+              <li style="margin-bottom: 0.75rem;">📊 <strong>Medical-Grade Reports</strong> - 90-day trends your doctor actually uses</li>
+              <li style="margin-bottom: 0.75rem;">⚡ <strong>Real-time Optimization</strong> - Instant recommendations based on your data</li>
+              <li style="margin-bottom: 0.75rem;">📱 <strong>Priority Support</strong> - Direct access to our medical advisory team</li>
+            </ul>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem;">
+            <button onclick="startPremiumCheckout()" style="background: linear-gradient(135deg, var(--magenta), var(--magenta-dark)); color: white; padding: 1rem 2rem; border: none; border-radius: 8px; font-weight: bold; font-size: 1.125rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(198, 22, 141, 0.4);">
+              🚀 UPGRADE NOW - $12.99/MONTH
+            </button>
+            <button onclick="startFreeTrial()" style="background: transparent; color: var(--magenta); padding: 0.75rem 2rem; border: 2px solid var(--magenta); border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+              Start 7-Day Free Trial
+            </button>
+          </div>
+          
+          <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.3);">
+            <p style="margin: 0; color: #10b981; font-size: 0.875rem;">✅ <strong>30-day money-back guarantee</strong> • No credit card required for trial</p>
+          </div>
+        </div>
+      `;
+      showCustomModal(title, content);
+    }
+
+    function startPremiumCheckout() {
+      // In a real app, this would redirect to Stripe checkout
+      alert('Premium checkout initiated! Redirecting to Stripe payment...\n\nAdvanced Symptom Analytics: $12.99/month\n✅ Advanced Analytics\n✅ AI Predictions\n✅ Medical Reports\n✅ Priority Support');
     }
 
     function startFreeTrial() {
