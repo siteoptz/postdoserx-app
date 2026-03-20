@@ -11543,18 +11543,17 @@ For clinical review and treatment optimization.`;
       if (feedbackCount === 0) {
         content += `
           <div style="text-align: center; margin-bottom: 2rem;">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">🍽️</div>
             <h3 style="color: white; margin-bottom: 1rem;">Start Rating Meals</h3>
             <p style="color: rgba(255, 255, 255, 0.8);">Rate your meals to unlock personalized safe food insights!</p>
           </div>
           
-          <h4 style="color: #10b981; margin-bottom: 1rem;">✅ Universally Safe GLP-1 Foods:</h4>
+          <h4 style="color: #10b981; margin-bottom: 1rem;">Universally Safe GLP-1 Foods:</h4>
           <div style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
             <p style="margin: 0; color: white;"><strong>High Success Rate (85%+ tolerance):</strong></p>
             <p style="margin: 0.5rem 0; color: white;">• Plain oatmeal with banana • Greek yogurt (plain) • Baked chicken breast • White rice • Clear broths • Toast (white bread)</p>
           </div>
           
-          <h4 style="color: #f59e0b; margin-bottom: 1rem;">⚠️ Common Trigger Foods to Avoid:</h4>
+          <h4 style="color: #f59e0b; margin-bottom: 1rem;">Common Trigger Foods to Avoid:</h4>
           <div style="background: rgba(245, 158, 11, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
             <p style="margin: 0; color: white;"><strong>High Risk (60%+ report symptoms):</strong></p>
             <p style="margin: 0.5rem 0; color: white;">• Fried/greasy foods • Spicy dishes • High-fat dairy • Raw vegetables • Carbonated drinks • Processed meats</p>
@@ -11563,18 +11562,17 @@ For clinical review and treatment optimization.`;
       } else {
         content += `
           <div style="text-align: center; margin-bottom: 2rem;">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">📊</div>
             <h3 style="color: white; margin-bottom: 1rem;">${feedbackCount} Meals Analyzed</h3>
           </div>
           
-          <h4 style="color: #10b981; margin-bottom: 1rem;">🎯 Your Personal Safe Foods:</h4>
+          <h4 style="color: #10b981; margin-bottom: 1rem;">Your Personal Safe Foods:</h4>
           <div style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
             <p style="margin: 0; color: white;"><strong>Mediterranean Bowl:</strong> 5/5 stars - Perfect tolerance</p>
             <p style="margin: 0.5rem 0; color: white;"><strong>Grilled Chicken Salad:</strong> 4/5 stars - Well tolerated</p>
             <p style="margin: 0.5rem 0; color: white;"><strong>Quinoa with Vegetables:</strong> 4/5 stars - Good option</p>
           </div>
           
-          <h4 style="color: #ef4444; margin-bottom: 1rem;">⚠️ Foods to Limit:</h4>
+          <h4 style="color: #ef4444; margin-bottom: 1rem;">Foods to Limit:</h4>
           <div style="background: rgba(239, 68, 68, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
             <p style="margin: 0; color: white;">Based on community data from similar users:</p>
             <p style="margin: 0.5rem 0; color: white;">• Dairy-heavy meals during peak symptom days • Large portions within 48 hours of injection</p>
@@ -11595,7 +11593,6 @@ For clinical review and treatment optimization.`;
       
       content += `
         <div style="text-align: center; margin-bottom: 2rem;">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">⏰</div>
           <h3 style="color: white; margin-bottom: 0.5rem;">Day ${daysSince} Post-Injection</h3>
           <p style="color: rgba(255, 255, 255, 0.8);">Optimized meal timing for your cycle</p>
         </div>
@@ -11603,7 +11600,7 @@ For clinical review and treatment optimization.`;
       
       if (daysSince <= 2) {
         content += `
-          <h4 style="color: #ef4444; margin-bottom: 1rem;">🚨 Peak Symptom Window</h4>
+          <h4 style="color: #ef4444; margin-bottom: 1rem;">Peak Symptom Window</h4>
           <div style="background: rgba(239, 68, 68, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
             <p style="margin: 0; color: white;"><strong>Strategy:</strong> 6 small meals, avoid fats</p>
             <p style="margin: 0.5rem 0; color: white;">• Eat every 2-3 hours • Plain foods only • Clear fluids</p>
@@ -11617,7 +11614,7 @@ For clinical review and treatment optimization.`;
         `;
       } else if (daysSince <= 4) {
         content += `
-          <h4 style="color: #f59e0b; margin-bottom: 1rem;">⚖️ Moderate Symptoms</h4>
+          <h4 style="color: #f59e0b; margin-bottom: 1rem;">Moderate Symptoms</h4>
           <div style="background: rgba(245, 158, 11, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
             <p style="margin: 0; color: white;"><strong>Safe to try:</strong> Regular meals with caution</p>
             <p style="margin: 0.5rem 0; color: white;">• Monitor portions • Light proteins preferred</p>
@@ -11631,7 +11628,7 @@ For clinical review and treatment optimization.`;
         `;
       } else {
         content += `
-          <h4 style="color: #10b981; margin-bottom: 1rem;">✅ Low Symptom Window</h4>
+          <h4 style="color: #10b981; margin-bottom: 1rem;">Low Symptom Window</h4>
           <div style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
             <p style="margin: 0; color: white;"><strong>Perfect for:</strong> New recipes and diverse foods</p>
             <p style="margin: 0.5rem 0; color: white;">• Normal portions • Experiment freely</p>
@@ -11657,7 +11654,6 @@ For clinical review and treatment optimization.`;
       
       content += `
         <div style="text-align: center; margin-bottom: 2rem;">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">📈</div>
           <h3 style="color: white; margin-bottom: 0.5rem;">Tolerance Trend Analysis</h3>
           <p style="color: rgba(255, 255, 255, 0.8);">${feedbackCount} meals tracked so far</p>
         </div>
@@ -11669,7 +11665,7 @@ For clinical review and treatment optimization.`;
             <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1.5rem;">Track ${3 - feedbackCount} more meals to unlock detailed trend analysis!</p>
           </div>
           
-          <h4 style="color: #10b981; margin-bottom: 1rem;">💡 What You'll See:</h4>
+          <h4 style="color: #10b981; margin-bottom: 1rem;">What You'll See:</h4>
           <div style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
             <p style="margin: 0; color: white;">• Weekly tolerance improvement patterns</p>
             <p style="margin: 0.5rem 0; color: white;">• Best and worst performing meals</p>
@@ -11680,21 +11676,21 @@ For clinical review and treatment optimization.`;
       } else {
         // Show sample trend data
         content += `
-          <h4 style="color: #10b981; margin-bottom: 1rem;">📊 7-Day Trend</h4>
+          <h4 style="color: #10b981; margin-bottom: 1rem;">7-Day Trend</h4>
           <div style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
-            <p style="margin: 0; color: white;"><strong>Average Rating:</strong> 4.2/5 stars ⭐</p>
+            <p style="margin: 0; color: white;"><strong>Average Rating:</strong> 4.2/5 stars</p>
             <p style="margin: 0.5rem 0; color: white;"><strong>Trend:</strong> +15% improvement this week</p>
             <p style="margin: 0.5rem 0; color: white;"><strong>Best Day:</strong> Day 5-7 post-injection</p>
           </div>
           
-          <h4 style="color: white; margin-bottom: 1rem;">🎯 Key Insights:</h4>
+          <h4 style="color: white; margin-bottom: 1rem;">Key Insights:</h4>
           <div style="background: rgba(255, 255, 255, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
             <p style="margin: 0; color: white;">• Your tolerance improves 40% by day 3</p>
             <p style="margin: 0.5rem 0; color: white;">• Mediterranean foods show 85% success rate</p>
             <p style="margin: 0.5rem 0; color: white;">• Evening meals are better tolerated</p>
           </div>
           
-          <h4 style="color: #f59e0b; margin-bottom: 1rem;">⚡ Recommendations:</h4>
+          <h4 style="color: #f59e0b; margin-bottom: 1rem;">Recommendations:</h4>
           <div style="background: rgba(245, 158, 11, 0.1); padding: 1.5rem; border-radius: 8px;">
             <p style="margin: 0; color: white;">• Focus on Greek/Mediterranean cuisine</p>
             <p style="margin: 0.5rem 0; color: white;">• Schedule larger meals for days 5-7</p>
@@ -11715,36 +11711,56 @@ For clinical review and treatment optimization.`;
       
       content += `
         <div style="text-align: center; margin-bottom: 2rem;">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">🎯</div>
           <h3 style="color: white; margin-bottom: 0.5rem;">Smart Meal Recommendations</h3>
           <p style="color: rgba(255, 255, 255, 0.8);">Personalized for your GLP-1 journey</p>
         </div>
       `;
       
+      if (feedbackCount === 0) {
+        content += `
+          <h4 style="color: #10b981; margin-bottom: 1rem;">Universal GLP-1 Safe Meals:</h4>
+          <div style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+            <p style="margin: 0; color: white;"><strong>Mediterranean Quinoa Bowl</strong></p>
+            <p style="margin: 0.25rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Protein-rich quinoa with olive oil, lemon, and herbs</p>
+            <p style="margin: 0.5rem 0; color: white;"><strong>Ginger Chicken Broth</strong></p>
+            <p style="margin: 0.25rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Anti-nausea properties, easy digestion</p>
+            <p style="margin: 0.5rem 0; color: white;"><strong>Banana Oatmeal</strong></p>
+            <p style="margin: 0.25rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Gentle carbs with potassium for energy</p>
+            <p style="margin: 0.5rem 0; color: white;"><strong>Baked Sweet Potato</strong></p>
+            <p style="margin: 0.25rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Complex carbs, easy on stomach</p>
+          </div>
+        `;
+      } else {
+        content += `
+          <h4 style="color: #10b981; margin-bottom: 1rem;">Based on Your Ratings:</h4>
+          <div style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+            <p style="margin: 0; color: white;"><strong>Mediterranean Quinoa Bowl</strong></p>
+            <p style="margin: 0.25rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">94% match based on your preferences</p>
+            <p style="margin: 0.5rem 0; color: white;"><strong>Ginger Chicken Soup</strong></p>
+            <p style="margin: 0.25rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Perfect for current cycle day</p>
+            <p style="margin: 0.5rem 0; color: white;"><strong>Banana Oat Smoothie</strong></p>
+            <p style="margin: 0.25rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Gentle morning option</p>
+          </div>
+        `;
+      }
+      
       content += `
-        <h4 style="color: #10b981; margin-bottom: 1rem;">🌟 Today's Top Picks:</h4>
-        <div style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
-          <p style="margin: 0; color: white;"><strong>🥗 Mediterranean Quinoa Bowl</strong></p>
-          <p style="margin: 0.25rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">94% match based on your preferences</p>
-          <p style="margin: 0.5rem 0; color: white;"><strong>🍲 Ginger Chicken Soup</strong></p>
-          <p style="margin: 0.25rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Perfect for current cycle day</p>
-          <p style="margin: 0.5rem 0; color: white;"><strong>🍌 Banana Oat Smoothie</strong></p>
-          <p style="margin: 0.25rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Gentle morning option</p>
-        </div>
-        
-        <h4 style="color: #8b5cf6; margin-bottom: 1rem;">💜 New to Try:</h4>
+        <h4 style="color: #8b5cf6; margin-bottom: 1rem;">New to Try:</h4>
         <div style="background: rgba(139, 92, 246, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
-          <p style="margin: 0; color: white;"><strong>🍠 Roasted Sweet Potato Bowl</strong></p>
+          <p style="margin: 0; color: white;"><strong>Roasted Sweet Potato Bowl</strong></p>
           <p style="margin: 0.25rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Similar users rate 4.3/5 stars</p>
-          <p style="margin: 0.5rem 0; color: white;"><strong>🐟 Lemon Herb Salmon</strong></p>
+          <p style="margin: 0.5rem 0; color: white;"><strong>Lemon Herb Salmon</strong></p>
           <p style="margin: 0.25rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">High protein, low nausea risk</p>
+          <p style="margin: 0.5rem 0; color: white;"><strong>Cauliflower Rice Stir-fry</strong></p>
+          <p style="margin: 0.25rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Low-carb alternative with vegetables</p>
         </div>
         
-        <h4 style="color: #ef4444; margin-bottom: 1rem;">⚠️ Skip Today:</h4>
+        <h4 style="color: #ef4444; margin-bottom: 1rem;">Skip Today:</h4>
         <div style="background: rgba(239, 68, 68, 0.1); padding: 1.5rem; border-radius: 8px;">
           <p style="margin: 0; color: white;">• Heavy cream sauces (high fat content)</p>
           <p style="margin: 0.5rem 0; color: white;">• Spicy foods (may worsen nausea)</p>
           <p style="margin: 0.5rem 0; color: white;">• Large portions (harder to digest)</p>
+          <p style="margin: 0.5rem 0; color: white;">• Fried or greasy foods</p>
         </div>
       `;
       
