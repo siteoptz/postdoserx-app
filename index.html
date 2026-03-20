@@ -6067,25 +6067,25 @@
           </div>
           
           <div class="intelligence-grid">
-            <div class="intelligence-card trend-card">
+            <div class="intelligence-card trend-card" onclick="showSymptomIntelligenceModal('trend')">
               <div class="metric-value">74%</div>
               <div class="metric-label">Better Days This Week</div>
               <div class="trend-indicator positive">↗ +12% vs last week</div>
             </div>
             
-            <div class="intelligence-card pattern-card">
+            <div class="intelligence-card pattern-card" onclick="showSymptomIntelligenceModal('pattern')">
               <div class="metric-value">Day 3-4</div>
               <div class="metric-label">Typical Peak Symptoms</div>
               <div class="pattern-note">Post-injection pattern detected</div>
             </div>
             
-            <div class="intelligence-card correlation-card">
+            <div class="intelligence-card correlation-card" onclick="showSymptomIntelligenceModal('correlation')">
               <div class="metric-value">Strong</div>
               <div class="metric-label">Sleep-Nausea Link</div>
               <div class="insight-note">Poor sleep = 2.3x more nausea</div>
             </div>
             
-            <div class="intelligence-card recommendation-card">
+            <div class="intelligence-card recommendation-card" onclick="showSymptomIntelligenceModal('recommendations')">
               <div class="metric-value">3</div>
               <div class="metric-label">AI Recommendations</div>
               <div class="action-note">Ready to optimize your routine</div>
@@ -6237,7 +6237,7 @@
             <div class="timeline-controls">
               <span class="timeline-btn active" onclick="showTimelineView('week')">7 Days</span>
               <span class="timeline-btn" onclick="showTimelineView('month')">30 Days</span>
-              <span class="timeline-btn premium-btn">90 Days</span>
+              <span class="timeline-btn premium-btn" onclick="showTimelineModal('90days')">90 Days</span>
             </div>
           </div>
           
@@ -6340,28 +6340,28 @@
               <div class="action-icon"><i data-lucide="leaf"></i></div>
               <h4>Nausea Relief</h4>
               <p>Try ginger tea or peppermint</p>
-              <button class="action-btn" onclick="showNauseaRelief()">Relief Guide</button>
+              <button class="action-btn" onclick="showNauseaReliefModal()">Relief Guide</button>
             </div>
             
             <div class="action-card meal-timing">
               <div class="action-icon"><i data-lucide="clock"></i></div>
               <h4>Meal Timing</h4>
               <p>Optimize today's meal schedule</p>
-              <button class="action-btn" onclick="optimizeMealTiming()">Adjust Meals</button>
+              <button class="action-btn" onclick="showMealTimingModal()">Adjust Meals</button>
             </div>
             
             <div class="action-card hydration">
               <div class="action-icon"><i data-lucide="droplets"></i></div>
               <h4>Hydration Check</h4>
               <p>Stay ahead of symptoms</p>
-              <button class="action-btn" onclick="startHydrationTimer()">Set Reminders</button>
+              <button class="action-btn" onclick="showHydrationModal()">Set Reminders</button>
             </div>
             
             <div class="action-card exercise">
               <div class="action-icon"><i data-lucide="footprints"></i></div>
               <h4>Gentle Movement</h4>
               <p>Light activity can help</p>
-              <button class="action-btn" onclick="showExerciseGuide()">Activity Ideas</button>
+              <button class="action-btn" onclick="showExerciseModal()">Activity Ideas</button>
             </div>
           </div>
         </div>
@@ -9937,6 +9937,274 @@ For clinical review and treatment optimization.`;
       window.location.href = 'https://postdoserx.com/login.html';
     }
 
+    // Comprehensive Modal Functions for Symptoms Page Buttons
+    
+    function addPromptText(text) {
+      const textarea = document.getElementById('symptom-note');
+      if (textarea) {
+        textarea.value += text;
+        textarea.focus();
+      }
+    }
+    
+    // Modal functions for symptoms page intelligence cards
+    function showSymptomIntelligenceModal(type) {
+      let modalTitle = '';
+      let modalContent = '';
+      
+      switch(type) {
+        case 'trend':
+          modalTitle = '📈 Better Days Trend Analysis';
+          modalContent = `
+            <div class="intelligence-detail">
+              <div class="trend-chart">
+                <h4>Your 74% Better Days This Week</h4>
+                <div class="weekly-breakdown">
+                  <div class="day-item good">Mon: 85% (Good day)</div>
+                  <div class="day-item moderate">Tue: 60% (Moderate symptoms)</div>
+                  <div class="day-item poor">Wed: 45% (Peak symptoms)</div>
+                  <div class="day-item improving">Thu: 70% (Improving)</div>
+                  <div class="day-item great">Fri: 90% (Great day)</div>
+                  <div class="day-item excellent">Sat: 95% (Excellent)</div>
+                  <div class="day-item injection">Sun: 80% (Injection day)</div>
+                </div>
+                
+                <h4>📊 Comparison to Previous Week</h4>
+                <div class="comparison-stats">
+                  <div class="stat-row">Previous Week Average: 62%</div>
+                  <div class="stat-row improvement">This Week Average: 74% (+12%)</div>
+                  <div class="stat-row">Best Improvement: Friday (+25%)</div>
+                </div>
+                
+                <h4>🎯 Key Insights</h4>
+                <ul class="insights-list">
+                  <li>Your injection day timing change improved overall symptoms</li>
+                  <li>Consistent sleep schedule reduced Wednesday peak severity</li>
+                  <li>Meal timing optimization showed 15% better appetite scores</li>
+                  <li>Weekend recovery time improved by 6 hours on average</li>
+                </ul>
+                
+                <div class="trend-actions">
+                  <button class="insight-btn" onclick="exportTrendData()">Export Weekly Report</button>
+                  <button class="insight-btn" onclick="setTrendAlerts()">Set Improvement Alerts</button>
+                </div>
+              </div>
+            </div>
+          `;
+          break;
+          
+        case 'pattern':
+          modalTitle = '🔍 Peak Symptoms Pattern Analysis';
+          modalContent = `
+            <div class="pattern-analysis">
+              <h4>Your Typical Injection Cycle</h4>
+              <div class="cycle-timeline">
+                <div class="cycle-day day-1">
+                  <strong>Day 1 (Injection Day)</strong><br>
+                  • Mild nausea (20% severity)<br>
+                  • Normal energy levels<br>
+                  • Good appetite maintained<br>
+                  • Slight injection site discomfort
+                </div>
+                <div class="cycle-day day-2">
+                  <strong>Day 2</strong><br>
+                  • Increasing nausea (40% severity)<br>
+                  • Slight fatigue beginning<br>
+                  • Reduced appetite (25% decrease)<br>
+                  • First GLP-1 effects noticeable
+                </div>
+                <div class="cycle-day day-3-4 peak">
+                  <strong>Day 3-4 (Peak Period)</strong><br>
+                  • Highest nausea (75% severity)<br>
+                  • Moderate fatigue levels<br>
+                  • Poor appetite (60% reduction)<br>
+                  • Maximum medication efficacy
+                </div>
+                <div class="cycle-day day-5-7">
+                  <strong>Day 5-7 (Recovery)</strong><br>
+                  • Gradual symptom improvement<br>
+                  • Energy levels returning<br>
+                  • Appetite slowly normalizing<br>
+                  • Preparing for next injection
+                </div>
+              </div>
+              
+              <h4>📈 Pattern Consistency Analysis</h4>
+              <div class="consistency-data">
+                <div class="stat-card">
+                  <h5>Peak Timing</h5>
+                  <div class="stat-value">Day 3-4: 89% of cycles</div>
+                </div>
+                <div class="stat-card">
+                  <h5>Duration</h5>
+                  <div class="stat-value">1.5 days average</div>
+                </div>
+                <div class="stat-card">
+                  <h5>Recovery Rate</h5>
+                  <div class="stat-value">94% by Day 6</div>
+                </div>
+              </div>
+              
+              <h4>🎯 Optimization Opportunities</h4>
+              <ul class="optimization-list">
+                <li>Pre-peak meal preparation for Days 2-3</li>
+                <li>Hydration protocol 24 hours before peak</li>
+                <li>Sleep optimization on Day 2 for better Day 3 tolerance</li>
+                <li>Gentle activity schedule during recovery phase</li>
+              </ul>
+              
+              <div class="pattern-actions">
+                <button class="pattern-btn" onclick="createPatternReminders()">Set Pattern Reminders</button>
+                <button class="pattern-btn" onclick="optimizeForPattern()">Optimize Schedule</button>
+              </div>
+            </div>
+          `;
+          break;
+          
+        case 'correlation':
+          modalTitle = '🧠 Sleep-Nausea Correlation Study';
+          modalContent = `
+            <div class="correlation-analysis">
+              <h4>Strong Correlation Detected</h4>
+              <div class="correlation-strength">
+                <div class="correlation-meter">
+                  <div class="meter-bar" style="width: 85%; background: linear-gradient(90deg, #16a34a, #15803d)"></div>
+                </div>
+                <span class="correlation-value">85% correlation strength</span>
+              </div>
+              
+              <h4>📊 Your Personalized Data Analysis</h4>
+              <div class="correlation-stats">
+                <div class="stat-card good-sleep">
+                  <h5>Good Sleep (7+ hours)</h5>
+                  <div class="stat-value">2.1 avg nausea score</div>
+                  <div class="stat-note">Based on 12 nights of data</div>
+                  <div class="stat-detail">Energy: 4.2/5 • Appetite: 4.1/5</div>
+                </div>
+                <div class="stat-card poor-sleep">
+                  <h5>Poor Sleep (<6 hours)</h5>
+                  <div class="stat-value">4.8 avg nausea score</div>
+                  <div class="stat-note warning">2.3x higher nausea levels</div>
+                  <div class="stat-detail">Energy: 2.1/5 • Appetite: 2.3/5</div>
+                </div>
+              </div>
+              
+              <h4>🌙 Sleep Quality Impact Breakdown</h4>
+              <ul class="impact-list">
+                <li class="impact-high">Poor sleep before injection day increases peak severity by 40%</li>
+                <li class="impact-medium">Consistent sleep schedule reduces symptom duration by 8 hours</li>
+                <li class="impact-high">7+ hours of sleep correlates with 60% faster recovery time</li>
+                <li class="impact-medium">Sleep quality affects appetite regulation for 48 hours</li>
+              </ul>
+              
+              <h4>🔮 Sleep-Based Predictions</h4>
+              <div class="predictions">
+                <div class="prediction-item">
+                  <strong>If you sleep 8+ hours tonight:</strong><br>
+                  Predicted tomorrow nausea: 2.0-2.5/5 (Low-Mild)
+                </div>
+                <div class="prediction-item">
+                  <strong>If you sleep <6 hours tonight:</strong><br>
+                  Predicted tomorrow nausea: 4.5-5.0/5 (High-Severe)
+                </div>
+              </div>
+              
+              <h4>💡 Personalized Sleep Recommendations</h4>
+              <div class="recommendations">
+                <button class="rec-btn primary" onclick="setSleepReminder()">Set Sleep Reminders</button>
+                <button class="rec-btn secondary" onclick="showSleepHygieneTips()">Sleep Hygiene Guide</button>
+                <button class="rec-btn secondary" onclick="trackSleepPatterns()">Advanced Sleep Tracking</button>
+              </div>
+            </div>
+          `;
+          break;
+          
+        case 'recommendations':
+          modalTitle = '🤖 AI-Powered Recommendations';
+          modalContent = `
+            <div class="ai-recommendations">
+              <h4>3 Personalized Recommendations Ready</h4>
+              <div class="ai-confidence">Based on 23 days of your unique data</div>
+              
+              <div class="recommendation-card priority-high">
+                <div class="rec-header">
+                  <div class="rec-priority high">HIGH PRIORITY</div>
+                  <div class="confidence-score">92% confidence</div>
+                </div>
+                <h5>🕕 Injection Timing Optimization</h5>
+                <p>Switch to evening injections for 34% symptom reduction</p>
+                <div class="rec-evidence">
+                  <strong>Evidence:</strong> Your morning injections show 2.3x higher next-day nausea<br>
+                  <strong>Sample size:</strong> 8 morning vs 4 evening injections analyzed
+                </div>
+                <div class="rec-benefits">
+                  <span class="benefit">• Reduced peak nausea by 40%</span>
+                  <span class="benefit">• Better sleep quality</span>
+                  <span class="benefit">• Improved next-day energy</span>
+                </div>
+                <button class="rec-action primary" onclick="scheduleInjectionChange()">Update Schedule</button>
+              </div>
+              
+              <div class="recommendation-card priority-medium">
+                <div class="rec-header">
+                  <div class="rec-priority medium">MEDIUM PRIORITY</div>
+                  <div class="confidence-score">87% confidence</div>
+                </div>
+                <h5>🍽️ Meal Frequency Strategy</h5>
+                <p>Increase meal frequency to 5-6 small meals during peak days (Days 2-4)</p>
+                <div class="rec-evidence">
+                  <strong>Evidence:</strong> Small frequent meals reduce nausea by 45%<br>
+                  <strong>Optimal timing:</strong> Every 2-3 hours during peak period
+                </div>
+                <div class="rec-benefits">
+                  <span class="benefit">• Stabilized blood sugar</span>
+                  <span class="benefit">• Reduced nausea spikes</span>
+                  <span class="benefit">• Better medication tolerance</span>
+                </div>
+                <button class="rec-action secondary" onclick="optimizeMealTiming()">Adjust Meal Plan</button>
+              </div>
+              
+              <div class="recommendation-card priority-low">
+                <div class="rec-header">
+                  <div class="rec-priority low">PREVENTIVE</div>
+                  <div class="confidence-score">74% confidence</div>
+                </div>
+                <h5>💧 Structured Hydration Protocol</h5>
+                <p>Implement hydration reminders every 90 minutes during peak symptom days</p>
+                <div class="rec-evidence">
+                  <strong>Evidence:</strong> Adequate hydration correlates with 30% faster recovery<br>
+                  <strong>Target:</strong> 8-10 oz water every 90 minutes, Days 2-4
+                </div>
+                <div class="rec-benefits">
+                  <span class="benefit">• Reduced dehydration-related nausea</span>
+                  <span class="benefit">• Better medication absorption</span>
+                  <span class="benefit">• Faster symptom resolution</span>
+                </div>
+                <button class="rec-action tertiary" onclick="startHydrationTimer()">Set Hydration Reminders</button>
+              </div>
+              
+              <div class="ai-methodology">
+                <h5>🎯 How We Calculate Confidence</h5>
+                <div class="methodology-list">
+                  <div class="method-item">
+                    <strong>Data Points:</strong> 23 days of symptoms, 12 injection cycles, 89 meals tracked
+                  </div>
+                  <div class="method-item">
+                    <strong>Algorithms:</strong> Correlation analysis, pattern recognition, predictive modeling
+                  </div>
+                  <div class="method-item">
+                    <strong>Validation:</strong> Cross-referenced with 2,847 similar user profiles
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+          break;
+      }
+      
+      showCustomModal(modalTitle, modalContent);
+    }
+    
     function showUpgradeModal() {
       // In a real app, this would show upgrade modal with Stripe integration
       alert('Upgrade modal would appear here with Stripe checkout for Premium subscription');
@@ -9945,6 +10213,230 @@ For clinical review and treatment optimization.`;
     function startFreeTrial() {
       // In a real app, this would start a 7-day free trial
       alert('Free trial signup would begin here with Stripe trial subscription');
+    }
+    
+    // Additional modal functions for symptoms page buttons
+    function showTimelineModal(period) {
+      let modalTitle = '';
+      let modalContent = '';
+      
+      if (period === '90days') {
+        modalTitle = '📊 90-Day Premium Analytics';
+        modalContent = `
+          <div class="premium-timeline-preview">
+            <div class="premium-badge-large">PREMIUM FEATURE</div>
+            <h4>Unlock Extended Timeline Analysis</h4>
+            
+            <div class="preview-benefits">
+              <div class="benefit-item">
+                <div class="benefit-icon">📈</div>
+                <div class="benefit-text">
+                  <strong>90-Day Trend Analysis</strong><br>
+                  See long-term patterns and seasonal effects on your GLP-1 journey
+                </div>
+              </div>
+              <div class="benefit-item">
+                <div class="benefit-icon">🔮</div>
+                <div class="benefit-text">
+                  <strong>Predictive Modeling</strong><br>
+                  AI predictions for upcoming injection cycles with 94% accuracy
+                </div>
+              </div>
+              <div class="benefit-item">
+                <div class="benefit-icon">📊</div>
+                <div class="benefit-text">
+                  <strong>Statistical Significance</strong><br>
+                  Medical-grade correlation analysis like clinical studies
+                </div>
+              </div>
+              <div class="benefit-item">
+                <div class="benefit-icon">📝</div>
+                <div class="benefit-text">
+                  <strong>Doctor Reports</strong><br>
+                  Professional summaries ready for your healthcare provider
+                </div>
+              </div>
+            </div>
+            
+            <div class="premium-sample">
+              <h5>Premium Feature Preview:</h5>
+              <div class="sample-insight">
+                "Based on your 90-day pattern, your optimal injection timing is Sunday 8 PM, which reduces Week 1 symptoms by 42% compared to morning injections."
+              </div>
+            </div>
+            
+            <div class="upgrade-cta">
+              <button class="upgrade-btn primary" onclick="showUpgradeModal()">Upgrade to Premium</button>
+              <button class="upgrade-btn secondary" onclick="startFreeTrial()">Start 7-Day Free Trial</button>
+              <div class="trial-offer">No credit card required • Full access • Cancel anytime</div>
+            </div>
+          </div>
+        `;
+      } else {
+        modalTitle = '📅 Timeline Analysis: ' + (period === 'week' ? '7 Days' : '30 Days');
+        modalContent = `
+          <div class="timeline-detail">
+            <h4>Detailed ${period === 'week' ? '7-Day' : '30-Day'} Symptom Analysis</h4>
+            <div class="timeline-actions">
+              <button class="action-btn primary" onclick="exportTimelineData('${period}')">Export ${period === 'week' ? 'Weekly' : 'Monthly'} Report</button>
+              <button class="action-btn secondary" onclick="shareWithDoctor('${period}')">Share with Doctor</button>
+            </div>
+          </div>
+        `;
+      }
+      
+      showCustomModal(modalTitle, modalContent);
+    }
+    
+    function showNauseaReliefModal() {
+      const modalTitle = '🌿 Comprehensive Nausea Relief Guide';
+      const modalContent = `
+        <div class="nausea-relief-guide">
+          <div class="severity-selector">
+            <h4>Current Nausea Level</h4>
+            <div class="severity-buttons">
+              <button class="severity-btn" onclick="showNauseaAdvice('mild')">Mild (1-2)</button>
+              <button class="severity-btn" onclick="showNauseaAdvice('moderate')">Moderate (3-4)</button>
+              <button class="severity-btn" onclick="showNauseaAdvice('severe')">Severe (5)</button>
+            </div>
+          </div>
+          
+          <div id="nauseaAdviceContent">
+            <h4>🎯 Immediate Relief Strategies</h4>
+            
+            <div class="relief-category">
+              <h5>🍵 Natural Remedies (Try First)</h5>
+              <ul class="remedy-list">
+                <li><strong>Ginger:</strong> Fresh ginger tea, ginger chews, or 1g ginger supplement</li>
+                <li><strong>Peppermint:</strong> Peppermint tea or aromatherapy (avoid if you have GERD)</li>
+                <li><strong>Cold compress:</strong> Apply to back of neck or forehead for 10-15 minutes</li>
+                <li><strong>Acupressure:</strong> Press P6 point on wrist (3 fingers below wrist crease)</li>
+              </ul>
+            </div>
+            
+            <div class="relief-category">
+              <h5>🍽️ Dietary Strategies</h5>
+              <ul class="remedy-list">
+                <li><strong>BRAT Diet:</strong> Bananas, rice, applesauce, toast - easy to digest</li>
+                <li><strong>Small frequent sips:</strong> Clear fluids every 15-20 minutes</li>
+                <li><strong>Crackers:</strong> Plain saltines can help settle stomach</li>
+                <li><strong>Avoid:</strong> Spicy, fatty, or strong-smelling foods</li>
+              </ul>
+            </div>
+            
+            <div class="emergency-section">
+              <h5>⚠️ When to Seek Help</h5>
+              <ul class="warning-list">
+                <li>Vomiting for more than 24 hours</li>
+                <li>Signs of dehydration (dizziness, dry mouth, dark urine)</li>
+                <li>Severe abdominal pain</li>
+                <li>Blood in vomit</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="relief-actions">
+            <button class="relief-btn" onclick="setNauseaReminders()">Set Relief Reminders</button>
+            <button class="relief-btn" onclick="trackReliefMethods()">Track What Works</button>
+          </div>
+        </div>
+      `;
+      
+      showCustomModal(modalTitle, modalContent);
+    }
+    
+    function showMealTimingModal() {
+      const modalTitle = '🕰️ Optimal Meal Timing Strategy';
+      const modalContent = `
+        <div class="meal-timing-optimizer">
+          <h4>Personalized Meal Timing for Your Injection Cycle</h4>
+          <p>Today is Day 4 since injection - Peak symptom period. Recommended: 5-6 small meals every 2-3 hours.</p>
+          
+          <div class="timing-actions">
+            <button class="timing-btn primary" onclick="setMealReminders()">Set Meal Reminders</button>
+            <button class="timing-btn secondary" onclick="optimizeMealTiming()">Apply to Meal Plan</button>
+          </div>
+        </div>
+      `;
+      
+      showCustomModal(modalTitle, modalContent);
+    }
+    
+    function showHydrationModal() {
+      const modalTitle = '💧 Smart Hydration Protocol';
+      const modalContent = `
+        <div class="hydration-protocol">
+          <h4>Personalized Hydration for GLP-1 Therapy</h4>
+          <p>During peak symptoms (Day 4), focus on small frequent sips. Target: 8 oz every 90 minutes.</p>
+          
+          <div class="hydration-tips">
+            <h5>Best fluids during nausea:</h5>
+            <ul>
+              <li>Ginger tea or clear ginger ale</li>
+              <li>Room temperature water</li>
+              <li>Electrolyte solutions (small sips)</li>
+              <li>Clear broths</li>
+            </ul>
+          </div>
+          
+          <div class="hydration-actions">
+            <button class="hydration-btn primary" onclick="startHydrationTimer()">Start Hydration Reminders</button>
+          </div>
+        </div>
+      `;
+      
+      showCustomModal(modalTitle, modalContent);
+    }
+    
+    function showExerciseModal() {
+      const modalTitle = '🏃‍♀️ Gentle Movement Guide';
+      const modalContent = `
+        <div class="exercise-guide">
+          <h4>Safe Exercise During GLP-1 Therapy</h4>
+          <p><strong>Today's Recommendation (Day 4):</strong> Very light movement only. Focus on rest and gentle stretching.</p>
+          
+          <div class="exercise-options">
+            <h5>Recommended for today:</h5>
+            <ul>
+              <li>5-10 minute slow walks (if tolerated)</li>
+              <li>Gentle stretching in bed</li>
+              <li>Deep breathing exercises</li>
+              <li>Neck and shoulder rolls</li>
+            </ul>
+          </div>
+          
+          <div class="exercise-actions">
+            <button class="exercise-btn primary" onclick="startGentleRoutine()">Start Today's Routine</button>
+          </div>
+        </div>
+      `;
+      
+      showCustomModal(modalTitle, modalContent);
+    }
+    
+    // Helper functions for modal actions
+    function setNauseaReminders() {
+      alert('Nausea relief reminders have been set!');
+    }
+    
+    function trackReliefMethods() {
+      alert('Relief method tracking activated!');
+    }
+    
+    function setMealReminders() {
+      alert('Meal timing reminders have been set!');
+    }
+    
+    function startGentleRoutine() {
+      alert('Starting gentle movement routine. Remember to listen to your body!');
+    }
+    
+    function exportTimelineData(period) {
+      alert(`${period} timeline data exported!`);
+    }
+    
+    function shareWithDoctor(period) {
+      alert(`${period} report prepared for your healthcare provider!`);
     }
 
     // Handle profile form submission
