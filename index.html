@@ -198,6 +198,14 @@
       color: white !important;
     }
     
+    .inline-icon {
+      display: inline-block;
+      width: 1.2em;
+      height: 1.2em;
+      margin-right: 0.5em;
+      vertical-align: middle;
+    }
+    
     /* Injection icon styling */
     .injection-icon {
       background: linear-gradient(135deg, var(--gold), var(--gold-dark));
@@ -1396,6 +1404,15 @@
       background: linear-gradient(45deg, rgba(198, 22, 141, 0.05), transparent);
       pointer-events: none;
     }
+    .enhanced-intelligence h3,
+    .enhanced-intelligence h4,
+    .enhanced-intelligence p,
+    .enhanced-intelligence span,
+    .enhanced-intelligence .intelligence-subtitle,
+    .enhanced-intelligence .total-ratings,
+    .enhanced-intelligence .accuracy-badge {
+      color: white !important;
+    }
     .intelligence-header {
       display: flex;
       justify-content: space-between;
@@ -2257,12 +2274,18 @@
     .star {
       font-size: 2rem;
       cursor: pointer;
-      transition: transform 0.2s ease;
+      transition: transform 0.2s ease, color 0.2s ease;
       opacity: 0.3;
+      color: #fbbf24;
     }
     .star:hover, .star.active {
       transform: scale(1.1);
       opacity: 1;
+      color: #fbbf24;
+    }
+    .star.selected {
+      opacity: 1;
+      color: #fbbf24;
     }
     .rating-labels {
       display: flex;
@@ -2291,23 +2314,57 @@
       align-items: center;
       gap: 0.5rem;
       padding: 1rem 1.5rem;
-      border: 2px solid var(--slate);
-      background: linear-gradient(145deg, var(--slate-dark), var(--slate));
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.1);
       border-radius: 12px;
       cursor: pointer;
       transition: all 0.3s ease;
       font-weight: 600;
-      color: var(--text-primary);
+      color: white;
       box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
     }
     .impact-btn:hover, .timing-btn:hover {
-      border-color: var(--accent-blue);
-      background: var(--slate-dark);
+      border-color: var(--magenta);
+      background: rgba(198, 22, 141, 0.2);
+      transform: translateY(-2px);
     }
-    .impact-btn.selected, .timing-btn.selected {
-      border-color: var(--accent-blue);
-      background: var(--accent-blue);
+    .impact-btn.selected, .timing-btn.selected, 
+    .impact-btn.active, .timing-btn.active {
+      border-color: var(--magenta);
+      background: var(--magenta);
       color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(198, 22, 141, 0.4);
+    }
+    .impact-btn.positive {
+      border-color: #10b981;
+      background: rgba(16, 185, 129, 0.1);
+    }
+    .impact-btn.positive:hover,
+    .impact-btn.positive.selected,
+    .impact-btn.positive.active {
+      background: #10b981;
+      border-color: #10b981;
+    }
+    .impact-btn.neutral {
+      border-color: #f59e0b;
+      background: rgba(245, 158, 11, 0.1);
+    }
+    .impact-btn.neutral:hover,
+    .impact-btn.neutral.selected,
+    .impact-btn.neutral.active {
+      background: #f59e0b;
+      border-color: #f59e0b;
+    }
+    .impact-btn.negative {
+      border-color: #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+    }
+    .impact-btn.negative:hover,
+    .impact-btn.negative.selected,
+    .impact-btn.negative.active {
+      background: #ef4444;
+      border-color: #ef4444;
     }
     .impact-icon {
       font-size: 1.5rem;
@@ -6771,12 +6828,12 @@
         <div class="content-card rating-intelligence enhanced-intelligence">
           <div class="intelligence-header">
             <div class="intelligence-title">
-              <h3>🧠 Your Meal Intelligence Dashboard</h3>
+              <h3><i data-lucide="brain" class="inline-icon"></i> Your Meal Intelligence Dashboard</h3>
               <p class="intelligence-subtitle">AI-powered insights based on your meal ratings and symptom patterns</p>
             </div>
             <div class="intelligence-stats">
               <span class="total-ratings" id="totalRatingsCount">0 meal ratings</span>
-              <span class="accuracy-badge">📊 95% prediction accuracy</span>
+              <span class="accuracy-badge"><i data-lucide="trending-up" class="inline-icon"></i> 95% prediction accuracy</span>
             </div>
           </div>
           
@@ -6970,7 +7027,7 @@
             </div>
             
             <div class="recipe-card medium-confidence">
-              <div class="recipe-image">🍲</div>
+              <div class="recipe-image"><i data-lucide="chef-hat"></i></div>
               <div class="recipe-content">
                 <h4>Healing Bone Broth Soup</h4>
                 <div class="recipe-stats">
@@ -8910,7 +8967,7 @@
             <li><strong>Timing:</strong> Eat every 2-3 hours during peak symptom days</li>
           </ul>
 
-          <h4 style="color: #10b981; margin-bottom: 1rem;">🥗 Optimized Foods for Each Phase:</h4>
+          <h4 style="color: #10b981; margin-bottom: 1rem;"><i data-lucide="salad" style="display: inline-block; width: 16px; height: 16px; margin-right: 8px;"></i> Optimized Foods for Each Phase:</h4>
           <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
             <p style="margin: 0;"><strong>High-tolerance foods:</strong> Rice, bananas, toast, broth-based soups</p>
             <p style="margin: 0.5rem 0 0 0;"><strong>Avoid during peak:</strong> Spicy, fatty, or heavily processed foods</p>
@@ -12043,11 +12100,71 @@ For clinical review and treatment optimization.`;
       }
     }
     
+    // Star rating functionality
+    function initializeStarRating() {
+      const stars = document.querySelectorAll('.star-rating .star');
+      stars.forEach(star => {
+        star.addEventListener('click', function() {
+          const rating = parseInt(this.getAttribute('data-rating'));
+          const starContainer = this.parentElement;
+          
+          // Clear all selected stars in this container
+          starContainer.querySelectorAll('.star').forEach(s => {
+            s.classList.remove('selected');
+          });
+          
+          // Set selected stars up to the clicked rating
+          for(let i = 1; i <= rating; i++) {
+            const currentStar = starContainer.querySelector(`[data-rating="${i}"]`);
+            if(currentStar) {
+              currentStar.classList.add('selected');
+            }
+          }
+          
+          // Store the rating
+          const today = new Date().toISOString().split('T')[0];
+          let mealFeedback = JSON.parse(localStorage.getItem('mealFeedback') || '{}');
+          if (!mealFeedback[today]) {
+            mealFeedback[today] = {};
+          }
+          mealFeedback[today].rating = rating;
+          localStorage.setItem('mealFeedback', JSON.stringify(mealFeedback));
+          
+          console.log(`Meal rating recorded: ${rating} stars`);
+        });
+        
+        // Add hover effects
+        star.addEventListener('mouseenter', function() {
+          const rating = parseInt(this.getAttribute('data-rating'));
+          const starContainer = this.parentElement;
+          
+          starContainer.querySelectorAll('.star').forEach(s => {
+            s.classList.remove('active');
+          });
+          
+          for(let i = 1; i <= rating; i++) {
+            const currentStar = starContainer.querySelector(`[data-rating="${i}"]`);
+            if(currentStar) {
+              currentStar.classList.add('active');
+            }
+          }
+        });
+        
+        star.addEventListener('mouseleave', function() {
+          const starContainer = this.parentElement;
+          starContainer.querySelectorAll('.star').forEach(s => {
+            s.classList.remove('active');
+          });
+        });
+      });
+    }
+
     // Multiple initialization attempts
     setTimeout(initializeLucideIcons, 100);
     document.addEventListener('DOMContentLoaded', function() {
       console.log('DOM loaded, trying Lucide init...');
       initializeLucideIcons();
+      initializeStarRating();
     });
     window.addEventListener('load', function() {
       console.log('Window loaded, trying Lucide init...');
