@@ -6540,6 +6540,7 @@
                   <span>Too Large</span>
                 </div>
               </div>
+              <div class="portion-value" id="portion-display">Just Right</div>
             </div>
             
             <div class="notes-section">
@@ -7933,7 +7934,8 @@
       const labels = {
         nausea: ['None', 'Mild', 'Moderate', 'Severe', 'Very Severe'],
         fatigue: ['Exhausted', 'Low', 'Fair', 'Good', 'Energetic'],
-        appetite: ['None', 'Poor', 'Fair', 'Normal', 'Strong']
+        appetite: ['None', 'Poor', 'Fair', 'Normal', 'Strong'],
+        sleep: ['Poor', 'Fair', 'Good', 'Very Good', 'Excellent']
       };
       
       if (displayElement && labels[symptomType]) {
@@ -8008,6 +8010,11 @@
         updateSymptomValue('appetite', todayData.appetite.value);
       }
       
+      if (todayData.sleep) {
+        document.getElementById('sleep-level').value = todayData.sleep.value;
+        updateSymptomValue('sleep', todayData.sleep.value);
+      }
+      
       // Update injection context
       const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
       if (medicationProfile.lastInjection) {
@@ -8030,6 +8037,85 @@
             contextNoteElement.textContent = 'Medication effect wearing off';
           }
         }
+      }
+    }
+
+    // Missing symptoms page button functions
+    function showTimelineView(period) {
+      // Update active timeline button
+      document.querySelectorAll('.timeline-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      // For now, just refresh the timeline with current data
+      // In the future, this could load different time periods from the API
+      updateSymptomTimeline();
+    }
+
+    function selectImpact(impact) {
+      // Update active impact button
+      document.querySelectorAll('.impact-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      // Store the meal impact feedback
+      const today = new Date().toISOString().split('T')[0];
+      let mealFeedback = JSON.parse(localStorage.getItem('mealFeedback') || '{}');
+      if (!mealFeedback[today]) {
+        mealFeedback[today] = {};
+      }
+      mealFeedback[today].impact = impact;
+      localStorage.setItem('mealFeedback', JSON.stringify(mealFeedback));
+      
+      console.log(`Meal impact recorded: ${impact}`);
+    }
+
+    function selectTiming(timing) {
+      // Update active timing button
+      document.querySelectorAll('.timing-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      // Store the meal timing feedback
+      const today = new Date().toISOString().split('T')[0];
+      let mealFeedback = JSON.parse(localStorage.getItem('mealFeedback') || '{}');
+      if (!mealFeedback[today]) {
+        mealFeedback[today] = {};
+      }
+      mealFeedback[today].timing = timing;
+      localStorage.setItem('mealFeedback', JSON.stringify(mealFeedback));
+      
+      console.log(`Meal timing recorded: ${timing}`);
+    }
+
+    function updatePortion(value) {
+      const portionLabels = ['Too Small', 'Small', 'Just Right', 'Large', 'Too Large'];
+      const portionDisplay = document.getElementById('portion-display');
+      
+      if (portionDisplay) {
+        portionDisplay.textContent = portionLabels[value - 1] || 'Just Right';
+      }
+      
+      // Store the portion feedback
+      const today = new Date().toISOString().split('T')[0];
+      let mealFeedback = JSON.parse(localStorage.getItem('mealFeedback') || '{}');
+      if (!mealFeedback[today]) {
+        mealFeedback[today] = {};
+      }
+      mealFeedback[today].portion = parseInt(value);
+      localStorage.setItem('mealFeedback', JSON.stringify(mealFeedback));
+      
+      console.log(`Portion size recorded: ${value}`);
+    }
+
+    function showImpactForm() {
+      const modal = document.getElementById('impact-modal');
+      if (modal) {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
       }
     }
 
