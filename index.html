@@ -965,7 +965,8 @@
     }
     .profile-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, auto);
       gap: 1rem;
     }
     .profile-item {
@@ -1364,6 +1365,12 @@
     }
     .trend-indicator.positive {
       color: #4ade80;
+    }
+    .trend-indicator.neutral {
+      color: #fbbf24;
+    }
+    .trend-indicator.negative {
+      color: #f87171;
     }
     .pattern-note, .insight-note, .action-note {
       font-size: 0.875rem;
@@ -4334,7 +4341,6 @@
       <div id="home" class="view active">
         <div class="view-header">
           <h1 class="view-title">Your personalized <span id="medication-name">Wegovy</span> journey dashboard</h1>
-          <p class="view-subtitle">Welcome back, <span id="dashboard-user-name">Demo User</span>!</p>
         </div>
         
         <!-- Medication Profile Setup -->
@@ -4511,7 +4517,7 @@
         <!-- AI Insights Card -->
         <div class="content-card insights-card">
           <div class="card-header">
-            <h3>Today's AI Insights</h3>
+            <h3>Today's Insights</h3>
             <span class="pro-badge-gold">PRO</span>
           </div>
           <div class="insight-list">
@@ -4534,25 +4540,25 @@
         <div class="content-card actions-card">
           <h3>Suggested Actions for Today</h3>
           <div class="action-list">
-            <div class="action-item">
+            <div class="action-item" onclick="showActionInsight('symptom-logging')" style="cursor: pointer;">
               <input type="checkbox" id="action1">
               <label for="action1">Log today's symptoms</label>
-              <button class="btn-action" onclick="showView('symptoms')">Go →</button>
+              <button class="btn-action" onclick="event.stopPropagation(); showView('symptoms')">Go →</button>
             </div>
-            <div class="action-item">
+            <div class="action-item" onclick="showActionInsight('meal-rating')" style="cursor: pointer;">
               <input type="checkbox" id="action2">
               <label for="action2">Rate yesterday's dinner</label>
-              <button class="btn-action" onclick="showView('feedback')">Go →</button>
+              <button class="btn-action" onclick="event.stopPropagation(); showView('feedback')">Go →</button>
             </div>
-            <div class="action-item">
+            <div class="action-item" onclick="showActionInsight('meal-planning')" style="cursor: pointer;">
               <input type="checkbox" id="action3">
               <label for="action3">Review tomorrow's meal plan</label>
-              <button class="btn-action" onclick="showView('meals')">Go →</button>
+              <button class="btn-action" onclick="event.stopPropagation(); showView('meals')">Go →</button>
             </div>
-            <div class="action-item">
+            <div class="action-item" onclick="showActionInsight('weight-tracking')" style="cursor: pointer;">
               <input type="checkbox" id="action4">
               <label for="action4">Update weight tracking</label>
-              <button class="btn-action" onclick="showView('progress')">Go →</button>
+              <button class="btn-action" onclick="event.stopPropagation(); showView('progress')">Go →</button>
             </div>
           </div>
         </div>
@@ -6063,14 +6069,14 @@
         <div class="content-card symptom-intelligence">
           <div class="card-header">
             <h3>Your Symptom Intelligence</h3>
-            <span class="date" id="current-symptom-date">March 18, 2024</span>
+            <span class="date" id="current-symptom-date"></span>
           </div>
           
           <div class="intelligence-grid">
             <div class="intelligence-card trend-card" onclick="showSymptomIntelligenceModal('trend')">
-              <div class="metric-value">74%</div>
-              <div class="metric-label">Better Days This Week</div>
-              <div class="trend-indicator positive">↗ +12% vs last week</div>
+              <div class="metric-value">0/7</div>
+              <div class="metric-label">Logs This Week</div>
+              <div class="trend-indicator negative">⚡ Log more for insights</div>
             </div>
             
             <div class="intelligence-card pattern-card" onclick="showSymptomIntelligenceModal('pattern')">
@@ -6190,6 +6196,10 @@
               Log & Analyze Symptoms
             </button>
             <button class="secondary-btn" onclick="quickCopyYesterday()">Copy Yesterday's Log</button>
+            <button class="secondary-btn" onclick="viewSymptomHistory()">
+              <span class="btn-icon"><i data-lucide="history"></i></span>
+              View Previous Logs
+            </button>
           </div>
         </div>
         
@@ -7843,22 +7853,45 @@
     function updateSymptomIntelligence() {
       const symptomData = initializeSymptomData();
       const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
+      const logs = JSON.parse(localStorage.getItem('symptomLogs') || '[]');
+      
+      // Update current date
+      const currentDateEl = document.getElementById('current-symptom-date');
+      if (currentDateEl) {
+        const today = new Date();
+        currentDateEl.textContent = today.toLocaleDateString('en-US', { 
+          weekday: 'long', 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+        });
+      }
       
       // Update intelligence cards with real data
-      const betterDaysCard = document.querySelector('.trend-card .metric-value');
-      const betterDaysLabel = document.querySelector('.trend-card .metric-label');
-      const betterDaysTrend = document.querySelector('.trend-card .trend-indicator');
+      const logsCard = document.querySelector('.trend-card .metric-value');
+      const logsLabel = document.querySelector('.trend-card .metric-label');
+      const logsTrend = document.querySelector('.trend-card .trend-indicator');
       
-      if (betterDaysCard) {
-        const currentPercent = symptomData.weeklyStats.betterDaysPercent;
-        betterDaysCard.textContent = `${currentPercent}%`;
-        betterDaysLabel.textContent = 'Better Days This Week';
+      if (logsCard) {
+        // Count logs from this week
+        const oneWeekAgo = new Date();
+        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+        const thisWeekLogs = logs.filter(log => new Date(log.date) >= oneWeekAgo);
         
-        // Calculate trend (mock comparison with last week for now)
-        const trendChange = Math.floor(Math.random() * 20) - 10; // -10 to +10
-        const trendSymbol = trendChange >= 0 ? '↗' : '↘';
-        betterDaysTrend.textContent = `${trendSymbol} ${Math.abs(trendChange)}% vs last week`;
-        betterDaysTrend.className = `trend-indicator ${trendChange >= 0 ? 'positive' : 'negative'}`;
+        logsCard.textContent = `${thisWeekLogs.length}/7`;
+        logsLabel.textContent = 'Logs This Week';
+        
+        // Show tracking consistency feedback
+        if (thisWeekLogs.length >= 5) {
+          logsTrend.textContent = '✓ Great tracking!';
+          logsTrend.className = 'trend-indicator positive';
+        } else if (thisWeekLogs.length >= 3) {
+          logsTrend.textContent = '~ Good progress';
+          logsTrend.className = 'trend-indicator neutral';
+        } else {
+          logsTrend.textContent = '⚡ Log more for insights';
+          logsTrend.className = 'trend-indicator negative';
+        }
       }
       
       // Update pattern card with real injection cycle data
@@ -8175,6 +8208,7 @@
       const fatigue = document.getElementById('fatigue-level')?.value || 0;
       const appetite = document.getElementById('appetite-level')?.value || 0;
       const sleep = document.getElementById('sleep-level')?.value || 0;
+      const note = document.getElementById('symptom-note')?.value || '';
       
       // Check if any symptoms were logged
       if (nausea == 0 && fatigue == 0 && appetite == 0 && sleep == 0) {
@@ -8182,12 +8216,214 @@
         return;
       }
       
+      // Store the logged data with timestamp
+      const today = new Date().toISOString().split('T')[0];
+      const logData = {
+        date: today,
+        nausea: parseInt(nausea),
+        fatigue: parseInt(fatigue),
+        appetite: parseInt(appetite),
+        sleep: parseInt(sleep),
+        note: note,
+        timestamp: new Date().toLocaleString()
+      };
+      
+      // Save to localStorage
+      const existingLogs = JSON.parse(localStorage.getItem('symptomLogs') || '[]');
+      const logIndex = existingLogs.findIndex(log => log.date === today);
+      if (logIndex >= 0) {
+        existingLogs[logIndex] = logData;
+      } else {
+        existingLogs.push(logData);
+      }
+      localStorage.setItem('symptomLogs', JSON.stringify(existingLogs));
+      
       // Update symptom data (already done by individual sliders, but refresh intelligence)
       updateSymptomIntelligence();
       updateSymptomTimeline();
       
-      alert('Symptom log saved successfully! Your data has been recorded for today.');
-      console.log('Symptom log saved');
+      // Show detailed summary
+      showSymptomLogSummary(logData);
+      
+      console.log('Symptom log saved', logData);
+    }
+
+    function showSymptomLogSummary(logData) {
+      const getSymptomLevel = (value) => {
+        if (value === 0) return 'None';
+        if (value <= 3) return 'Mild';
+        if (value <= 6) return 'Moderate';
+        if (value <= 8) return 'Significant';
+        return 'Severe';
+      };
+
+      const getSymptomColor = (value) => {
+        if (value === 0) return '#10b981'; // green
+        if (value <= 3) return '#3b82f6'; // blue
+        if (value <= 6) return '#f59e0b'; // yellow
+        if (value <= 8) return '#f97316'; // orange
+        return '#ef4444'; // red
+      };
+
+      const title = '✅ Symptom Log Recorded Successfully';
+      const content = `
+        <div style="text-align: left;">
+          <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+            <p style="margin: 0; font-weight: 600;">📅 ${logData.timestamp}</p>
+          </div>
+          
+          <h4 style="color: #10b981; margin-bottom: 1rem;">Today's Symptoms Summary:</h4>
+          
+          <div style="display: grid; gap: 0.75rem; margin-bottom: 1.5rem;">
+            ${logData.nausea > 0 ? `
+              <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(255,255,255,0.05); border-radius: 6px;">
+                <span>🤢 Nausea:</span>
+                <span style="color: ${getSymptomColor(logData.nausea)}; font-weight: 600;">${logData.nausea}/10 (${getSymptomLevel(logData.nausea)})</span>
+              </div>` : ''}
+            
+            ${logData.fatigue > 0 ? `
+              <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(255,255,255,0.05); border-radius: 6px;">
+                <span>😴 Fatigue:</span>
+                <span style="color: ${getSymptomColor(logData.fatigue)}; font-weight: 600;">${logData.fatigue}/10 (${getSymptomLevel(logData.fatigue)})</span>
+              </div>` : ''}
+            
+            ${logData.appetite > 0 ? `
+              <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(255,255,255,0.05); border-radius: 6px;">
+                <span>🍽️ Appetite Changes:</span>
+                <span style="color: ${getSymptomColor(logData.appetite)}; font-weight: 600;">${logData.appetite}/10 (${getSymptomLevel(logData.appetite)})</span>
+              </div>` : ''}
+            
+            ${logData.sleep > 0 ? `
+              <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(255,255,255,0.05); border-radius: 6px;">
+                <span>😪 Sleep Issues:</span>
+                <span style="color: ${getSymptomColor(logData.sleep)}; font-weight: 600;">${logData.sleep}/10 (${getSymptomLevel(logData.sleep)})</span>
+              </div>` : ''}
+          </div>
+
+          ${logData.note ? `
+            <div style="margin-bottom: 1.5rem;">
+              <h5 style="color: #10b981; margin-bottom: 0.5rem;">📝 What was different today:</h5>
+              <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; font-style: italic;">
+                "${logData.note}"
+              </div>
+            </div>` : ''}
+          
+          <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+            <p style="margin: 0; font-size: 0.9rem; color: #9ca3af;">
+              💡 Your data is being analyzed to identify patterns and provide personalized recommendations. 
+              Check the Progress section to see trends over time.
+            </p>
+          </div>
+        </div>
+      `;
+      
+      showCustomModal(title, content);
+    }
+
+    function viewSymptomHistory() {
+      const logs = JSON.parse(localStorage.getItem('symptomLogs') || '[]');
+      
+      if (logs.length === 0) {
+        showCustomModal('📊 Symptom History', `
+          <div style="text-align: center; padding: 2rem;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">📝</div>
+            <p style="color: #9ca3af; margin-bottom: 1rem;">No symptom logs found yet.</p>
+            <p style="font-size: 0.9rem;">Start logging your daily symptoms to track patterns and get personalized insights!</p>
+          </div>
+        `);
+        return;
+      }
+
+      // Sort logs by date (most recent first)
+      logs.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+      const getSymptomLevel = (value) => {
+        if (value === 0) return 'None';
+        if (value <= 3) return 'Mild';
+        if (value <= 6) return 'Moderate';
+        if (value <= 8) return 'Significant';
+        return 'Severe';
+      };
+
+      const getSymptomColor = (value) => {
+        if (value === 0) return '#10b981';
+        if (value <= 3) return '#3b82f6';
+        if (value <= 6) return '#f59e0b';
+        if (value <= 8) return '#f97316';
+        return '#ef4444';
+      };
+
+      const formatDate = (dateStr) => {
+        const date = new Date(dateStr);
+        return date.toLocaleDateString('en-US', { 
+          weekday: 'short', 
+          month: 'short', 
+          day: 'numeric' 
+        });
+      };
+
+      let historyContent = `
+        <div style="text-align: left; max-height: 60vh; overflow-y: auto;">
+          <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+            <p style="margin: 0; font-weight: 600;">📅 Found ${logs.length} symptom log${logs.length > 1 ? 's' : ''}</p>
+          </div>
+      `;
+
+      logs.slice(0, 14).forEach((log, index) => {
+        const isToday = log.date === new Date().toISOString().split('T')[0];
+        
+        historyContent += `
+          <div style="border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; ${isToday ? 'background: rgba(16, 185, 129, 0.05);' : ''}">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+              <h5 style="margin: 0; color: #10b981;">${formatDate(log.date)} ${isToday ? '(Today)' : ''}</h5>
+              <small style="color: #9ca3af;">${log.timestamp}</small>
+            </div>
+            
+            <div style="display: grid; gap: 0.5rem; margin-bottom: ${log.note ? '1rem' : '0'};">
+              ${log.nausea > 0 ? `
+                <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                  <span>🤢 Nausea:</span>
+                  <span style="color: ${getSymptomColor(log.nausea)}; font-weight: 600;">${log.nausea}/10 (${getSymptomLevel(log.nausea)})</span>
+                </div>` : ''}
+              
+              ${log.fatigue > 0 ? `
+                <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                  <span>😴 Fatigue:</span>
+                  <span style="color: ${getSymptomColor(log.fatigue)}; font-weight: 600;">${log.fatigue}/10 (${getSymptomLevel(log.fatigue)})</span>
+                </div>` : ''}
+              
+              ${log.appetite > 0 ? `
+                <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                  <span>🍽️ Appetite:</span>
+                  <span style="color: ${getSymptomColor(log.appetite)}; font-weight: 600;">${log.appetite}/10 (${getSymptomLevel(log.appetite)})</span>
+                </div>` : ''}
+              
+              ${log.sleep > 0 ? `
+                <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                  <span>😪 Sleep:</span>
+                  <span style="color: ${getSymptomColor(log.sleep)}; font-weight: 600;">${log.sleep}/10 (${getSymptomLevel(log.sleep)})</span>
+                </div>` : ''}
+            </div>
+
+            ${log.note ? `
+              <div style="background: rgba(255,255,255,0.05); padding: 0.75rem; border-radius: 6px; font-size: 0.9rem; font-style: italic;">
+                <strong>Note:</strong> "${log.note}"
+              </div>` : ''}
+          </div>
+        `;
+      });
+
+      if (logs.length > 14) {
+        historyContent += `
+          <div style="text-align: center; padding: 1rem; color: #9ca3af; font-size: 0.9rem;">
+            Showing most recent 14 logs. Check the Progress section for full history analytics.
+          </div>
+        `;
+      }
+
+      historyContent += '</div>';
+
+      showCustomModal('📊 Symptom History', historyContent);
     }
 
     function quickCopyYesterday() {
@@ -9612,6 +9848,107 @@ For clinical review and treatment optimization.`;
       modal.classList.remove('active');
       document.body.style.overflow = '';
     }
+    
+    // Custom modal function for symptoms page modals
+    function showCustomModal(title, content) {
+      const modal = document.getElementById('meal-modal');
+      const titleEl = document.getElementById('modal-title');
+      const subtitle = document.getElementById('modal-subtitle');
+      const body = document.getElementById('modal-body');
+      
+      titleEl.textContent = title.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, ''); // Remove emojis from title
+      subtitle.textContent = 'PostDoseRX Symptom Management';
+      body.innerHTML = content;
+      
+      showModal();
+    }
+
+    // Show action insight modal
+    function showActionInsight(actionType) {
+      const insights = {
+        'symptom-logging': {
+          title: 'Daily Symptom Tracking',
+          content: `
+            <div style="text-align: left;">
+              <h4 style="color: #10b981; margin-bottom: 1rem;">📊 Why Track Symptoms Daily?</h4>
+              <p style="margin-bottom: 1rem;">Consistent symptom tracking helps you:</p>
+              <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem;">
+                <li>Identify patterns related to your injection cycle</li>
+                <li>Optimize meal timing to minimize nausea</li>
+                <li>Track improvement over time</li>
+                <li>Provide valuable data for your healthcare provider</li>
+              </ul>
+              <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                <strong>💡 Pro Tip:</strong> Log symptoms at the same time each day for the most accurate patterns.
+              </div>
+              <p style="font-size: 0.9rem; color: #9ca3af;">Your symptom data powers personalized AI recommendations and helps optimize your GLP-1 journey.</p>
+            </div>
+          `
+        },
+        'meal-rating': {
+          title: 'Meal Rating & Feedback',
+          content: `
+            <div style="text-align: left;">
+              <h4 style="color: #10b981; margin-bottom: 1rem;">🍽️ Why Rate Your Meals?</h4>
+              <p style="margin-bottom: 1rem;">Rating meals helps the AI understand:</p>
+              <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem;">
+                <li>Which foods work best with your medication</li>
+                <li>Optimal portion sizes for your current dose</li>
+                <li>Timing preferences that reduce side effects</li>
+                <li>Personal taste preferences for future recommendations</li>
+              </ul>
+              <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                <strong>💡 Pro Tip:</strong> Rate based on how you felt 2-3 hours after eating, not just taste.
+              </div>
+              <p style="font-size: 0.9rem; color: #9ca3af;">Your meal ratings directly improve future meal plan recommendations.</p>
+            </div>
+          `
+        },
+        'meal-planning': {
+          title: 'Meal Planning Strategy',
+          content: `
+            <div style="text-align: left;">
+              <h4 style="color: #10b981; margin-bottom: 1rem;">📋 Smart Meal Planning</h4>
+              <p style="margin-bottom: 1rem;">Reviewing tomorrow's plan helps you:</p>
+              <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem;">
+                <li>Prepare for your injection cycle phase</li>
+                <li>Shop for ingredients in advance</li>
+                <li>Plan lighter meals during peak symptom days</li>
+                <li>Ensure balanced nutrition throughout the week</li>
+              </ul>
+              <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                <strong>💡 Pro Tip:</strong> Meal plans adapt based on where you are in your weekly injection cycle.
+              </div>
+              <p style="font-size: 0.9rem; color: #9ca3af;">Plans are personalized using your symptom patterns and meal ratings.</p>
+            </div>
+          `
+        },
+        'weight-tracking': {
+          title: 'Weight Progress Tracking',
+          content: `
+            <div style="text-align: left;">
+              <h4 style="color: #10b981; margin-bottom: 1rem;">⚖️ Why Track Weight Regularly?</h4>
+              <p style="margin-bottom: 1rem;">Regular weight tracking provides:</p>
+              <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem;">
+                <li>Objective progress measurement</li>
+                <li>Early detection of plateaus</li>
+                <li>Motivation through visual progress</li>
+                <li>Data for dose adjustment discussions</li>
+              </ul>
+              <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                <strong>💡 Pro Tip:</strong> Weigh yourself at the same time each day, preferably in the morning.
+              </div>
+              <p style="font-size: 0.9rem; color: #9ca3af;">Weight trends help predict optimal timing for dose escalation.</p>
+            </div>
+          `
+        }
+      };
+
+      const insight = insights[actionType];
+      if (insight) {
+        showCustomModal(insight.title, insight.content);
+      }
+    }
 
     // Close modal when clicking outside
     document.addEventListener('click', function(event) {
@@ -9954,39 +10291,40 @@ For clinical review and treatment optimization.`;
       
       switch(type) {
         case 'trend':
-          modalTitle = '📈 Better Days Trend Analysis';
+          modalTitle = '📊 Symptom Tracking Progress';
           modalContent = `
             <div class="intelligence-detail">
               <div class="trend-chart">
-                <h4>Your 74% Better Days This Week</h4>
+                <h4>Your Weekly Logging Activity</h4>
                 <div class="weekly-breakdown">
-                  <div class="day-item good">Mon: 85% (Good day)</div>
-                  <div class="day-item moderate">Tue: 60% (Moderate symptoms)</div>
-                  <div class="day-item poor">Wed: 45% (Peak symptoms)</div>
-                  <div class="day-item improving">Thu: 70% (Improving)</div>
-                  <div class="day-item great">Fri: 90% (Great day)</div>
-                  <div class="day-item excellent">Sat: 95% (Excellent)</div>
-                  <div class="day-item injection">Sun: 80% (Injection day)</div>
+                  <div class="day-item logged">Mon: ✓ Logged</div>
+                  <div class="day-item missing">Tue: - Not logged</div>
+                  <div class="day-item logged">Wed: ✓ Logged</div>
+                  <div class="day-item missing">Thu: - Not logged</div>
+                  <div class="day-item missing">Fri: - Not logged</div>
+                  <div class="day-item missing">Sat: - Not logged</div>
+                  <div class="day-item missing">Sun: - Not logged</div>
                 </div>
                 
-                <h4>📊 Comparison to Previous Week</h4>
+                <h4>📈 Tracking Benefits</h4>
                 <div class="comparison-stats">
-                  <div class="stat-row">Previous Week Average: 62%</div>
-                  <div class="stat-row improvement">This Week Average: 74% (+12%)</div>
-                  <div class="stat-row">Best Improvement: Friday (+25%)</div>
+                  <div class="stat-row">Current Streak: 2 days</div>
+                  <div class="stat-row">Weekly Goal: 5+ logs</div>
+                  <div class="stat-row">Best Week: 7/7 logs</div>
                 </div>
                 
-                <h4>🎯 Key Insights</h4>
+                <h4>🎯 Why Consistent Tracking Matters</h4>
                 <ul class="insights-list">
-                  <li>Your injection day timing change improved overall symptoms</li>
-                  <li>Consistent sleep schedule reduced Wednesday peak severity</li>
-                  <li>Meal timing optimization showed 15% better appetite scores</li>
-                  <li>Weekend recovery time improved by 6 hours on average</li>
+                  <li>🔍 <strong>Pattern Detection:</strong> 5+ logs per week reveal injection cycle patterns</li>
+                  <li>📊 <strong>Personalized Insights:</strong> More data = better AI recommendations</li>
+                  <li>⚡ <strong>Early Warning:</strong> Spot symptom changes before they peak</li>
+                  <li>📈 <strong>Progress Tracking:</strong> See how your body adapts over time</li>
                 </ul>
                 
-                <div class="trend-actions">
-                  <button class="insight-btn" onclick="exportTrendData()">Export Weekly Report</button>
-                  <button class="insight-btn" onclick="setTrendAlerts()">Set Improvement Alerts</button>
+                <div class="trend-actions" style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                  <p style="margin: 0; font-size: 0.9rem; color: #9ca3af;">
+                    💡 <strong>Pro Tip:</strong> Set a daily reminder to log symptoms at the same time each day for the most accurate patterns.
+                  </p>
                 </div>
               </div>
             </div>
@@ -10506,14 +10844,6 @@ For clinical review and treatment optimization.`;
       </div>
       <div class="modal-body">
         <form id="profile-form">
-          <div class="form-group">
-            <label for="profile-name">Full Name</label>
-            <input type="text" id="profile-name" placeholder="Enter your full name" />
-          </div>
-          <div class="form-group">
-            <label for="profile-email">Email</label>
-            <input type="email" id="profile-email" placeholder="your.email@example.com" disabled />
-          </div>
           <div class="form-group">
             <label for="profile-medication">Medication</label>
             <select id="profile-medication">
