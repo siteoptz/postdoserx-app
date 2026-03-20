@@ -7008,88 +7008,37 @@
           </div>
         </div>
         
-        <!-- Quick Meal Rating -->
+        <!-- Latest Meal Ratings Display -->
         <div class="content-card meal-rating-quick advanced-analytics">
           <div class="premium-header">
             <div class="premium-title-section">
-              <h3>Rate Your Latest Meal</h3>
+              <h3>Your Latest Meal Ratings</h3>
               <span class="premium-badge">ACTIVE</span>
             </div>
             <div class="premium-value">
-              <span class="savings-badge">Building your tolerance profile</span>
-            </div>
-          </div>
-          <div class="meal-context-professional" style="padding: 2rem; margin-bottom: 2rem; background: linear-gradient(135deg, #003366, #0f4f75); border-radius: 16px; border: 2px solid rgba(16, 185, 129, 0.3); box-shadow: 0 8px 32px rgba(0, 51, 102, 0.4);">
-            <div style="display: flex; align-items: center; margin-bottom: 1rem;">
-              <div style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--magenta), #b91c7c); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-right: 1rem; box-shadow: 0 4px 16px rgba(198, 22, 141, 0.3);">
-                <i data-lucide="utensils" style="width: 24px; height: 24px; stroke: white;"></i>
-              </div>
-              <div>
-                <h4 style="color: white; margin: 0; font-size: 1.25rem; font-weight: 600;">Yesterday's Meal Assessment</h4>
-                <p style="color: rgba(255, 255, 255, 0.8); margin: 0; font-size: 0.9rem;">Mediterranean Bowl · 6:30 PM · Day 3 Post-Injection</p>
-              </div>
-            </div>
-            <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--teal);">
-              <p style="color: white; margin: 0; font-size: 1rem; font-weight: 500;">Clinical Assessment: How did this meal impact your symptoms and overall well-being?</p>
+              <span class="savings-badge">Personalized nutrition insights</span>
             </div>
           </div>
           
-          <div class="professional-rating-interface" style="background: rgba(255, 255, 255, 0.02); padding: 2rem; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);">
-            <div class="rating-section-professional" style="margin-bottom: 2rem;">
-              <label style="color: white; font-weight: 600; font-size: 1.1rem; display: block; margin-bottom: 1rem;">Meal Satisfaction Score</label>
-              <div class="star-rating">
-                <span class="star" data-rating="1">★</span>
-                <span class="star" data-rating="2">★</span>
-                <span class="star" data-rating="3">★</span>
-                <span class="star" data-rating="4">★</span>
-                <span class="star" data-rating="5">★</span>
-              </div>
-              <div class="rating-labels" style="display: flex; justify-content: space-between; color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; margin-top: 0.5rem;">
-                <span>Poor Experience</span>
-                <span>Excellent Experience</span>
-              </div>
+          <div id="meal-ratings-display" class="meal-ratings-container">
+            <!-- This will be populated by JavaScript based on actual user ratings -->
+          </div>
+        </div>
+        
+        <!-- Personalized Insights Based on Ratings -->
+        <div class="content-card meal-insights advanced-analytics" id="meal-insights-section">
+          <div class="premium-header">
+            <div class="premium-title-section">
+              <h3>Your Nutrition Insights</h3>
+              <span class="premium-badge">ACTIVE</span>
             </div>
-            
-            <div class="symptom-impact-section-professional" style="margin-bottom: 2rem;">
-              <label style="color: white; font-weight: 600; font-size: 1.1rem; display: block; margin-bottom: 1rem;">Symptom Impact Assessment</label>
-              <div class="impact-options">
-                <button class="impact-btn positive" onclick="selectImpact('positive')">
-                  <span class="impact-icon"><i data-lucide="smile"></i></span>
-                  Felt Great
-                </button>
-                <button class="impact-btn neutral" onclick="selectImpact('neutral')">
-                  <span class="impact-icon"><i data-lucide="meh"></i></span>
-                  No Change
-                </button>
-                <button class="impact-btn negative" onclick="selectImpact('negative')">
-                  <span class="impact-icon"><i data-lucide="frown"></i></span>
-                  Increased Symptoms
-                </button>
-              </div>
+            <div class="premium-value">
+              <span class="savings-badge">Based on your meal ratings</span>
             </div>
-            
-            <div class="portion-section-professional" style="margin-bottom: 2rem;">
-              <label style="color: white; font-weight: 600; font-size: 1.1rem; display: block; margin-bottom: 1rem;">Portion Assessment</label>
-              <div class="portion-slider">
-                <input type="range" min="1" max="5" value="3" id="portion-size" oninput="updatePortion(this.value)">
-                <div class="portion-labels">
-                  <span>Too Small</span>
-                  <span>Just Right</span>
-                  <span>Too Large</span>
-                </div>
-              </div>
-              <div class="portion-value" id="portion-display">Just Right</div>
-            </div>
-            
-            <div class="notes-section-professional" style="margin-bottom: 2rem;">
-              <label style="color: white; font-weight: 600; font-size: 1.1rem; display: block; margin-bottom: 1rem;">Clinical Notes</label>
-              <textarea style="width: 100%; min-height: 100px; padding: 1rem; background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(255, 255, 255, 0.1); border-radius: 8px; color: white; font-size: 1rem; resize: vertical;" placeholder="Document meal experience, ingredient reactions, digestive comfort, energy levels, and overall tolerability for clinical tracking..."></textarea>
-            </div>
-            
-            <button class="professional-submit-btn" style="width: 100%; padding: 1rem 2rem; background: linear-gradient(135deg, var(--teal), #0d9488); color: white; border: none; border-radius: 12px; font-weight: 600; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.75rem; box-shadow: 0 6px 24px rgba(16, 185, 129, 0.3); transition: all 0.3s ease;" onclick="submitMealRating()" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 32px rgba(16, 185, 129, 0.4)'" onmouseout="this.style.transform='translateY(0px)'; this.style.boxShadow='0 6px 24px rgba(16, 185, 129, 0.3)'">
-              <i data-lucide="activity" style="width: 20px; height: 20px;"></i>
-              Complete Clinical Assessment
-            </button>
+          </div>
+          
+          <div id="personalized-insights" class="insights-container">
+            <!-- This will be populated by JavaScript based on actual user ratings -->
           </div>
         </div>
         
@@ -12672,6 +12621,8 @@ For clinical review and treatment optimization.`;
       console.log('Window loaded, trying Lucide init...');
       initializeLucideIcons();
       updateMealSatisfactionDisplay();
+      updateMealRatingsDisplay();
+      updatePersonalizedInsights();
     });
     
     // Scroll to rating section function
@@ -12935,6 +12886,273 @@ For clinical review and treatment optimization.`;
       }
     }
     
+    // Populate the meal ratings display with actual user rating data
+    function updateMealRatingsDisplay() {
+      const mealRatings = JSON.parse(localStorage.getItem('recipeRatings') || '{}');
+      const mealFeedback = JSON.parse(localStorage.getItem('mealFeedback') || '{}');
+      const displayContainer = document.getElementById('meal-ratings-display');
+      
+      if (!displayContainer) return;
+      
+      // Combine all ratings with timestamps
+      const allRatings = [];
+      
+      // Add recipe ratings
+      Object.entries(mealRatings).forEach(([recipeId, data]) => {
+        if (data && data.rating && data.timestamp) {
+          allRatings.push({
+            type: 'recipe',
+            id: recipeId,
+            rating: data.rating,
+            timestamp: new Date(data.timestamp),
+            date: data.date,
+            name: getRecipeName(recipeId)
+          });
+        }
+      });
+      
+      // Add meal feedback ratings
+      Object.entries(mealFeedback).forEach(([date, feedback]) => {
+        if (feedback && feedback.rating) {
+          allRatings.push({
+            type: 'meal',
+            id: date,
+            rating: feedback.rating,
+            timestamp: new Date(date + 'T12:00:00'), // Default to noon for meal feedback
+            date: date,
+            name: 'Daily Meal Assessment'
+          });
+        }
+      });
+      
+      // Sort by timestamp, most recent first
+      allRatings.sort((a, b) => b.timestamp - a.timestamp);
+      
+      if (allRatings.length === 0) {
+        displayContainer.innerHTML = `
+          <div style="text-align: center; padding: 2rem; color: rgba(255, 255, 255, 0.7);">
+            <div style="font-size: 2rem; margin-bottom: 1rem; color: var(--magenta);">◆</div>
+            <p style="margin-bottom: 0.5rem; font-weight: 600;">No meal ratings yet</p>
+            <p style="font-size: 0.9rem; opacity: 0.8;">View recipes and rate them to unlock personalized insights</p>
+          </div>
+        `;
+        return;
+      }
+      
+      // Get the most recent rating to determine the date display
+      const mostRecent = allRatings[0];
+      const today = new Date();
+      const yesterday = new Date(today);
+      yesterday.setDate(yesterday.getDate() - 1);
+      
+      const isToday = mostRecent.timestamp.toDateString() === today.toDateString();
+      const isYesterday = mostRecent.timestamp.toDateString() === yesterday.toDateString();
+      
+      let dateHeader;
+      if (isToday) {
+        dateHeader = "Today's Meal Assessment";
+      } else if (isYesterday) {
+        dateHeader = "Yesterday's Meal Assessment";
+      } else {
+        dateHeader = `${mostRecent.timestamp.toLocaleDateString()}'s Meal Assessment`;
+      }
+      
+      // Display the latest 3 ratings
+      const recentRatings = allRatings.slice(0, 3);
+      
+      displayContainer.innerHTML = `
+        <div class="meal-assessment-header" style="margin-bottom: 1.5rem;">
+          <h4 style="color: white; font-weight: 600; margin-bottom: 0.5rem;">${dateHeader}</h4>
+          <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Your recent meal ratings and feedback</p>
+        </div>
+        
+        <div class="rated-meals-list" style="display: flex; flex-direction: column; gap: 1rem;">
+          ${recentRatings.map(rating => `
+            <div class="rated-meal-item" style="background: rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 1rem; border-left: 3px solid var(--magenta);">
+              <div style="display: flex; justify-content: between; align-items: center;">
+                <div style="flex: 1;">
+                  <div style="color: white; font-weight: 600; margin-bottom: 0.25rem;">${rating.name}</div>
+                  <div style="color: rgba(255, 255, 255, 0.7); font-size: 0.85rem; margin-bottom: 0.5rem;">
+                    ${rating.timestamp.toLocaleDateString()} at ${rating.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                  </div>
+                  <div class="rating-stars" style="color: var(--magenta);">
+                    ${'★'.repeat(rating.rating)}${'☆'.repeat(5 - rating.rating)}
+                    <span style="color: rgba(255, 255, 255, 0.8); margin-left: 0.5rem;">${rating.rating}/5</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        
+        ${allRatings.length > 3 ? `
+          <div style="text-align: center; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.1);">
+            <span style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;">
+              ${allRatings.length - 3} more rating${allRatings.length - 3 !== 1 ? 's' : ''} in your history
+            </span>
+          </div>
+        ` : ''}
+      `;
+    }
+    
+    // Helper function to get recipe name from ID
+    function getRecipeName(recipeId) {
+      const recipeNames = {
+        'quinoa-bowl': 'Gentle Quinoa Bowl',
+        'bone-broth': 'Healing Bone Broth Soup',
+        'lemon-pasta': 'Light Lemon Pasta',
+        'greek-salad': 'Protein-Packed Greek Salad'
+      };
+      return recipeNames[recipeId] || 'Recipe';
+    }
+    
+    // Generate personalized insights based on actual user rating data
+    function updatePersonalizedInsights() {
+      const mealRatings = JSON.parse(localStorage.getItem('recipeRatings') || '{}');
+      const mealFeedback = JSON.parse(localStorage.getItem('mealFeedback') || '{}');
+      const insightsContainer = document.getElementById('personalized-insights');
+      
+      if (!insightsContainer) return;
+      
+      // Combine all ratings
+      const allRatings = [];
+      
+      // Add recipe ratings
+      Object.entries(mealRatings).forEach(([recipeId, data]) => {
+        if (data && data.rating) {
+          allRatings.push({
+            type: 'recipe',
+            id: recipeId,
+            rating: data.rating,
+            name: getRecipeName(recipeId)
+          });
+        }
+      });
+      
+      // Add meal feedback ratings
+      Object.values(mealFeedback).forEach(feedback => {
+        if (feedback && feedback.rating) {
+          allRatings.push({
+            type: 'meal',
+            rating: feedback.rating,
+            name: 'Daily Assessment'
+          });
+        }
+      });
+      
+      if (allRatings.length === 0) {
+        insightsContainer.innerHTML = `
+          <div style="text-align: center; padding: 2rem; color: rgba(255, 255, 255, 0.7);">
+            <div style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--magenta);">◇</div>
+            <p style="margin-bottom: 0.5rem; font-weight: 600;">No insights available yet</p>
+            <p style="font-size: 0.9rem; opacity: 0.8;">Rate a few meals to generate personalized nutrition insights</p>
+          </div>
+        `;
+        return;
+      }
+      
+      // Calculate insights
+      const totalRatings = allRatings.length;
+      const averageRating = allRatings.reduce((sum, r) => sum + r.rating, 0) / totalRatings;
+      const highRatings = allRatings.filter(r => r.rating >= 4).length;
+      const lowRatings = allRatings.filter(r => r.rating <= 2).length;
+      const satisfactionRate = Math.round((highRatings / totalRatings) * 100);
+      
+      // Find favorite recipes
+      const recipeRatings = allRatings.filter(r => r.type === 'recipe');
+      const highRatedRecipes = recipeRatings.filter(r => r.rating >= 4).map(r => r.name);
+      
+      // Generate insights based on actual data
+      const insights = [];
+      
+      if (averageRating >= 4) {
+        insights.push({
+          icon: 'trending-up',
+          title: 'Excellent Meal Satisfaction',
+          description: `Your average meal rating is ${averageRating.toFixed(1)}/5 - you're finding meals that work well with your GLP-1 treatment.`,
+          color: 'teal'
+        });
+      } else if (averageRating >= 3) {
+        insights.push({
+          icon: 'target',
+          title: 'Good Progress Tracking',
+          description: `Your average meal rating is ${averageRating.toFixed(1)}/5. Consider trying more of your highly-rated recipes.`,
+          color: 'magenta'
+        });
+      } else {
+        insights.push({
+          icon: 'alert-circle',
+          title: 'Meal Optimization Opportunity',
+          description: `Your average meal rating is ${averageRating.toFixed(1)}/5. Let's focus on finding gentler options that work better for you.`,
+          color: 'amber'
+        });
+      }
+      
+      if (highRatedRecipes.length > 0) {
+        insights.push({
+          icon: 'heart',
+          title: 'Your Top-Rated Meals',
+          description: `You love: ${highRatedRecipes.slice(0, 2).join(' and ')}${highRatedRecipes.length > 2 ? ` (+${highRatedRecipes.length - 2} more)` : ''}. Consider meal prep with these favorites.`,
+          color: 'teal'
+        });
+      }
+      
+      if (satisfactionRate >= 70) {
+        insights.push({
+          icon: 'check-circle',
+          title: 'High Meal Success Rate',
+          description: `${satisfactionRate}% of your meals are rated 4+ stars. Your nutrition strategy is working well with your GLP-1 treatment.`,
+          color: 'teal'
+        });
+      } else if (lowRatings > 0) {
+        insights.push({
+          icon: 'info',
+          title: 'Pattern Recognition',
+          description: `We've identified ${lowRatings} lower-rated meals. These patterns help us recommend better alternatives for future meal planning.`,
+          color: 'magenta'
+        });
+      }
+      
+      if (totalRatings >= 5) {
+        insights.push({
+          icon: 'brain',
+          title: 'AI Learning Progress',
+          description: `With ${totalRatings} ratings, our recommendation engine is getting smarter about your preferences and GLP-1 tolerance patterns.`,
+          color: 'teal'
+        });
+      }
+      
+      // Render insights
+      insightsContainer.innerHTML = `
+        <div class="insights-grid" style="display: grid; gap: 1rem; grid-template-columns: 1fr;">
+          ${insights.map(insight => `
+            <div class="insight-item" style="background: rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 1.25rem; border-left: 3px solid var(--${insight.color === 'teal' ? 'teal' : insight.color === 'amber' ? 'accent-amber' : 'magenta'});">
+              <div style="display: flex; align-items: flex-start; gap: 1rem;">
+                <div style="background: rgba(${insight.color === 'teal' ? '16, 185, 129' : insight.color === 'amber' ? '245, 158, 11' : '198, 22, 141'}, 0.1); border-radius: 50%; padding: 0.75rem; flex-shrink: 0;">
+                  <i data-lucide="${insight.icon}" style="width: 20px; height: 20px; color: var(--${insight.color === 'teal' ? 'teal' : insight.color === 'amber' ? 'accent-amber' : 'magenta'});"></i>
+                </div>
+                <div style="flex: 1;">
+                  <h4 style="color: white; font-weight: 600; margin-bottom: 0.5rem; font-size: 1rem;">${insight.title}</h4>
+                  <p style="color: rgba(255, 255, 255, 0.8); margin: 0; line-height: 1.5; font-size: 0.9rem;">${insight.description}</p>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        
+        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255, 255, 255, 0.1); text-align: center;">
+          <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; margin: 0;">
+            Insights automatically update as you rate more meals
+          </p>
+        </div>
+      `;
+      
+      // Re-initialize Lucide icons for the new content
+      if (window.lucide) {
+        window.lucide.createIcons();
+      }
+    }
+    
     // Rate a recipe from the view recipe modal
     function rateRecipeFromModal(recipeId, rating) {
       const recipeRatings = JSON.parse(localStorage.getItem('recipeRatings') || '{}');
@@ -12950,6 +13168,12 @@ For clinical review and treatment optimization.`;
       
       // Update satisfaction display
       updateMealSatisfactionDisplay();
+      
+      // Update meal ratings display
+      updateMealRatingsDisplay();
+      
+      // Update personalized insights
+      updatePersonalizedInsights();
       
       // Show feedback
       const ratingSection = document.querySelector('.recipe-rating-section');
