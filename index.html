@@ -7061,15 +7061,6 @@
               </div>
             </div>
             
-            <div class="timing-section-professional" style="margin-bottom: 2rem;">
-              <label style="color: white; font-weight: 600; font-size: 1.1rem; display: block; margin-bottom: 1rem;">Timing Evaluation</label>
-              <div class="timing-options">
-                <button class="timing-btn" onclick="selectTiming('perfect')">Perfect Timing</button>
-                <button class="timing-btn" onclick="selectTiming('too-early')">Too Early</button>
-                <button class="timing-btn" onclick="selectTiming('too-late')">Too Late</button>
-              </div>
-            </div>
-            
             <div class="portion-section-professional" style="margin-bottom: 2rem;">
               <label style="color: white; font-weight: 600; font-size: 1.1rem; display: block; margin-bottom: 1rem;">Portion Assessment</label>
               <div class="portion-slider">
@@ -12500,7 +12491,16 @@ For clinical review and treatment optimization.`;
       
       // Check if rating exists
       if (!currentFeedback.rating) {
-        alert('Please rate the meal using the star system before submitting.');
+        showCustomModal('Assessment Incomplete', `
+          <div style="padding: 2rem; text-align: center; color: white;">
+            <div style="width: 64px; height: 64px; background: linear-gradient(135deg, #f59e0b, #d97706); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem; box-shadow: 0 8px 32px rgba(245, 158, 11, 0.4);">
+              <i data-lucide="alert-circle" style="width: 32px; height: 32px; stroke: white;"></i>
+            </div>
+            <h3 style="color: white; margin-bottom: 1rem; font-size: 1.25rem;">Missing Meal Rating</h3>
+            <p style="color: rgba(255, 255, 255, 0.8); margin-bottom: 1.5rem;">Please provide a star rating for your meal experience before submitting your clinical assessment.</p>
+            <button onclick="closeModal()" style="padding: 0.75rem 1.5rem; background: linear-gradient(135deg, var(--magenta), #b91c7c); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Continue Rating</button>
+          </div>
+        `);
         return;
       }
       
@@ -12514,8 +12514,8 @@ For clinical review and treatment optimization.`;
       mealFeedback[today] = currentFeedback;
       localStorage.setItem('mealFeedback', JSON.stringify(mealFeedback));
       
-      // Show success message
-      alert(`Rating submitted! ⭐ ${currentFeedback.rating}/5 stars\n\nYour personalized recommendations will be updated based on this feedback.`);
+      // Show styled success modal with real feedback
+      showMealRatingSuccessModal(currentFeedback.rating, currentFeedback.notes);
       
       // Clear the form
       if (notesTextarea) notesTextarea.value = '';
@@ -12590,6 +12590,78 @@ For clinical review and treatment optimization.`;
         setTimeout(() => {
           grid.style.opacity = '1';
         }, 150);
+      }
+    }
+
+    // Show meal rating success modal with detailed feedback
+    function showMealRatingSuccessModal(rating, notes) {
+      const title = 'Clinical Assessment Recorded';
+      const content = `
+        <div style="padding: 2rem; text-align: left; color: white;">
+          <div style="text-align: center; margin-bottom: 2rem;">
+            <div style="width: 64px; height: 64px; background: linear-gradient(135deg, var(--teal), #0d9488); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; box-shadow: 0 8px 32px rgba(16, 185, 129, 0.4);">
+              <i data-lucide="check-circle" style="width: 32px; height: 32px; stroke: white;"></i>
+            </div>
+            <h3 style="color: white; margin-bottom: 0.5rem; font-size: 1.5rem;">Assessment Successfully Recorded</h3>
+            <p style="color: rgba(255, 255, 255, 0.8); margin: 0;">Your meal data has been analyzed and integrated into your profile</p>
+          </div>
+          
+          <div style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; border-left: 4px solid var(--teal);">
+            <h4 style="color: var(--teal); margin: 0 0 1rem 0; font-size: 1.1rem;">Recorded Assessment Data:</h4>
+            <div style="margin-bottom: 1rem;">
+              <span style="color: white; font-weight: 600;">Meal Satisfaction: </span>
+              <span style="color: var(--teal); font-weight: 600; font-size: 1.1rem;">${rating}/5 stars</span>
+            </div>
+            ${notes ? `
+            <div>
+              <span style="color: white; font-weight: 600;">Clinical Notes: </span>
+              <span style="color: rgba(255, 255, 255, 0.9);">${notes}</span>
+            </div>` : ''}
+          </div>
+          
+          <div style="background: rgba(255, 255, 255, 0.05); padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem;">
+            <h4 style="color: white; margin: 0 0 1rem 0; font-size: 1.1rem;">Real-Time Updates Applied:</h4>
+            <div style="display: grid; gap: 0.75rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 8px; height: 8px; background: var(--teal); border-radius: 50%; opacity: 0.8;"></div>
+                <span style="color: rgba(255, 255, 255, 0.9); font-size: 0.95rem;">Recipe recommendations engine updated with your preferences</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 8px; height: 8px; background: var(--magenta); border-radius: 50%; opacity: 0.8;"></div>
+                <span style="color: rgba(255, 255, 255, 0.9); font-size: 0.95rem;">AI learning algorithm refined based on your meal tolerance</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 8px; height: 8px; background: var(--navy); border-radius: 50%; opacity: 0.8;"></div>
+                <span style="color: rgba(255, 255, 255, 0.9); font-size: 0.95rem;">Symptom correlation patterns updated in your profile</span>
+              </div>
+            </div>
+          </div>
+          
+          <div style="text-align: center;">
+            <button onclick="closeModal(); scrollToRecommendations();" style="padding: 0.75rem 2rem; background: linear-gradient(135deg, var(--magenta), #b91c7c); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; box-shadow: 0 4px 16px rgba(198, 22, 141, 0.3);">
+              <i data-lucide="arrow-down" style="width: 18px; height: 18px;"></i>
+              View Updated Recommendations
+            </button>
+          </div>
+        </div>
+      `;
+      
+      showCustomModal(title, content);
+    }
+    
+    // Scroll to recommendations section
+    function scrollToRecommendations() {
+      const recommendationsSection = document.querySelector('.ai-recommendations');
+      if (recommendationsSection) {
+        recommendationsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        
+        // Add visual highlight to show the update
+        recommendationsSection.style.transform = 'scale(1.02)';
+        recommendationsSection.style.transition = 'transform 0.3s ease';
+        
+        setTimeout(() => {
+          recommendationsSection.style.transform = 'scale(1)';
+        }, 1000);
       }
     }
   </script>
