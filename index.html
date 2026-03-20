@@ -6563,7 +6563,7 @@
             <div class="intelligence-card trend-card" onclick="showSymptomIntelligenceModal('trend')">
               <div class="metric-value">0/7</div>
               <div class="metric-label">Logs This Week</div>
-              <div class="trend-indicator negative">⚡ Log more for insights</div>
+              <div class="trend-indicator negative">Log more for insights</div>
             </div>
             
             <div class="intelligence-card pattern-card" onclick="showSymptomIntelligenceModal('pattern')">
@@ -6775,7 +6775,7 @@
                   <div class="symptom-bar nausea-bar" style="height: 75%"></div>
                   <div class="symptom-bar fatigue-bar" style="height: 65%"></div>
                 </div>
-                <div class="peak-marker">📍 Peak</div>
+                <div class="peak-marker">Peak</div>
               </div>
               
               <div class="chart-day today-marker">
@@ -7494,14 +7494,14 @@
             <div class="chart-timeline">
               <div class="timeline-point">
                 <div class="date">3/4</div>
-                <div class="injection-mark">💉</div>
+                <div class="injection-mark">Inj</div>
               </div>
               <div class="timeline-point">
                 <div class="date">3/8</div>
               </div>
               <div class="timeline-point">
                 <div class="date">3/11</div>
-                <div class="injection-mark">💉</div>
+                <div class="injection-mark">Inj</div>
               </div>
               <div class="timeline-point current">
                 <div class="date">3/15</div>
@@ -7516,7 +7516,7 @@
           <!-- Weight Trends -->
           <div class="content-card trend-card">
             <div class="card-header">
-              <h4>📉 Weight Trends</h4>
+              <h4>Weight Trends</h4>
             </div>
             <div class="trend-metrics">
               <div class="metric">
@@ -7540,7 +7540,7 @@
           <!-- Injection Correlation -->
           <div class="content-card correlation-card">
             <div class="card-header">
-              <h4>💉 Injection Day Impact</h4>
+              <h4>Injection Day Impact</h4>
             </div>
             <div class="correlation-insights">
               <div class="insight-row">
@@ -7693,7 +7693,7 @@
           <div class="content-card cycle-correlation-card premium-feature advanced-analytics">
             <div class="premium-header">
               <div class="premium-title-section">
-                <h3>💉 Injection Cycle Analysis</h3>
+                <h3>Injection Cycle Analysis</h3>
                 <span class="premium-badge">ACTIVE</span>
               </div>
               <div class="premium-value">
@@ -7884,7 +7884,7 @@
         </div>
 
         <div class="premium-notice">
-          🔒 <strong>Premium Feature</strong> Unlock AI-powered personalization that learns from your meal ratings, symptoms, and progress to create custom recommendations.
+          <strong>Premium Feature</strong> Unlock AI-powered personalization that learns from your meal ratings, symptoms, and progress to create custom recommendations.
           <button class="btn-upgrade">Upgrade to Premium</button>
         </div>
 
@@ -8269,11 +8269,11 @@
         } else {
           const avgComfort = mealRatings.reduce((sum, r) => sum + r.stomachComfort, 0) / mealRatings.length;
           if (avgComfort >= 4) {
-            primaryInsightEl.textContent = '🎉 Excellent tolerance! Your meal choices are working well.';
+            primaryInsightEl.textContent = 'Excellent tolerance! Your meal choices are working well.';
           } else if (avgComfort >= 3) {
-            primaryInsightEl.textContent = '📊 Good progress! Consider smaller portions during peak symptom days.';
+            primaryInsightEl.textContent = 'Good progress! Consider smaller portions during peak symptom days.';
           } else {
-            primaryInsightEl.textContent = '💡 Focus on gentler foods like soups and bland proteins for better tolerance.';
+            primaryInsightEl.textContent = 'Focus on gentler foods like soups and bland proteins for better tolerance.';
           }
         }
       }
@@ -8560,13 +8560,13 @@
         
         // Show tracking consistency feedback
         if (thisWeekLogs.length >= 5) {
-          logsTrend.textContent = '✓ Great tracking!';
+          logsTrend.textContent = 'Great tracking!';
           logsTrend.className = 'trend-indicator positive';
         } else if (thisWeekLogs.length >= 3) {
           logsTrend.textContent = '~ Good progress';
           logsTrend.className = 'trend-indicator neutral';
         } else {
-          logsTrend.textContent = '⚡ Log more for insights';
+          logsTrend.textContent = 'Log more for insights';
           logsTrend.className = 'trend-indicator negative';
         }
       }
@@ -8708,9 +8708,9 @@
               <div class="symptom-bar nausea-bar" style="height: ${nauseaHeight}%"></div>
               <div class="symptom-bar fatigue-bar" style="height: ${fatigueHeight}%"></div>
             </div>
-            ${isInjectionDay ? '<div class="injection-marker">💉</div>' : ''}
+            ${isInjectionDay ? '<div class="injection-marker">Inj</div>' : ''}
             ${isToday ? '<div class="today-label">Today</div>' : ''}
-            ${nauseaHeight >= 60 ? '<div class="peak-marker">📍 Peak</div>' : ''}
+            ${nauseaHeight >= 60 ? '<div class="peak-marker">Peak</div>' : ''}
           </div>
         `);
       }
@@ -8922,15 +8922,15 @@
 
     // Personalized Insights Action Functions
     function scheduleInjectionChange() {
-      const title = '🕐 Optimal Injection Timing Recommendation';
+      const title = 'Optimal Injection Timing Recommendation';
       const content = `
         <div style="text-align: left;">
-          <h4 style="color: #10b981; margin-bottom: 1rem;">📊 Based on Your 23-Day Pattern Analysis</h4>
+          <h4 style="color: #10b981; margin-bottom: 1rem;">Based on Your 23-Day Pattern Analysis</h4>
           <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
-            <p style="margin: 0; font-weight: 600;">🎯 Recommendation: Switch to Sunday Evening Injections</p>
+            <p style="margin: 0; font-weight: 600;">Recommendation: Switch to Sunday Evening Injections</p>
           </div>
           
-          <h4 style="color: #10b981; margin-bottom: 1rem;">📈 Your Data Shows:</h4>
+          <h4 style="color: #10b981; margin-bottom: 1rem;">Your Data Shows:</h4>
           <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem;">
             <li><strong>34% lower symptoms</strong> with evening vs morning injections</li>
             <li><strong>Better sleep quality</strong> when injecting before bedtime</li>
@@ -8938,14 +8938,14 @@
             <li><strong>Improved appetite</strong> the following day</li>
           </ul>
 
-          <h4 style="color: #10b981; margin-bottom: 1rem;">🔧 Implementation Guide:</h4>
+          <h4 style="color: #10b981; margin-bottom: 1rem;">Implementation Guide:</h4>
           <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
             <p style="margin: 0;"><strong>Best Time:</strong> Sunday 8:00-9:00 PM</p>
             <p style="margin: 0.5rem 0 0 0;"><strong>Tip:</strong> Inject 1-2 hours after dinner for optimal absorption</p>
           </div>
 
           <div style="display: flex; gap: 0.5rem; margin-top: 1.5rem;">
-            <button onclick="applyInjectionScheduleChange()" style="flex: 1; padding: 0.75rem; background: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">✓ Apply This Schedule</button>
+            <button onclick="applyInjectionScheduleChange()" style="flex: 1; padding: 0.75rem; background: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Apply This Schedule</button>
             <button onclick="closeModal()" style="flex: 1; padding: 0.75rem; background: rgba(255,255,255,0.1); color: white; border: none; border-radius: 6px; cursor: pointer;">Maybe Later</button>
           </div>
         </div>
@@ -8957,15 +8957,15 @@
       const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
       const injectionDay = medicationProfile.injectionDay || 'injection';
       
-      const title = '😴 Sleep Impact Analysis & Optimization';
+      const title = 'Sleep Impact Analysis & Optimization';
       const content = `
         <div style="text-align: left;">
-          <h4 style="color: #10b981; margin-bottom: 1rem;">📊 Your Sleep-Energy Correlation</h4>
+          <h4 style="color: #10b981; margin-bottom: 1rem;">Your Sleep-Energy Correlation</h4>
           <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
-            <p style="margin: 0; font-weight: 600;">🎯 Strong correlation detected between sleep quality and next-day energy levels</p>
+            <p style="margin: 0; font-weight: 600;">Strong correlation detected between sleep quality and next-day energy levels</p>
           </div>
           
-          <h4 style="color: #10b981; margin-bottom: 1rem;">📈 Key Findings:</h4>
+          <h4 style="color: #10b981; margin-bottom: 1rem;">Key Findings:</h4>
           <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem;">
             <li><strong>7+ hours sleep:</strong> 65% better energy levels next day</li>
             <li><strong>Poor sleep (< 6 hours):</strong> 2.3x more nausea intensity</li>
@@ -9008,13 +9008,13 @@
       localStorage.setItem('medicationProfile', JSON.stringify(medicationProfile));
 
       closeModal();
-      showCustomModal('✅ Schedule Updated Successfully', `
+      showCustomModal('Schedule Updated Successfully', `
         <div style="text-align: center;">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">🎯</div>
+          <div style="font-size: 2rem; margin-bottom: 1rem; color: var(--magenta);">◆</div>
           <p style="color: #10b981; font-weight: 600; margin-bottom: 1rem;">Injection schedule optimized!</p>
           <p style="margin-bottom: 1.5rem;">Your profile has been updated to reflect evening injections at 8:00 PM.</p>
           <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px;">
-            <p style="margin: 0; font-size: 0.9rem;">💡 Track your symptoms over the next few weeks to see the improvement!</p>
+            <p style="margin: 0; font-size: 0.9rem;">Track your symptoms over the next few weeks to see the improvement!</p>
           </div>
         </div>
       `);
@@ -9034,28 +9034,28 @@
       localStorage.setItem('userPreferences', JSON.stringify(userPreferences));
 
       closeModal();
-      showCustomModal('😴 Sleep Reminders Activated', `
+      showCustomModal('Sleep Reminders Activated', `
         <div style="text-align: center;">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">⏰</div>
+          <div style="font-size: 2rem; margin-bottom: 1rem; color: var(--magenta);">▲</div>
           <p style="color: #10b981; font-weight: 600; margin-bottom: 1rem;">Sleep optimization enabled!</p>
           <p style="margin-bottom: 1.5rem;">You'll now receive reminders to get 7+ hours of sleep, especially before injection day.</p>
           <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px;">
-            <p style="margin: 0; font-size: 0.9rem;">📱 Check your notification settings to ensure reminders are enabled.</p>
+            <p style="margin: 0; font-size: 0.9rem;">Check your notification settings to ensure reminders are enabled.</p>
           </div>
         </div>
       `);
     }
 
     function showMealTimingStrategy() {
-      const title = '🍽️ Meal Timing Strategy & Optimization';
+      const title = 'Meal Timing Strategy & Optimization';
       const content = `
         <div style="text-align: left;">
-          <h4 style="color: #10b981; margin-bottom: 1rem;">📊 Your Personalized Meal Strategy</h4>
+          <h4 style="color: #10b981; margin-bottom: 1rem;">Your Personalized Meal Strategy</h4>
           <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
-            <p style="margin: 0; font-weight: 600;">🎯 Small, frequent meals reduce nausea by 45% on Days 2-4 post-injection</p>
+            <p style="margin: 0; font-weight: 600;">Small, frequent meals reduce nausea by 45% on Days 2-4 post-injection</p>
           </div>
           
-          <h4 style="color: #10b981; margin-bottom: 1rem;">📈 Strategy Based on Your Data:</h4>
+          <h4 style="color: #10b981; margin-bottom: 1rem;">Strategy Based on Your Data:</h4>
           <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem;">
             <li><strong>Days 0-1:</strong> Normal meals, focus on protein and healthy fats</li>
             <li><strong>Days 2-4:</strong> 5-6 small meals instead of 3 large ones</li>
@@ -9070,7 +9070,7 @@
           </div>
 
           <div style="display: flex; gap: 0.5rem; margin-top: 1.5rem;">
-            <button onclick="applyMealStrategy()" style="flex: 1; padding: 0.75rem; background: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">📋 Apply to Meal Plan</button>
+            <button onclick="applyMealStrategy()" style="flex: 1; padding: 0.75rem; background: #10b981; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">Apply to Meal Plan</button>
             <button onclick="showView('meals'); closeModal();" style="flex: 1; padding: 0.75rem; background: rgba(255,255,255,0.1); color: white; border: none; border-radius: 6px; cursor: pointer;">View Full Meal Plan</button>
           </div>
         </div>
@@ -9091,13 +9091,13 @@
       localStorage.setItem('userPreferences', JSON.stringify(userPreferences));
 
       closeModal();
-      showCustomModal('🍽️ Meal Strategy Applied', `
+      showCustomModal('Meal Strategy Applied', `
         <div style="text-align: center;">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">📋</div>
+          <div style="font-size: 2rem; margin-bottom: 1rem; color: var(--magenta);">◆</div>
           <p style="color: #10b981; font-weight: 600; margin-bottom: 1rem;">Your meal plan has been optimized!</p>
           <p style="margin-bottom: 1.5rem;">Small, frequent meals are now integrated into your weekly plan based on your injection cycle.</p>
           <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px;">
-            <p style="margin: 0; font-size: 0.9rem;">🍽️ Check the Meal Plan section to see your personalized schedule.</p>
+            <p style="margin: 0; font-size: 0.9rem;">Check the Meal Plan section to see your personalized schedule.</p>
           </div>
         </div>
       `);
@@ -9196,11 +9196,11 @@
         return '#ef4444'; // red
       };
 
-      const title = '✅ Symptom Log Recorded Successfully';
+      const title = 'Symptom Log Recorded Successfully';
       const content = `
         <div style="text-align: left;">
           <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
-            <p style="margin: 0; font-weight: 600;">📅 ${logData.timestamp}</p>
+            <p style="margin: 0; font-weight: 600;">${logData.timestamp}</p>
           </div>
           
           <h4 style="color: #10b981; margin-bottom: 1rem;">Today's Symptoms Summary:</h4>
@@ -9214,26 +9214,26 @@
             
             ${logData.fatigue > 0 ? `
               <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(255,255,255,0.05); border-radius: 6px;">
-                <span>😴 Fatigue:</span>
+                <span>Fatigue:</span>
                 <span style="color: ${getSymptomColor(logData.fatigue)}; font-weight: 600;">${logData.fatigue}/10 (${getSymptomLevel(logData.fatigue)})</span>
               </div>` : ''}
             
             ${logData.appetite > 0 ? `
               <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(255,255,255,0.05); border-radius: 6px;">
-                <span>🍽️ Appetite Changes:</span>
+                <span>Appetite Changes:</span>
                 <span style="color: ${getSymptomColor(logData.appetite)}; font-weight: 600;">${logData.appetite}/10 (${getSymptomLevel(logData.appetite)})</span>
               </div>` : ''}
             
             ${logData.sleep > 0 ? `
               <div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(255,255,255,0.05); border-radius: 6px;">
-                <span>😪 Sleep Issues:</span>
+                <span>Sleep Issues:</span>
                 <span style="color: ${getSymptomColor(logData.sleep)}; font-weight: 600;">${logData.sleep}/10 (${getSymptomLevel(logData.sleep)})</span>
               </div>` : ''}
           </div>
 
           ${logData.note ? `
             <div style="margin-bottom: 1.5rem;">
-              <h5 style="color: #10b981; margin-bottom: 0.5rem;">📝 What was different today:</h5>
+              <h5 style="color: #10b981; margin-bottom: 0.5rem;">What was different today:</h5>
               <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; font-style: italic;">
                 "${logData.note}"
               </div>
@@ -9241,7 +9241,7 @@
           
           <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
             <p style="margin: 0; font-size: 0.9rem; color: #9ca3af;">
-              💡 Your data is being analyzed to identify patterns and provide personalized recommendations. 
+              Your data is being analyzed to identify patterns and provide personalized recommendations. 
               Check the Progress section to see trends over time.
             </p>
           </div>
@@ -9255,9 +9255,9 @@
       const logs = JSON.parse(localStorage.getItem('symptomLogs') || '[]');
       
       if (logs.length === 0) {
-        showCustomModal('📊 Symptom History', `
+        showCustomModal('Symptom History', `
           <div style="text-align: center; padding: 2rem;">
-            <div style="font-size: 3rem; margin-bottom: 1rem;">📝</div>
+            <div style="font-size: 2rem; margin-bottom: 1rem; color: var(--magenta);">◆</div>
             <p style="color: #9ca3af; margin-bottom: 1rem;">No symptom logs found yet.</p>
             <p style="font-size: 0.9rem;">Start logging your daily symptoms to track patterns and get personalized insights!</p>
           </div>
@@ -9296,7 +9296,7 @@
       let historyContent = `
         <div style="text-align: left; max-height: 60vh; overflow-y: auto;">
           <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
-            <p style="margin: 0; font-weight: 600;">📅 Found ${logs.length} symptom log${logs.length > 1 ? 's' : ''}</p>
+            <p style="margin: 0; font-weight: 600;">Found ${logs.length} symptom log${logs.length > 1 ? 's' : ''}</p>
           </div>
       `;
 
@@ -9319,19 +9319,19 @@
               
               ${log.fatigue > 0 ? `
                 <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
-                  <span>😴 Fatigue:</span>
+                  <span>Fatigue:</span>
                   <span style="color: ${getSymptomColor(log.fatigue)}; font-weight: 600;">${log.fatigue}/10 (${getSymptomLevel(log.fatigue)})</span>
                 </div>` : ''}
               
               ${log.appetite > 0 ? `
                 <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
-                  <span>🍽️ Appetite:</span>
+                  <span>Appetite:</span>
                   <span style="color: ${getSymptomColor(log.appetite)}; font-weight: 600;">${log.appetite}/10 (${getSymptomLevel(log.appetite)})</span>
                 </div>` : ''}
               
               ${log.sleep > 0 ? `
                 <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
-                  <span>😪 Sleep:</span>
+                  <span>Sleep:</span>
                   <span style="color: ${getSymptomColor(log.sleep)}; font-weight: 600;">${log.sleep}/10 (${getSymptomLevel(log.sleep)})</span>
                 </div>` : ''}
             </div>
@@ -9354,7 +9354,7 @@
 
       historyContent += '</div>';
 
-      showCustomModal('📊 Symptom History', historyContent);
+      showCustomModal('Symptom History', historyContent);
     }
 
     function quickCopyYesterday() {
@@ -9573,7 +9573,7 @@
             if (!header.querySelector('.injection-indicator')) {
               const indicator = document.createElement('div');
               indicator.className = 'injection-indicator';
-              indicator.textContent = '💉';
+              indicator.textContent = 'Inj';
               header.appendChild(indicator);
             }
           }
@@ -10808,7 +10808,7 @@ For clinical review and treatment optimization.`;
           title: 'Daily Symptom Tracking',
           content: `
             <div style="text-align: left;">
-              <h4 style="color: #10b981; margin-bottom: 1rem;">📊 Why Track Symptoms Daily?</h4>
+              <h4 style="color: #10b981; margin-bottom: 1rem;">Why Track Symptoms Daily?</h4>
               <p style="margin-bottom: 1rem;">Consistent symptom tracking helps you:</p>
               <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem;">
                 <li>Identify patterns related to your injection cycle</li>
@@ -10817,7 +10817,7 @@ For clinical review and treatment optimization.`;
                 <li>Provide valuable data for your healthcare provider</li>
               </ul>
               <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                <strong>💡 Pro Tip:</strong> Log symptoms at the same time each day for the most accurate patterns.
+                <strong>Pro Tip:</strong> Log symptoms at the same time each day for the most accurate patterns.
               </div>
               <p style="font-size: 0.9rem; color: #9ca3af;">Your symptom data powers personalized AI recommendations and helps optimize your GLP-1 journey.</p>
             </div>
@@ -10827,7 +10827,7 @@ For clinical review and treatment optimization.`;
           title: 'Meal Rating & Feedback',
           content: `
             <div style="text-align: left;">
-              <h4 style="color: #10b981; margin-bottom: 1rem;">🍽️ Why Rate Your Meals?</h4>
+              <h4 style="color: #10b981; margin-bottom: 1rem;">Why Rate Your Meals?</h4>
               <p style="margin-bottom: 1rem;">Rating meals helps the AI understand:</p>
               <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem;">
                 <li>Which foods work best with your medication</li>
@@ -10836,7 +10836,7 @@ For clinical review and treatment optimization.`;
                 <li>Personal taste preferences for future recommendations</li>
               </ul>
               <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                <strong>💡 Pro Tip:</strong> Rate based on how you felt 2-3 hours after eating, not just taste.
+                <strong>Pro Tip:</strong> Rate based on how you felt 2-3 hours after eating, not just taste.
               </div>
               <p style="font-size: 0.9rem; color: #9ca3af;">Your meal ratings directly improve future meal plan recommendations.</p>
             </div>
@@ -10846,7 +10846,7 @@ For clinical review and treatment optimization.`;
           title: 'Meal Planning Strategy',
           content: `
             <div style="text-align: left;">
-              <h4 style="color: #10b981; margin-bottom: 1rem;">📋 Smart Meal Planning</h4>
+              <h4 style="color: #10b981; margin-bottom: 1rem;">Smart Meal Planning</h4>
               <p style="margin-bottom: 1rem;">Reviewing tomorrow's plan helps you:</p>
               <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem;">
                 <li>Prepare for your injection cycle phase</li>
@@ -10855,7 +10855,7 @@ For clinical review and treatment optimization.`;
                 <li>Ensure balanced nutrition throughout the week</li>
               </ul>
               <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                <strong>💡 Pro Tip:</strong> Meal plans adapt based on where you are in your weekly injection cycle.
+                <strong>Pro Tip:</strong> Meal plans adapt based on where you are in your weekly injection cycle.
               </div>
               <p style="font-size: 0.9rem; color: #9ca3af;">Plans are personalized using your symptom patterns and meal ratings.</p>
             </div>
@@ -10865,7 +10865,7 @@ For clinical review and treatment optimization.`;
           title: 'Weight Progress Tracking',
           content: `
             <div style="text-align: left;">
-              <h4 style="color: #10b981; margin-bottom: 1rem;">⚖️ Why Track Weight Regularly?</h4>
+              <h4 style="color: #10b981; margin-bottom: 1rem;">Why Track Weight Regularly?</h4>
               <p style="margin-bottom: 1rem;">Regular weight tracking provides:</p>
               <ul style="margin-bottom: 1.5rem; padding-left: 1.5rem;">
                 <li>Objective progress measurement</li>
@@ -10874,7 +10874,7 @@ For clinical review and treatment optimization.`;
                 <li>Data for dose adjustment discussions</li>
               </ul>
               <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                <strong>💡 Pro Tip:</strong> Weigh yourself at the same time each day, preferably in the morning.
+                <strong>Pro Tip:</strong> Weigh yourself at the same time each day, preferably in the morning.
               </div>
               <p style="font-size: 0.9rem; color: #9ca3af;">Weight trends help predict optimal timing for dose escalation.</p>
             </div>
@@ -11229,39 +11229,39 @@ For clinical review and treatment optimization.`;
       
       switch(type) {
         case 'trend':
-          modalTitle = '📊 Symptom Tracking Progress';
+          modalTitle = 'Symptom Tracking Progress';
           modalContent = `
             <div class="intelligence-detail">
               <div class="trend-chart">
                 <h4>Your Weekly Logging Activity</h4>
                 <div class="weekly-breakdown">
-                  <div class="day-item logged">Mon: ✓ Logged</div>
+                  <div class="day-item logged">Mon: Logged</div>
                   <div class="day-item missing">Tue: - Not logged</div>
-                  <div class="day-item logged">Wed: ✓ Logged</div>
+                  <div class="day-item logged">Wed: Logged</div>
                   <div class="day-item missing">Thu: - Not logged</div>
                   <div class="day-item missing">Fri: - Not logged</div>
                   <div class="day-item missing">Sat: - Not logged</div>
                   <div class="day-item missing">Sun: - Not logged</div>
                 </div>
                 
-                <h4>📈 Tracking Benefits</h4>
+                <h4>Tracking Benefits</h4>
                 <div class="comparison-stats">
                   <div class="stat-row">Current Streak: 2 days</div>
                   <div class="stat-row">Weekly Goal: 5+ logs</div>
                   <div class="stat-row">Best Week: 7/7 logs</div>
                 </div>
                 
-                <h4>🎯 Why Consistent Tracking Matters</h4>
+                <h4>Why Consistent Tracking Matters</h4>
                 <ul class="insights-list">
-                  <li>🔍 <strong>Pattern Detection:</strong> 5+ logs per week reveal injection cycle patterns</li>
-                  <li>📊 <strong>Personalized Insights:</strong> More data = better AI recommendations</li>
-                  <li>⚡ <strong>Early Warning:</strong> Spot symptom changes before they peak</li>
-                  <li>📈 <strong>Progress Tracking:</strong> See how your body adapts over time</li>
+                  <li><strong>Pattern Detection:</strong> 5+ logs per week reveal injection cycle patterns</li>
+                  <li><strong>Personalized Insights:</strong> More data = better AI recommendations</li>
+                  <li><strong>Early Warning:</strong> Spot symptom changes before they peak</li>
+                  <li><strong>Progress Tracking:</strong> See how your body adapts over time</li>
                 </ul>
                 
                 <div class="trend-actions" style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px; margin-top: 1rem;">
                   <p style="margin: 0; font-size: 0.9rem; color: #9ca3af;">
-                    💡 <strong>Pro Tip:</strong> Set a daily reminder to log symptoms at the same time each day for the most accurate patterns.
+                    <strong>Pro Tip:</strong> Set a daily reminder to log symptoms at the same time each day for the most accurate patterns.
                   </p>
                 </div>
               </div>
@@ -11270,7 +11270,7 @@ For clinical review and treatment optimization.`;
           break;
           
         case 'pattern':
-          modalTitle = '🔍 Peak Symptoms Pattern Analysis';
+          modalTitle = 'Peak Symptoms Pattern Analysis';
           modalContent = `
             <div class="pattern-analysis">
               <h4>Your Typical Injection Cycle</h4>
@@ -11305,7 +11305,7 @@ For clinical review and treatment optimization.`;
                 </div>
               </div>
               
-              <h4>📈 Pattern Consistency Analysis</h4>
+              <h4>Pattern Consistency Analysis</h4>
               <div class="consistency-data">
                 <div class="stat-card">
                   <h5>Peak Timing</h5>
@@ -11321,7 +11321,7 @@ For clinical review and treatment optimization.`;
                 </div>
               </div>
               
-              <h4>🎯 Optimization Opportunities</h4>
+              <h4>Optimization Opportunities</h4>
               <ul class="optimization-list">
                 <li>Pre-peak meal preparation for Days 2-3</li>
                 <li>Hydration protocol 24 hours before peak</li>
@@ -11349,7 +11349,7 @@ For clinical review and treatment optimization.`;
                 <span class="correlation-value">85% correlation strength</span>
               </div>
               
-              <h4>📊 Your Personalized Data Analysis</h4>
+              <h4>Your Personalized Data Analysis</h4>
               <div class="correlation-stats">
                 <div class="stat-card good-sleep">
                   <h5>Good Sleep (7+ hours)</h5>
@@ -11365,7 +11365,7 @@ For clinical review and treatment optimization.`;
                 </div>
               </div>
               
-              <h4>🌙 Sleep Quality Impact Breakdown</h4>
+              <h4>Sleep Quality Impact Breakdown</h4>
               <ul class="impact-list">
                 <li class="impact-high">Poor sleep before injection day increases peak severity by 40%</li>
                 <li class="impact-medium">Consistent sleep schedule reduces symptom duration by 8 hours</li>
@@ -11373,7 +11373,7 @@ For clinical review and treatment optimization.`;
                 <li class="impact-medium">Sleep quality affects appetite regulation for 48 hours</li>
               </ul>
               
-              <h4>🔮 Sleep-Based Predictions</h4>
+              <h4>Sleep-Based Predictions</h4>
               <div class="predictions">
                 <div class="prediction-item">
                   <strong>If you sleep 8+ hours tonight:</strong><br>
@@ -11385,7 +11385,7 @@ For clinical review and treatment optimization.`;
                 </div>
               </div>
               
-              <h4>💡 Personalized Sleep Recommendations</h4>
+              <h4>Personalized Sleep Recommendations</h4>
               <div class="recommendations">
                 <button class="rec-btn primary" onclick="setSleepReminder()">Set Sleep Reminders</button>
                 <button class="rec-btn secondary" onclick="showSleepHygieneTips()">Sleep Hygiene Guide</button>
@@ -11407,7 +11407,7 @@ For clinical review and treatment optimization.`;
                   <div class="rec-priority high">HIGH PRIORITY</div>
                   <div class="confidence-score">92% confidence</div>
                 </div>
-                <h5>🕕 Injection Timing Optimization</h5>
+                <h5>Injection Timing Optimization</h5>
                 <p>Switch to evening injections for 34% symptom reduction</p>
                 <div class="rec-evidence">
                   <strong>Evidence:</strong> Your morning injections show 2.3x higher next-day nausea<br>
@@ -11426,7 +11426,7 @@ For clinical review and treatment optimization.`;
                   <div class="rec-priority medium">MEDIUM PRIORITY</div>
                   <div class="confidence-score">87% confidence</div>
                 </div>
-                <h5>🍽️ Meal Frequency Strategy</h5>
+                <h5>Meal Frequency Strategy</h5>
                 <p>Increase meal frequency to 5-6 small meals during peak days (Days 2-4)</p>
                 <div class="rec-evidence">
                   <strong>Evidence:</strong> Small frequent meals reduce nausea by 45%<br>
@@ -11445,7 +11445,7 @@ For clinical review and treatment optimization.`;
                   <div class="rec-priority low">PREVENTIVE</div>
                   <div class="confidence-score">74% confidence</div>
                 </div>
-                <h5>💧 Structured Hydration Protocol</h5>
+                <h5>Structured Hydration Protocol</h5>
                 <p>Implement hydration reminders every 90 minutes during peak symptom days</p>
                 <div class="rec-evidence">
                   <strong>Evidence:</strong> Adequate hydration correlates with 30% faster recovery<br>
@@ -11460,7 +11460,7 @@ For clinical review and treatment optimization.`;
               </div>
               
               <div class="ai-methodology">
-                <h5>🎯 How We Calculate Confidence</h5>
+                <h5>How We Calculate Confidence</h5>
                 <div class="methodology-list">
                   <div class="method-item">
                     <strong>Data Points:</strong> 23 days of symptoms, 12 injection cycles, 89 meals tracked
@@ -11482,33 +11482,33 @@ For clinical review and treatment optimization.`;
     }
     
     function showUpgradeModal() {
-      const title = '🚀 Advanced Symptom Analytics';
+      const title = 'Advanced Symptom Analytics';
       const content = `
         <div style="text-align: center; background: linear-gradient(to bottom right, var(--navy), #1a365d, var(--navy)); padding: 2rem; border-radius: 12px; color: white;">
-          <div style="font-size: 3rem; margin-bottom: 1rem;">💎</div>
+          <div style="font-size: 2rem; margin-bottom: 1rem; color: var(--magenta);">◆</div>
           <h2 style="color: var(--magenta); margin-bottom: 1rem; font-size: 2rem; font-weight: bold;">Advanced Symptom Analytics</h2>
           <p style="color: white; margin-bottom: 2rem; font-size: 1.125rem;">Get medical-grade insights that optimize your GLP-1 journey</p>
           
           <div style="background: rgba(198, 22, 141, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border: 1px solid rgba(198, 22, 141, 0.3);">
             <div style="font-size: 3rem; font-weight: bold; color: var(--magenta); margin-bottom: 0.5rem;">$12.99</div>
             <div style="color: #e5e7eb; font-size: 1rem;">per month • Cancel anytime</div>
-            <div style="color: #10b981; font-size: 0.875rem; margin-top: 0.5rem;">💰 Save $247/month vs. clinic visits</div>
+            <div style="color: #10b981; font-size: 0.875rem; margin-top: 0.5rem;">Save $247/month vs. clinic visits</div>
           </div>
 
           <div style="text-align: left; margin-bottom: 2rem;">
-            <h4 style="color: var(--magenta); margin-bottom: 1rem;">✨ Premium Features Include:</h4>
+            <h4 style="color: var(--magenta); margin-bottom: 1rem;">Premium Features Include:</h4>
             <ul style="color: white; list-style: none; padding: 0;">
-              <li style="margin-bottom: 0.75rem;">🔬 <strong>Advanced Correlation Analysis</strong> - See how diet, sleep & exercise affect symptoms</li>
+              <li style="margin-bottom: 0.75rem;"><strong>Advanced Correlation Analysis</strong> - See how diet, sleep & exercise affect symptoms</li>
               <li style="margin-bottom: 0.75rem;">🤖 <strong>AI Symptom Predictions</strong> - Prevent side effects before they happen</li>
-              <li style="margin-bottom: 0.75rem;">📊 <strong>Medical-Grade Reports</strong> - 90-day trends your doctor actually uses</li>
-              <li style="margin-bottom: 0.75rem;">⚡ <strong>Real-time Optimization</strong> - Instant recommendations based on your data</li>
-              <li style="margin-bottom: 0.75rem;">📱 <strong>Priority Support</strong> - Direct access to our medical advisory team</li>
+              <li style="margin-bottom: 0.75rem;"><strong>Medical-Grade Reports</strong> - 90-day trends your doctor actually uses</li>
+              <li style="margin-bottom: 0.75rem;"><strong>Real-time Optimization</strong> - Instant recommendations based on your data</li>
+              <li style="margin-bottom: 0.75rem;"><strong>Priority Support</strong> - Direct access to our medical advisory team</li>
             </ul>
           </div>
 
           <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem;">
             <button onclick="startPremiumCheckout()" style="background: linear-gradient(135deg, var(--magenta), var(--magenta-dark)); color: white; padding: 1rem 2rem; border: none; border-radius: 8px; font-weight: bold; font-size: 1.125rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(198, 22, 141, 0.4);">
-              🚀 UPGRADE NOW - $12.99/MONTH
+              UPGRADE NOW - $12.99/MONTH
             </button>
             <button onclick="startFreeTrial()" style="background: transparent; color: var(--magenta); padding: 0.75rem 2rem; border: 2px solid var(--magenta); border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
               Start 7-Day Free Trial
@@ -11516,7 +11516,7 @@ For clinical review and treatment optimization.`;
           </div>
           
           <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border: 1px solid rgba(16, 185, 129, 0.3);">
-            <p style="margin: 0; color: #10b981; font-size: 0.875rem;">✅ <strong>30-day money-back guarantee</strong> • No credit card required for trial</p>
+            <p style="margin: 0; color: #10b981; font-size: 0.875rem;"><strong>30-day money-back guarantee</strong> • No credit card required for trial</p>
           </div>
         </div>
       `;
@@ -11525,7 +11525,7 @@ For clinical review and treatment optimization.`;
 
     function startPremiumCheckout() {
       // In a real app, this would redirect to Stripe checkout
-      alert('Premium checkout initiated! Redirecting to Stripe payment...\n\nAdvanced Symptom Analytics: $12.99/month\n✅ Advanced Analytics\n✅ AI Predictions\n✅ Medical Reports\n✅ Priority Support');
+      alert('Premium checkout initiated! Redirecting to Stripe payment...\n\nAdvanced Symptom Analytics: $12.99/month\nAdvanced Analytics\nAI Predictions\nMedical Reports\nPriority Support');
     }
 
     function startFreeTrial() {
@@ -11771,7 +11771,7 @@ For clinical review and treatment optimization.`;
     function showTrendModal_old() {
       const mealRatings = JSON.parse(localStorage.getItem('mealRatings') || '[]');
       
-      let content = '<div style="padding: 2rem; text-align: center;"><h3 style="color: var(--magenta); margin-bottom: 1.5rem;">📈 Tolerance Trend Analysis</h3>';
+      let content = '<div style="padding: 2rem; text-align: center;"><h3 style="color: var(--magenta); margin-bottom: 1.5rem;">Tolerance Trend Analysis</h3>';
       
       if (mealRatings.length < 5) {
         content += `<p>Rate ${5 - mealRatings.length} more meals to unlock detailed trend analysis!</p>`;
@@ -11796,11 +11796,11 @@ For clinical review and treatment optimization.`;
         content += '</div>';
         
         if (avgRecent >= 4) {
-          content += '<p style="color: #10b981; font-weight: 600;">🎉 Excellent progress! Your meal tolerance is very good.</p>';
+          content += '<p style="color: #10b981; font-weight: 600;">Excellent progress! Your meal tolerance is very good.</p>';
         } else if (avgRecent >= 3) {
-          content += '<p style="color: #f59e0b; font-weight: 600;">📊 Good progress! Keep monitoring your responses.</p>';
+          content += '<p style="color: #f59e0b; font-weight: 600;">Good progress! Keep monitoring your responses.</p>';
         } else {
-          content += '<p style="color: #ef4444; font-weight: 600;">💡 Focus on gentler foods to improve tolerance.</p>';
+          content += '<p style="color: #ef4444; font-weight: 600;">Focus on gentler foods to improve tolerance.</p>';
         }
       }
       
@@ -11811,7 +11811,7 @@ For clinical review and treatment optimization.`;
     function showRecommendationModal() {
       const mealRatings = JSON.parse(localStorage.getItem('mealRatings') || '[]');
       
-      let content = '<div style="padding: 2rem; text-align: center;"><h3 style="color: var(--magenta); margin-bottom: 1.5rem;">🎯 Personalized Recommendations</h3>';
+      let content = '<div style="padding: 2rem; text-align: center;"><h3 style="color: var(--magenta); margin-bottom: 1.5rem;">Personalized Recommendations</h3>';
       
       if (mealRatings.length === 0) {
         content += '<p>Start rating your meals to unlock personalized recipe recommendations!</p>';
@@ -11823,21 +11823,21 @@ For clinical review and treatment optimization.`;
         if (avgComfort >= 4) {
           content += `
             <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; margin-bottom: 1rem; border-radius: 8px;">
-              <strong>🍜 Mediterranean Quinoa Bowl</strong><br>
+              <strong>Mediterranean Quinoa Bowl</strong><br>
               <small>Based on your excellent tolerance</small>
             </div>
             <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; margin-bottom: 1rem; border-radius: 8px;">
-              <strong>🐟 Baked Salmon with Herbs</strong><br>
+              <strong>Baked Salmon with Herbs</strong><br>
               <small>High protein, gentle preparation</small>
             </div>`;
         } else if (avgComfort >= 3) {
           content += `
             <div style="background: rgba(245, 158, 11, 0.1); padding: 1rem; margin-bottom: 1rem; border-radius: 8px;">
-              <strong>🍲 Chicken & Rice Soup</strong><br>
+              <strong>Chicken & Rice Soup</strong><br>
               <small>Gentle on sensitive stomachs</small>
             </div>
             <div style="background: rgba(245, 158, 11, 0.1); padding: 1rem; margin-bottom: 1rem; border-radius: 8px;">
-              <strong>🍞 Toast with Banana</strong><br>
+              <strong>Toast with Banana</strong><br>
               <small>Easy to digest, mild flavors</small>
             </div>`;
         } else {
@@ -11847,13 +11847,13 @@ For clinical review and treatment optimization.`;
               <small>Ultra-gentle for sensitive days</small>
             </div>
             <div style="background: rgba(239, 68, 68, 0.1); padding: 1rem; margin-bottom: 1rem; border-radius: 8px;">
-              <strong>🍵 Ginger Tea with Toast</strong><br>
+              <strong>Ginger Tea with Toast</strong><br>
               <small>Nausea-fighting combination</small>
             </div>`;
         }
         
         content += '</div>';
-        content += `<p style="color: var(--magenta); font-weight: 600;">💡 ${Math.min(12, mealRatings.length * 2)} total recommendations available based on your ${mealRatings.length} rating${mealRatings.length !== 1 ? 's' : ''}.</p>`;
+        content += `<p style="color: var(--magenta); font-weight: 600;">${Math.min(12, mealRatings.length * 2)} total recommendations available based on your ${mealRatings.length} rating${mealRatings.length !== 1 ? 's' : ''}.</p>`;
       }
       
       content += '</div>';
@@ -11866,7 +11866,7 @@ For clinical review and treatment optimization.`;
       let modalContent = '';
       
       if (period === '90days') {
-        modalTitle = '📊 90-Day Premium Analytics';
+        modalTitle = '90-Day Premium Analytics';
         modalContent = `
           <div class="premium-timeline-preview">
             <div class="premium-badge-large">PREMIUM FEATURE</div>
@@ -11874,28 +11874,28 @@ For clinical review and treatment optimization.`;
             
             <div class="preview-benefits">
               <div class="benefit-item">
-                <div class="benefit-icon">📈</div>
+                <div class="benefit-icon" style="color: var(--magenta);">▲</div>
                 <div class="benefit-text">
                   <strong>90-Day Trend Analysis</strong><br>
                   See long-term patterns and seasonal effects on your GLP-1 journey
                 </div>
               </div>
               <div class="benefit-item">
-                <div class="benefit-icon">🔮</div>
+                <div class="benefit-icon" style="color: var(--magenta);">▲</div>
                 <div class="benefit-text">
                   <strong>Predictive Modeling</strong><br>
                   AI predictions for upcoming injection cycles with 94% accuracy
                 </div>
               </div>
               <div class="benefit-item">
-                <div class="benefit-icon">📊</div>
+                <div class="benefit-icon" style="color: var(--magenta);">◆</div>
                 <div class="benefit-text">
                   <strong>Statistical Significance</strong><br>
                   Medical-grade correlation analysis like clinical studies
                 </div>
               </div>
               <div class="benefit-item">
-                <div class="benefit-icon">📝</div>
+                <div class="benefit-icon" style="color: var(--magenta);">◼</div>
                 <div class="benefit-text">
                   <strong>Doctor Reports</strong><br>
                   Professional summaries ready for your healthcare provider
@@ -11918,7 +11918,7 @@ For clinical review and treatment optimization.`;
           </div>
         `;
       } else {
-        modalTitle = '📅 Timeline Analysis: ' + (period === 'week' ? '7 Days' : '30 Days');
+        modalTitle = 'Timeline Analysis: ' + (period === 'week' ? '7 Days' : '30 Days');
         modalContent = `
           <div class="timeline-detail">
             <h4>Detailed ${period === 'week' ? '7-Day' : '30-Day'} Symptom Analysis</h4>
@@ -11934,7 +11934,7 @@ For clinical review and treatment optimization.`;
     }
     
     function showNauseaReliefModal() {
-      const modalTitle = '🌿 Comprehensive Nausea Relief Guide';
+      const modalTitle = 'Comprehensive Nausea Relief Guide';
       const modalContent = `
         <div class="nausea-relief-guide">
           <div class="severity-selector">
@@ -11947,10 +11947,10 @@ For clinical review and treatment optimization.`;
           </div>
           
           <div id="nauseaAdviceContent">
-            <h4>🎯 Immediate Relief Strategies</h4>
+            <h4>Immediate Relief Strategies</h4>
             
             <div class="relief-category">
-              <h5>🍵 Natural Remedies (Try First)</h5>
+              <h5>Natural Remedies (Try First)</h5>
               <ul class="remedy-list">
                 <li><strong>Ginger:</strong> Fresh ginger tea, ginger chews, or 1g ginger supplement</li>
                 <li><strong>Peppermint:</strong> Peppermint tea or aromatherapy (avoid if you have GERD)</li>
@@ -11960,7 +11960,7 @@ For clinical review and treatment optimization.`;
             </div>
             
             <div class="relief-category">
-              <h5>🍽️ Dietary Strategies</h5>
+              <h5>Dietary Strategies</h5>
               <ul class="remedy-list">
                 <li><strong>BRAT Diet:</strong> Bananas, rice, applesauce, toast - easy to digest</li>
                 <li><strong>Small frequent sips:</strong> Clear fluids every 15-20 minutes</li>
@@ -11970,7 +11970,7 @@ For clinical review and treatment optimization.`;
             </div>
             
             <div class="emergency-section">
-              <h5>⚠️ When to Seek Help</h5>
+              <h5>When to Seek Help</h5>
               <ul class="warning-list">
                 <li>Vomiting for more than 24 hours</li>
                 <li>Signs of dehydration (dizziness, dry mouth, dark urine)</li>
@@ -11991,7 +11991,7 @@ For clinical review and treatment optimization.`;
     }
     
     function showMealTimingModal() {
-      const modalTitle = '🕰️ Optimal Meal Timing Strategy';
+      const modalTitle = 'Optimal Meal Timing Strategy';
       const modalContent = `
         <div class="meal-timing-optimizer">
           <h4>Personalized Meal Timing for Your Injection Cycle</h4>
@@ -12008,7 +12008,7 @@ For clinical review and treatment optimization.`;
     }
     
     function showHydrationModal() {
-      const modalTitle = '💧 Smart Hydration Protocol';
+      const modalTitle = 'Smart Hydration Protocol';
       const modalContent = `
         <div class="hydration-protocol">
           <h4>Personalized Hydration for GLP-1 Therapy</h4>
@@ -12034,7 +12034,7 @@ For clinical review and treatment optimization.`;
     }
     
     function showExerciseModal() {
-      const modalTitle = '🏃‍♀️ Gentle Movement Guide';
+      const modalTitle = 'Gentle Movement Guide';
       const modalContent = `
         <div class="exercise-guide">
           <h4>Safe Exercise During GLP-1 Therapy</h4>
