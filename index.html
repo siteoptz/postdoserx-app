@@ -1644,6 +1644,13 @@
       border-radius: 12px;
       color: white;
     }
+    .recipe-title {
+      color: white;
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin: 0 0 1rem 0;
+      line-height: 1.3;
+    }
     .advanced-analytics .recipe-card h4 {
       color: white;
     }
@@ -7109,6 +7116,7 @@
             <div class="recipe-card high-confidence">
               <div class="recipe-image"><i data-lucide="bowl"></i></div>
               <div class="recipe-content">
+                <h4 class="recipe-title">Gentle Quinoa Bowl</h4>
                 <div class="recipe-stats">
                   <span class="confidence-score">94% Match</span>
                   <span class="prep-time">15 mins</span>
@@ -7130,6 +7138,7 @@
             <div class="recipe-card medium-confidence">
               <div class="recipe-image"><i data-lucide="chef-hat"></i></div>
               <div class="recipe-content">
+                <h4 class="recipe-title">Healing Bone Broth Soup</h4>
                 <div class="recipe-stats">
                   <span class="confidence-score">87% Match</span>
                   <span class="prep-time">25 mins</span>
@@ -7151,6 +7160,7 @@
             <div class="recipe-card new-suggestion">
               <div class="recipe-image"><i data-lucide="utensils"></i></div>
               <div class="recipe-content">
+                <h4 class="recipe-title">Light Lemon Pasta</h4>
                 <div class="recipe-stats">
                   <span class="confidence-score">79% Match</span>
                   <span class="prep-time">20 mins</span>
@@ -7165,6 +7175,28 @@
                 <div class="recipe-actions">
                   <button class="recipe-btn primary" onclick="viewRecipe('lemon-pasta')">View Recipe</button>
                   <button class="recipe-btn secondary" onclick="addToMealPlan('lemon-pasta')">Add to Plan</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="recipe-card balanced-nutrition">
+              <div class="recipe-image"><i data-lucide="salad"></i></div>
+              <div class="recipe-content">
+                <h4 class="recipe-title">Protein-Packed Greek Salad</h4>
+                <div class="recipe-stats">
+                  <span class="confidence-score">91% Match</span>
+                  <span class="prep-time">12 mins</span>
+                  <span class="difficulty">Easy</span>
+                </div>
+                <p class="recipe-description">Light, refreshing, and loaded with protein. Perfect for good symptom days when you want something fresh and energizing.</p>
+                <div class="recipe-tags">
+                  <span class="tag protein">High Protein</span>
+                  <span class="tag fresh">Fresh & Light</span>
+                  <span class="tag quick">Quick Prep</span>
+                </div>
+                <div class="recipe-actions">
+                  <button class="recipe-btn primary" onclick="viewRecipe('greek-salad')">View Recipe</button>
+                  <button class="recipe-btn secondary" onclick="addToMealPlan('greek-salad')">Add to Plan</button>
                 </div>
               </div>
             </div>
@@ -10077,6 +10109,164 @@ For clinical review and treatment optimization.`;
         },
         tags: ['High Protein', 'Light', 'GLP-1 Friendly', 'Quick']
       },
+      
+      'quinoa-bowl': {
+        name: 'Gentle Quinoa Bowl',
+        category: 'Lunch/Dinner',
+        description: 'A soothing Mediterranean-inspired quinoa bowl with gentle ingredients perfect for injection days. Features tender quinoa, cucumber, mild herbs, and a light olive oil dressing.',
+        prep_time: '15 minutes',
+        servings: 1,
+        ingredients: [
+          { name: 'Cooked quinoa', amount: '3/4 cup' },
+          { name: 'English cucumber, diced', amount: '1/2 cup' },
+          { name: 'Roma tomato, diced (seeds removed)', amount: '1/3 cup' },
+          { name: 'Extra virgin olive oil', amount: '1 tbsp' },
+          { name: 'Fresh lemon juice', amount: '1 tsp' },
+          { name: 'Fresh parsley, chopped', amount: '1 tbsp' },
+          { name: 'Sea salt', amount: 'Pinch' },
+          { name: 'Feta cheese (optional)', amount: '2 tbsp' }
+        ],
+        instructions: [
+          'Cook quinoa according to package directions and let cool slightly',
+          'Dice cucumber and tomato into small, uniform pieces',
+          'Remove seeds from tomato to reduce acidity',
+          'Whisk together olive oil and lemon juice in a small bowl',
+          'Combine quinoa, cucumber, and tomato in serving bowl',
+          'Drizzle with dressing and toss gently',
+          'Top with fresh parsley and feta if using',
+          'Serve at room temperature for best digestion'
+        ],
+        nutrition: {
+          calories: 320,
+          protein: '11g',
+          carbs: '45g',
+          fat: '12g',
+          fiber: '5g',
+          sugar: '4g'
+        },
+        tags: ['Stomach-Friendly', 'High Protein', 'Quick Prep', 'Mediterranean']
+      },
+      
+      'bone-broth': {
+        name: 'Healing Bone Broth Soup',
+        category: 'Soup',
+        description: 'Ultra-gentle, nutrient-rich bone broth with soft vegetables. Perfect for high-symptom days when you need nourishment without stress on your digestive system.',
+        prep_time: '25 minutes',
+        servings: 2,
+        ingredients: [
+          { name: 'High-quality bone broth', amount: '2 cups' },
+          { name: 'Carrot, peeled and finely diced', amount: '1 small' },
+          { name: 'Celery stalk, finely diced', amount: '1/2 stalk' },
+          { name: 'Cooked white rice', amount: '1/4 cup' },
+          { name: 'Fresh ginger, minced', amount: '1/2 tsp' },
+          { name: 'Fresh parsley, chopped', amount: '1 tbsp' },
+          { name: 'Sea salt', amount: 'To taste' },
+          { name: 'Coconut oil', amount: '1/2 tsp' }
+        ],
+        instructions: [
+          'Heat bone broth in a medium saucepan over low heat',
+          'Add minced ginger and let simmer for 5 minutes',
+          'Add diced carrots and cook for 10 minutes until very tender',
+          'Add celery and cook for another 5 minutes',
+          'Stir in cooked rice and coconut oil',
+          'Season with salt to taste (start with less)',
+          'Simmer for 2-3 more minutes to heat through',
+          'Garnish with fresh parsley before serving',
+          'Serve warm but not hot to avoid triggering nausea'
+        ],
+        nutrition: {
+          calories: 180,
+          protein: '12g',
+          carbs: '15g',
+          fat: '8g',
+          fiber: '2g',
+          sugar: '3g'
+        },
+        tags: ['Ultra Gentle', 'Comfort Food', 'Hydrating', 'Anti-Inflammatory']
+      },
+      
+      'lemon-pasta': {
+        name: 'Light Lemon Pasta',
+        category: 'Lunch/Dinner',
+        description: 'Delicate angel hair pasta with a light lemon and herb sauce. Bright citrus flavors help combat nausea while providing satisfying carbohydrates.',
+        prep_time: '20 minutes',
+        servings: 1,
+        ingredients: [
+          { name: 'Angel hair pasta', amount: '2 oz (about 1 cup cooked)' },
+          { name: 'Extra virgin olive oil', amount: '1.5 tbsp' },
+          { name: 'Fresh lemon juice', amount: '2 tbsp' },
+          { name: 'Lemon zest', amount: '1 tsp' },
+          { name: 'Fresh basil, chopped', amount: '1 tbsp' },
+          { name: 'Garlic clove, minced', amount: '1/2 clove' },
+          { name: 'Parmesan cheese, grated', amount: '2 tbsp' },
+          { name: 'Sea salt', amount: 'Pinch' },
+          { name: 'Black pepper', amount: 'Light sprinkle' }
+        ],
+        instructions: [
+          'Cook pasta according to package directions until al dente',
+          'Reserve 1/4 cup pasta cooking water before draining',
+          'In a large skillet, heat olive oil over low heat',
+          'Add minced garlic and cook for 30 seconds (don\'t brown)',
+          'Add lemon juice and zest, swirl to combine',
+          'Add drained pasta to the skillet',
+          'Toss with sauce, adding pasta water if needed for consistency',
+          'Remove from heat, add basil and Parmesan',
+          'Season lightly with salt and pepper',
+          'Serve immediately while warm'
+        ],
+        nutrition: {
+          calories: 380,
+          protein: '13g',
+          carbs: '48g',
+          fat: '16g',
+          fiber: '2g',
+          sugar: '2g'
+        },
+        tags: ['New for You', 'Citrus', 'Satisfying', 'Anti-Nausea']
+      },
+      
+      'greek-salad': {
+        name: 'Protein-Packed Greek Salad',
+        category: 'Lunch/Dinner',
+        description: 'Fresh, light Mediterranean salad with protein-rich ingredients. Perfect for good symptom days when you want something refreshing and energizing.',
+        prep_time: '12 minutes',
+        servings: 1,
+        ingredients: [
+          { name: 'Mixed greens (spinach, arugula)', amount: '2 cups' },
+          { name: 'English cucumber, sliced', amount: '1/2 cup' },
+          { name: 'Cherry tomatoes, halved', amount: '1/3 cup' },
+          { name: 'Red onion, thinly sliced', amount: '1 tbsp' },
+          { name: 'Kalamata olives, pitted', amount: '6 olives' },
+          { name: 'Feta cheese, crumbled', amount: '1/4 cup' },
+          { name: 'Grilled chicken breast, sliced', amount: '3 oz' },
+          { name: 'Extra virgin olive oil', amount: '1.5 tbsp' },
+          { name: 'Red wine vinegar', amount: '1 tbsp' },
+          { name: 'Dried oregano', amount: '1/2 tsp' },
+          { name: 'Sea salt and pepper', amount: 'To taste' }
+        ],
+        instructions: [
+          'Wash and dry mixed greens thoroughly',
+          'Slice cucumber and halve cherry tomatoes',
+          'Thinly slice red onion and soak in cold water for 5 minutes to mellow',
+          'Grill or pan-cook chicken breast and let rest, then slice',
+          'In a large bowl, combine greens, cucumber, and tomatoes',
+          'Whisk together olive oil, vinegar, and oregano',
+          'Drain red onion and add to salad',
+          'Drizzle with dressing and toss gently',
+          'Top with sliced chicken, feta, and olives',
+          'Season with salt and pepper to taste',
+          'Serve immediately for best texture'
+        ],
+        nutrition: {
+          calories: 420,
+          protein: '32g',
+          carbs: '12g',
+          fat: '28g',
+          fiber: '4g',
+          sugar: '8g'
+        },
+        tags: ['High Protein', 'Fresh & Light', 'Quick Prep', 'Mediterranean']
+      },
       'green-smoothie-mon': {
         name: 'Green Smoothie',
         category: 'Snack',
@@ -10596,9 +10786,24 @@ For clinical review and treatment optimization.`;
             </div>
           </div>
         </div>
+        
+        <div class="modal-section recipe-rating-section">
+          <h4>Rate This Recipe</h4>
+          <p style="margin-bottom: 1rem; color: rgba(255, 255, 255, 0.8);">How would you rate this recipe for your GLP-1 journey?</p>
+          <div class="recipe-star-rating" style="margin-bottom: 1rem; display: flex; justify-content: center;">
+            ${[1, 2, 3, 4, 5].map(rating => 
+              `<span class="star recipe-star" data-rating="${rating}" onclick="rateRecipeFromModal('${mealId}', ${rating})" style="font-size: 2.5rem; cursor: pointer; color: rgba(255, 255, 255, 0.3); margin-right: 0.5rem; transition: all 0.2s ease;" onmouseover="highlightStars(this, ${rating})" onmouseout="resetStars(this)">★</span>`
+            ).join('')}
+          </div>
+          <div style="display: flex; justify-content: space-between; color: rgba(255, 255, 255, 0.7); font-size: 0.9rem;">
+            <span>Not for me</span>
+            <span>Perfect!</span>
+          </div>
+        </div>
       `;
 
       showModal();
+      updateMealSatisfactionDisplay();
     }
 
     function viewNutrition(mealId) {
@@ -12466,6 +12671,7 @@ For clinical review and treatment optimization.`;
     window.addEventListener('load', function() {
       console.log('Window loaded, trying Lucide init...');
       initializeLucideIcons();
+      updateMealSatisfactionDisplay();
     });
     
     // Scroll to rating section function
@@ -12647,6 +12853,134 @@ For clinical review and treatment optimization.`;
       `;
       
       showCustomModal(title, content);
+    }
+    
+    // Helper functions for recipe star rating
+    function highlightStars(clickedStar, rating) {
+      const container = clickedStar.parentElement;
+      const stars = container.querySelectorAll('.recipe-star');
+      
+      stars.forEach((star, index) => {
+        if (index < rating) {
+          star.style.color = '#fbbf24';
+        } else {
+          star.style.color = 'rgba(255, 255, 255, 0.3)';
+        }
+      });
+    }
+    
+    function resetStars(clickedStar) {
+      const container = clickedStar.parentElement;
+      const stars = container.querySelectorAll('.recipe-star');
+      
+      stars.forEach(star => {
+        star.style.color = 'rgba(255, 255, 255, 0.3)';
+      });
+    }
+    
+    // Update dynamic meal satisfaction score display
+    function updateMealSatisfactionDisplay() {
+      const mealRatings = JSON.parse(localStorage.getItem('recipeRatings') || '{}');
+      const mealFeedback = JSON.parse(localStorage.getItem('mealFeedback') || '{}');
+      
+      // Combine both rating sources
+      const allRatings = [];
+      
+      // Add recipe ratings
+      Object.values(mealRatings).forEach(rating => {
+        if (rating && rating.rating) {
+          allRatings.push(rating.rating);
+        }
+      });
+      
+      // Add meal feedback ratings
+      Object.values(mealFeedback).forEach(feedback => {
+        if (feedback && feedback.rating) {
+          allRatings.push(feedback.rating);
+        }
+      });
+      
+      // Calculate average if we have ratings
+      if (allRatings.length > 0) {
+        const average = allRatings.reduce((sum, rating) => sum + rating, 0) / allRatings.length;
+        const roundedAverage = Math.round(average * 10) / 10;
+        
+        // Update the display in the Rate Your Latest Meal section
+        const satisfactionElements = document.querySelectorAll('.meal-context-professional');
+        satisfactionElements.forEach(element => {
+          // Add a satisfaction score display
+          let scoreDisplay = element.querySelector('.satisfaction-score-display');
+          if (!scoreDisplay) {
+            scoreDisplay = document.createElement('div');
+            scoreDisplay.className = 'satisfaction-score-display';
+            scoreDisplay.style.cssText = `
+              background: linear-gradient(135deg, var(--teal), #0d9488); 
+              padding: 0.75rem 1rem; 
+              border-radius: 8px; 
+              margin-top: 1rem; 
+              text-align: center;
+            `;
+            element.appendChild(scoreDisplay);
+          }
+          
+          scoreDisplay.innerHTML = `
+            <div style="color: white; font-weight: 600; margin-bottom: 0.25rem;">Current Meal Satisfaction</div>
+            <div style="color: white; font-size: 1.5rem; font-weight: 700;">${roundedAverage}/5.0 ★</div>
+            <div style="color: rgba(255, 255, 255, 0.8); font-size: 0.85rem;">Based on ${allRatings.length} meal rating${allRatings.length !== 1 ? 's' : ''}</div>
+          `;
+        });
+        
+        // Update recommendations based on ratings
+        updateRecommendationsBasedOnRatings(allRatings);
+      }
+    }
+    
+    // Rate a recipe from the view recipe modal
+    function rateRecipeFromModal(recipeId, rating) {
+      const recipeRatings = JSON.parse(localStorage.getItem('recipeRatings') || '{}');
+      const timestamp = new Date().toISOString();
+      
+      recipeRatings[recipeId] = {
+        rating: rating,
+        timestamp: timestamp,
+        date: new Date().toISOString().split('T')[0]
+      };
+      
+      localStorage.setItem('recipeRatings', JSON.stringify(recipeRatings));
+      
+      // Update satisfaction display
+      updateMealSatisfactionDisplay();
+      
+      // Show feedback
+      const ratingSection = document.querySelector('.recipe-rating-section');
+      if (ratingSection) {
+        ratingSection.innerHTML = `
+          <div style="background: rgba(16, 185, 129, 0.2); padding: 1rem; border-radius: 8px; text-align: center; border: 2px solid var(--teal);">
+            <div style="color: var(--teal); font-weight: 600; margin-bottom: 0.5rem;">Rating Saved!</div>
+            <div style="color: white;">You rated this recipe ${rating}/5 stars</div>
+          </div>
+        `;
+      }
+    }
+    
+    // Update recommendations based on user ratings
+    function updateRecommendationsBasedOnRatings(allRatings) {
+      if (allRatings.length === 0) return;
+      
+      const averageRating = allRatings.reduce((sum, rating) => sum + rating, 0) / allRatings.length;
+      
+      // Update confidence scores based on user preferences
+      const recipeCards = document.querySelectorAll('.recipe-card');
+      recipeCards.forEach(card => {
+        const confidenceScore = card.querySelector('.confidence-score');
+        if (confidenceScore && averageRating >= 4) {
+          // If user generally likes meals, increase confidence
+          const currentScore = parseInt(confidenceScore.textContent);
+          const newScore = Math.min(99, currentScore + 5);
+          confidenceScore.textContent = `${newScore}% Match`;
+          confidenceScore.style.color = 'var(--teal)';
+        }
+      });
     }
     
     // Scroll to recommendations section
