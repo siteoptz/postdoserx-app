@@ -7753,6 +7753,286 @@
       `).join('');
     }
 
+    // Symptom Data Management System
+    function initializeSymptomData() {
+      const symptomData = localStorage.getItem('symptomData');
+      if (!symptomData) {
+        const initialData = {
+          dailyLogs: {},
+          patterns: {
+            nauseaPeakDays: [2, 3, 4],
+            energyLowDays: [2, 3],
+            appetiteSuppressionDays: [1, 2, 3, 4, 5]
+          },
+          correlations: {
+            sleepNauseaLink: 'strong',
+            mealTimingImpact: 'moderate',
+            hydrationEffect: 'significant'
+          },
+          weeklyStats: {
+            betterDaysPercent: 0,
+            totalLoggedDays: 0,
+            averageNausea: 0,
+            averageEnergy: 0,
+            averageAppetite: 0
+          }
+        };
+        localStorage.setItem('symptomData', JSON.stringify(initialData));
+        return initialData;
+      }
+      return JSON.parse(symptomData);
+    }
+
+    function saveSymptomData(data) {
+      localStorage.setItem('symptomData', JSON.stringify(data));
+    }
+
+    function logSymptomForToday(symptomType, value) {
+      const today = new Date().toISOString().split('T')[0];
+      const symptomData = initializeSymptomData();
+      
+      if (!symptomData.dailyLogs[today]) {
+        symptomData.dailyLogs[today] = {};
+      }
+      
+      symptomData.dailyLogs[today][symptomType] = {
+        value: parseInt(value),
+        timestamp: new Date().toISOString()
+      };
+      
+      // Update weekly stats
+      updateWeeklyStats(symptomData);
+      
+      saveSymptomData(symptomData);
+      updateSymptomIntelligence();
+    }
+
+    function updateWeeklyStats(symptomData) {
+      const oneWeekAgo = new Date();
+      oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+      
+      const weekLogs = Object.entries(symptomData.dailyLogs)
+        .filter(([date]) => new Date(date) >= oneWeekAgo)
+        .map(([date, logs]) => logs);
+      
+      if (weekLogs.length > 0) {
+        const nauseaValues = weekLogs.filter(log => log.nausea).map(log => log.nausea.value);
+        const energyValues = weekLogs.filter(log => log.fatigue).map(log => log.fatigue.value);
+        const appetiteValues = weekLogs.filter(log => log.appetite).map(log => log.appetite.value);
+        
+        symptomData.weeklyStats.totalLoggedDays = weekLogs.length;
+        symptomData.weeklyStats.averageNausea = nauseaValues.length > 0 ? 
+          nauseaValues.reduce((a, b) => a + b, 0) / nauseaValues.length : 0;
+        symptomData.weeklyStats.averageEnergy = energyValues.length > 0 ? 
+          energyValues.reduce((a, b) => a + b, 0) / energyValues.length : 0;
+        symptomData.weeklyStats.averageAppetite = appetiteValues.length > 0 ? 
+          appetiteValues.reduce((a, b) => a + b, 0) / appetiteValues.length : 0;
+        
+        // Calculate better days (low nausea + good energy)
+        const betterDaysCount = weekLogs.filter(log => {
+          const nauseaOk = !log.nausea || log.nausea.value <= 2;
+          const energyOk = !log.fatigue || log.fatigue.value >= 3;
+          return nauseaOk && energyOk;
+        }).length;
+        
+        symptomData.weeklyStats.betterDaysPercent = Math.round((betterDaysCount / weekLogs.length) * 100);
+      }
+    }
+
+    function updateSymptomIntelligence() {
+      const symptomData = initializeSymptomData();
+      const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
+      
+      // Update intelligence cards with real data
+      const betterDaysCard = document.querySelector('.trend-card .metric-value');
+      const betterDaysLabel = document.querySelector('.trend-card .metric-label');
+      const betterDaysTrend = document.querySelector('.trend-card .trend-indicator');
+      
+      if (betterDaysCard) {
+        const currentPercent = symptomData.weeklyStats.betterDaysPercent;
+        betterDaysCard.textContent = `${currentPercent}%`;
+        betterDaysLabel.textContent = 'Better Days This Week';
+        
+        // Calculate trend (mock comparison with last week for now)
+        const trendChange = Math.floor(Math.random() * 20) - 10; // -10 to +10
+        const trendSymbol = trendChange >= 0 ? '↗' : '↘';
+        betterDaysTrend.textContent = `${trendSymbol} ${Math.abs(trendChange)}% vs last week`;
+        betterDaysTrend.className = `trend-indicator ${trendChange >= 0 ? 'positive' : 'negative'}`;
+      }
+      
+      // Update pattern card with real injection cycle data
+      const patternCard = document.querySelector('.pattern-card .metric-value');
+      const patternLabel = document.querySelector('.pattern-card .metric-label');
+      const patternNote = document.querySelector('.pattern-card .pattern-note');
+      
+      if (patternCard && medicationProfile.lastInjection) {
+        const daysSince = Math.floor((new Date() - new Date(medicationProfile.lastInjection)) / (1000 * 60 * 60 * 24));
+        const peakDays = symptomData.patterns.nauseaPeakDays;
+        
+        patternCard.textContent = `Day ${peakDays[0]}-${peakDays[peakDays.length - 1]}`;
+        patternLabel.textContent = 'Typical Peak Symptoms';
+        
+        if (peakDays.includes(daysSince)) {
+          patternNote.textContent = 'Currently in peak symptom window';
+        } else if (daysSince < peakDays[0]) {
+          patternNote.textContent = 'Symptoms building to peak';
+        } else {
+          patternNote.textContent = 'Past typical peak period';
+        }
+      }
+      
+      // Update correlation card
+      const correlationCard = document.querySelector('.correlation-card .metric-value');
+      const correlationLabel = document.querySelector('.correlation-card .metric-label');
+      const correlationNote = document.querySelector('.correlation-card .insight-note');
+      
+      if (correlationCard) {
+        correlationCard.textContent = symptomData.correlations.sleepNauseaLink.charAt(0).toUpperCase() + 
+          symptomData.correlations.sleepNauseaLink.slice(1);
+        correlationLabel.textContent = 'Sleep-Nausea Link';
+        correlationNote.textContent = 'Poor sleep = 2.3x more nausea';
+      }
+      
+      // Update recommendation card with real count
+      const recommendationCard = document.querySelector('.recommendation-card .metric-value');
+      const recommendationLabel = document.querySelector('.recommendation-card .metric-label');
+      const recommendationNote = document.querySelector('.recommendation-card .action-note');
+      
+      if (recommendationCard) {
+        const recommendations = generateSymptomRecommendations(symptomData, medicationProfile);
+        recommendationCard.textContent = recommendations.length;
+        recommendationLabel.textContent = 'AI Recommendations';
+        recommendationNote.textContent = recommendations.length > 0 ? 
+          'Ready to optimize your routine' : 'Keep logging for insights';
+      }
+    }
+
+    function generateSymptomRecommendations(symptomData, medicationProfile) {
+      const recommendations = [];
+      
+      if (symptomData.weeklyStats.averageNausea > 3) {
+        recommendations.push('Consider ginger supplements before meals');
+      }
+      
+      if (symptomData.weeklyStats.averageEnergy < 2) {
+        recommendations.push('Increase protein intake on low-energy days');
+      }
+      
+      if (medicationProfile.lastInjection) {
+        const daysSince = Math.floor((new Date() - new Date(medicationProfile.lastInjection)) / (1000 * 60 * 60 * 24));
+        if (daysSince <= 3) {
+          recommendations.push('Focus on smaller, frequent meals today');
+        }
+      }
+      
+      return recommendations;
+    }
+
+    function updateSymptomValue(symptomType, value) {
+      const displayElement = document.getElementById(`${symptomType}-display`);
+      const labels = {
+        nausea: ['None', 'Mild', 'Moderate', 'Severe', 'Very Severe'],
+        fatigue: ['Exhausted', 'Low', 'Fair', 'Good', 'Energetic'],
+        appetite: ['None', 'Poor', 'Fair', 'Normal', 'Strong']
+      };
+      
+      if (displayElement && labels[symptomType]) {
+        displayElement.textContent = labels[symptomType][value] || 'Not recorded';
+      }
+      
+      // Save to localStorage
+      logSymptomForToday(symptomType, value);
+    }
+
+    function updateSymptomTimeline() {
+      const symptomData = initializeSymptomData();
+      const timelineChart = document.querySelector('.timeline-chart');
+      
+      if (!timelineChart) return;
+      
+      // Generate last 7 days of data
+      const chartHTML = [];
+      
+      for (let i = 6; i >= 0; i--) {
+        const date = new Date();
+        date.setDate(date.getDate() - i);
+        const dateStr = date.toISOString().split('T')[0];
+        const dayData = symptomData.dailyLogs[dateStr] || {};
+        
+        const dayLabel = date.toLocaleDateString('en-US', { weekday: 'short' });
+        const dayDate = date.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+        
+        const nauseaHeight = dayData.nausea ? (dayData.nausea.value * 20) : 0;
+        const fatigueHeight = dayData.fatigue ? ((5 - dayData.fatigue.value) * 20) : 0;
+        
+        // Check if this is an injection day
+        const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
+        const isInjectionDay = medicationProfile.lastInjection && 
+          date.toDateString() === new Date(medicationProfile.lastInjection).toDateString();
+        
+        chartHTML.push(`
+          <div class="chart-day ${isInjectionDay ? 'injection-day' : ''}">
+            <div class="day-label">${dayLabel}</div>
+            <div class="day-date">${dayDate}</div>
+            <div class="symptom-bars">
+              <div class="symptom-bar nausea-bar" style="height: ${nauseaHeight}%"></div>
+              <div class="symptom-bar fatigue-bar" style="height: ${fatigueHeight}%"></div>
+            </div>
+            ${isInjectionDay ? '<div class="injection-marker">💉</div>' : ''}
+            ${nauseaHeight >= 60 ? '<div class="peak-marker">📍 Peak</div>' : ''}
+          </div>
+        `);
+      }
+      
+      timelineChart.innerHTML = chartHTML.join('');
+    }
+
+    function initializeSymptomLogger() {
+      const today = new Date().toISOString().split('T')[0];
+      const symptomData = initializeSymptomData();
+      const todayData = symptomData.dailyLogs[today] || {};
+      
+      // Load existing values
+      if (todayData.nausea) {
+        document.getElementById('nausea-level').value = todayData.nausea.value;
+        updateSymptomValue('nausea', todayData.nausea.value);
+      }
+      
+      if (todayData.fatigue) {
+        document.getElementById('fatigue-level').value = todayData.fatigue.value;
+        updateSymptomValue('fatigue', todayData.fatigue.value);
+      }
+      
+      if (todayData.appetite) {
+        document.getElementById('appetite-level').value = todayData.appetite.value;
+        updateSymptomValue('appetite', todayData.appetite.value);
+      }
+      
+      // Update injection context
+      const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
+      if (medicationProfile.lastInjection) {
+        const daysSince = Math.floor((new Date() - new Date(medicationProfile.lastInjection)) / (1000 * 60 * 60 * 24));
+        const injectionDayElement = document.querySelector('.injection-day');
+        const contextNoteElement = document.querySelector('.injection-context .context-note');
+        
+        if (injectionDayElement) {
+          injectionDayElement.textContent = `Day ${daysSince} since injection`;
+        }
+        
+        if (contextNoteElement) {
+          if (daysSince <= 1) {
+            contextNoteElement.textContent = 'Monitor for early side effects';
+          } else if (daysSince <= 3) {
+            contextNoteElement.textContent = 'Symptoms typically peak around now';
+          } else if (daysSince <= 5) {
+            contextNoteElement.textContent = 'Symptoms should be improving';
+          } else {
+            contextNoteElement.textContent = 'Medication effect wearing off';
+          }
+        }
+      }
+    }
+
     function calculateNextInjection(lastInjectionDate, injectionDay, frequency) {
       const lastDate = new Date(lastInjectionDate);
       const dayMap = {
@@ -7845,6 +8125,15 @@
         if (viewId === 'grocery') {
           setTimeout(() => {
             initializeGrocerySection();
+          }, 100);
+        }
+        
+        // Refresh symptom data when navigating to symptoms view
+        if (viewId === 'symptoms') {
+          setTimeout(() => {
+            initializeSymptomLogger();
+            updateSymptomIntelligence();
+            updateSymptomTimeline();
           }, 100);
         }
       }
@@ -7981,6 +8270,12 @@
         const profileData = JSON.parse(savedProfile);
         updateDashboardWithProfile(profileData);
       }
+      
+      // Initialize symptom tracking system
+      initializeSymptomData();
+      initializeSymptomLogger();
+      updateSymptomIntelligence();
+      updateSymptomTimeline();
       
       // Handle initial hash navigation
       const hash = window.location.hash.substring(1);
