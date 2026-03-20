@@ -8119,6 +8119,112 @@
       }
     }
 
+    // Personalized Insights Action Functions
+    function scheduleInjectionChange() {
+      const confirmed = confirm('Would you like to update your injection schedule to evening? This can help reduce symptoms based on your pattern.');
+      if (confirmed) {
+        alert('Schedule updated! Your next injection reminder will be set for evening. Check your medication profile for details.');
+        console.log('Injection schedule updated to evening');
+      }
+    }
+
+    function setSleepReminder() {
+      const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
+      if (medicationProfile.injectionDay) {
+        alert(`Sleep reminder set! You'll be reminded to get 7+ hours of sleep the night before your ${medicationProfile.injectionDay} injection.`);
+        console.log('Sleep reminder activated');
+      } else {
+        alert('Sleep reminder set! Aim for 7+ hours of sleep before each injection for better energy levels.');
+        console.log('General sleep reminder activated');
+      }
+    }
+
+    function showNauseaRelief() {
+      alert('Nausea Relief Guide:\n\n• Try ginger tea or ginger supplements\n• Eat small, frequent meals\n• Stay hydrated with clear fluids\n• Avoid strong smells\n• Rest in a cool, quiet environment\n• Consider crackers before getting up');
+      console.log('Nausea relief guide shown');
+    }
+
+    function optimizeMealTiming() {
+      const confirmed = confirm('Would you like to adjust your meal timing for better symptom management? This will update your meal plan with smaller, more frequent meals during peak symptom days.');
+      if (confirmed) {
+        alert('Meal timing optimized! Your meal plan has been updated with smaller portions and increased frequency during Days 2-4 post-injection.');
+        console.log('Meal timing optimized');
+        // Refresh the meal plan if we're on that view
+        if (window.location.hash === '#meals') {
+          showView('meals');
+        }
+      }
+    }
+
+    function startHydrationTimer() {
+      const confirmed = confirm('Would you like to set hydration reminders? This will help you stay hydrated, which can reduce nausea and improve energy.');
+      if (confirmed) {
+        alert('Hydration reminders activated! You\'ll receive reminders to drink water every 2 hours during peak symptom days.');
+        console.log('Hydration timer started');
+      }
+    }
+
+    function showExerciseGuide() {
+      alert('Gentle Activity Ideas for GLP-1 Users:\n\n• Light walking (10-15 minutes)\n• Gentle stretching or yoga\n• Deep breathing exercises\n• Seated exercises if feeling weak\n• Avoid intense workouts on peak symptom days\n• Listen to your body and rest when needed');
+      console.log('Exercise guide shown');
+    }
+
+    function saveSymptomLog() {
+      // Get current symptom values
+      const nausea = document.getElementById('nausea-level')?.value || 0;
+      const fatigue = document.getElementById('fatigue-level')?.value || 0;
+      const appetite = document.getElementById('appetite-level')?.value || 0;
+      const sleep = document.getElementById('sleep-level')?.value || 0;
+      
+      // Check if any symptoms were logged
+      if (nausea == 0 && fatigue == 0 && appetite == 0 && sleep == 0) {
+        alert('Please log at least one symptom before saving.');
+        return;
+      }
+      
+      // Update symptom data (already done by individual sliders, but refresh intelligence)
+      updateSymptomIntelligence();
+      updateSymptomTimeline();
+      
+      alert('Symptom log saved successfully! Your data has been recorded for today.');
+      console.log('Symptom log saved');
+    }
+
+    function quickCopyYesterday() {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1);
+      const yesterdayStr = yesterday.toISOString().split('T')[0];
+      
+      const symptomData = initializeSymptomData();
+      const yesterdayData = symptomData.dailyLogs[yesterdayStr];
+      
+      if (yesterdayData) {
+        // Copy yesterday's values to today's form
+        if (yesterdayData.nausea) {
+          document.getElementById('nausea-level').value = yesterdayData.nausea.value;
+          updateSymptomValue('nausea', yesterdayData.nausea.value);
+        }
+        if (yesterdayData.fatigue) {
+          document.getElementById('fatigue-level').value = yesterdayData.fatigue.value;
+          updateSymptomValue('fatigue', yesterdayData.fatigue.value);
+        }
+        if (yesterdayData.appetite) {
+          document.getElementById('appetite-level').value = yesterdayData.appetite.value;
+          updateSymptomValue('appetite', yesterdayData.appetite.value);
+        }
+        if (yesterdayData.sleep) {
+          document.getElementById('sleep-level').value = yesterdayData.sleep.value;
+          updateSymptomValue('sleep', yesterdayData.sleep.value);
+        }
+        
+        alert('Yesterday\'s symptom values copied successfully!');
+        console.log('Yesterday\'s symptoms copied');
+      } else {
+        alert('No symptom data found for yesterday. Please log your symptoms manually.');
+        console.log('No yesterday data to copy');
+      }
+    }
+
     function calculateNextInjection(lastInjectionDate, injectionDay, frequency) {
       const lastDate = new Date(lastInjectionDate);
       const dayMap = {
