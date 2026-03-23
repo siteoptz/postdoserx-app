@@ -3985,30 +3985,55 @@
       transform: translateY(-2px);
     }
 
-    /* Roboto typography for comprehensive-progress page */
+    /* COMPREHENSIVE ROBOTO FONT OVERRIDE - MAXIMUM SPECIFICITY */
     body.comprehensive-progress-active {
       font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
-      font-weight: 400;
-      letter-spacing: 0.01em;
+      font-weight: 400 !important;
+      letter-spacing: 0.01em !important;
     }
-    body.comprehensive-progress-active * {
+    body.comprehensive-progress-active *,
+    body.comprehensive-progress-active *::before,
+    body.comprehensive-progress-active *::after,
+    body.comprehensive-progress-active input,
+    body.comprehensive-progress-active button,
+    body.comprehensive-progress-active textarea,
+    body.comprehensive-progress-active select,
+    body.comprehensive-progress-active span,
+    body.comprehensive-progress-active div,
+    body.comprehensive-progress-active p,
+    body.comprehensive-progress-active label {
       font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
     }
 
+    /* Override all specific Montserrat elements */
     body.comprehensive-progress-active h1,
     body.comprehensive-progress-active h2,
     body.comprehensive-progress-active h3,
-    body.comprehensive-progress-active h4 {
-      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-      font-weight: 500;
-      letter-spacing: 0;
+    body.comprehensive-progress-active h4,
+    body.comprehensive-progress-active h5,
+    body.comprehensive-progress-active h6 {
+      font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
+      font-weight: 500 !important;
+      letter-spacing: 0 !important;
+    }
+
+    body.comprehensive-progress-active .nav-link,
+    body.comprehensive-progress-active .nav-title,
+    body.comprehensive-progress-active .pro-badge,
+    body.comprehensive-progress-active .pro-badge-gold,
+    body.comprehensive-progress-active .primary-btn,
+    body.comprehensive-progress-active .secondary-btn,
+    body.comprehensive-progress-active .chart-btn,
+    body.comprehensive-progress-active .timeline-btn,
+    body.comprehensive-progress-active .rating-btn {
+      font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
     }
 
     body.comprehensive-progress-active .view-title {
-      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-      font-weight: 700;
-      font-size: 2.5rem;
-      letter-spacing: -0.01em;
+      font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
+      font-weight: 700 !important;
+      font-size: 2.5rem !important;
+      letter-spacing: -0.01em !important;
       background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -4017,42 +4042,42 @@
     }
 
     body.comprehensive-progress-active .view-subtitle {
-      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-      font-weight: 400;
-      font-size: 1.1rem;
-      letter-spacing: 0.01em;
+      font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
+      font-weight: 400 !important;
+      font-size: 1.1rem !important;
+      letter-spacing: 0.01em !important;
       opacity: 0.9;
     }
 
     body.comprehensive-progress-active .premium-title-section h3 {
-      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-      font-weight: 500;
-      font-size: 1.3rem;
-      letter-spacing: 0;
+      font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
+      font-weight: 500 !important;
+      font-size: 1.3rem !important;
+      letter-spacing: 0 !important;
     }
 
     body.comprehensive-progress-active .premium-badge,
     body.comprehensive-progress-active .savings-badge {
-      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-      font-weight: 500;
-      font-size: 0.75rem;
-      letter-spacing: 0.1em;
+      font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
+      font-weight: 500 !important;
+      font-size: 0.75rem !important;
+      letter-spacing: 0.1em !important;
       text-transform: uppercase;
     }
 
     body.comprehensive-progress-active .comprehensive-actions button {
-      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-      font-weight: 500;
-      letter-spacing: 0;
+      font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
+      font-weight: 500 !important;
+      letter-spacing: 0 !important;
     }
 
     /* Numbers and metrics styling */
     body.comprehensive-progress-active .metric-value,
     body.comprehensive-progress-active .stat-value,
     body.comprehensive-progress-active .prediction-value {
-      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-      font-weight: 700;
-      letter-spacing: 0;
+      font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
+      font-weight: 700 !important;
+      letter-spacing: 0 !important;
       font-variant-numeric: tabular-nums;
     }
 
