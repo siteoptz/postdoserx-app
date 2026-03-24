@@ -8775,10 +8775,6 @@
 
         <!-- Quick Actions -->
         <div class="progress-actions">
-          <button class="primary-btn" onclick="logWeight()">
-            <span class="btn-icon"><i data-lucide="weight"></i></span>
-            Log Today's Weight
-          </button>
           <button class="secondary-btn" onclick="setNewGoal()">
             <span class="btn-icon"><i data-lucide="target"></i></span>
             Set New Goal
@@ -11054,7 +11050,7 @@
               <h4 style="margin-bottom: 1rem;">Weight Progress Chart</h4>
               <p style="margin-bottom: 1.5rem; color: rgba(255,255,255,0.7);">Log your weight regularly to see your progress chart here.</p>
               <button class="primary-btn" onclick="logWeight()" style="margin-top: 1rem;">
-                Log Your First Weight
+                Log Your Weight
               </button>
             </div>
           `;
@@ -11087,7 +11083,7 @@
       filteredLogs.sort((a, b) => new Date(a.date) - new Date(b.date));
       
       if (filteredLogs.length === 0) {
-        // Show message for empty period
+        // Show message for empty period but preserve the SVG structure
         const chartContainer = document.querySelector('.weight-chart-container');
         if (chartContainer) {
           chartContainer.innerHTML = `
@@ -11099,6 +11095,39 @@
           `;
         }
         return;
+      }
+      
+      // Restore the chart structure if it was replaced
+      const chartContainer = document.querySelector('.weight-chart-container');
+      if (chartContainer && !chartContainer.querySelector('.progress-chart')) {
+        chartContainer.innerHTML = `
+          <div class="chart-canvas">
+            <svg viewBox="0 0 400 200" class="progress-chart">
+              <!-- Grid lines -->
+              <defs>
+                <pattern id="grid" width="40" height="20" patternUnits="userSpaceOnUse">
+                  <path d="M 40 0 L 0 0 0 20" fill="none" stroke="#e5e5e5" stroke-width="1"/>
+                </pattern>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#grid)" />
+              
+              <!-- Weight trend line -->
+              <path stroke="var(--accent-blue)" stroke-width="3" fill="none" stroke-linecap="round"/>
+              
+              <!-- Goal line -->
+              <path stroke="#ffd700" stroke-width="2" stroke-dasharray="5,5" style="display: none;"/>
+              <text x="385" y="95" fill="#ffd700" font-size="12">Goal</text>
+              
+              <!-- Y-axis labels -->
+              <text x="10" y="30" fill="#666" font-size="10">200</text>
+              <text x="10" y="110" fill="#666" font-size="10">190</text>
+              <text x="10" y="190" fill="#666" font-size="10">180</text>
+            </svg>
+          </div>
+          <div class="chart-timeline">
+            <!-- Timeline labels will be populated by JavaScript -->
+          </div>
+        `;
       }
       
       // Generate chart data
@@ -11118,8 +11147,16 @@
       const timelineLabels = [];
       
       filteredLogs.forEach((log, index) => {
-        const x = startX + (index * (chartWidth / (filteredLogs.length - 1 || 1)));
-        const y = startY - ((log.weight - minWeight) / weightRange) * chartHeight;
+        let x, y;
+        
+        if (filteredLogs.length === 1) {
+          // Center single data point
+          x = startX + (chartWidth / 2);
+          y = startY - ((log.weight - minWeight) / (weightRange || 1)) * chartHeight;
+        } else {
+          x = startX + (index * (chartWidth / (filteredLogs.length - 1)));
+          y = startY - ((log.weight - minWeight) / (weightRange || 1)) * chartHeight;
+        }
         
         if (index === 0) {
           pathData += `M ${x} ${y}`;
@@ -11147,8 +11184,16 @@
         
         // Add new circles for each data point
         filteredLogs.forEach((log, index) => {
-          const x = startX + (index * (chartWidth / (filteredLogs.length - 1 || 1)));
-          const y = startY - ((log.weight - minWeight) / weightRange) * chartHeight;
+          let x, y;
+          
+          if (filteredLogs.length === 1) {
+            // Center single data point
+            x = startX + (chartWidth / 2);
+            y = startY - ((log.weight - minWeight) / (weightRange || 1)) * chartHeight;
+          } else {
+            x = startX + (index * (chartWidth / (filteredLogs.length - 1)));
+            y = startY - ((log.weight - minWeight) / (weightRange || 1)) * chartHeight;
+          }
           
           const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
           circle.setAttribute('cx', x);
@@ -16802,7 +16847,7 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
             <h4>Weight Progress Chart</h4>
             <p>Log your weight regularly to see your progress chart here.</p>
             <button class="primary-btn" onclick="logWeight()" style="margin-top: 1rem;">
-              Log Your First Weight
+              Log Your Weight
             </button>
           </div>
         `;
