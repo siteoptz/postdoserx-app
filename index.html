@@ -7846,7 +7846,12 @@
         <div class="content-card rating-intelligence enhanced-intelligence">
           <div class="intelligence-header">
             <div class="intelligence-title">
-              <h3><i data-lucide="brain" class="inline-icon"></i> Your Meal Intelligence Dashboard</h3>
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div class="stat-icon" style="width: 45px; height: 45px; font-size: 1.25rem;">
+                  <i data-lucide="brain"></i>
+                </div>
+                <h3 style="margin: 0;">Your Meal Intelligence Dashboard</h3>
+              </div>
               <p class="intelligence-subtitle">Personalized insights based on your meal ratings and symptom patterns</p>
             </div>
             <div class="intelligence-stats">
@@ -7912,7 +7917,11 @@
           <!-- Quick Insights Bar -->
           <div class="quick-insights-bar" id="quickInsightsBar" onclick="scrollToRating()" style="cursor: pointer;">
             <div class="insight-item">
-              <span class="insight-icon"><i data-lucide="lightbulb" style="width: 20px; height: 20px; stroke: var(--magenta); margin-right: 8px;"></i></span>
+              <span class="insight-icon">
+                <div class="stat-icon" style="width: 35px; height: 35px; font-size: 1rem; margin-right: 8px;">
+                  <i data-lucide="lightbulb"></i>
+                </div>
+              </span>
               <span class="insight-message" id="primaryInsight">Rate your first meal to unlock personalized insights!</span>
             </div>
           </div>
@@ -7922,7 +7931,12 @@
         <div class="content-card feedback-loop advanced-analytics">
           <div class="premium-header">
             <div class="premium-title-section">
-              <h3>Personalized Learning from Your Feedback</h3>
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div class="stat-icon" style="width: 40px; height: 40px; font-size: 1.1rem;">
+                  <i data-lucide="graduation-cap"></i>
+                </div>
+                <h3 style="margin: 0;">Personalized Learning from Your Feedback</h3>
+              </div>
               <span class="premium-badge">ACTIVE</span>
             </div>
             <div class="premium-value">
@@ -8027,7 +8041,12 @@
         <div class="content-card meal-insights advanced-analytics" id="meal-insights-section">
           <div class="premium-header">
             <div class="premium-title-section">
-              <h3>Your Nutrition Insights</h3>
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div class="stat-icon" style="width: 40px; height: 40px; font-size: 1.1rem;">
+                  <i data-lucide="bar-chart-3"></i>
+                </div>
+                <h3 style="margin: 0;">Your Nutrition Insights</h3>
+              </div>
               <span class="premium-badge">ACTIVE</span>
             </div>
             <div class="premium-value">
@@ -8774,10 +8793,15 @@
     }
     
     function updateDashboardWithProfile(profile) {
+      console.log('updateDashboardWithProfile called with:', profile);
+      
       // Update user name in header
       const userNameElement = document.getElementById('user-name');
       if (userNameElement && profile.name) {
+        console.log('Updating user name to:', profile.name);
         userNameElement.textContent = profile.name;
+      } else {
+        console.log('Could not update user name. Element found:', !!userNameElement, 'Name:', profile.name);
       }
       
       // Update user name in profile section
@@ -8788,8 +8812,10 @@
       
       // Update medication name throughout dashboard
       const medicationNameElements = document.querySelectorAll('#medication-name');
-      medicationNameElements.forEach(el => {
+      console.log('Found medication name elements:', medicationNameElements.length);
+      medicationNameElements.forEach((el, index) => {
         if (profile.medication) {
+          console.log(`Updating medication element ${index} to:`, profile.medication);
           el.textContent = profile.medication;
         }
       });
@@ -8803,7 +8829,10 @@
       
       // Update medication display
       if (profileMedicationDisplay && profile.medication) {
+        console.log('Updating profile medication display to:', profile.medication);
         profileMedicationDisplay.textContent = profile.medication;
+      } else {
+        console.log('Could not update profile medication display. Element found:', !!profileMedicationDisplay, 'Medication:', profile.medication);
       }
       
       // Update dose display
@@ -13170,10 +13199,14 @@ For clinical review and treatment optimization.`;
             injectionDay: formData.injectionDay,
             nextInjection: formData.nextInjection
           };
+          
+          console.log('Updated profile data:', updatedProfile);
           localStorage.setItem('medicationProfile', JSON.stringify(updatedProfile));
+          console.log('Saved to localStorage, now calling updateDashboardWithProfile');
           
           // Update dashboard with new profile data
           updateDashboardWithProfile(updatedProfile);
+          console.log('updateDashboardWithProfile called');
           
           // Update UI elements
           document.getElementById('dropdown-user-name').textContent = formData.name;
