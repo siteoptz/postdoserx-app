@@ -14191,7 +14191,7 @@ For clinical review and treatment optimization.`;
             rating: data.rating,
             timestamp: new Date(data.timestamp),
             date: data.date,
-            name: getRecipeName(recipeId)
+            name: data.recipeName || getRecipeName(recipeId) // Use stored name or fallback to mapping
           });
         }
       });
@@ -14283,15 +14283,60 @@ For clinical review and treatment optimization.`;
     // Helper function to get recipe name from ID
     function getRecipeName(recipeId) {
       const recipeNames = {
+        // Featured Recipes
         'quinoa-bowl': 'Gentle Quinoa Bowl',
         'bone-broth': 'Healing Bone Broth Soup',
         'lemon-pasta': 'Light Lemon Pasta',
         'greek-salad': 'Protein-Packed Greek Salad',
+        
+        // Monday Meals
+        'protein-bowl-mon': 'Protein Power Bowl',
         'green-smoothie-mon': 'Green Smoothie',
-        'protein-bowl-mon': 'Protein Bowl',
-        'quinoa-salad-mon': 'Quinoa Salad',
-        'hummus-veggies-mon': 'Hummus with Veggies',
-        'salmon-asparagus-mon': 'Salmon with Asparagus'
+        'quinoa-salad-mon': 'Mediterranean Quinoa Salad',
+        'hummus-veggies-mon': 'Hummus & Veggie Sticks',
+        'salmon-asparagus-mon': 'Grilled Salmon with Asparagus',
+        
+        // Tuesday Meals
+        'overnight-oats-tue': 'Overnight Oats with Berries',
+        'tea-almonds-tue': 'Herbal Tea & Almonds',
+        'chicken-soup-tue': 'Gentle Chicken Soup',
+        'apple-almond-tue': 'Apple with Almond Butter',
+        'turkey-zucchini-tue': 'Turkey & Zucchini Boats',
+        
+        // Wednesday Meals
+        'eggs-spinach-wed': 'Scrambled Eggs with Spinach',
+        'coconut-crackers-wed': 'Coconut Water & Crackers',
+        'lettuce-wraps-wed': 'Asian Lettuce Wraps',
+        'yogurt-cucumber-wed': 'Greek Yogurt & Cucumber',
+        'cod-vegetables-wed': 'Baked Cod with Vegetables',
+        
+        // Thursday Meals
+        'smoothie-bowl-thu': 'Gentle Smoothie Bowl',
+        'bone-broth-thu': 'Healing Bone Broth',
+        'buddha-bowl-thu': 'Nourishing Buddha Bowl',
+        'cucumber-ricecakes-thu': 'Cucumber & Rice Cakes',
+        'chicken-cauliflower-thu': 'Chicken & Cauliflower Rice',
+        
+        // Friday Meals
+        'avocado-toast-fri': 'Avocado Toast with Seeds',
+        'chamomile-banana-fri': 'Chamomile Tea & Banana',
+        'lentil-curry-fri': 'Mild Lentil Curry',
+        'cottage-berries-fri': 'Cottage Cheese & Berries',
+        'stuffed-peppers-fri': 'Quinoa Stuffed Peppers',
+        
+        // Saturday Meals
+        'chia-pudding-sat': 'Chia Pudding with Mango',
+        'mint-toast-sat': 'Mint Tea & Toast',
+        'caprese-chicken-sat': 'Caprese Chicken Salad',
+        'trail-mix-sat': 'Gentle Trail Mix',
+        'pork-tenderloin-sat': 'Herb-Crusted Pork Tenderloin',
+        
+        // Sunday Meals (Injection Day - Gentle)
+        'gentle-oatmeal-sun': 'Gentle Oatmeal with Cinnamon',
+        'ginger-water-sun': 'Ginger Water & Crackers',
+        'clear-broth-sun': 'Clear Vegetable Broth',
+        'plain-rice-sun': 'Plain Rice with Herbs',
+        'steamed-fish-sun': 'Steamed Fish with Lemon'
       };
       return recipeNames[recipeId] || 'Recipe';
     }
@@ -14689,7 +14734,8 @@ For clinical review and treatment optimization.`;
       recipeRatings[recipeId] = {
         rating: rating,
         timestamp: timestamp,
-        date: new Date().toISOString().split('T')[0]
+        date: new Date().toISOString().split('T')[0],
+        recipeName: getRecipeName(recipeId) // Store the recipe name for reliable display
       };
       
       localStorage.setItem('recipeRatings', JSON.stringify(recipeRatings));
