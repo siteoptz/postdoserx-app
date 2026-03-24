@@ -4097,6 +4097,29 @@
       margin-bottom: 0.75rem;
     }
 
+    /* Success notification animations */
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideOutRight {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+    }
+
     .insight-list p {
       color: rgba(255, 255, 255, 0.8);
       margin-bottom: 0.5rem;
@@ -10745,6 +10768,14 @@
           }, 100);
         }
         
+        // Refresh progress data and chart when navigating to progress view
+        if (viewId === 'progress') {
+          setTimeout(() => {
+            updateProgressDisplay();
+            updateProgressChart('week'); // Default to weekly view
+          }, 100);
+        }
+        
         // Refresh meal intelligence when navigating to recipes view
         if (viewId === 'recipes') {
           setTimeout(() => {
@@ -11010,27 +11041,157 @@
       updateProgressChart(period);
     }
 
-    function updateProgressChart(period) {
-      // Mock data for different periods
-      const chartData = {
-        week: {
-          points: "M 20 160 L 60 150 L 100 145 L 140 140 L 180 135 L 220 130 L 260 125",
-          timeline: ["3/11", "3/12", "3/13", "3/14", "3/15", "3/16", "3/17"]
-        },
-        month: {
-          points: "M 20 180 L 80 170 L 140 160 L 200 150 L 260 140 L 320 130 L 380 120",
-          timeline: ["2/15", "2/22", "3/1", "3/8", "3/15", "3/22", "3/29"]
-        },
-        quarter: {
-          points: "M 20 200 L 60 190 L 100 180 L 140 170 L 180 160 L 220 150 L 260 140 L 300 130 L 340 120 L 380 110",
-          timeline: ["1/1", "1/15", "2/1", "2/15", "3/1", "3/15", "4/1"]
-        }
-      };
+    function updateProgressChart(period = 'week') {
+      const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
+      const weightLogs = progressData.weightLogs || [];
       
-      const data = chartData[period];
+      if (weightLogs.length === 0) {
+        // Show empty state with call to action
+        const chartContainer = document.querySelector('.weight-chart-container');
+        if (chartContainer) {
+          chartContainer.innerHTML = `
+            <div style="text-align: center; padding: 2rem; color: white;">
+              <h4 style="margin-bottom: 1rem;">Weight Progress Chart</h4>
+              <p style="margin-bottom: 1.5rem; color: rgba(255,255,255,0.7);">Log your weight regularly to see your progress chart here.</p>
+              <button class="primary-btn" onclick="logWeight()" style="margin-top: 1rem;">
+                Log Your First Weight
+              </button>
+            </div>
+          `;
+        }
+        return;
+      }
+      
+      // Filter data based on period
+      const now = new Date();
+      let filteredLogs = [];
+      
+      switch(period) {
+        case 'week':
+          const weekAgo = new Date(now.getTime() - (7 * 24 * 60 * 60 * 1000));
+          filteredLogs = weightLogs.filter(log => new Date(log.date) >= weekAgo);
+          break;
+        case 'month':
+          const monthAgo = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
+          filteredLogs = weightLogs.filter(log => new Date(log.date) >= monthAgo);
+          break;
+        case 'quarter':
+          const quarterAgo = new Date(now.getTime() - (90 * 24 * 60 * 60 * 1000));
+          filteredLogs = weightLogs.filter(log => new Date(log.date) >= quarterAgo);
+          break;
+        default:
+          filteredLogs = weightLogs.slice(-10); // Last 10 entries
+      }
+      
+      // Sort by date
+      filteredLogs.sort((a, b) => new Date(a.date) - new Date(b.date));
+      
+      if (filteredLogs.length === 0) {
+        // Show message for empty period
+        const chartContainer = document.querySelector('.weight-chart-container');
+        if (chartContainer) {
+          chartContainer.innerHTML = `
+            <div style="text-align: center; padding: 2rem; color: white;">
+              <h4 style="margin-bottom: 1rem;">No Data for ${period === 'week' ? '7 Days' : period === 'month' ? '30 Days' : '3 Months'}</h4>
+              <p style="margin-bottom: 1.5rem; color: rgba(255,255,255,0.7);">Log more weight entries to see data for this time period.</p>
+              <button class="primary-btn" onclick="logWeight()">Log Weight Now</button>
+            </div>
+          `;
+        }
+        return;
+      }
+      
+      // Generate chart data
+      const weights = filteredLogs.map(log => log.weight);
+      const minWeight = Math.min(...weights);
+      const maxWeight = Math.max(...weights);
+      const weightRange = maxWeight - minWeight || 10; // Prevent division by zero
+      
+      // Chart dimensions
+      const chartWidth = 360; // Leave margin for labels
+      const chartHeight = 160;
+      const startX = 20;
+      const startY = 180;
+      
+      // Generate SVG path points
+      let pathData = '';
+      const timelineLabels = [];
+      
+      filteredLogs.forEach((log, index) => {
+        const x = startX + (index * (chartWidth / (filteredLogs.length - 1 || 1)));
+        const y = startY - ((log.weight - minWeight) / weightRange) * chartHeight;
+        
+        if (index === 0) {
+          pathData += `M ${x} ${y}`;
+        } else {
+          pathData += ` L ${x} ${y}`;
+        }
+        
+        // Format date for timeline
+        const date = new Date(log.date);
+        timelineLabels.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+      });
+      
+      // Update the chart path
       const chartPath = document.querySelector('.progress-chart path[stroke="var(--accent-blue)"]');
-      if (chartPath && data) {
-        chartPath.setAttribute('d', data.points);
+      if (chartPath) {
+        chartPath.setAttribute('d', pathData);
+      }
+      
+      // Update chart circles (data points)
+      const svg = document.querySelector('.progress-chart');
+      if (svg) {
+        // Remove old circles
+        const oldCircles = svg.querySelectorAll('circle[fill="var(--accent-blue)"]');
+        oldCircles.forEach(circle => circle.remove());
+        
+        // Add new circles for each data point
+        filteredLogs.forEach((log, index) => {
+          const x = startX + (index * (chartWidth / (filteredLogs.length - 1 || 1)));
+          const y = startY - ((log.weight - minWeight) / weightRange) * chartHeight;
+          
+          const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+          circle.setAttribute('cx', x);
+          circle.setAttribute('cy', y);
+          circle.setAttribute('r', index === filteredLogs.length - 1 ? '6' : '4');
+          circle.setAttribute('fill', 'var(--accent-blue)');
+          if (index === filteredLogs.length - 1) {
+            circle.setAttribute('stroke', 'white');
+            circle.setAttribute('stroke-width', '2');
+          }
+          svg.appendChild(circle);
+        });
+      }
+      
+      // Update timeline labels
+      const timeline = document.querySelector('.chart-timeline');
+      if (timeline) {
+        timeline.innerHTML = timelineLabels.map(label => 
+          `<span class="timeline-item">${label}</span>`
+        ).join('');
+      }
+      
+      // Update Y-axis labels with actual weight range
+      const yAxisLabels = svg.querySelectorAll('text[x="10"]');
+      yAxisLabels.forEach((label, index) => {
+        if (index === 0) {
+          label.textContent = Math.round(minWeight);
+        } else if (index === 1) {
+          label.textContent = Math.round((minWeight + maxWeight) / 2);
+        } else if (index === 2) {
+          label.textContent = Math.round(maxWeight);
+        }
+      });
+      
+      // Update goal line if goal is set
+      const goalWeight = progressData.goalWeight;
+      const goalPath = svg.querySelector('path[stroke="#ffd700"]');
+      if (goalWeight && goalPath) {
+        const goalY = startY - ((goalWeight - minWeight) / weightRange) * chartHeight;
+        goalPath.setAttribute('d', `M 20 ${goalY} L 380 ${goalY}`);
+        goalPath.style.display = 'block';
+      } else if (goalPath) {
+        goalPath.style.display = 'none';
       }
     }
 
@@ -11073,8 +11234,17 @@
             // Update UI
             updateProgressDisplay();
             
+            // Update weight chart with new data
+            const activeChartBtn = document.querySelector('.chart-btn.active');
+            const currentPeriod = activeChartBtn ? activeChartBtn.textContent.includes('7') ? 'week' : 
+                                                   activeChartBtn.textContent.includes('30') ? 'month' : 'quarter' : 'week';
+            updateProgressChart(currentPeriod);
+            
             // Close modal and show success
             closeUserModal('log-weight-modal');
+            
+            // Show success notification
+            showSuccessNotification(`Weight logged successfully! ${currentWeight} lbs on ${new Date(weightDate).toLocaleDateString()}`);
             
             // Reset form
             weightForm.reset();
@@ -11125,6 +11295,12 @@
             
             // Close modal
             closeUserModal('set-goal-modal');
+            
+            // Show success notification
+            const goalMessage = goalTimeline ? 
+              `Goal set! Target: ${goalWeight} lbs by ${new Date(goalTimeline).toLocaleDateString()}` :
+              `Goal set! Target weight: ${goalWeight} lbs`;
+            showSuccessNotification(goalMessage);
             
             // Reset form
             goalForm.reset();
@@ -11283,6 +11459,9 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
       
       // Update the display with current data
       updateProgressDisplay();
+      
+      // Update the chart when page loads
+      updateProgressChart('week');
     }
 
     // Add progress initialization to the existing DOMContentLoaded listener
@@ -12775,6 +12954,64 @@ For clinical review and treatment optimization.`;
         modal.classList.remove('active');
         document.body.style.overflow = '';
       }
+    }
+    
+    // Show success notification
+    function showSuccessNotification(message) {
+      // Remove any existing notifications
+      const existingNotification = document.querySelector('.success-notification');
+      if (existingNotification) {
+        existingNotification.remove();
+      }
+      
+      // Create notification element
+      const notification = document.createElement('div');
+      notification.className = 'success-notification';
+      notification.innerHTML = `
+        <div style="
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          background: linear-gradient(135deg, #10b981, #059669);
+          color: white;
+          padding: 1rem 1.5rem;
+          border-radius: 8px;
+          box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+          z-index: 10000;
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          font-weight: 500;
+          max-width: 320px;
+          animation: slideInRight 0.3s ease-out;
+        ">
+          <div style="
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+          ">✓</div>
+          <span>${message}</span>
+        </div>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Auto-remove after 3 seconds
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.style.animation = 'slideOutRight 0.3s ease-in forwards';
+          setTimeout(() => {
+            if (notification.parentNode) {
+              notification.remove();
+            }
+          }, 300);
+        }
+      }, 3000);
     }
 
     function populateProfileModal() {
