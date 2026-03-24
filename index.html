@@ -5163,6 +5163,75 @@
       color: white;
       border: 1px solid rgba(255, 255, 255, 0.3);
     }
+    
+    /* Progress modal specific styling */
+    .progress-summary-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      backdrop-filter: blur(10px);
+    }
+    
+    .summary-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .summary-header h4 {
+      color: white;
+      margin: 0;
+      font-size: 1.25rem;
+    }
+    
+    .progress-badge {
+      background: linear-gradient(135deg, var(--magenta), var(--magenta-dark));
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .stat-row:last-child {
+      border-bottom: none;
+    }
+    
+    .stat-label {
+      color: rgba(255, 255, 255, 0.8);
+      font-weight: 500;
+    }
+    
+    .stat-value {
+      color: white;
+      font-weight: 600;
+    }
+    
+    .share-message {
+      margin-top: 1rem;
+    }
+    
+    .share-message label {
+      display: block;
+      color: white;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
     .recipe-tag {
       background: var(--yellow-400);
       color: var(--text-primary);
@@ -10821,6 +10890,9 @@
     
     // Initialize everything on page load
     document.addEventListener('DOMContentLoaded', function() {
+      // Initialize form handlers for modals
+      initializeWeightLogForm();
+      initializeGoalForm();
       // Load and display saved medication profile (single consolidated call)
       const savedProfile = localStorage.getItem('medicationProfile');
       if (savedProfile) {
@@ -10963,43 +11035,101 @@
     }
 
     function logWeight() {
-      const currentWeight = prompt("Enter your current weight (lbs):");
-      if (currentWeight && !isNaN(currentWeight)) {
-        // Save to local storage
-        const progressData = JSON.parse(localStorage.getItem('progressData') || '{"weightLogs": []}');
-        const today = new Date().toISOString().split('T')[0];
-        
-        // Add new weight entry
-        progressData.weightLogs.push({
-          date: today,
-          weight: parseFloat(currentWeight),
-          timestamp: Date.now()
+      // Set today's date as default
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('weight-date').value = today;
+      
+      // Initialize form handler and open modal
+      initializeWeightLogForm();
+      openUserModal('log-weight-modal');
+    }
+    
+    // Initialize weight log form handler
+    function initializeWeightLogForm() {
+      const weightForm = document.getElementById('weight-log-form');
+      if (weightForm && !weightForm.dataset.initialized) {
+        weightForm.dataset.initialized = 'true';
+        weightForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const currentWeight = document.getElementById('current-weight').value;
+          const weightDate = document.getElementById('weight-date').value;
+          const weightNotes = document.getElementById('weight-notes').value;
+          
+          if (currentWeight && !isNaN(currentWeight)) {
+            // Save to local storage
+            const progressData = JSON.parse(localStorage.getItem('progressData') || '{"weightLogs": []}');
+            
+            // Add new weight entry
+            progressData.weightLogs.push({
+              date: weightDate,
+              weight: parseFloat(currentWeight),
+              notes: weightNotes,
+              timestamp: Date.now()
+            });
+            
+            localStorage.setItem('progressData', JSON.stringify(progressData));
+            
+            // Update UI
+            updateProgressDisplay();
+            
+            // Close modal and show success
+            closeUserModal('log-weight-modal');
+            
+            // Reset form
+            weightForm.reset();
+            
+            // In real implementation, this would call API:
+            // await fetch('/api/progress/weight', { method: 'POST', body: JSON.stringify({weight: currentWeight, date: weightDate, notes: weightNotes}) });
+          }
         });
-        
-        localStorage.setItem('progressData', JSON.stringify(progressData));
-        
-        // Update UI
-        updateProgressDisplay();
-        alert("Weight logged successfully!");
-        
-        // In real implementation, this would call API:
-        // await fetch('/api/progress/weight', { method: 'POST', body: JSON.stringify({weight: currentWeight, date: today}) });
       }
     }
 
     function setNewGoal() {
-      const goalWeight = prompt("Enter your goal weight (lbs):");
-      if (goalWeight && !isNaN(goalWeight)) {
-        // Save goal to local storage
-        const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
-        progressData.goalWeight = parseFloat(goalWeight);
-        progressData.goalSetDate = new Date().toISOString();
-        
-        localStorage.setItem('progressData', JSON.stringify(progressData));
-        
-        // Update UI
-        updateGoalDisplay();
-        alert("Goal updated successfully!");
+      // Pre-populate form with current goal if it exists
+      const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
+      if (progressData.goalWeight) {
+        document.getElementById('goal-weight').value = progressData.goalWeight;
+      }
+      
+      // Initialize form handler and open modal
+      initializeGoalForm();
+      openUserModal('set-goal-modal');
+    }
+    
+    // Initialize goal form handler
+    function initializeGoalForm() {
+      const goalForm = document.getElementById('goal-form');
+      if (goalForm && !goalForm.dataset.initialized) {
+        goalForm.dataset.initialized = 'true';
+        goalForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          
+          const goalWeight = document.getElementById('goal-weight').value;
+          const goalTimeline = document.getElementById('goal-timeline').value;
+          const goalMotivation = document.getElementById('goal-motivation').value;
+          
+          if (goalWeight && !isNaN(goalWeight)) {
+            // Save goal to local storage
+            const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
+            progressData.goalWeight = parseFloat(goalWeight);
+            progressData.goalSetDate = new Date().toISOString();
+            if (goalTimeline) progressData.goalTimeline = goalTimeline;
+            if (goalMotivation) progressData.goalMotivation = goalMotivation;
+            
+            localStorage.setItem('progressData', JSON.stringify(progressData));
+            
+            // Update UI
+            updateGoalDisplay();
+            
+            // Close modal
+            closeUserModal('set-goal-modal');
+            
+            // Reset form
+            goalForm.reset();
+          }
+        });
       }
     }
 
@@ -11008,12 +11138,73 @@
     }
 
     function shareProgress() {
-      // Generate shareable progress summary
-      const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
-      const currentWeight = progressData.weightLogs?.[progressData.weightLogs.length - 1]?.weight || 'Not logged';
-      const goalWeight = progressData.goalWeight || 'Not set';
+      // Update progress stats in the modal
+      updateShareProgressStats();
       
-      const shareText = `My PostDoseRX Progress Update:\n\nCurrent Weight: ${currentWeight} lbs\nGoal: ${goalWeight} lbs\nTracking my GLP-1 journey with smart analytics!\n\n#PostDoseRX #WeightLossJourney #GLP1`;
+      // Open the styled modal instead of directly sharing
+      openUserModal('share-progress-modal');
+    }
+    
+    function updateShareProgressStats() {
+      const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
+      const currentWeight = progressData.weightLogs?.[progressData.weightLogs.length - 1]?.weight || null;
+      const goalWeight = progressData.goalWeight || null;
+      const startingWeight = progressData.weightLogs?.[0]?.weight || null;
+      
+      let progressText = '';
+      let weightLoss = 0;
+      
+      if (currentWeight !== null && startingWeight !== null) {
+        weightLoss = startingWeight - currentWeight;
+      }
+      
+      // Update the share text area
+      const shareTextArea = document.getElementById('share-text');
+      if (shareTextArea) {
+        shareTextArea.value = `My PostDoseRX Progress Update:
+
+🎯 Current Weight: ${currentWeight !== null ? currentWeight + ' lbs' : 'Not logged'}
+🏆 Goal: ${goalWeight !== null ? goalWeight + ' lbs' : 'Not set'}
+📈 Progress: ${weightLoss > 0 ? '-' + weightLoss.toFixed(1) + ' lbs' : 'Starting journey'}
+
+Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #GLP1`;
+      }
+      
+      // Update the progress stats display
+      const statsEl = document.getElementById('share-progress-stats');
+      if (statsEl) {
+        statsEl.innerHTML = `
+          <div class="stat-row">
+            <span class="stat-label">Current Weight:</span>
+            <span class="stat-value">${currentWeight !== null ? currentWeight + ' lbs' : 'Not logged'}</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Goal Weight:</span>
+            <span class="stat-value">${goalWeight !== null ? goalWeight + ' lbs' : 'Not set'}</span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Progress:</span>
+            <span class="stat-value">${weightLoss > 0 ? '-' + weightLoss.toFixed(1) + ' lbs' : 'Starting journey'}</span>
+          </div>
+        `;
+      }
+    }
+    
+    function copyProgressText() {
+      const shareText = document.getElementById('share-text').value;
+      navigator.clipboard.writeText(shareText).then(() => {
+        // Visual feedback for copy success
+        const button = event.target;
+        const originalText = button.textContent;
+        button.textContent = 'Copied!';
+        setTimeout(() => {
+          button.textContent = originalText;
+        }, 2000);
+      });
+    }
+    
+    function shareProgressNative() {
+      const shareText = document.getElementById('share-text').value;
       
       if (navigator.share) {
         navigator.share({
@@ -11021,9 +11212,8 @@
           text: shareText
         });
       } else {
-        navigator.clipboard.writeText(shareText).then(() => {
-          alert('Progress summary copied to clipboard!');
-        });
+        // Fallback to copy to clipboard
+        copyProgressText();
       }
     }
 
@@ -13796,6 +13986,107 @@ For clinical review and treatment optimization.`;
         <div class="modal-actions">
           <button type="button" class="btn-secondary" onclick="closeUserModal('regenerate-modal')">Close</button>
           <button type="button" class="btn-primary" onclick="showView('meals'); closeUserModal('regenerate-modal')">View Updated Plan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Log Weight Modal -->
+  <div id="log-weight-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="modal-close" onclick="closeUserModal('log-weight-modal')">&times;</button>
+        <h3 class="modal-title">Log Today's Weight</h3>
+        <p class="modal-subtitle">Track your progress with accurate weight logging</p>
+      </div>
+      <div class="modal-body">
+        <form id="weight-log-form">
+          <div class="form-group">
+            <label for="current-weight">Current Weight (lbs)</label>
+            <input type="number" id="current-weight" step="0.1" min="0" max="1000" placeholder="Enter your weight" required />
+          </div>
+          <div class="form-group">
+            <label for="weight-date">Date</label>
+            <input type="date" id="weight-date" required />
+          </div>
+          <div class="form-group">
+            <label for="weight-notes">Notes (Optional)</label>
+            <textarea id="weight-notes" placeholder="Any observations about your weight today..." rows="3"></textarea>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary" onclick="closeUserModal('log-weight-modal')">Cancel</button>
+            <button type="submit" class="btn-primary">Log Weight</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Set Goal Modal -->
+  <div id="set-goal-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="modal-close" onclick="closeUserModal('set-goal-modal')">&times;</button>
+        <h3 class="modal-title">Set Your Weight Goal</h3>
+        <p class="modal-subtitle">Define your target weight and timeline</p>
+      </div>
+      <div class="modal-body">
+        <form id="goal-form">
+          <div class="form-group">
+            <label for="goal-weight">Target Weight (lbs)</label>
+            <input type="number" id="goal-weight" step="0.1" min="0" max="1000" placeholder="Enter your goal weight" required />
+          </div>
+          <div class="form-group">
+            <label for="goal-timeline">Target Date (Optional)</label>
+            <input type="date" id="goal-timeline" />
+          </div>
+          <div class="form-group">
+            <label for="goal-motivation">Motivation (Optional)</label>
+            <textarea id="goal-motivation" placeholder="What motivates you to reach this goal?" rows="3"></textarea>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary" onclick="closeUserModal('set-goal-modal')">Cancel</button>
+            <button type="submit" class="btn-primary">Set Goal</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Share Progress Modal -->
+  <div id="share-progress-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="modal-close" onclick="closeUserModal('share-progress-modal')">&times;</button>
+        <h3 class="modal-title">Share Your Progress</h3>
+        <p class="modal-subtitle">Celebrate your achievements with others</p>
+      </div>
+      <div class="modal-body">
+        <div class="share-preview">
+          <div class="progress-summary-card">
+            <div class="summary-header">
+              <h4>My PostDoseRX Progress</h4>
+              <div class="progress-badge">Journey Update</div>
+            </div>
+            <div class="progress-stats" id="share-progress-stats">
+              <!-- Populated by JavaScript -->
+            </div>
+          </div>
+          <div class="share-message">
+            <label for="share-text">Share Message</label>
+            <textarea id="share-text" rows="4">My PostDoseRX Progress Update:
+
+🎯 Current Weight: Loading...
+🏆 Goal: Loading...
+📈 Progress: Loading...
+
+Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #GLP1</textarea>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" onclick="closeUserModal('share-progress-modal')">Cancel</button>
+          <button type="button" class="btn-tertiary" onclick="copyProgressText()">Copy Text</button>
+          <button type="button" class="btn-primary" onclick="shareProgressNative()">Share</button>
         </div>
       </div>
     </div>
