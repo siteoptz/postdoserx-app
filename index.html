@@ -5755,7 +5755,7 @@
       <!-- Home View -->
       <div id="home" class="view active">
         <div class="view-header">
-          <h1 class="view-title">Your personalized <span id="medication-name">Wegovy</span> journey dashboard</h1>
+          <h1 class="view-title" id="dashboard-title">Welcome <span id="user-name">User</span>, here's your personalized <span id="medication-name">Wegovy</span> journey dashboard</h1>
         </div>
         
         <!-- Medication Profile Setup -->
@@ -8770,6 +8770,12 @@
     }
     
     function updateDashboardWithProfile(profile) {
+      // Update user name in header
+      const userNameElement = document.getElementById('user-name');
+      if (userNameElement && profile.name) {
+        userNameElement.textContent = profile.name;
+      }
+      
       // Update medication name throughout dashboard
       const medicationNameElements = document.querySelectorAll('#medication-name');
       medicationNameElements.forEach(el => {
@@ -12106,19 +12112,19 @@ For clinical review and treatment optimization.`;
     }
 
     function populateProfileModal() {
-      // Get current user data from the interface
-      const userNameElement = document.getElementById('dropdown-user-name');
-      const userEmailElement = document.getElementById('dropdown-user-email');
+      // Load medication profile data (which now includes name)
+      const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
       
-      if (userNameElement) {
-        document.getElementById('profile-name').value = userNameElement.textContent;
+      // Get current user data from localStorage
+      if (medicationProfile.name) {
+        document.getElementById('profile-name').value = medicationProfile.name;
       }
+      
+      // Get email from dropdown (if available)
+      const userEmailElement = document.getElementById('dropdown-user-email');
       if (userEmailElement) {
         document.getElementById('profile-email').value = userEmailElement.textContent;
       }
-      
-      // Load medication profile data
-      const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
       
       if (medicationProfile.medication) {
         document.getElementById('profile-medication').value = medicationProfile.medication;
@@ -13038,6 +13044,7 @@ For clinical review and treatment optimization.`;
           const currentProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
           const updatedProfile = {
             ...currentProfile,
+            name: formData.name,
             medication: formData.medication,
             dose: formData.dose,
             injectionDay: formData.injectionDay,
@@ -13048,7 +13055,7 @@ For clinical review and treatment optimization.`;
           // Update dashboard with new profile data
           updateDashboardWithProfile(updatedProfile);
           
-          // Update UI
+          // Update UI elements
           document.getElementById('dropdown-user-name').textContent = formData.name;
           
           // Close modal
