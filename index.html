@@ -13691,16 +13691,16 @@ For clinical review and treatment optimization.`;
         }
       });
       
-      // Add meal feedback ratings
+      // Add meal feedback ratings (only if they have a meal name, not just daily assessments)
       Object.entries(mealFeedback).forEach(([date, feedback]) => {
-        if (feedback && feedback.rating) {
+        if (feedback && feedback.rating && feedback.mealName && feedback.mealName !== 'Daily Meal Assessment') {
           allRatings.push({
             type: 'meal',
             id: date,
             rating: feedback.rating,
             timestamp: new Date(date + 'T12:00:00'), // Default to noon for meal feedback
             date: date,
-            name: 'Daily Meal Assessment'
+            name: feedback.mealName || 'Meal Rating'
           });
         }
       });
@@ -13751,7 +13751,7 @@ For clinical review and treatment optimization.`;
             <div class="rated-meal-item" style="background: rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 1rem; border-left: 3px solid var(--magenta);">
               <div style="display: flex; justify-content: between; align-items: center;">
                 <div style="flex: 1;">
-                  <div style="color: white; font-weight: 600; margin-bottom: 0.25rem;">${rating.name}</div>
+                  <div style="color: white; font-weight: 600; margin-bottom: 0.25rem; cursor: pointer; text-decoration: underline;" onclick="viewRecipeFromRating('${rating.id}', '${rating.type}')">${rating.name}</div>
                   <div style="color: rgba(255, 255, 255, 0.7); font-size: 0.85rem; margin-bottom: 0.5rem;">
                     ${rating.timestamp.toLocaleDateString()} at ${rating.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                   </div>
@@ -13781,9 +13781,33 @@ For clinical review and treatment optimization.`;
         'quinoa-bowl': 'Gentle Quinoa Bowl',
         'bone-broth': 'Healing Bone Broth Soup',
         'lemon-pasta': 'Light Lemon Pasta',
-        'greek-salad': 'Protein-Packed Greek Salad'
+        'greek-salad': 'Protein-Packed Greek Salad',
+        'green-smoothie-mon': 'Green Smoothie',
+        'protein-bowl-mon': 'Protein Bowl',
+        'quinoa-salad-mon': 'Quinoa Salad',
+        'hummus-veggies-mon': 'Hummus with Veggies',
+        'salmon-asparagus-mon': 'Salmon with Asparagus'
       };
       return recipeNames[recipeId] || 'Recipe';
+    }
+    
+    // Function to view recipe from meal rating click
+    function viewRecipeFromRating(ratingId, ratingType) {
+      if (ratingType === 'recipe') {
+        // For recipe ratings, use the recipe ID to show the recipe modal
+        viewRecipe(ratingId);
+      } else if (ratingType === 'meal') {
+        // For meal feedback, show a generic message or meal details
+        showCustomModal('Meal Rating Details', `
+          <div style="padding: 1rem; text-align: center;">
+            <h3 style="color: var(--magenta); margin-bottom: 1rem;">Daily Meal Assessment</h3>
+            <p style="color: white; margin-bottom: 1rem;">This was a daily meal assessment rating.</p>
+            <p style="color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">
+              Rate individual recipes for more detailed insights and recipe recommendations.
+            </p>
+          </div>
+        `);
+      }
     }
     
     // Generate personalized insights based on actual user rating data
