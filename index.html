@@ -2176,8 +2176,8 @@
 
     .smart-symptom-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 2rem;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
       margin: 2rem 0;
     }
     .symptom-item {
@@ -2211,7 +2211,7 @@
     .rating-slider input[type="range"] {
       width: 100%;
       height: 8px;
-      background: var(--sand);
+      background: rgba(255, 255, 255, 0.3);
       border-radius: 4px;
       appearance: none;
       cursor: pointer;
@@ -2886,7 +2886,7 @@
     .portion-slider input[type="range"] {
       width: 100%;
       height: 8px;
-      background: var(--sand);
+      background: rgba(255, 255, 255, 0.3);
       border-radius: 4px;
       appearance: none;
       cursor: pointer;
@@ -10404,7 +10404,11 @@
       `;
 
       logs.slice(0, 14).forEach((log, index) => {
-        const isToday = log.date === new Date().toISOString().split('T')[0];
+        const today = new Date();
+        const todayStr = today.getFullYear() + '-' + 
+                        String(today.getMonth() + 1).padStart(2, '0') + '-' + 
+                        String(today.getDate()).padStart(2, '0');
+        const isToday = log.date === todayStr;
         
         historyContent += `
           <div style="border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; ${isToday ? 'background: rgba(16, 185, 129, 0.05);' : ''}">
