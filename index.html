@@ -2071,8 +2071,8 @@
       font-size: 1.5rem;
     }
     .insight-icon {
-      background: linear-gradient(135deg, var(--navy), var(--navy-light));
-      border-radius: 8px;
+      background: linear-gradient(135deg, var(--magenta), var(--magenta-dark));
+      border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -2984,17 +2984,23 @@
     }
     .insight-box .insight-icon {
       font-size: 2rem;
-      background: none;
-      border: none;
-      padding: 0;
+      background: linear-gradient(135deg, var(--magenta), var(--magenta-dark));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+      margin-right: 1rem;
+      flex-shrink: 0;
     }
     .insight-box .insight-icon i {
       width: 2rem;
       height: 2rem;
-      stroke: var(--teal);
+      stroke: white !important;
       stroke-width: 2;
       fill: none;
-      color: var(--teal);
+      color: white !important;
     }
     .insight-box h4 {
       color: var(--text-primary);
@@ -14106,8 +14112,8 @@ For clinical review and treatment optimization.`;
           ${insights.map(insight => `
             <div class="insight-item" style="background: rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 1.25rem; border-left: 3px solid var(--${insight.color === 'teal' ? 'teal' : insight.color === 'amber' ? 'accent-amber' : 'magenta'});">
               <div style="display: flex; align-items: flex-start; gap: 1rem;">
-                <div style="background: rgba(${insight.color === 'teal' ? '16, 185, 129' : insight.color === 'amber' ? '245, 158, 11' : '198, 22, 141'}, 0.1); border-radius: 50%; padding: 0.75rem; flex-shrink: 0;">
-                  <i data-lucide="${insight.icon}" style="width: 20px; height: 20px; color: var(--${insight.color === 'teal' ? 'teal' : insight.color === 'amber' ? 'accent-amber' : 'magenta'});"></i>
+                <div style="background: linear-gradient(135deg, var(--magenta), var(--magenta-dark)); border-radius: 12px; padding: 0.75rem; flex-shrink: 0; display: flex; align-items: center; justify-content: center; width: 45px; height: 45px;">
+                  <i data-lucide="${insight.icon}" style="width: 20px; height: 20px; color: white; stroke: white;"></i>
                 </div>
                 <div style="flex: 1;">
                   <h4 style="color: white; font-weight: 600; margin-bottom: 0.5rem; font-size: 1rem;">${insight.title}</h4>
