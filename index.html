@@ -8765,8 +8765,8 @@
       // Show success message
       alert('Medication profile setup complete! Your dashboard is now personalized.');
       
-      // Update all views with medication data
-      updateAllViewsWithMedication();
+      // Update meal plan with medication data
+      updateMealPlanWithProfile();
     }
     
     function skipSetup() {
@@ -10181,12 +10181,16 @@
       return null;
     }
     
-    function updateAllViewsWithMedication() {
-      const profile = loadMedicationProfile();
-      if (!profile) return;
+    function updateMealPlanWithProfile() {
+      const savedProfile = localStorage.getItem('medicationProfile');
+      if (!savedProfile) return;
+      
+      const profile = JSON.parse(savedProfile);
       
       // Update injection day highlighting in meal plans
-      updateMealPlanInjectionDay(profile.injectionDay);
+      if (profile.injectionDay) {
+        updateMealPlanInjectionDay(profile.injectionDay);
+      }
       
       // Regenerate meal plan if needed
       if (shouldRegenerateMealPlan()) {
@@ -10388,14 +10392,44 @@
     
     // Initialize everything on page load
     document.addEventListener('DOMContentLoaded', function() {
-      // Load saved medication profile
-      loadMedicationProfile();
-      
-      // Ensure profile display updates on load
+      // Load and display saved medication profile (single consolidated call)
       const savedProfile = localStorage.getItem('medicationProfile');
       if (savedProfile) {
         const profileData = JSON.parse(savedProfile);
+        
+        // Populate form fields
+        if (document.getElementById('medication-select')) {
+          document.getElementById('medication-select').value = profileData.medication || '';
+        }
+        if (document.getElementById('dose-input')) {
+          document.getElementById('dose-input').value = profileData.dose || '';
+        }
+        if (document.getElementById('frequency-select')) {
+          document.getElementById('frequency-select').value = profileData.frequency || '';
+        }
+        if (document.getElementById('last-injection')) {
+          document.getElementById('last-injection').value = profileData.lastInjection || '';
+        }
+        if (document.getElementById('next-injection')) {
+          document.getElementById('next-injection').value = profileData.nextInjection || '';
+        }
+        if (document.getElementById('injection-day')) {
+          document.getElementById('injection-day').value = profileData.injectionDay || '';
+        }
+        
+        // Update dashboard display with profile data
         updateDashboardWithProfile(profileData);
+        
+        // Update meal plan with profile data
+        updateMealPlanWithProfile();
+        
+        // Hide setup card if profile is complete
+        if (profileData.setupComplete) {
+          const setupCard = document.getElementById('medication-setup-card');
+          if (setupCard) {
+            setupCard.style.display = 'none';
+          }
+        }
       }
       
       // Initialize symptom tracking system
@@ -10409,9 +10443,6 @@
       if (hash) {
         showView(hash, false);
       }
-      
-      // Update all views with medication data
-      updateAllViewsWithMedication();
       
       // Schedule automatic meal plan regeneration
       scheduleMealPlanCheck();
