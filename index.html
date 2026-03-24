@@ -11208,14 +11208,21 @@
     // Initialize weight log form handler
     function initializeWeightLogForm() {
       const weightForm = document.getElementById('weight-log-form');
+      console.log('Initializing weight form:', weightForm);
+      
       if (weightForm && !weightForm.dataset.initialized) {
         weightForm.dataset.initialized = 'true';
+        console.log('Adding submit handler to weight form');
+        
         weightForm.addEventListener('submit', function(e) {
           e.preventDefault();
+          console.log('Weight form submitted');
           
           const currentWeight = document.getElementById('current-weight').value;
           const weightDate = document.getElementById('weight-date').value;
           const weightNotes = document.getElementById('weight-notes').value;
+          
+          console.log('Weight data:', {currentWeight, weightDate, weightNotes});
           
           if (currentWeight && !isNaN(currentWeight)) {
             // Save to local storage
@@ -11230,6 +11237,7 @@
             });
             
             localStorage.setItem('progressData', JSON.stringify(progressData));
+            console.log('Weight data saved to localStorage:', progressData);
             
             // Update UI
             updateProgressDisplay();
@@ -11251,8 +11259,14 @@
             
             // In real implementation, this would call API:
             // await fetch('/api/progress/weight', { method: 'POST', body: JSON.stringify({weight: currentWeight, date: weightDate, notes: weightNotes}) });
+          } else {
+            console.log('Invalid weight data');
           }
         });
+      } else if (weightForm && weightForm.dataset.initialized) {
+        console.log('Weight form already initialized');
+      } else {
+        console.log('Weight form not found');
       }
     }
 
@@ -11271,14 +11285,21 @@
     // Initialize goal form handler
     function initializeGoalForm() {
       const goalForm = document.getElementById('goal-form');
+      console.log('Initializing goal form:', goalForm);
+      
       if (goalForm && !goalForm.dataset.initialized) {
         goalForm.dataset.initialized = 'true';
+        console.log('Adding submit handler to goal form');
+        
         goalForm.addEventListener('submit', function(e) {
           e.preventDefault();
+          console.log('Goal form submitted');
           
           const goalWeight = document.getElementById('goal-weight').value;
           const goalTimeline = document.getElementById('goal-timeline').value;
           const goalMotivation = document.getElementById('goal-motivation').value;
+          
+          console.log('Goal data:', {goalWeight, goalTimeline, goalMotivation});
           
           if (goalWeight && !isNaN(goalWeight)) {
             // Save goal to local storage
@@ -11289,6 +11310,7 @@
             if (goalMotivation) progressData.goalMotivation = goalMotivation;
             
             localStorage.setItem('progressData', JSON.stringify(progressData));
+            console.log('Goal data saved to localStorage:', progressData);
             
             // Update UI
             updateGoalDisplay();
@@ -11304,8 +11326,14 @@
             
             // Reset form
             goalForm.reset();
+          } else {
+            console.log('Invalid goal weight data');
           }
         });
+      } else if (goalForm && goalForm.dataset.initialized) {
+        console.log('Goal form already initialized');
+      } else {
+        console.log('Goal form not found');
       }
     }
 
