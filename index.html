@@ -11041,8 +11041,14 @@
       const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
       const weightLogs = progressData.weightLogs || [];
       
+      console.log('updateProgressChart called with period:', period);
+      console.log('progressData:', progressData);
+      console.log('weightLogs:', weightLogs);
+      console.log('weightLogs.length:', weightLogs.length);
+      
       if (weightLogs.length === 0) {
         // Show empty state with call to action
+        console.log('No weight logs found, showing empty state');
         const chartContainer = document.querySelector('.weight-chart-container');
         if (chartContainer) {
           chartContainer.innerHTML = `
@@ -11056,6 +11062,8 @@
           `;
         }
         return;
+      } else {
+        console.log('Weight logs found, proceeding with chart generation');
       }
       
       // Filter data based on period
@@ -11082,8 +11090,12 @@
       // Sort by date
       filteredLogs.sort((a, b) => new Date(a.date) - new Date(b.date));
       
+      console.log('After filtering for period', period, '- filteredLogs:', filteredLogs);
+      console.log('filteredLogs.length:', filteredLogs.length);
+      
       if (filteredLogs.length === 0) {
         // Show message for empty period but preserve the SVG structure
+        console.log('No logs in filtered period, showing period-specific empty message');
         const chartContainer = document.querySelector('.weight-chart-container');
         if (chartContainer) {
           chartContainer.innerHTML = `
