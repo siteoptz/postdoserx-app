@@ -11044,13 +11044,19 @@
     }
 
     function updateProgressChart(period = 'week') {
-      const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
-      const weightLogs = progressData.weightLogs || [];
+      console.log('=== updateProgressChart STARTED ===', period);
       
-      console.log('updateProgressChart called with period:', period);
-      console.log('progressData:', progressData);
-      console.log('weightLogs:', weightLogs);
-      console.log('weightLogs.length:', weightLogs.length);
+      let progressData, weightLogs;
+      try {
+        progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
+        weightLogs = progressData.weightLogs || [];
+        console.log('Successfully parsed progressData:', progressData);
+        console.log('weightLogs:', weightLogs);
+        console.log('weightLogs.length:', weightLogs.length);
+      } catch (error) {
+        console.error('Error parsing localStorage data:', error);
+        return;
+      }
       
       if (weightLogs.length === 0) {
         // Show empty state with call to action
