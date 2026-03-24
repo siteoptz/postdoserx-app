@@ -902,6 +902,270 @@
       margin-bottom: 1rem;
     }
 
+    /* Enhanced Insights Dashboard Styles */
+    .insights-dashboard {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    
+    .primary-insights {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .interactive-insights {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .insight-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.75rem;
+    }
+    
+    .insight-action-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.875rem 1rem;
+      background: var(--sand-light);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+    }
+    
+    .insight-action-btn:hover {
+      background: var(--magenta);
+      color: white;
+      border-color: var(--magenta);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .insight-action-btn i {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+    
+    .action-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.125rem;
+    }
+    
+    .action-title {
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+    
+    .action-desc {
+      font-size: 0.75rem;
+      opacity: 0.7;
+    }
+    
+    .quick-insights {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    
+    .quick-insight-item {
+      padding: 0.75rem;
+      background: var(--bg-secondary);
+      border-radius: 6px;
+      text-align: center;
+    }
+    
+    .quick-insight-value {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--magenta);
+      margin-bottom: 0.25rem;
+    }
+    
+    .quick-insight-label {
+      font-size: 0.75rem;
+      color: var(--text-sec);
+    }
+    
+    /* Enhanced Actions Card Styles */
+    .completion-badge {
+      background: var(--magenta);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .action-insights {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+    }
+    
+    .insight-tip {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem;
+      background: var(--sand-light);
+      border-radius: 6px;
+      font-size: 0.875rem;
+      color: var(--text-sec);
+    }
+    
+    .insight-tip i {
+      width: 16px;
+      height: 16px;
+      color: var(--accent-blue);
+    }
+    
+    /* Enhanced Activity Card Styles */
+    .activity-controls {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .activity-filter-btn {
+      padding: 0.375rem 0.75rem;
+      background: transparent;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-sec);
+      transition: all 0.2s ease;
+    }
+    
+    .activity-filter-btn:hover {
+      background: var(--sand-light);
+    }
+    
+    .activity-filter-btn.active {
+      background: var(--magenta);
+      color: white;
+      border-color: var(--magenta);
+    }
+    
+    .activity-recommendations {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+    }
+    
+    .recommendation-insight {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: var(--sand-light);
+      border-radius: 6px;
+    }
+    
+    .recommendation-insight i {
+      width: 20px;
+      height: 20px;
+      color: var(--accent-blue);
+      flex-shrink: 0;
+    }
+    
+    .recommendation-content {
+      display: flex;
+      flex-direction: column;
+      gap: 0.125rem;
+    }
+    
+    .recommendation-title {
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+    
+    .recommendation-desc {
+      font-size: 0.75rem;
+      color: var(--text-sec);
+    }
+    
+    /* Enhanced Action Item Styles */
+    .action-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      background: var(--sand-light);
+      border-radius: 8px;
+      margin-bottom: 0.75rem;
+      transition: all 0.2s ease;
+    }
+    
+    .action-item:hover {
+      background: var(--bg-secondary);
+      transform: translateX(4px);
+    }
+    
+    .action-checkbox {
+      flex-shrink: 0;
+    }
+    
+    .checkbox-icon {
+      width: 20px;
+      height: 20px;
+      color: var(--text-sec);
+    }
+    
+    .action-content {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .action-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+    }
+    
+    .action-description {
+      font-size: 0.8rem;
+      color: var(--text-sec);
+      margin-bottom: 0.375rem;
+    }
+    
+    .action-impact {
+      font-size: 0.75rem;
+      color: var(--accent-blue);
+      font-style: italic;
+    }
+    
+    .action-go {
+      flex-shrink: 0;
+    }
+    
+    .btn-action {
+      padding: 0.375rem 0.75rem;
+      background: var(--magenta);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    
+    .btn-action:hover {
+      background: var(--magenta-dark);
+    }
+
     /* Loading State */
     .loading {
       display: flex;
@@ -5947,60 +6211,87 @@
               <h3>Today's Insights</h3>
             </div>
             <div class="premium-value">
-              <span class="savings-badge">Personalized daily insights</span>
+              <span class="savings-badge">AI-powered recommendations</span>
             </div>
           </div>
-          <div class="insight-list" id="daily-insights-list">
-            <!-- This will be populated by JavaScript based on user data -->
+          <div class="insights-dashboard" id="insights-dashboard">
+            <!-- Primary insights section -->
+            <div class="primary-insights" id="daily-insights-list">
+              <!-- This will be populated by JavaScript based on user data -->
+            </div>
+            
+            <!-- Interactive insights section -->
+            <div class="interactive-insights">
+              <div class="insight-actions">
+                <button class="insight-action-btn" onclick="generateSymptomPrediction()" id="symptom-prediction-btn">
+                  <i data-lucide="trending-up"></i>
+                  <div class="action-content">
+                    <span class="action-title">Predict Today's Symptoms</span>
+                    <span class="action-desc">Based on injection cycle</span>
+                  </div>
+                </button>
+                <button class="insight-action-btn" onclick="optimizeMealTiming()" id="meal-timing-btn">
+                  <i data-lucide="clock"></i>
+                  <div class="action-content">
+                    <span class="action-title">Optimize Meal Timing</span>
+                    <span class="action-desc">Personalized schedule</span>
+                  </div>
+                </button>
+                <button class="insight-action-btn" onclick="showWeightTrend()" id="weight-trend-btn">
+                  <i data-lucide="activity"></i>
+                  <div class="action-content">
+                    <span class="action-title">View Progress Trends</span>
+                    <span class="action-desc">Weight & symptom analysis</span>
+                  </div>
+                </button>
+              </div>
+              
+              <!-- Quick stats -->
+              <div class="quick-insights" id="quick-insights">
+                <!-- Will be populated by JavaScript -->
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Today's Actions -->
         <div class="content-card actions-card">
-          <h3>Suggested Actions for Today</h3>
-          <div class="action-list">
-            <div class="action-item" onclick="showActionInsight('symptom-logging')" style="cursor: pointer;">
-              <input type="checkbox" id="action1">
-              <label for="action1">Log today's symptoms</label>
-              <button class="btn-action" onclick="event.stopPropagation(); showView('symptoms')">Go →</button>
-            </div>
-            <div class="action-item" onclick="showActionInsight('meal-rating')" style="cursor: pointer;">
-              <input type="checkbox" id="action2">
-              <label for="action2">Rate yesterday's dinner</label>
-              <button class="btn-action" onclick="event.stopPropagation(); showView('feedback')">Go →</button>
-            </div>
-            <div class="action-item" onclick="showActionInsight('meal-planning')" style="cursor: pointer;">
-              <input type="checkbox" id="action3">
-              <label for="action3">Review tomorrow's meal plan</label>
-              <button class="btn-action" onclick="event.stopPropagation(); showView('meals')">Go →</button>
-            </div>
-            <div class="action-item" onclick="showActionInsight('weight-tracking')" style="cursor: pointer;">
-              <input type="checkbox" id="action4">
-              <label for="action4">Update weight tracking</label>
-              <button class="btn-action" onclick="event.stopPropagation(); showView('progress')">Go →</button>
+          <div class="card-header">
+            <h3>Personalized Action Plan</h3>
+            <span class="completion-badge" id="actions-completion">0/0 completed</span>
+          </div>
+          <div class="action-list" id="suggested-actions-list">
+            <!-- Will be populated dynamically based on user data and patterns -->
+          </div>
+          <div class="action-insights" id="action-insights">
+            <div class="insight-tip">
+              <i data-lucide="lightbulb"></i>
+              <span>Complete actions to improve your GLP-1 journey insights and recommendations</span>
             </div>
           </div>
         </div>
 
         <!-- Recent Activity -->
         <div class="content-card activity-card">
-          <h3>Recent Activity</h3>
-          <div class="activity-timeline">
-            <div class="activity-item">
-              <div class="activity-time">2 hours ago</div>
-              <div class="activity-content">Rated "Grilled Salmon with Asparagus" 5 stars</div>
+          <div class="card-header">
+            <h3>Recent Activity & Insights</h3>
+            <div class="activity-controls">
+              <button class="activity-filter-btn active" onclick="filterActivity('all')">All</button>
+              <button class="activity-filter-btn" onclick="filterActivity('meals')">Meals</button>
+              <button class="activity-filter-btn" onclick="filterActivity('symptoms')">Symptoms</button>
+              <button class="activity-filter-btn" onclick="filterActivity('progress')">Progress</button>
             </div>
-            <div class="activity-item">
-              <div class="activity-time">Yesterday</div>
-              <div class="activity-content">Logged symptoms: Mild nausea (2/10)</div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-time">2 days ago</div>
-              <div class="activity-content">Completed injection day check-in</div>
-            </div>
-            <div class="activity-item">
-              <div class="activity-time">3 days ago</div>
-              <div class="activity-content">Generated new weekly meal plan</div>
+          </div>
+          <div class="activity-timeline" id="activity-timeline">
+            <!-- Will be populated dynamically from actual user data -->
+          </div>
+          <div class="activity-recommendations" id="activity-recommendations">
+            <div class="recommendation-insight">
+              <i data-lucide="trending-up"></i>
+              <div class="recommendation-content">
+                <span class="recommendation-title">Pattern Detected</span>
+                <span class="recommendation-desc">Track more data to unlock personalized insights</span>
+              </div>
             </div>
           </div>
         </div>
@@ -8862,6 +9153,39 @@
           });
         } else {
           profileNextInjection.textContent = 'Not scheduled';
+        }
+      }
+      
+      // Update time on medication
+      const profileDuration = document.getElementById('profile-duration');
+      if (profileDuration) {
+        if (profile.startDate) {
+          const startDate = new Date(profile.startDate);
+          const today = new Date();
+          const timeDiff = today - startDate;
+          const weeks = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 7));
+          const months = Math.floor(weeks / 4);
+          
+          if (months >= 1) {
+            profileDuration.textContent = `${months} month${months > 1 ? 's' : ''} (${weeks} weeks)`;
+          } else {
+            profileDuration.textContent = `${weeks} week${weeks !== 1 ? 's' : ''}`;
+          }
+        } else if (profile.lastInjection) {
+          // Fallback: estimate based on last injection assuming weekly injections
+          const lastDate = new Date(profile.lastInjection);
+          const today = new Date();
+          const timeDiff = today - lastDate;
+          const weeks = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 7)) + 1; // +1 for current week
+          const months = Math.floor(weeks / 4);
+          
+          if (months >= 1) {
+            profileDuration.textContent = `~${months} month${months > 1 ? 's' : ''} (${weeks} weeks)`;
+          } else {
+            profileDuration.textContent = `~${weeks} week${weeks !== 1 ? 's' : ''}`;
+          }
+        } else {
+          profileDuration.textContent = 'Not specified';
         }
       }
       
@@ -14559,6 +14883,441 @@ For clinical review and treatment optimization.`;
           <div class="insight-message">${insight.message}</div>
         </div>
       `).join('');
+      
+      // Update quick insights
+      updateQuickInsights();
+    }
+    
+    // Update quick insights section with real-time data
+    function updateQuickInsights() {
+      const quickInsightsEl = document.getElementById('quick-insights');
+      if (!quickInsightsEl) return;
+      
+      const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
+      const symptomLogs = JSON.parse(localStorage.getItem('symptomLogs') || '{}');
+      const weightLogs = JSON.parse(localStorage.getItem('weightLogs') || '[]');
+      const allRatings = [...Object.values(JSON.parse(localStorage.getItem('recipeRatings') || '{}')), 
+                         ...Object.values(JSON.parse(localStorage.getItem('mealFeedback') || '{}'))];
+      
+      let injectionDayPhase = 'Unknown';
+      let symptomTrend = 'No data';
+      let weightTrend = 'No data';
+      let dataCompleteness = 0;
+      
+      // Calculate injection cycle phase
+      if (medicationProfile.lastInjection) {
+        const daysSince = Math.floor((new Date() - new Date(medicationProfile.lastInjection)) / (1000 * 60 * 60 * 24));
+        if (daysSince === 0) injectionDayPhase = 'Day 0';
+        else if (daysSince <= 2) injectionDayPhase = 'Peak Effect';
+        else if (daysSince <= 4) injectionDayPhase = 'Sustained';
+        else injectionDayPhase = 'Diminishing';
+      }
+      
+      // Calculate symptom trend
+      const recentSymptoms = Object.entries(symptomLogs).slice(-7);
+      if (recentSymptoms.length >= 2) {
+        const first = recentSymptoms[0][1];
+        const last = recentSymptoms[recentSymptoms.length - 1][1];
+        const avgFirst = ((first.nausea || 0) + (first.fatigue || 0)) / 2;
+        const avgLast = ((last.nausea || 0) + (last.fatigue || 0)) / 2;
+        const change = avgLast - avgFirst;
+        
+        if (change < -1) symptomTrend = 'Improving';
+        else if (change > 1) symptomTrend = 'Worsening';
+        else symptomTrend = 'Stable';
+      }
+      
+      // Calculate weight trend
+      if (weightLogs.length >= 2) {
+        const recent = weightLogs.slice(-2);
+        const change = recent[1].weight - recent[0].weight;
+        if (change < -0.5) weightTrend = 'Losing';
+        else if (change > 0.5) weightTrend = 'Gaining';
+        else weightTrend = 'Stable';
+      }
+      
+      // Calculate data completeness
+      const hasProfile = Object.keys(medicationProfile).length > 2;
+      const hasSymptoms = Object.keys(symptomLogs).length > 0;
+      const hasWeight = weightLogs.length > 0;
+      const hasRatings = allRatings.length > 0;
+      dataCompleteness = Math.round(([hasProfile, hasSymptoms, hasWeight, hasRatings].filter(Boolean).length / 4) * 100);
+      
+      quickInsightsEl.innerHTML = `
+        <div class="quick-insight-item">
+          <div class="quick-insight-value">${injectionDayPhase}</div>
+          <div class="quick-insight-label">Cycle Phase</div>
+        </div>
+        <div class="quick-insight-item">
+          <div class="quick-insight-value">${symptomTrend}</div>
+          <div class="quick-insight-label">Symptom Trend</div>
+        </div>
+        <div class="quick-insight-item">
+          <div class="quick-insight-value">${weightTrend}</div>
+          <div class="quick-insight-label">Weight Trend</div>
+        </div>
+        <div class="quick-insight-item">
+          <div class="quick-insight-value">${dataCompleteness}%</div>
+          <div class="quick-insight-label">Data Complete</div>
+        </div>
+      `;
+    }
+    
+    // Generate symptom prediction based on injection cycle
+    function generateSymptomPrediction() {
+      const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
+      const symptomLogs = JSON.parse(localStorage.getItem('symptomLogs') || '{}');
+      
+      if (!medicationProfile.lastInjection) {
+        alert('Please set your last injection date in your profile to use symptom prediction.');
+        return;
+      }
+      
+      const daysSinceInjection = Math.floor((new Date() - new Date(medicationProfile.lastInjection)) / (1000 * 60 * 60 * 24));
+      let prediction = '';
+      let recommendation = '';
+      
+      if (daysSinceInjection === 0) {
+        prediction = 'Expect mild to moderate nausea within 2-4 hours. Fatigue may increase by evening.';
+        recommendation = 'Have bland foods ready (crackers, toast). Stay hydrated with small sips.';
+      } else if (daysSinceInjection <= 2) {
+        prediction = 'Peak symptom period. Nausea and fatigue typically highest on days 1-2.';
+        recommendation = 'Focus on small, frequent meals. Ginger tea may help with nausea.';
+      } else if (daysSinceInjection <= 4) {
+        prediction = 'Symptoms should be moderating. Energy levels may start improving.';
+        recommendation = 'Good time to try slightly larger portions and new foods.';
+      } else {
+        prediction = 'Minimal symptoms expected. This is your optimal eating window.';
+        recommendation = 'Perfect time for meal prep and trying new recipes before your next injection.';
+      }
+      
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay active';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Today's Symptom Prediction</h3>
+            <button class="close-btn" onclick="this.parentElement.parentElement.parentElement.remove()">×</button>
+          </div>
+          <div class="modal-body">
+            <div style="margin-bottom: 1.5rem;">
+              <h4 style="color: var(--magenta); margin-bottom: 0.5rem;">Day ${daysSinceInjection} Post-Injection</h4>
+              <p style="margin-bottom: 1rem;">${prediction}</p>
+              <div style="background: var(--sand-light); padding: 1rem; border-radius: 8px;">
+                <h5 style="margin: 0 0 0.5rem 0; color: var(--accent-blue);">Recommended Actions:</h5>
+                <p style="margin: 0;">${recommendation}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+    
+    // Optimize meal timing based on user data
+    function optimizeMealTiming() {
+      const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
+      
+      if (!medicationProfile.lastInjection) {
+        alert('Please set your injection schedule in your profile to optimize meal timing.');
+        return;
+      }
+      
+      const modal = document.createElement('div');
+      modal.className = 'modal-overlay active';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3>Personalized Meal Timing</h3>
+            <button class="close-btn" onclick="this.parentElement.parentElement.parentElement.remove()">×</button>
+          </div>
+          <div class="modal-body">
+            <div style="display: grid; gap: 1rem;">
+              <div style="background: var(--sand-light); padding: 1rem; border-radius: 8px;">
+                <h4 style="margin: 0 0 0.5rem 0; color: var(--magenta);">Injection Day</h4>
+                <p style="margin: 0; font-size: 0.9rem;">Light breakfast before injection, avoid large meals 4-6 hours after</p>
+              </div>
+              <div style="background: var(--sand-light); padding: 1rem; border-radius: 8px;">
+                <h4 style="margin: 0 0 0.5rem 0; color: var(--magenta);">Days 1-2 Post-Injection</h4>
+                <p style="margin: 0; font-size: 0.9rem;">Small meals every 2-3 hours, focus on gentle foods</p>
+              </div>
+              <div style="background: var(--sand-light); padding: 1rem; border-radius: 8px;">
+                <h4 style="margin: 0 0 0.5rem 0; color: var(--magenta);">Days 3-6</h4>
+                <p style="margin: 0; font-size: 0.9rem;">Normal meal schedule, good time for meal prep</p>
+              </div>
+            </div>
+            <div style="margin-top: 1.5rem; text-align: center;">
+              <button class="primary-btn" onclick="showView('meals'); this.parentElement.parentElement.parentElement.parentElement.remove();">View Meal Plan</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+    
+    // Show weight and symptom trend analysis
+    function showWeightTrend() {
+      showView('progress');
+    }
+    
+    // Update suggested actions based on user data
+    function updateSuggestedActions(profile) {
+      const actionsListEl = document.getElementById('suggested-actions-list');
+      const actionsCompletionEl = document.getElementById('actions-completion');
+      if (!actionsListEl) return;
+      
+      const actions = [];
+      const today = new Date().toISOString().split('T')[0];
+      const symptomLogs = JSON.parse(localStorage.getItem('symptomLogs') || '{}');
+      const weightLogs = JSON.parse(localStorage.getItem('weightLogs') || '[]');
+      const allRatings = [...Object.values(JSON.parse(localStorage.getItem('recipeRatings') || '{}')), 
+                         ...Object.values(JSON.parse(localStorage.getItem('mealFeedback') || '{}'))];
+      
+      // Check if symptoms logged today
+      if (!symptomLogs[today]) {
+        actions.push({
+          id: 'log-symptoms',
+          title: 'Log Today\'s Symptoms',
+          description: 'Track nausea, fatigue, and overall wellness',
+          impact: 'Improves AI recommendations by 15%',
+          action: () => showView('symptoms'),
+          priority: 1
+        });
+      }
+      
+      // Check if weight logged recently
+      const lastWeightLog = weightLogs[weightLogs.length - 1];
+      const daysSinceWeight = lastWeightLog ? 
+        Math.floor((new Date() - new Date(lastWeightLog.date)) / (1000 * 60 * 60 * 24)) : 999;
+      
+      if (daysSinceWeight > 3) {
+        actions.push({
+          id: 'log-weight',
+          title: 'Update Weight Progress',
+          description: 'Track your GLP-1 weight loss journey',
+          impact: 'Enables trend analysis and goal tracking',
+          action: () => showView('progress'),
+          priority: 2
+        });
+      }
+      
+      // Check for unrated recent meals
+      if (allRatings.length < 3) {
+        actions.push({
+          id: 'rate-meals',
+          title: 'Rate Recent Meals',
+          description: 'Help AI learn your food preferences',
+          impact: 'Unlocks personalized meal recommendations',
+          action: () => showView('feedback'),
+          priority: 1
+        });
+      }
+      
+      // Check injection day preparation
+      if (profile.injectionDay && profile.nextInjection) {
+        const nextInjection = new Date(profile.nextInjection);
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        
+        if (nextInjection.toDateString() === tomorrow.toDateString()) {
+          actions.push({
+            id: 'injection-prep',
+            title: 'Prepare for Tomorrow\'s Injection',
+            description: 'Review gentle meal plan and stock up on bland foods',
+            impact: 'Reduces post-injection symptoms',
+            action: () => showView('meals'),
+            priority: 0
+          });
+        }
+      }
+      
+      // Sort by priority and limit to 4 actions
+      const sortedActions = actions.sort((a, b) => a.priority - b.priority).slice(0, 4);
+      
+      // Calculate completion
+      const totalPossible = 4;
+      const completed = totalPossible - sortedActions.length;
+      if (actionsCompletionEl) {
+        actionsCompletionEl.textContent = `${completed}/${totalPossible} completed`;
+      }
+      
+      actionsListEl.innerHTML = sortedActions.map(action => `
+        <div class="action-item" onclick="${action.action.toString().replace('() => ', '').replace('()', '')}()" style="cursor: pointer;">
+          <div class="action-checkbox">
+            <div class="checkbox-icon">
+              <i data-lucide="circle"></i>
+            </div>
+          </div>
+          <div class="action-content">
+            <div class="action-title">${action.title}</div>
+            <div class="action-description">${action.description}</div>
+            <div class="action-impact">💡 ${action.impact}</div>
+          </div>
+          <div class="action-go">
+            <button class="btn-action">Go →</button>
+          </div>
+        </div>
+      `).join('');
+    }
+    
+    // Update recent activity with real user data
+    function updateRecentActivity(profile) {
+      const timelineEl = document.getElementById('activity-timeline');
+      const recommendationsEl = document.getElementById('activity-recommendations');
+      if (!timelineEl) return;
+      
+      const activities = [];
+      
+      // Get all user activities from localStorage
+      const symptomLogs = JSON.parse(localStorage.getItem('symptomLogs') || '{}');
+      const weightLogs = JSON.parse(localStorage.getItem('weightLogs') || '[]');
+      const recipeRatings = JSON.parse(localStorage.getItem('recipeRatings') || '{}');
+      const mealFeedback = JSON.parse(localStorage.getItem('mealFeedback') || '{}');
+      
+      // Add symptom logs
+      Object.entries(symptomLogs).forEach(([date, data]) => {
+        const timeAgo = getTimeAgo(new Date(date));
+        const avgSymptom = Math.round(((data.nausea || 0) + (data.fatigue || 0)) / 2);
+        activities.push({
+          time: timeAgo,
+          content: `Logged symptoms: ${avgSymptom}/10 average severity`,
+          type: 'symptoms',
+          timestamp: new Date(date)
+        });
+      });
+      
+      // Add weight logs
+      weightLogs.forEach(log => {
+        const timeAgo = getTimeAgo(new Date(log.date));
+        activities.push({
+          time: timeAgo,
+          content: `Recorded weight: ${log.weight} lbs`,
+          type: 'progress',
+          timestamp: new Date(log.date)
+        });
+      });
+      
+      // Add recipe ratings
+      Object.entries(recipeRatings).forEach(([recipeId, data]) => {
+        const timeAgo = getTimeAgo(new Date(data.timestamp));
+        const recipeName = getRecipeName(recipeId);
+        activities.push({
+          time: timeAgo,
+          content: `Rated "${recipeName}" ${data.rating} star${data.rating !== 1 ? 's' : ''}`,
+          type: 'meals',
+          timestamp: new Date(data.timestamp)
+        });
+      });
+      
+      // Add meal feedback
+      Object.entries(mealFeedback).forEach(([mealId, data]) => {
+        if (data.mealName) {
+          const timeAgo = getTimeAgo(new Date(data.timestamp));
+          activities.push({
+            time: timeAgo,
+            content: `Rated meal "${data.mealName}" ${data.rating}/5 stars`,
+            type: 'meals',
+            timestamp: new Date(data.timestamp)
+          });
+        }
+      });
+      
+      // Sort by timestamp and limit to recent 6
+      const recentActivities = activities
+        .sort((a, b) => b.timestamp - a.timestamp)
+        .slice(0, 6);
+      
+      if (recentActivities.length === 0) {
+        timelineEl.innerHTML = `
+          <div class="activity-item" style="text-align: center; padding: 2rem;">
+            <div class="activity-content" style="color: var(--text-sec);">
+              No recent activity yet. Start by logging symptoms or rating a meal!
+            </div>
+          </div>
+        `;
+      } else {
+        timelineEl.innerHTML = recentActivities.map(activity => `
+          <div class="activity-item">
+            <div class="activity-time">${activity.time}</div>
+            <div class="activity-content">${activity.content}</div>
+          </div>
+        `).join('');
+      }
+      
+      // Update recommendations based on activity patterns
+      if (recommendationsEl) {
+        let recommendationText = 'Track more data to unlock personalized insights';
+        let recommendationTitle = 'Pattern Detected';
+        
+        if (recentActivities.length >= 3) {
+          const mealActivities = recentActivities.filter(a => a.type === 'meals').length;
+          const symptomActivities = recentActivities.filter(a => a.type === 'symptoms').length;
+          
+          if (mealActivities > symptomActivities) {
+            recommendationTitle = 'Great Meal Tracking!';
+            recommendationText = 'You\'re doing great with meal ratings. Consider logging symptoms for better correlations.';
+          } else if (symptomActivities > mealActivities) {
+            recommendationTitle = 'Excellent Symptom Tracking!';
+            recommendationText = 'Your symptom logs are detailed. Try rating more meals to find patterns.';
+          } else {
+            recommendationTitle = 'Balanced Tracking!';
+            recommendationText = 'You\'re maintaining good balance between symptom and meal tracking.';
+          }
+        }
+        
+        recommendationsEl.innerHTML = `
+          <div class="recommendation-insight">
+            <i data-lucide="trending-up"></i>
+            <div class="recommendation-content">
+              <span class="recommendation-title">${recommendationTitle}</span>
+              <span class="recommendation-desc">${recommendationText}</span>
+            </div>
+          </div>
+        `;
+      }
+    }
+    
+    // Filter activity by type
+    function filterActivity(type) {
+      // Update active button
+      document.querySelectorAll('.activity-filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+      
+      // Filter timeline items
+      const timelineItems = document.querySelectorAll('.activity-item');
+      timelineItems.forEach(item => {
+        const content = item.querySelector('.activity-content').textContent.toLowerCase();
+        let show = false;
+        
+        if (type === 'all') {
+          show = true;
+        } else if (type === 'meals' && (content.includes('rated') || content.includes('meal'))) {
+          show = true;
+        } else if (type === 'symptoms' && content.includes('symptom')) {
+          show = true;
+        } else if (type === 'progress' && content.includes('weight')) {
+          show = true;
+        }
+        
+        item.style.display = show ? 'block' : 'none';
+      });
+    }
+    
+    // Helper function to get relative time
+    function getTimeAgo(date) {
+      const now = new Date();
+      const diffMs = now - date;
+      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+      const diffDays = Math.floor(diffHours / 24);
+      
+      if (diffHours < 1) return 'Just now';
+      if (diffHours < 24) return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
+      if (diffDays === 1) return 'Yesterday';
+      if (diffDays < 7) return `${diffDays} days ago`;
+      
+      return date.toLocaleDateString();
     }
     
     // Generate weight trend analysis based on actual user data
