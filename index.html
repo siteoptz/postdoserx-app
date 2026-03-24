@@ -3998,9 +3998,9 @@
       }
     }
 
-    /* Purple Gradient Theme Test for Comprehensive Progress */
+    /* Comprehensive Progress - Match normal site styling */
     #comprehensive-progress {
-      background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 30%, #1E293B 70%, #000000 100%);
+      background: var(--color-background);
       min-height: 100vh;
       font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
       font-weight: 400;
@@ -4026,22 +4026,22 @@
 
     #comprehensive-progress .header,
     #comprehensive-progress .sidebar {
-      background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 30%, #1E293B 70%, #000000 100%);
+      background: var(--charcoal);
     }
 
-    /* Update sidebar for purple theme when on comprehensive-progress page */
+    /* Update sidebar for normal theme when on comprehensive-progress page */
     body.comprehensive-progress-active .sidebar {
-      background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 30%, #1E293B 70%, #000000 100%) !important;
+      background: var(--charcoal) !important;
     }
 
     body.comprehensive-progress-active .header {
-      background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 30%, #1E293B 70%, #000000 100%) !important;
+      background: var(--charcoal) !important;
     }
 
-    /* Purple theme dropdown menus */
+    /* Normal theme dropdown menus */
     body.comprehensive-progress-active .user-dropdown {
-      background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 30%, #1E293B 70%, #000000 100%) !important;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: var(--charcoal) !important;
+      border: 1px solid var(--slate);
     }
 
     body.comprehensive-progress-active .dropdown-item {
@@ -9929,7 +9929,7 @@
         targetView.classList.add('active');
         targetView.style.display = 'block';
         
-        // Apply purple theme and Roboto font for comprehensive-progress page
+        // Apply Roboto font for comprehensive-progress page
         if (viewId === 'comprehensive-progress') {
           document.body.classList.add('comprehensive-progress-active');
           document.documentElement.classList.add('comprehensive-progress-active');
