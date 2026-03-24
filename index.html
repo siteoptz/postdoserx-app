@@ -3985,11 +3985,16 @@
       transform: translateY(-2px);
     }
 
-    /* COMPREHENSIVE ROBOTO FONT OVERRIDE - MAXIMUM SPECIFICITY */
-    body.comprehensive-progress-active {
+    /* NUCLEAR ROBOTO FONT OVERRIDE - ABSOLUTE HIGHEST SPECIFICITY */
+    html body.comprehensive-progress-active {
       font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
       font-weight: 400 !important;
       letter-spacing: 0.01em !important;
+    }
+    /* Force Roboto on HTML element for comprehensive-progress page */
+    html.comprehensive-progress-active,
+    html.comprehensive-progress-active body {
+      font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
     }
     body.comprehensive-progress-active *,
     body.comprehensive-progress-active *::before,
@@ -9771,6 +9776,7 @@
       
       // Remove any theme classes
       document.body.classList.remove('comprehensive-progress-active');
+      document.documentElement.classList.remove('comprehensive-progress-active');
       
       // Show target view
       const targetView = document.getElementById(viewId);
@@ -9778,9 +9784,10 @@
         targetView.classList.add('active');
         targetView.style.display = 'block';
         
-        // Apply purple theme for comprehensive-progress page
+        // Apply purple theme and Roboto font for comprehensive-progress page
         if (viewId === 'comprehensive-progress') {
           document.body.classList.add('comprehensive-progress-active');
+          document.documentElement.classList.add('comprehensive-progress-active');
         }
         
         // Update URL hash for browser navigation
