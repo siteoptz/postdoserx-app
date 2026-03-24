@@ -10767,8 +10767,14 @@
         // Refresh progress data and chart when navigating to progress view
         if (viewId === 'progress') {
           setTimeout(() => {
+            console.log('Navigated to progress view, updating display and chart');
             updateProgressDisplay();
-            updateProgressChart('week'); // Default to weekly view
+            try {
+              updateProgressChart('week'); // Default to weekly view
+              console.log('Progress view chart update completed');
+            } catch (error) {
+              console.error('Error updating chart on progress view:', error);
+            }
           }, 100);
         }
         
@@ -11294,10 +11300,19 @@
             updateProgressDisplay();
             
             // Update weight chart with new data
+            console.log('About to update chart after weight logging');
             const activeChartBtn = document.querySelector('.chart-btn.active');
+            console.log('activeChartBtn found:', activeChartBtn);
             const currentPeriod = activeChartBtn ? activeChartBtn.textContent.includes('7') ? 'week' : 
                                                    activeChartBtn.textContent.includes('30') ? 'month' : 'quarter' : 'week';
-            updateProgressChart(currentPeriod);
+            console.log('currentPeriod determined:', currentPeriod);
+            
+            try {
+              updateProgressChart(currentPeriod);
+              console.log('updateProgressChart completed successfully');
+            } catch (error) {
+              console.error('Error updating progress chart:', error);
+            }
             
             // Close modal and show success
             closeUserModal('log-weight-modal');
