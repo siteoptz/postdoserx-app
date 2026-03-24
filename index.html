@@ -5872,15 +5872,15 @@
             </div>
             <div class="profile-item">
               <label>Medication:</label>
-              <span id="profile-medication">Ozempic (Semaglutide)</span>
+              <span id="profile-medication-display">Ozempic (Semaglutide)</span>
             </div>
             <div class="profile-item">
               <label>Current Dose:</label>
-              <span id="profile-dose">1.0 mg weekly</span>
+              <span id="profile-dose-display">1.0 mg weekly</span>
             </div>
             <div class="profile-item">
               <label>Injection Day:</label>
-              <span id="profile-injection-day">Sundays</span>
+              <span id="profile-injection-day-display">Sundays</span>
             </div>
             <div class="profile-item">
               <label>Last Injection:</label>
@@ -6003,24 +6003,24 @@
       <!-- Meals View -->
       <div id="meals" class="view">
         <div class="view-header">
-          <h1 class="view-title">Meal plans optimized for your <span class="highlight">Sunday</span> injection schedule</h1>
+          <h1 class="view-title">Meal plans optimized for your <span class="highlight" id="meal-plan-injection-day">Sunday</span> injection schedule</h1>
           <p class="view-subtitle">Dose-day Synchronized Meals</p>
         </div>
 
         <!-- Injection Schedule Alert -->
-        <div class="injection-alert">
+        <div class="injection-alert" id="injection-alert">
           <div class="alert-icon injection-icon">
             <i data-lucide="syringe"></i>
           </div>
           <div class="alert-content">
-            <h4>Injection Day Tomorrow (Sunday)</h4>
+            <h4 id="injection-alert-title">Injection Day Tomorrow (Sunday)</h4>
             <p>Your meal plan has been adjusted for reduced portions and gentle foods to minimize side effects.</p>
           </div>
         </div>
 
         <!-- Week Header -->
         <div class="week-header">
-          <h1 class="week-title">Week of March 18-22, 2026</h1>
+          <h1 class="week-title" id="week-title">Week of March 18-22, 2026</h1>
           <div class="week-controls">
             <button class="week-nav" onclick="previousWeek()">← Previous</button>
             <button class="week-nav" onclick="nextWeek()">Next →</button>
@@ -8795,28 +8795,28 @@
       });
       
       // Update all profile display elements
-      const profileMedication = document.getElementById('profile-medication');
-      const profileDose = document.getElementById('profile-dose');
-      const profileInjectionDay = document.getElementById('profile-injection-day');
+      const profileMedicationDisplay = document.getElementById('profile-medication-display');
+      const profileDoseDisplay = document.getElementById('profile-dose-display');
+      const profileInjectionDayDisplay = document.getElementById('profile-injection-day-display');
       const profileLastInjection = document.getElementById('profile-last-injection');
       const profileNextInjection = document.getElementById('profile-next-injection');
       
       // Update medication display
-      if (profileMedication && profile.medication) {
-        profileMedication.textContent = profile.medication;
+      if (profileMedicationDisplay && profile.medication) {
+        profileMedicationDisplay.textContent = profile.medication;
       }
       
       // Update dose display
-      if (profileDose && profile.dose && profile.frequency) {
-        profileDose.textContent = `${profile.dose} ${profile.frequency}`;
-      } else if (profileDose && profile.dose) {
-        profileDose.textContent = profile.dose;
+      if (profileDoseDisplay && profile.dose && profile.frequency) {
+        profileDoseDisplay.textContent = `${profile.dose} ${profile.frequency}`;
+      } else if (profileDoseDisplay && profile.dose) {
+        profileDoseDisplay.textContent = profile.dose;
       }
       
       // Update injection day
-      if (profileInjectionDay && profile.injectionDay) {
+      if (profileInjectionDayDisplay && profile.injectionDay) {
         const dayName = profile.injectionDay.charAt(0).toUpperCase() + profile.injectionDay.slice(1);
-        profileInjectionDay.textContent = dayName + 's';
+        profileInjectionDayDisplay.textContent = dayName + 's';
       }
       
       // Update last injection
@@ -8853,6 +8853,9 @@
       
       // Update Today's Insights with new profile data
       updateDailyInsights();
+      
+      // Update injection day information throughout the app
+      updateInjectionDayInfo();
       
       // Update suggested actions based on user data
       updateSuggestedActions(profile);
@@ -10201,6 +10204,65 @@
       }
     }
     
+    function updateCurrentWeekDisplay() {
+      const weekTitleElement = document.getElementById('week-title');
+      if (!weekTitleElement) return;
+      
+      const now = new Date();
+      const weekStart = new Date(now);
+      weekStart.setDate(now.getDate() - now.getDay() + 1); // Monday
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekStart.getDate() + 6); // Sunday
+      
+      // Format the week display
+      const startStr = weekStart.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+      const endStr = weekEnd.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+      const year = now.getFullYear();
+      
+      weekTitleElement.textContent = `Week of ${startStr} through ${endStr}, ${year}`;
+    }
+    
+    function updateInjectionDayInfo() {
+      const savedProfile = localStorage.getItem('medicationProfile');
+      if (!savedProfile) return;
+      
+      const profile = JSON.parse(savedProfile);
+      if (!profile.injectionDay) return;
+      
+      const injectionDay = profile.injectionDay;
+      const injectionDayCapitalized = injectionDay.charAt(0).toUpperCase() + injectionDay.slice(1);
+      
+      // Update meal plan injection day in header
+      const mealPlanInjectionDayElement = document.getElementById('meal-plan-injection-day');
+      if (mealPlanInjectionDayElement) {
+        mealPlanInjectionDayElement.textContent = injectionDayCapitalized;
+      }
+      
+      // Calculate when next injection day is
+      const today = new Date();
+      const currentDay = today.getDay();
+      const dayMap = {
+        'sunday': 0, 'monday': 1, 'tuesday': 2, 'wednesday': 3,
+        'thursday': 4, 'friday': 5, 'saturday': 6
+      };
+      const targetDay = dayMap[injectionDay.toLowerCase()];
+      
+      let daysUntilInjection = (targetDay - currentDay + 7) % 7;
+      if (daysUntilInjection === 0) daysUntilInjection = 7; // If today is injection day, next is in 7 days
+      
+      // Update injection alert
+      const injectionAlertTitle = document.getElementById('injection-alert-title');
+      if (injectionAlertTitle) {
+        if (daysUntilInjection === 1) {
+          injectionAlertTitle.textContent = `Injection Day Tomorrow (${injectionDayCapitalized})`;
+        } else if (daysUntilInjection === 0) {
+          injectionAlertTitle.textContent = `Injection Day Today (${injectionDayCapitalized})`;
+        } else {
+          injectionAlertTitle.textContent = `Next Injection Day: ${injectionDayCapitalized} (${daysUntilInjection} days)`;
+        }
+      }
+    }
+    
     // URL Navigation with Hashtags - Updated showView function
     function showView(viewId, updateHash = true) {
       // Hide all views
@@ -10425,6 +10487,12 @@
         
         // Update meal plan with profile data
         updateMealPlanWithProfile();
+        
+        // Update current week display on meals page
+        updateCurrentWeekDisplay();
+        
+        // Update injection day information throughout the app
+        updateInjectionDayInfo();
         
         // Hide setup card if profile is complete
         if (profileData.setupComplete) {
