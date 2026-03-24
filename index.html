@@ -10769,11 +10769,18 @@
           setTimeout(() => {
             console.log('Navigated to progress view, updating display and chart');
             updateProgressDisplay();
-            try {
-              updateProgressChart('week'); // Default to weekly view
-              console.log('Progress view chart update completed');
-            } catch (error) {
-              console.error('Error updating chart on progress view:', error);
+            
+            console.log('Checking if updateProgressChart function exists:', typeof updateProgressChart);
+            if (typeof updateProgressChart === 'function') {
+              console.log('updateProgressChart function found, calling it...');
+              try {
+                updateProgressChart('week'); // Default to weekly view
+                console.log('Progress view chart update completed');
+              } catch (error) {
+                console.error('Error updating chart on progress view:', error);
+              }
+            } else {
+              console.error('updateProgressChart function NOT found!');
             }
           }, 100);
         }
@@ -11307,17 +11314,24 @@
             
             // Update weight chart with new data
             console.log('About to update chart after weight logging');
+            console.log('updateProgressChart function type:', typeof updateProgressChart);
+            
             const activeChartBtn = document.querySelector('.chart-btn.active');
             console.log('activeChartBtn found:', activeChartBtn);
             const currentPeriod = activeChartBtn ? activeChartBtn.textContent.includes('7') ? 'week' : 
                                                    activeChartBtn.textContent.includes('30') ? 'month' : 'quarter' : 'week';
             console.log('currentPeriod determined:', currentPeriod);
             
-            try {
-              updateProgressChart(currentPeriod);
-              console.log('updateProgressChart completed successfully');
-            } catch (error) {
-              console.error('Error updating progress chart:', error);
+            if (typeof updateProgressChart === 'function') {
+              console.log('Calling updateProgressChart function...');
+              try {
+                updateProgressChart(currentPeriod);
+                console.log('updateProgressChart completed successfully');
+              } catch (error) {
+                console.error('Error updating progress chart:', error);
+              }
+            } else {
+              console.error('updateProgressChart is not a function!');
             }
             
             // Close modal and show success
