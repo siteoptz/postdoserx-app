@@ -8729,12 +8729,10 @@
           </div>
           
           <div class="weight-chart-container" style="padding: 2rem 0;">
-            <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-              <h4 style="margin: 0; color: white;">Weight Progress</h4>
-              <div class="chart-actions" style="display: flex; gap: 0.5rem;">
-                <button class="chart-action-btn" onclick="showWeightDataManager()">Manage Data</button>
-                <button class="chart-action-btn danger" onclick="clearAllWeightData()">Clear All</button>
-              </div>
+            <!-- Health-style widget replaces the chart area directly -->
+            <div class="chart-actions" style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-bottom: 1.5rem;">
+              <button class="chart-action-btn" onclick="showWeightDataManager()">Manage Data</button>
+              <button class="chart-action-btn danger" onclick="clearAllWeightData()">Clear All</button>
             </div>
             <div class="chart-canvas" style="width: 100%; margin: 0; padding: 0 2rem;">
               <svg viewBox="0 0 600 160" class="progress-chart" style="width: 100%; height: 160px; display: block;">
@@ -11189,13 +11187,11 @@
         console.log('Restoring chart structure...');
         chartContainer.innerHTML = `
           <div style="padding: 2rem 0;">
-            <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-              <h4 style="margin: 0; color: white;">Weight Progress</h4>
-              <div class="chart-actions" style="display: flex; gap: 0.5rem;">
-                <button class="primary-btn" onclick="logWeight()" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Log Weight</button>
-                <button class="chart-action-btn" onclick="showWeightDataManager()">Manage Data</button>
-                <button class="chart-action-btn danger" onclick="clearAllWeightData()">Clear All</button>
-              </div>
+            <!-- Health-style widget shows directly without duplicate header -->
+            <div class="chart-actions" style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-bottom: 1.5rem;">
+              <button class="primary-btn" onclick="logWeight()" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Log Weight</button>
+              <button class="chart-action-btn" onclick="showWeightDataManager()">Manage Data</button>
+              <button class="chart-action-btn danger" onclick="clearAllWeightData()">Clear All</button>
             </div>
             <div class="chart-canvas" style="width: 100%; margin: 0; padding: 0 2rem;">
               <svg viewBox="0 0 600 160" class="progress-chart" style="width: 100%; height: 160px; display: block;">
@@ -11647,11 +11643,11 @@
     
     // Generate Health app-style chart with professional design
     function generateHealthStyleChart(validLogs, goalWeight) {
-      // Chart dimensions and setup - expanded to full width with axis space
+      // Chart dimensions and setup - full width usage
       const chartWidth = 600;
       const chartHeight = 200;
-      const chartLeft = 40; // Extra space for y-axis labels
-      const chartRight = 580;
+      const chartLeft = 50; // Space for y-axis labels
+      const chartRight = 560; // Use more width
       const chartTop = 20;
       const chartBottom = 160;
       const plotWidth = chartRight - chartLeft;
@@ -11783,13 +11779,12 @@
       // Generate x-axis labels (dates) and y-axis labels (weights)
       const axisLabels = [];
       
-      // X-axis: Date labels at week boundaries
-      weekBoundaries.forEach(date => {
-        const x = dateToX(date.toISOString().split('T')[0]);
-        if (x >= chartLeft && x <= chartRight) {
-          const label = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-          axisLabels.push(`<text x="${x}" y="${chartBottom + 16}" text-anchor="middle" fill="#8E8E93" font-size="10" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">${label}</text>`);
-        }
+      // X-axis: Date labels for actual user log dates
+      recentLogs.forEach((log, index) => {
+        const x = dateToX(log.date);
+        const logDate = new Date(log.date);
+        const label = logDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        axisLabels.push(`<text x="${x}" y="${chartBottom + 16}" text-anchor="middle" fill="#8E8E93" font-size="10" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif">${label}</text>`);
       });
       
       // Y-axis: Weight labels
