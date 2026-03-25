@@ -6388,6 +6388,11 @@
         width: auto;
       }
       
+      /* Hide 7-Day Symptom Journey card on mobile */
+      .mobile-hide-card {
+        display: none !important;
+      }
+      
       /* Fix specific card overflows */
       .smart-symptom-grid {
         grid-template-columns: 1fr !important;
@@ -8517,7 +8522,7 @@
         </div>
         
         <!-- Symptom Timeline -->
-        <div class="content-card symptom-timeline">
+        <div class="content-card symptom-timeline mobile-hide-card">
           <div class="card-header">
             <h3>7-Day Symptom Journey</h3>
             <div class="timeline-controls">
