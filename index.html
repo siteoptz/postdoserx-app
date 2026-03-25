@@ -17547,12 +17547,12 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
       const weightLabelElement = document.querySelector('#total-weight-lost').nextElementSibling;
       
       if (totalLost > 0) {
-        // Weight loss (first weight > current weight)
-        weightChangeElement.textContent = `-${totalLost.toFixed(1)} lbs`;
+        // Weight loss (first weight > current weight) - show positive number
+        weightChangeElement.textContent = `${totalLost.toFixed(1)} lbs`;
         if (weightLabelElement) weightLabelElement.textContent = 'Total Weight Lost';
       } else if (totalLost < 0) {
-        // Weight gain (first weight < current weight)
-        weightChangeElement.textContent = `+${Math.abs(totalLost).toFixed(1)} lbs`;
+        // Weight gain (first weight < current weight) - show positive number
+        weightChangeElement.textContent = `${Math.abs(totalLost).toFixed(1)} lbs`;
         if (weightLabelElement) weightLabelElement.textContent = 'Total Weight Gained';
       } else {
         // No change
@@ -17596,13 +17596,51 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
         streak < 7 ? 'Building momentum!' :
         streak < 30 ? 'Strong consistency!' : 'Personal best!';
 
-      // Calculate weekly average
+      // Calculate weekly average (recent logs are already sorted by date filter)
       if (recentLogs.length >= 2) {
-        const weeklyLoss = recentLogs[0].weight - recentLogs[recentLogs.length - 1].weight;
-        document.getElementById('weekly-average').textContent = `${weeklyLoss.toFixed(1)} lbs`;
-        document.getElementById('average-trend').textContent = 
-          weeklyLoss >= 1 ? 'Above target' :
-          weeklyLoss >= 0.5 ? 'On track' : 'Below target';
+        // Sort recent logs by date to ensure proper order
+        recentLogs.sort((a, b) => new Date(a.date) - new Date(b.date));
+        const oldestRecentWeight = recentLogs[0].weight;
+        const latestRecentWeight = recentLogs[recentLogs.length - 1].weight;
+        const weeklyChange = latestRecentWeight - oldestRecentWeight;
+        
+        // Get user goal to determine if weight loss or gain goal
+        const userGoal = JSON.parse(localStorage.getItem('userGoal') || '{}');
+        const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
+        const targetWeight = userGoal.targetWeight || progressData.goalWeight;
+        
+        // Determine if goal is achieved
+        const goalAchieved = targetWeight ? 
+          (currentWeight <= targetWeight && firstWeight > targetWeight) || // Weight loss goal achieved
+          (currentWeight >= targetWeight && firstWeight < targetWeight)    // Weight gain goal achieved
+          : false;
+        
+        // Display weekly change with proper sign
+        const displayValue = Math.abs(weeklyChange);
+        const changeDirection = weeklyChange >= 0 ? '+' : '-';
+        document.getElementById('weekly-average').textContent = `${changeDirection}${displayValue.toFixed(1)} lbs`;
+        
+        // Determine trend status based on goal achievement and direction
+        let trendStatus;
+        if (goalAchieved) {
+          trendStatus = 'Goal achieved!';
+        } else if (!targetWeight) {
+          trendStatus = Math.abs(weeklyChange) >= 1 ? 'Good progress' : 
+                      Math.abs(weeklyChange) >= 0.5 ? 'Steady pace' : 'Slow progress';
+        } else {
+          // Weight loss goal: negative change is good, weight gain goal: positive change is good
+          const isWeightLossGoal = firstWeight > targetWeight;
+          const isProgressingTowardGoal = isWeightLossGoal ? weeklyChange < 0 : weeklyChange > 0;
+          
+          if (isProgressingTowardGoal) {
+            trendStatus = Math.abs(weeklyChange) >= 1 ? 'Above target' :
+                         Math.abs(weeklyChange) >= 0.5 ? 'On track' : 'Slow progress';
+          } else {
+            trendStatus = 'Moving away from goal';
+          }
+        }
+        
+        document.getElementById('average-trend').textContent = trendStatus;
       }
     }
 
@@ -17657,21 +17695,24 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
       const oneWeekAgo = new Date();
       oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
       const weekLogs = weightLogs.filter(log => new Date(log.date) >= oneWeekAgo);
+      weekLogs.sort((a, b) => new Date(a.date) - new Date(b.date)); // Ensure chronological order
       
       // Calculate this month
       const oneMonthAgo = new Date();
       oneMonthAgo.setDate(oneMonthAgo.getDate() - 30);
       const monthLogs = weightLogs.filter(log => new Date(log.date) >= oneMonthAgo);
+      monthLogs.sort((a, b) => new Date(a.date) - new Date(b.date)); // Ensure chronological order
       
-      // Calculate total
-      const firstWeight = weightLogs[0].weight;
-      const currentWeight = weightLogs[weightLogs.length - 1].weight;
-      const totalChange = firstWeight - currentWeight; // Positive = loss, Negative = gain
+      // Calculate total (using all weight logs which are already sorted)
+      const firstWeight = weightLogs[0].weight; // Earliest weight
+      const currentWeight = weightLogs[weightLogs.length - 1].weight; // Latest weight
+      const totalChange = currentWeight - firstWeight; // Positive = gain, Negative = loss
       
+      // Calculate changes with proper chronological order
       const weekChange = weekLogs.length >= 2 ? 
-        weekLogs[0].weight - weekLogs[weekLogs.length - 1].weight : 0;
+        weekLogs[weekLogs.length - 1].weight - weekLogs[0].weight : 0; // Latest - earliest
       const monthChange = monthLogs.length >= 2 ? 
-        monthLogs[0].weight - monthLogs[monthLogs.length - 1].weight : 0;
+        monthLogs[monthLogs.length - 1].weight - monthLogs[0].weight : 0; // Latest - earliest
 
       // Helper function to generate contextual advice
       function getAdvice(change, period, isGoalAligned) {
@@ -17679,17 +17720,17 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
         
         if (userGoal.isLossGoal) {
           // User wants to lose weight
-          if (change > 0) {
-            // They're losing weight (good for loss goal)
+          if (change < 0) {
+            // They're losing weight (good for loss goal) - negative change
             if (period === 'week') {
-              return change >= 1 ? 'Excellent progress!' : change >= 0.5 ? 'Good progress!' : 'Steady progress';
+              return absChange >= 1 ? 'Excellent progress!' : absChange >= 0.5 ? 'Good progress!' : 'Steady progress';
             } else if (period === 'month') {
-              return change >= 4 ? 'Amazing results!' : change >= 2 ? 'On track!' : 'Building momentum';
+              return absChange >= 4 ? 'Amazing results!' : absChange >= 2 ? 'On track!' : 'Building momentum';
             } else {
-              return change >= 10 ? 'Outstanding results!' : change >= 5 ? 'Excellent progress!' : 'Great start!';
+              return absChange >= 10 ? 'Outstanding results!' : absChange >= 5 ? 'Excellent progress!' : 'Great start!';
             }
           } else {
-            // They're gaining weight (bad for loss goal)
+            // They're gaining weight (bad for loss goal) - positive change
             if (period === 'week') {
               return 'Focus on portion control & activity';
             } else if (period === 'month') {
@@ -17700,11 +17741,11 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
           }
         } else {
           // User wants to gain weight (rare for GLP-1 users)
-          if (change < 0) {
-            // They're gaining weight (good for gain goal)
+          if (change > 0) {
+            // They're gaining weight (good for gain goal) - positive change
             return absChange >= 1 ? 'Great progress!' : 'Building towards goal';
           } else {
-            // They're losing weight (bad for gain goal)
+            // They're losing weight (bad for gain goal) - negative change
             return 'Consider increasing caloric intake';
           }
         }
@@ -17712,23 +17753,23 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
 
       metricsEl.innerHTML = `
         <div class="metric">
-          <div class="metric-value">${weekChange >= 0 ? '-' : '+'}${Math.abs(weekChange).toFixed(1)} lbs</div>
+          <div class="metric-value">${weekChange >= 0 ? '+' : ''}${weekChange.toFixed(1)} lbs</div>
           <div class="metric-label">This week</div>
-          <div class="metric-change ${(userGoal.isLossGoal && weekChange >= 0) || (!userGoal.isLossGoal && weekChange < 0) ? 'positive' : 'negative'}">
+          <div class="metric-change ${(userGoal.isLossGoal && weekChange < 0) || (!userGoal.isLossGoal && weekChange > 0) ? 'positive' : 'negative'}">
             ${getAdvice(weekChange, 'week')}
           </div>
         </div>
         <div class="metric">
-          <div class="metric-value">${monthChange >= 0 ? '-' : '+'}${Math.abs(monthChange).toFixed(1)} lbs</div>
+          <div class="metric-value">${monthChange >= 0 ? '+' : ''}${monthChange.toFixed(1)} lbs</div>
           <div class="metric-label">This month</div>
-          <div class="metric-change ${(userGoal.isLossGoal && monthChange >= 0) || (!userGoal.isLossGoal && monthChange < 0) ? 'positive' : 'negative'}">
+          <div class="metric-change ${(userGoal.isLossGoal && monthChange < 0) || (!userGoal.isLossGoal && monthChange > 0) ? 'positive' : 'negative'}">
             ${getAdvice(monthChange, 'month')}
           </div>
         </div>
         <div class="metric">
-          <div class="metric-value">${totalChange >= 0 ? '-' : '+'}${Math.abs(totalChange).toFixed(1)} lbs</div>
+          <div class="metric-value">${totalChange >= 0 ? '+' : ''}${totalChange.toFixed(1)} lbs</div>
           <div class="metric-label">Total</div>
-          <div class="metric-change ${(userGoal.isLossGoal && totalChange >= 0) || (!userGoal.isLossGoal && totalChange < 0) ? 'positive' : 'negative'}">
+          <div class="metric-change ${(userGoal.isLossGoal && totalChange < 0) || (!userGoal.isLossGoal && totalChange > 0) ? 'positive' : 'negative'}">
             ${getAdvice(totalChange, 'total')}
           </div>
         </div>
@@ -17882,21 +17923,43 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
 
       weightLogs.sort((a, b) => new Date(b.date) - new Date(a.date));
       const currentWeight = weightLogs[0].weight;
-      const remaining = Math.max(0, currentWeight - targetWeight);
-      const totalNeeded = (userGoal.startingWeight || weightLogs[weightLogs.length - 1].weight) - targetWeight;
-      const progress = Math.max(0, Math.min(100, ((userGoal.startingWeight || weightLogs[weightLogs.length - 1].weight) - currentWeight) / Math.max(totalNeeded, 1) * 100));
+      const startingWeight = userGoal.startingWeight || weightLogs[weightLogs.length - 1].weight;
       
-      // Calculate estimated time to goal
-      const recentLogs = weightLogs.slice(0, 6); // Last 6 logs for better average
-      let avgWeeklyLoss = 0;
-      if (recentLogs.length >= 2) {
-        const days = Math.max(1, (new Date(recentLogs[0].date) - new Date(recentLogs[recentLogs.length - 1].date)) / (1000 * 60 * 60 * 24));
-        const totalLoss = recentLogs[recentLogs.length - 1].weight - recentLogs[0].weight;
-        avgWeeklyLoss = Math.max(0, (totalLoss / days) * 7);
+      // Determine goal direction (loss or gain)
+      const isWeightLossGoal = startingWeight > targetWeight;
+      const goalAchieved = isWeightLossGoal ? currentWeight <= targetWeight : currentWeight >= targetWeight;
+      
+      // Calculate remaining amount to goal (always positive)
+      const remaining = goalAchieved ? 0 : Math.abs(currentWeight - targetWeight);
+      
+      // Calculate progress percentage
+      const totalNeeded = Math.abs(startingWeight - targetWeight);
+      const totalProgress = Math.abs(startingWeight - currentWeight);
+      const progress = totalNeeded > 0 ? Math.min(100, (totalProgress / totalNeeded) * 100) : 100;
+      
+      // Calculate weekly rate and time to goal (only if goal not achieved)
+      let avgWeeklyRate = 0;
+      let weeksToGoal = 0;
+      let neededRate = 0;
+      
+      if (!goalAchieved) {
+        const recentLogs = weightLogs.slice(0, 6); // Last 6 logs for trend
+        if (recentLogs.length >= 2) {
+          const days = Math.max(1, (new Date(recentLogs[0].date) - new Date(recentLogs[recentLogs.length - 1].date)) / (1000 * 60 * 60 * 24));
+          const recentChange = recentLogs[0].weight - recentLogs[recentLogs.length - 1].weight; // Latest - oldest
+          const weeklyChange = (recentChange / days) * 7;
+          
+          // For weight loss goal, we need negative weekly change (losing weight)
+          // For weight gain goal, we need positive weekly change (gaining weight)
+          if ((isWeightLossGoal && weeklyChange > 0) || (!isWeightLossGoal && weeklyChange < 0)) {
+            avgWeeklyRate = Math.abs(weeklyChange);
+            weeksToGoal = avgWeeklyRate > 0.1 ? Math.ceil(remaining / avgWeeklyRate) : 0;
+          }
+        }
+        
+        // Calculate needed rate (minimum 0.5 lbs/week, maximum based on timeline)
+        neededRate = remaining > 0 ? Math.max(0.5, remaining / Math.max(4, weeksToGoal || 12)) : 0;
       }
-      
-      const weeksToGoal = avgWeeklyLoss > 0.1 ? Math.ceil(remaining / avgWeeklyLoss) : 0;
-      const neededRate = remaining > 0 ? Math.max(0.5, remaining / Math.max(4, weeksToGoal)) : 0;
       
       // Calculate target date status
       let dateStatus = '';
@@ -17950,22 +18013,22 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
         
         <div class="goal-stats">
           <div class="stat">
-            <div class="stat-value" style="color: ${remaining <= 0 ? '#10b981' : '#ffffff'};">
-              ${remaining > 0 ? remaining.toFixed(1) : '🎉'}
+            <div class="stat-value" style="color: ${goalAchieved ? '#10b981' : '#ffffff'};">
+              ${goalAchieved ? '🎉' : remaining.toFixed(1)}
             </div>
-            <div class="stat-label">${remaining > 0 ? 'lbs to goal' : 'Goal achieved!'}</div>
+            <div class="stat-label">${goalAchieved ? 'Goal achieved!' : 'lbs to goal'}</div>
           </div>
           <div class="stat">
-            <div class="stat-value" style="color: ${onTrack ? '#10b981' : '#f59e0b'};">
-              ${weeksToGoal > 0 && weeksToGoal < 100 ? weeksToGoal : targetDate ? Math.ceil(daysToTarget/7) : '--'}
+            <div class="stat-value" style="color: ${goalAchieved ? '#10b981' : onTrack ? '#10b981' : '#f59e0b'};">
+              ${goalAchieved ? '✅' : (weeksToGoal > 0 && weeksToGoal < 100 ? weeksToGoal : targetDate ? Math.ceil(daysToTarget/7) : '--')}
             </div>
-            <div class="stat-label">${targetDate ? 'weeks to target' : 'weeks estimated'}</div>
+            <div class="stat-label">${goalAchieved ? 'Complete' : (targetDate ? 'weeks to target' : 'weeks estimated')}</div>
           </div>
           <div class="stat">
-            <div class="stat-value" style="color: ${neededRate <= 2 ? '#10b981' : neededRate <= 3 ? '#f59e0b' : '#ef4444'};">
-              ${neededRate > 0 ? neededRate.toFixed(1) : '✅'}
+            <div class="stat-value" style="color: ${goalAchieved ? '#10b981' : neededRate <= 2 ? '#10b981' : neededRate <= 3 ? '#f59e0b' : '#ef4444'};">
+              ${goalAchieved ? '🏆' : (neededRate > 0 ? neededRate.toFixed(1) : '✅')}
             </div>
-            <div class="stat-label">${neededRate > 0 ? 'lbs/week needed' : 'Maintaining'}</div>
+            <div class="stat-label">${goalAchieved ? 'Success!' : (neededRate > 0 ? 'lbs/week needed' : 'On track')}</div>
           </div>
         </div>
         
