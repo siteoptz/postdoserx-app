@@ -11093,17 +11093,21 @@
       try {
         progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
         weightLogs = progressData.weightLogs || [];
-        console.log('Successfully parsed progressData:', progressData);
-        console.log('weightLogs:', weightLogs);
+        console.log('Raw progressData from localStorage:', progressData);
+        console.log('weightLogs extracted:', weightLogs);
         console.log('weightLogs.length:', weightLogs.length);
       } catch (error) {
         console.error('Error parsing localStorage data:', error);
         return;
       }
       
-      if (weightLogs.length === 0) {
-        // Show empty state with call to action
-        console.log('No weight logs found, showing empty state');
+      // Make sure we have valid weight logs with required fields
+      const validLogs = weightLogs.filter(log => log && log.weight && log.date);
+      console.log('Valid weight logs after filtering:', validLogs);
+      console.log('Valid logs count:', validLogs.length);
+      
+      if (validLogs.length === 0) {
+        console.log('No valid weight logs found, showing empty state');
         const chartContainer = document.querySelector('.weight-chart-container');
         if (chartContainer) {
           chartContainer.innerHTML = `
@@ -11125,41 +11129,41 @@
           `;
         }
         return;
-      } else {
-        console.log('Weight logs found, proceeding with chart generation');
       }
       
-      // Filter data based on period
-      const now = new Date();
-      let filteredLogs = [];
+      // Use validLogs instead of weightLogs for further processing
+      let filteredLogs = validLogs;
       
+      // Apply period filtering if needed
+      const now = new Date();
       switch(period) {
         case 'week':
           const weekAgo = new Date(now.getTime() - (7 * 24 * 60 * 60 * 1000));
-          filteredLogs = weightLogs.filter(log => new Date(log.date) >= weekAgo);
-          // Ensure we don't show more than 7 days worth
-          filteredLogs = filteredLogs.slice(-7);
+          filteredLogs = validLogs.filter(log => new Date(log.date) >= weekAgo);
           break;
         case 'month':
           const monthAgo = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
-          filteredLogs = weightLogs.filter(log => new Date(log.date) >= monthAgo);
+          filteredLogs = validLogs.filter(log => new Date(log.date) >= monthAgo);
           break;
         case 'quarter':
           const quarterAgo = new Date(now.getTime() - (90 * 24 * 60 * 60 * 1000));
-          filteredLogs = weightLogs.filter(log => new Date(log.date) >= quarterAgo);
+          filteredLogs = validLogs.filter(log => new Date(log.date) >= quarterAgo);
           break;
         default:
-          filteredLogs = weightLogs.slice(-7); // Default to 7 entries for better display
+          filteredLogs = validLogs; // Show all valid logs
+      }
+      
+      // Limit to maximum 7 entries for display
+      if (filteredLogs.length > 7) {
+        filteredLogs = filteredLogs.slice(-7);
       }
       
       // Sort by date
       filteredLogs.sort((a, b) => new Date(a.date) - new Date(b.date));
       
-      console.log('After filtering for period', period, '- filteredLogs:', filteredLogs);
-      console.log('filteredLogs.length:', filteredLogs.length);
+      console.log('After filtering and sorting for period', period, ':', filteredLogs);
       
       if (filteredLogs.length === 0) {
-        // Show message for empty period but preserve the SVG structure
         console.log('No logs in filtered period, showing period-specific empty message');
         const chartContainer = document.querySelector('.weight-chart-container');
         if (chartContainer) {
@@ -11183,102 +11187,94 @@
         return;
       }
       
-      // Generate bar chart with real data
-      const svg = document.querySelector('.progress-chart');
-      console.log('SVG element found:', !!svg);
+      // WE HAVE DATA - Generate the bar chart
+      console.log('GENERATING BAR CHART with', filteredLogs.length, 'data points');
       
-      if (svg) {
-        // Clear existing bars
-        svg.querySelectorAll('rect').forEach(bar => bar.remove());
-        
-        // Calculate chart dimensions
-        const weights = filteredLogs.map(log => log.weight);
-        const minWeight = Math.min(...weights);
-        const maxWeight = Math.max(...weights);
-        const weightRange = maxWeight - minWeight || 10;
-        
-        console.log('Weight data:', { weights, minWeight, maxWeight, weightRange });
-        
-        // Bar chart settings
-        const chartWidth = 560; // Total chart area width
-        const chartHeight = 120; // Available height for bars
-        const barWidth = 40;
-        const numBars = Math.min(filteredLogs.length, 7); // Max 7 bars
-        const spacing = (chartWidth - (numBars * barWidth)) / (numBars + 1);
-        
-        // Generate bars for each data point
-        const timelineLabels = [];
-        filteredLogs.slice(0, 7).forEach((log, index) => {
-          const x = 20 + spacing + (index * (barWidth + spacing));
-          const weightPercent = (log.weight - minWeight) / (weightRange || 1);
-          const barHeight = Math.max(10, weightPercent * chartHeight);
-          const y = 140 - barHeight;
-          
-          // Create bar
-          const bar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-          bar.setAttribute('x', x);
-          bar.setAttribute('y', y);
-          bar.setAttribute('width', barWidth);
-          bar.setAttribute('height', barHeight);
-          bar.setAttribute('fill', index === filteredLogs.length - 1 ? 'var(--primary)' : 'var(--accent-blue)');
-          bar.setAttribute('rx', '4');
-          svg.appendChild(bar);
-          
-          // Add weight label on top of bar
-          const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-          label.setAttribute('x', x + barWidth/2);
-          label.setAttribute('y', y - 5);
-          label.setAttribute('fill', 'white');
-          label.setAttribute('font-size', '10');
-          label.setAttribute('text-anchor', 'middle');
-          label.textContent = log.weight + ' lbs';
-          svg.appendChild(label);
-          
-          // Format date for timeline
-          const date = new Date(log.date);
-          timelineLabels.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
-        });
-        
-        // Update timeline labels
-        const timeline = document.querySelector('.chart-timeline');
-        if (timeline) {
-          timeline.innerHTML = timelineLabels.map(label => 
-            `<span class="timeline-item">${label}</span>`
-          ).join('');
-        }
-        
-        // Update Y-axis labels
-        const yAxisLabels = svg.querySelectorAll('text[x="5"]');
-        yAxisLabels.forEach((label, index) => {
-          if (index === 0) {
-            label.textContent = Math.round(maxWeight);
-          } else if (index === 1) {
-            label.textContent = Math.round((minWeight + maxWeight) / 2);
-          } else if (index === 2) {
-            label.textContent = Math.round(minWeight);
-          }
-        });
-        
-        // Update goal line
-        const goalWeight = progressData.goalWeight;
-        const goalLine = svg.querySelector('line[stroke="#ffd700"]');
-        if (goalWeight && goalLine) {
-          const goalPercent = (goalWeight - minWeight) / (weightRange || 1);
-          const goalY = 140 - (goalPercent * chartHeight);
-          goalLine.setAttribute('y1', goalY);
-          goalLine.setAttribute('y2', goalY);
-          goalLine.style.display = 'block';
-          
-          const goalText = svg.querySelector('text[fill="#ffd700"]');
-          if (goalText) {
-            goalText.setAttribute('y', goalY - 5);
-          }
-        }
-        
-        console.log('Bar chart generated successfully with', numBars, 'bars');
+      // Make sure we have the static chart structure to work with
+      const chartContainer = document.querySelector('.weight-chart-container');
+      const svg = document.querySelector('.progress-chart');
+      
+      if (!svg) {
+        console.error('SVG element not found in DOM');
+        return;
       }
       
-      console.log('=== updateProgressChart COMPLETED SUCCESSFULLY ===');
+      // Clear existing dynamic content
+      svg.querySelectorAll('rect').forEach(rect => rect.remove());
+      svg.querySelectorAll('text[text-anchor="middle"]').forEach(text => text.remove());
+      
+      // Calculate weight range for scaling
+      const weights = filteredLogs.map(log => parseFloat(log.weight));
+      const minWeight = Math.min(...weights);
+      const maxWeight = Math.max(...weights);
+      const weightRange = Math.max(maxWeight - minWeight, 10); // Minimum range of 10
+      
+      console.log('Weight scaling:', { weights, minWeight, maxWeight, weightRange });
+      
+      // Bar chart settings for 600px wide SVG
+      const chartWidth = 560;
+      const chartHeight = 100;
+      const barWidth = 40;
+      const numBars = filteredLogs.length;
+      const totalBarsWidth = numBars * barWidth;
+      const totalSpacing = chartWidth - totalBarsWidth;
+      const spacing = totalSpacing / (numBars + 1);
+      
+      console.log('Chart layout:', { chartWidth, numBars, barWidth, spacing });
+      
+      // Generate bars and labels
+      const timelineLabels = [];
+      filteredLogs.forEach((log, index) => {
+        const x = spacing + (index * (barWidth + spacing));
+        const weightPercent = (parseFloat(log.weight) - minWeight) / weightRange;
+        const barHeight = Math.max(20, weightPercent * chartHeight);
+        const y = 140 - barHeight;
+        
+        console.log(`Bar ${index}: weight=${log.weight}, x=${x}, y=${y}, height=${barHeight}`);
+        
+        // Create bar rectangle
+        const bar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        bar.setAttribute('x', x);
+        bar.setAttribute('y', y);
+        bar.setAttribute('width', barWidth);
+        bar.setAttribute('height', barHeight);
+        bar.setAttribute('fill', index === numBars - 1 ? '#c61628' : '#3b82f6');
+        bar.setAttribute('rx', '4');
+        svg.appendChild(bar);
+        
+        // Add weight label
+        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        label.setAttribute('x', x + barWidth/2);
+        label.setAttribute('y', y - 5);
+        label.setAttribute('fill', 'white');
+        label.setAttribute('font-size', '10');
+        label.setAttribute('text-anchor', 'middle');
+        label.textContent = log.weight + ' lbs';
+        svg.appendChild(label);
+        
+        // Format date for timeline
+        const date = new Date(log.date);
+        timelineLabels.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+      });
+      
+      // Update timeline
+      const timeline = document.querySelector('.chart-timeline');
+      if (timeline) {
+        timeline.innerHTML = timelineLabels.map(label => 
+          `<span class="timeline-item">${label}</span>`
+        ).join('');
+        console.log('Timeline updated with labels:', timelineLabels);
+      }
+      
+      // Update Y-axis labels
+      const yLabels = svg.querySelectorAll('text[x="5"]');
+      if (yLabels.length >= 3) {
+        yLabels[0].textContent = Math.round(maxWeight);
+        yLabels[1].textContent = Math.round((minWeight + maxWeight) / 2);
+        yLabels[2].textContent = Math.round(minWeight);
+      }
+      
+      console.log('=== BAR CHART GENERATION COMPLETED ===');
     }
 
     // Notification function
