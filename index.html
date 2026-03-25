@@ -11156,22 +11156,14 @@
               <button class="chart-action-btn" onclick="clearAllWeightData()" style="background: rgba(220,53,69,0.8); color: white; border: 1px solid rgba(220,53,69,0.5); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; cursor: pointer;">Clear All</button>
             </div>
           </div>
-          <div class="chart-canvas" style="width: 100%;">
-            <svg viewBox="0 0 800 200" class="progress-chart" style="width: 100%; height: 200px;">
-              <!-- Grid lines -->
-              <defs>
-                <pattern id="grid" width="80" height="20" patternUnits="userSpaceOnUse">
-                  <path d="M 80 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#grid)" />
-              
+          <div class="chart-canvas" style="width: 100%; margin: 0; padding: 0;">
+            <svg viewBox="0 0 800 200" class="progress-chart" style="width: 100%; height: 200px; display: block;">
               <!-- Weight trend line -->
               <path stroke="var(--accent-blue)" stroke-width="3" fill="none" stroke-linecap="round"/>
               
               <!-- Goal line -->
               <path stroke="#ffd700" stroke-width="2" stroke-dasharray="5,5" style="display: none;"/>
-              <text x="770" y="95" fill="#ffd700" font-size="12">Goal</text>
+              <text x="750" y="95" fill="#ffd700" font-size="12">Goal</text>
               
               <!-- Y-axis labels -->
               <text x="10" y="30" fill="rgba(255,255,255,0.7)" font-size="10">200</text>
@@ -11179,7 +11171,7 @@
               <text x="10" y="190" fill="rgba(255,255,255,0.7)" font-size="10">180</text>
             </svg>
           </div>
-          <div class="chart-timeline" style="display: flex; justify-content: space-between; margin-top: 0.5rem; padding: 0 20px;">
+          <div class="chart-timeline" style="display: flex; justify-content: space-between; margin-top: 0.5rem; padding: 0 5px;">
             <!-- Timeline labels will be populated by JavaScript -->
           </div>
         `;
@@ -11194,10 +11186,10 @@
       const weightRange = maxWeight - minWeight || 10; // Prevent division by zero
       console.log('Weight range:', { minWeight, maxWeight, weightRange });
       
-      // Chart dimensions (updated for full width)
-      const chartWidth = 760; // Full width minus margins
+      // Chart dimensions (full width edge to edge)
+      const chartWidth = 780; // Full width with minimal margins
       const chartHeight = 160;
-      const startX = 30;
+      const startX = 10;
       const startY = 180;
       
       // Generate SVG path points
@@ -11299,7 +11291,7 @@
       const goalPath = svg.querySelector('path[stroke="#ffd700"]');
       if (goalWeight && goalPath) {
         const goalY = startY - ((goalWeight - minWeight) / weightRange) * chartHeight;
-        goalPath.setAttribute('d', `M 30 ${goalY} L 770 ${goalY}`);
+        goalPath.setAttribute('d', `M 10 ${goalY} L 790 ${goalY}`);
         goalPath.style.display = 'block';
         console.log('Goal line updated with weight:', goalWeight);
       } else if (goalPath) {
