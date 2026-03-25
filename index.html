@@ -8734,66 +8734,47 @@
           </div>
           
           <div class="weight-chart-container">
-            <div class="chart-canvas">
-              <svg viewBox="0 0 800 200" class="progress-chart" style="width: 100%; height: 200px;">
+            <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+              <h4 style="margin: 0; color: white;">Weight Progress</h4>
+              <div class="chart-actions" style="display: flex; gap: 0.5rem;">
+                <button class="chart-action-btn" onclick="showWeightDataManager()">Manage Data</button>
+                <button class="chart-action-btn danger" onclick="clearAllWeightData()">Clear All</button>
+              </div>
+            </div>
+            <div class="chart-canvas" style="width: 100%; margin: 0; padding: 0;">
+              <svg viewBox="0 0 800 200" class="progress-chart" style="width: 100%; height: 200px; display: block;">
                 <!-- Weight trend line -->
-                <path d="M 10 160 L 110 150 L 210 145 L 310 140 L 410 135 L 510 130 L 610 125 L 710 120 L 790 115" 
+                <path d="M 10 160 L 140 155 L 270 150 L 400 145 L 530 142 L 660 140 L 790 135" 
                       stroke="var(--accent-blue)" stroke-width="3" fill="none" stroke-linecap="round"/>
                 
                 <!-- Goal line -->
                 <path d="M 10 90 L 790 90" stroke="#ffd700" stroke-width="2" stroke-dasharray="5,5"/>
                 <text x="750" y="95" fill="#ffd700" font-size="12">Goal</text>
                 
-                <!-- Data points -->
+                <!-- Data points (reduced to 7 for 7-day period) -->
                 <circle cx="10" cy="160" r="4" fill="var(--accent-blue)"/>
-                <circle cx="110" cy="150" r="4" fill="var(--accent-blue)"/>
-                <circle cx="210" cy="145" r="4" fill="var(--accent-blue)"/>
-                <circle cx="310" cy="140" r="4" fill="var(--accent-blue)"/>
-                <circle cx="410" cy="135" r="4" fill="var(--accent-blue)"/>
-                <circle cx="510" cy="130" r="4" fill="var(--accent-blue)"/>
-                <circle cx="610" cy="125" r="4" fill="var(--accent-blue)"/>
-                <circle cx="710" cy="120" r="4" fill="var(--accent-blue)"/>
-                <circle cx="790" cy="115" r="6" fill="var(--accent-blue)" stroke="white" stroke-width="2"/>
+                <circle cx="140" cy="155" r="4" fill="var(--accent-blue)"/>
+                <circle cx="270" cy="150" r="4" fill="var(--accent-blue)"/>
+                <circle cx="400" cy="145" r="4" fill="var(--accent-blue)"/>
+                <circle cx="530" cy="142" r="4" fill="var(--accent-blue)"/>
+                <circle cx="660" cy="140" r="4" fill="var(--accent-blue)"/>
+                <circle cx="790" cy="135" r="6" fill="var(--accent-blue)" stroke="white" stroke-width="2"/>
                 
                 <!-- Y-axis labels -->
-                <text x="10" y="165" fill="#666" font-size="10">195</text>
-                <text x="10" y="125" fill="#666" font-size="10">190</text>
-                <text x="10" y="95" fill="#666" font-size="10">185</text>
-                <text x="10" y="55" fill="#666" font-size="10">180</text>
+                <text x="10" y="30" fill="rgba(255,255,255,0.7)" font-size="10">200</text>
+                <text x="10" y="110" fill="rgba(255,255,255,0.7)" font-size="10">190</text>
+                <text x="10" y="190" fill="rgba(255,255,255,0.7)" font-size="10">180</text>
               </svg>
             </div>
             
             <div class="chart-timeline" style="display: flex; justify-content: space-between; margin-top: 0.5rem; padding: 0 5px;">
-              <div class="timeline-point">
-                <div class="date">3/4</div>
-                <div class="injection-mark">Inj</div>
-              </div>
-              <div class="timeline-point">
-                <div class="date">3/8</div>
-              </div>
-              <div class="timeline-point">
-                <div class="date">3/11</div>
-                <div class="injection-mark">Inj</div>
-              </div>
-              <div class="timeline-point">
-                <div class="date">3/12</div>
-              </div>
-              <div class="timeline-point">
-                <div class="date">3/13</div>
-              </div>
-              <div class="timeline-point">
-                <div class="date">3/14</div>
-              </div>
-              <div class="timeline-point">
-                <div class="date">3/15</div>
-              </div>
-              <div class="timeline-point">
-                <div class="date">3/16</div>
-              </div>
-              <div class="timeline-point current">
-                <div class="date">3/17</div>
-                <div class="weight">186.7</div>
-              </div>
+              <span class="timeline-item">Mon</span>
+              <span class="timeline-item">Tue</span>
+              <span class="timeline-item">Wed</span>
+              <span class="timeline-item">Thu</span>
+              <span class="timeline-item">Fri</span>
+              <span class="timeline-item">Sat</span>
+              <span class="timeline-item">Sun</span>
             </div>
           </div>
         </div>
@@ -11158,6 +11139,8 @@
         case 'week':
           const weekAgo = new Date(now.getTime() - (7 * 24 * 60 * 60 * 1000));
           filteredLogs = weightLogs.filter(log => new Date(log.date) >= weekAgo);
+          // Ensure we don't show more than 7 days worth
+          filteredLogs = filteredLogs.slice(-7);
           break;
         case 'month':
           const monthAgo = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
@@ -11168,7 +11151,7 @@
           filteredLogs = weightLogs.filter(log => new Date(log.date) >= quarterAgo);
           break;
         default:
-          filteredLogs = weightLogs.slice(-10); // Last 10 entries
+          filteredLogs = weightLogs.slice(-7); // Default to 7 entries for better display
       }
       
       // Sort by date
@@ -11331,6 +11314,8 @@
         timeline.innerHTML = timelineLabels.map(label => 
           `<span class="timeline-item">${label}</span>`
         ).join('');
+        
+        console.log('Timeline updated with', timelineLabels.length, 'labels for period:', period);
       }
       
       // Update Y-axis labels with actual weight range
