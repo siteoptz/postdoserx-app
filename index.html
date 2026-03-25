@@ -11267,29 +11267,45 @@
       // Clear existing content
       svg.innerHTML = '';
       
-      // Define plot area excluding Y-axis labels
-      const yAxisWidth = 35; // Space for Y-axis labels
-      const plotStartX = yAxisWidth;
-      const plotEndX = 580;
-      const plotWidth = plotEndX - plotStartX; // Plot area width excluding Y-axis
-      const chartHeight = 100;
-      const chartTop = 20;
-      const chartBottom = 130;
+      // Chart dimensions matching the reference design
+      const chartPadding = 40;
+      const plotStartX = chartPadding;
+      const plotEndX = 560;
+      const plotWidth = plotEndX - plotStartX;
+      const chartHeight = 80;
+      const chartTop = 30;
+      const chartBottom = 110;
       
-      const numBars = aggregatedData.length;
+      const dataPoints = aggregatedData.filter(entry => entry.hasData && entry.weight !== null);
       
-      console.log('Plot dimensions:', { plotStartX, plotEndX, plotWidth, numBars });
+      console.log('Rendering professional chart with', dataPoints.length, 'data points');
+      
+      // Draw background grid lines (vertical)
+      const numGridLines = 4;
+      for (let i = 1; i < numGridLines; i++) {
+        const x = plotStartX + (i * plotWidth / numGridLines);
+        const gridLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        gridLine.setAttribute('x1', x);
+        gridLine.setAttribute('y1', chartTop);
+        gridLine.setAttribute('x2', x);
+        gridLine.setAttribute('y2', chartBottom);
+        gridLine.setAttribute('stroke', 'rgba(255,255,255,0.1)');
+        gridLine.setAttribute('stroke-width', '1');
+        gridLine.setAttribute('stroke-dasharray', '2,4');
+        svg.appendChild(gridLine);
+      }
       
       // Draw Y-axis labels
       const yLabels = [yScale.max, Math.round((yScale.min + yScale.max) / 2), yScale.min];
       yLabels.forEach((label, index) => {
-        const y = chartTop + (index * (chartHeight / 2));
+        const y = chartTop + (index * chartHeight / 2);
         const yLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        yLabel.setAttribute('x', '5');
-        yLabel.setAttribute('y', y);
-        yLabel.setAttribute('fill', 'rgba(255,255,255,0.7)');
-        yLabel.setAttribute('font-size', '10');
-        yLabel.textContent = label;
+        yLabel.setAttribute('x', '10');
+        yLabel.setAttribute('y', y + 3);
+        yLabel.setAttribute('fill', 'rgba(255,255,255,0.6)');
+        yLabel.setAttribute('font-size', '11');
+        yLabel.setAttribute('text-anchor', 'start');
+        yLabel.textContent = `${label} lbs`;
         svg.appendChild(yLabel);
       });
       
@@ -11304,113 +11320,99 @@
         goalLine.setAttribute('stroke', '#ffd700');
         goalLine.setAttribute('stroke-width', '2');
         goalLine.setAttribute('stroke-dasharray', '5,5');
+        goalLine.setAttribute('opacity', '0.8');
         svg.appendChild(goalLine);
         
         const goalLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        goalLabel.setAttribute('x', plotEndX - 30);
-        goalLabel.setAttribute('y', goalY - 3);
+        goalLabel.setAttribute('x', plotEndX - 5);
+        goalLabel.setAttribute('y', goalY - 5);
         goalLabel.setAttribute('fill', '#ffd700');
         goalLabel.setAttribute('font-size', '10');
+        goalLabel.setAttribute('text-anchor', 'end');
         goalLabel.textContent = 'Goal';
         svg.appendChild(goalLabel);
       }
       
-      // Calculate bar dimensions
-      const barSpacing = plotWidth / numBars; // Equal spacing across plot width
-      const barWidth = Math.min(40, barSpacing * 0.7); // 70% of available space per bar
+      if (dataPoints.length === 0) {
+        // Show empty state
+        const emptyText = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        emptyText.setAttribute('x', plotStartX + plotWidth / 2);
+        emptyText.setAttribute('y', chartTop + chartHeight / 2);
+        emptyText.setAttribute('fill', 'rgba(255,255,255,0.5)');
+        emptyText.setAttribute('font-size', '14');
+        emptyText.setAttribute('text-anchor', 'middle');
+        emptyText.textContent = 'No weight data for this period';
+        svg.appendChild(emptyText);
+        return;
+      }
       
-      const timelineLabels = [];
+      // Calculate data point positions
+      const dataPointSpacing = plotWidth / (dataPoints.length - 1);
+      const points = [];
       
-      aggregatedData.forEach((entry, index) => {
-        // Use same scale for bars: position at center of each slot
-        const barCenter = plotStartX + (index + 0.5) * barSpacing;
-        const x = barCenter - (barWidth / 2);
-        
-        console.log(`Bar ${index}: center=${barCenter}, x=${x}, spacing=${barSpacing}`);
-        
-        if (entry.hasData && entry.weight !== null) {
-          // Draw bar for actual data
-          const weightPercent = (entry.weight - yScale.min) / yScale.range;
-          const barHeight = Math.max(8, weightPercent * chartHeight);
-          const y = chartBottom - barHeight;
-          
-          const bar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-          bar.setAttribute('x', x);
-          bar.setAttribute('y', y);
-          bar.setAttribute('width', barWidth);
-          bar.setAttribute('height', barHeight);
-          bar.setAttribute('fill', '#3b82f6');
-          bar.setAttribute('rx', '3');
-          svg.appendChild(bar);
-          
-          // Weight label above bar
-          const weightLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-          weightLabel.setAttribute('x', barCenter);
-          weightLabel.setAttribute('y', y - 5);
-          weightLabel.setAttribute('fill', 'white');
-          weightLabel.setAttribute('font-size', '9');
-          weightLabel.setAttribute('text-anchor', 'middle');
-          weightLabel.textContent = Math.round(entry.weight);
-          svg.appendChild(weightLabel);
-        } else {
-          // Show empty state indicator for missing days
-          const emptyIndicator = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-          emptyIndicator.setAttribute('x', x);
-          emptyIndicator.setAttribute('y', chartBottom - 5);
-          emptyIndicator.setAttribute('width', barWidth);
-          emptyIndicator.setAttribute('height', '2');
-          emptyIndicator.setAttribute('fill', 'rgba(255,255,255,0.3)');
-          emptyIndicator.setAttribute('rx', '1');
-          svg.appendChild(emptyIndicator);
-        }
-        
-        timelineLabels.push(entry.displayDate);
+      dataPoints.forEach((entry, index) => {
+        const x = dataPoints.length === 1 ? plotStartX + plotWidth / 2 : plotStartX + (index * dataPointSpacing);
+        const weightPercent = (entry.weight - yScale.min) / yScale.range;
+        const y = chartBottom - (weightPercent * chartHeight);
+        points.push({ x, y, weight: entry.weight, date: entry.displayDate });
       });
       
-      // Timeline positioned to exactly match bar centers
-      const timeline = document.querySelector('.chart-timeline');
-      console.log('Timeline element found:', !!timeline);
+      // Draw connecting line if multiple points
+      if (points.length > 1) {
+        const pathData = points.map((point, index) => 
+          `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`
+        ).join(' ');
+        
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        line.setAttribute('d', pathData);
+        line.setAttribute('stroke', '#3b82f6');
+        line.setAttribute('stroke-width', '3');
+        line.setAttribute('fill', 'none');
+        line.setAttribute('stroke-linejoin', 'round');
+        line.setAttribute('stroke-linecap', 'round');
+        svg.appendChild(line);
+      }
       
-      if (timeline) {
-        // Set timeline container width to match SVG canvas area
+      // Draw data points
+      points.forEach((point, index) => {
+        // Data point circle
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', point.x);
+        circle.setAttribute('cy', point.y);
+        circle.setAttribute('r', '4');
+        circle.setAttribute('fill', '#3b82f6');
+        circle.setAttribute('stroke', '#ffffff');
+        circle.setAttribute('stroke-width', '2');
+        svg.appendChild(circle);
+        
+        // Weight label above point
+        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        label.setAttribute('x', point.x);
+        label.setAttribute('y', point.y - 12);
+        label.setAttribute('fill', 'white');
+        label.setAttribute('font-size', '11');
+        label.setAttribute('text-anchor', 'middle');
+        label.setAttribute('font-weight', '500');
+        label.textContent = `${Math.round(point.weight)}`;
+        svg.appendChild(label);
+      });
+      
+      // Update timeline with proper date alignment
+      const timeline = document.querySelector('.chart-timeline');
+      if (timeline && points.length > 0) {
         timeline.style.cssText = `
-          position: relative;
-          height: 20px;
+          display: flex;
+          justify-content: space-between;
           margin-top: 0.5rem;
-          padding: 0 2rem;
-          width: calc(100% - 4rem);
+          padding: 0 ${chartPadding}px;
         `;
         
-        console.log('Timeline container styled. Plot area:', { plotStartX, plotWidth, barSpacing });
+        // Generate timeline labels for actual data points
+        timeline.innerHTML = points.map(point => 
+          `<span style="color: rgba(255,255,255,0.7); font-size: 11px; text-align: center;">${point.date}</span>`
+        ).join('');
         
-        // Position each label exactly under its bar using pixel positioning
-        let timelineHTML = '';
-        timelineLabels.forEach((label, index) => {
-          // Calculate exact bar center position in pixels
-          const barCenter = plotStartX + (index + 0.5) * barSpacing;
-          // Convert to percentage relative to the full SVG width (600px)
-          // Account for timeline container padding (2rem = 32px on each side)
-          const timelineWidth = 600 - 64; // Total width minus padding
-          const adjustedBarCenter = barCenter - 32; // Adjust for left padding
-          const leftPercent = (adjustedBarCenter / timelineWidth) * 100;
-          
-          timelineHTML += `
-            <span style="
-              position: absolute;
-              left: ${leftPercent}%;
-              transform: translateX(-50%);
-              color: rgba(255,255,255,0.8);
-              font-size: 10px;
-              white-space: nowrap;
-            ">${label}</span>
-          `;
-          
-          console.log(`TIMELINE CALC: Label ${index} "${label}": bar at ${barCenter}px, adjusted=${adjustedBarCenter}px, timeline at ${leftPercent.toFixed(1)}%`);
-        });
-        timeline.innerHTML = timelineHTML;
-        console.log('Timeline HTML updated:', timelineHTML.substring(0, 200) + '...');
-      } else {
-        console.error('Timeline element not found in DOM!');
+        console.log('Timeline updated with', points.length, 'data points');
       }
     }
     
