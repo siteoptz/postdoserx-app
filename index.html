@@ -11363,22 +11363,29 @@
         timelineLabels.push(entry.displayDate);
       });
       
-      // Timeline with relative positioning using (i+0.5)/N*100% formula
+      // Timeline positioned to exactly match bar centers
       const timeline = document.querySelector('.chart-timeline');
       if (timeline) {
-        // Set timeline container to match plot width exactly (excluding Y-axis)
+        // Set timeline container width to match SVG canvas area
         timeline.style.cssText = `
           position: relative;
           height: 20px;
           margin-top: 0.5rem;
-          margin-left: ${yAxisWidth}px;
-          width: ${plotWidth}px;
+          padding: 0 2rem;
+          width: calc(100% - 4rem);
         `;
         
-        // Position each label using the exact formula: (i+0.5)/N*100%
+        // Position each label exactly under its bar using pixel positioning
         let timelineHTML = '';
         timelineLabels.forEach((label, index) => {
-          const leftPercent = ((index + 0.5) / numBars) * 100;
+          // Calculate exact bar center position in pixels
+          const barCenter = plotStartX + (index + 0.5) * barSpacing;
+          // Convert to percentage relative to the full SVG width (600px)
+          // Account for timeline container padding (2rem = 32px on each side)
+          const timelineWidth = 600 - 64; // Total width minus padding
+          const adjustedBarCenter = barCenter - 32; // Adjust for left padding
+          const leftPercent = (adjustedBarCenter / timelineWidth) * 100;
+          
           timelineHTML += `
             <span style="
               position: absolute;
@@ -11389,12 +11396,10 @@
               white-space: nowrap;
             ">${label}</span>
           `;
+          
+          console.log(`Label ${index} "${label}": bar at ${barCenter}px, timeline at ${leftPercent.toFixed(1)}%`);
         });
         timeline.innerHTML = timelineHTML;
-        
-        console.log('Timeline formula applied:', timelineLabels.map((label, i) => 
-          `${label}: ${((i + 0.5) / numBars * 100).toFixed(1)}%`
-        ));
       }
     }
     
