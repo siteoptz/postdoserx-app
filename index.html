@@ -8733,41 +8733,41 @@
             </div>
           </div>
           
-          <div class="weight-chart-container">
-            <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <div class="weight-chart-container" style="padding: 2rem 0;">
+            <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
               <h4 style="margin: 0; color: white;">Weight Progress</h4>
               <div class="chart-actions" style="display: flex; gap: 0.5rem;">
                 <button class="chart-action-btn" onclick="showWeightDataManager()">Manage Data</button>
                 <button class="chart-action-btn danger" onclick="clearAllWeightData()">Clear All</button>
               </div>
             </div>
-            <div class="chart-canvas" style="width: 100%; margin: 0; padding: 0;">
-              <svg viewBox="0 0 800 200" class="progress-chart" style="width: 100%; height: 200px; display: block;">
+            <div class="chart-canvas" style="width: 100%; margin: 0; padding: 0 2rem;">
+              <svg viewBox="0 0 700 160" class="progress-chart" style="width: 100%; height: 160px; display: block;">
                 <!-- Weight trend line -->
-                <path d="M 10 160 L 140 155 L 270 150 L 400 145 L 530 142 L 660 140 L 790 135" 
+                <path d="M 50 120 L 150 115 L 250 110 L 350 105 L 450 102 L 550 100 L 650 95" 
                       stroke="var(--accent-blue)" stroke-width="3" fill="none" stroke-linecap="round"/>
                 
                 <!-- Goal line -->
-                <path d="M 10 90 L 790 90" stroke="#ffd700" stroke-width="2" stroke-dasharray="5,5"/>
-                <text x="750" y="95" fill="#ffd700" font-size="12">Goal</text>
+                <path d="M 50 80 L 650 80" stroke="#ffd700" stroke-width="2" stroke-dasharray="5,5"/>
+                <text x="620" y="75" fill="#ffd700" font-size="11">Goal</text>
                 
-                <!-- Data points (reduced to 7 for 7-day period) -->
-                <circle cx="10" cy="160" r="4" fill="var(--accent-blue)"/>
-                <circle cx="140" cy="155" r="4" fill="var(--accent-blue)"/>
-                <circle cx="270" cy="150" r="4" fill="var(--accent-blue)"/>
-                <circle cx="400" cy="145" r="4" fill="var(--accent-blue)"/>
-                <circle cx="530" cy="142" r="4" fill="var(--accent-blue)"/>
-                <circle cx="660" cy="140" r="4" fill="var(--accent-blue)"/>
-                <circle cx="790" cy="135" r="6" fill="var(--accent-blue)" stroke="white" stroke-width="2"/>
+                <!-- Data points -->
+                <circle cx="50" cy="120" r="4" fill="var(--accent-blue)"/>
+                <circle cx="150" cy="115" r="4" fill="var(--accent-blue)"/>
+                <circle cx="250" cy="110" r="4" fill="var(--accent-blue)"/>
+                <circle cx="350" cy="105" r="4" fill="var(--accent-blue)"/>
+                <circle cx="450" cy="102" r="4" fill="var(--accent-blue)"/>
+                <circle cx="550" cy="100" r="4" fill="var(--accent-blue)"/>
+                <circle cx="650" cy="95" r="6" fill="var(--accent-blue)" stroke="white" stroke-width="2"/>
                 
                 <!-- Y-axis labels -->
-                <text x="10" y="30" fill="rgba(255,255,255,0.7)" font-size="10">200</text>
-                <text x="10" y="110" fill="rgba(255,255,255,0.7)" font-size="10">190</text>
-                <text x="10" y="190" fill="rgba(255,255,255,0.7)" font-size="10">180</text>
+                <text x="20" y="25" fill="rgba(255,255,255,0.7)" font-size="10">200</text>
+                <text x="20" y="85" fill="rgba(255,255,255,0.7)" font-size="10">190</text>
+                <text x="20" y="145" fill="rgba(255,255,255,0.7)" font-size="10">180</text>
               </svg>
             </div>
             
-            <div class="chart-timeline" style="display: flex; justify-content: space-between; margin-top: 0.5rem; padding: 0 5px;">
+            <div class="chart-timeline" style="display: flex; justify-content: space-between; margin-top: 1rem; padding: 0 2rem;">
               <span class="timeline-item">Mon</span>
               <span class="timeline-item">Tue</span>
               <span class="timeline-item">Wed</span>
@@ -11111,18 +11111,20 @@
         const chartContainer = document.querySelector('.weight-chart-container');
         if (chartContainer) {
           chartContainer.innerHTML = `
-            <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-              <h4 style="margin: 0; color: white;">Weight Progress</h4>
-              <div class="chart-actions" style="display: flex; gap: 0.5rem;">
-                <button class="chart-action-btn" onclick="showWeightDataManager()" disabled>Manage Data</button>
-                <button class="chart-action-btn danger" onclick="clearAllWeightData()" disabled>Clear All</button>
+            <div style="padding: 2rem 0;">
+              <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h4 style="margin: 0; color: white;">Weight Progress</h4>
+                <div class="chart-actions" style="display: flex; gap: 0.5rem;">
+                  <button class="chart-action-btn" onclick="showWeightDataManager()" disabled>Manage Data</button>
+                  <button class="chart-action-btn danger" onclick="clearAllWeightData()" disabled>Clear All</button>
+                </div>
               </div>
-            </div>
-            <div style="text-align: center; padding: 2rem; color: white;">
-              <p style="margin-bottom: 1.5rem; color: rgba(255,255,255,0.7);">Log your weight regularly to see your progress chart here.</p>
-              <button class="primary-btn" onclick="logWeight()" style="margin-top: 1rem;">
-                Log Your Weight
-              </button>
+              <div style="text-align: center; padding: 4rem 2rem; color: white;">
+                <p style="margin-bottom: 1.5rem; color: rgba(255,255,255,0.7);">Log your weight regularly to see your progress chart here.</p>
+                <button class="primary-btn" onclick="logWeight()" style="margin-top: 1rem;">
+                  Log Your Weight
+                </button>
+              </div>
             </div>
           `;
         }
@@ -11166,17 +11168,19 @@
         const chartContainer = document.querySelector('.weight-chart-container');
         if (chartContainer) {
           chartContainer.innerHTML = `
-            <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-              <h4 style="margin: 0; color: white;">Weight Progress</h4>
-              <div class="chart-actions" style="display: flex; gap: 0.5rem;">
-                <button class="chart-action-btn" onclick="showWeightDataManager()">Manage Data</button>
-                <button class="chart-action-btn danger" onclick="clearAllWeightData()">Clear All</button>
+            <div style="padding: 2rem 0;">
+              <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h4 style="margin: 0; color: white;">Weight Progress</h4>
+                <div class="chart-actions" style="display: flex; gap: 0.5rem;">
+                  <button class="chart-action-btn" onclick="showWeightDataManager()">Manage Data</button>
+                  <button class="chart-action-btn danger" onclick="clearAllWeightData()">Clear All</button>
+                </div>
               </div>
-            </div>
-            <div style="text-align: center; padding: 2rem; color: white;">
-              <h4 style="margin-bottom: 1rem;">No Data for ${period === 'week' ? '7 Days' : period === 'month' ? '30 Days' : '3 Months'}</h4>
-              <p style="margin-bottom: 1.5rem; color: rgba(255,255,255,0.7);">Log more weight entries to see data for this time period.</p>
-              <button class="primary-btn" onclick="logWeight()">Log Weight Now</button>
+              <div style="text-align: center; padding: 4rem 2rem; color: white;">
+                <h4 style="margin-bottom: 1rem;">No Data for ${period === 'week' ? '7 Days' : period === 'month' ? '30 Days' : '3 Months'}</h4>
+                <p style="margin-bottom: 1.5rem; color: rgba(255,255,255,0.7);">Log more weight entries to see data for this time period.</p>
+                <button class="primary-btn" onclick="logWeight()">Log Weight Now</button>
+              </div>
             </div>
           `;
         }
@@ -11191,29 +11195,29 @@
       if (chartContainer && !chartContainer.querySelector('.progress-chart')) {
         console.log('Restoring SVG chart structure...');
         chartContainer.innerHTML = `
-          <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
             <h4 style="margin: 0; color: white;">Weight Progress</h4>
             <div class="chart-actions" style="display: flex; gap: 0.5rem;">
               <button class="chart-action-btn" onclick="showWeightDataManager()">Manage Data</button>
               <button class="chart-action-btn danger" onclick="clearAllWeightData()">Clear All</button>
             </div>
           </div>
-          <div class="chart-canvas" style="width: 100%; margin: 0; padding: 0;">
-            <svg viewBox="0 0 800 200" class="progress-chart" style="width: 100%; height: 200px; display: block;">
+          <div class="chart-canvas" style="width: 100%; margin: 0; padding: 0 2rem;">
+            <svg viewBox="0 0 700 160" class="progress-chart" style="width: 100%; height: 160px; display: block;">
               <!-- Weight trend line -->
               <path stroke="var(--accent-blue)" stroke-width="3" fill="none" stroke-linecap="round"/>
               
               <!-- Goal line -->
               <path stroke="#ffd700" stroke-width="2" stroke-dasharray="5,5" style="display: none;"/>
-              <text x="750" y="95" fill="#ffd700" font-size="12">Goal</text>
+              <text x="620" y="75" fill="#ffd700" font-size="11">Goal</text>
               
               <!-- Y-axis labels -->
-              <text x="10" y="30" fill="rgba(255,255,255,0.7)" font-size="10">200</text>
-              <text x="10" y="110" fill="rgba(255,255,255,0.7)" font-size="10">190</text>
-              <text x="10" y="190" fill="rgba(255,255,255,0.7)" font-size="10">180</text>
+              <text x="20" y="25" fill="rgba(255,255,255,0.7)" font-size="10">200</text>
+              <text x="20" y="85" fill="rgba(255,255,255,0.7)" font-size="10">190</text>
+              <text x="20" y="145" fill="rgba(255,255,255,0.7)" font-size="10">180</text>
             </svg>
           </div>
-          <div class="chart-timeline" style="display: flex; justify-content: space-between; margin-top: 0.5rem; padding: 0 5px;">
+          <div class="chart-timeline" style="display: flex; justify-content: space-between; margin-top: 1rem; padding: 0 2rem;">
             <!-- Timeline labels will be populated by JavaScript -->
           </div>
         `;
@@ -11228,11 +11232,11 @@
       const weightRange = maxWeight - minWeight || 10; // Prevent division by zero
       console.log('Weight range:', { minWeight, maxWeight, weightRange });
       
-      // Chart dimensions (full width edge to edge)
-      const chartWidth = 780; // Full width with minimal margins
-      const chartHeight = 160;
-      const startX = 10;
-      const startY = 180;
+      // Chart dimensions (properly aligned with timeline)
+      const chartWidth = 600; // Chart area width (650 - 50 margin)
+      const chartHeight = 120; // Usable chart height
+      const startX = 50; // Left margin for Y-axis labels
+      const startY = 140; // Bottom position
       
       // Generate SVG path points
       let pathData = '';
@@ -11319,7 +11323,7 @@
       }
       
       // Update Y-axis labels with actual weight range
-      const yAxisLabels = svg.querySelectorAll('text[x="10"]');
+      const yAxisLabels = svg.querySelectorAll('text[x="20"]');
       yAxisLabels.forEach((label, index) => {
         if (index === 0) {
           label.textContent = Math.round(minWeight);
@@ -11335,7 +11339,7 @@
       const goalPath = svg.querySelector('path[stroke="#ffd700"]');
       if (goalWeight && goalPath) {
         const goalY = startY - ((goalWeight - minWeight) / weightRange) * chartHeight;
-        goalPath.setAttribute('d', `M 10 ${goalY} L 790 ${goalY}`);
+        goalPath.setAttribute('d', `M ${startX} ${goalY} L ${startX + chartWidth} ${goalY}`);
         goalPath.style.display = 'block';
         console.log('Goal line updated with weight:', goalWeight);
       } else if (goalPath) {
