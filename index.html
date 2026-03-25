@@ -8742,28 +8742,24 @@
               </div>
             </div>
             <div class="chart-canvas" style="width: 100%; margin: 0; padding: 0 2rem;">
-              <svg viewBox="0 0 700 160" class="progress-chart" style="width: 100%; height: 160px; display: block;">
-                <!-- Weight trend line -->
-                <path d="M 50 120 L 150 115 L 250 110 L 350 105 L 450 102 L 550 100 L 650 95" 
-                      stroke="var(--accent-blue)" stroke-width="3" fill="none" stroke-linecap="round"/>
+              <svg viewBox="0 0 600 160" class="progress-chart" style="width: 100%; height: 160px; display: block;">
+                <!-- Weight bars (7 bars for 7 days) -->
+                <rect x="40" y="60" width="40" height="80" fill="var(--accent-blue)" rx="4"/>
+                <rect x="120" y="50" width="40" height="90" fill="var(--accent-blue)" rx="4"/>
+                <rect x="200" y="45" width="40" height="95" fill="var(--accent-blue)" rx="4"/>
+                <rect x="280" y="40" width="40" height="100" fill="var(--accent-blue)" rx="4"/>
+                <rect x="360" y="38" width="40" height="102" fill="var(--accent-blue)" rx="4"/>
+                <rect x="440" y="35" width="40" height="105" fill="var(--accent-blue)" rx="4"/>
+                <rect x="520" y="30" width="40" height="110" fill="var(--primary)" rx="4"/>
                 
                 <!-- Goal line -->
-                <path d="M 50 80 L 650 80" stroke="#ffd700" stroke-width="2" stroke-dasharray="5,5"/>
-                <text x="620" y="75" fill="#ffd700" font-size="11">Goal</text>
-                
-                <!-- Data points -->
-                <circle cx="50" cy="120" r="4" fill="var(--accent-blue)"/>
-                <circle cx="150" cy="115" r="4" fill="var(--accent-blue)"/>
-                <circle cx="250" cy="110" r="4" fill="var(--accent-blue)"/>
-                <circle cx="350" cy="105" r="4" fill="var(--accent-blue)"/>
-                <circle cx="450" cy="102" r="4" fill="var(--accent-blue)"/>
-                <circle cx="550" cy="100" r="4" fill="var(--accent-blue)"/>
-                <circle cx="650" cy="95" r="6" fill="var(--accent-blue)" stroke="white" stroke-width="2"/>
+                <line x1="20" y1="70" x2="580" y2="70" stroke="#ffd700" stroke-width="2" stroke-dasharray="5,5"/>
+                <text x="545" y="65" fill="#ffd700" font-size="11">Goal</text>
                 
                 <!-- Y-axis labels -->
-                <text x="20" y="25" fill="rgba(255,255,255,0.7)" font-size="10">200</text>
-                <text x="20" y="85" fill="rgba(255,255,255,0.7)" font-size="10">190</text>
-                <text x="20" y="145" fill="rgba(255,255,255,0.7)" font-size="10">180</text>
+                <text x="5" y="25" fill="rgba(255,255,255,0.7)" font-size="10">200</text>
+                <text x="5" y="80" fill="rgba(255,255,255,0.7)" font-size="10">190</text>
+                <text x="5" y="135" fill="rgba(255,255,255,0.7)" font-size="10">180</text>
               </svg>
             </div>
             
@@ -11187,167 +11183,138 @@
         return;
       }
       
-      // Restore the chart structure if it was replaced
-      const chartContainer = document.querySelector('.weight-chart-container');
-      console.log('Chart container found:', !!chartContainer);
-      console.log('Progress chart exists:', !!chartContainer?.querySelector('.progress-chart'));
-      
-      if (chartContainer && !chartContainer.querySelector('.progress-chart')) {
-        console.log('Restoring SVG chart structure...');
-        chartContainer.innerHTML = `
-          <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-            <h4 style="margin: 0; color: white;">Weight Progress</h4>
-            <div class="chart-actions" style="display: flex; gap: 0.5rem;">
-              <button class="chart-action-btn" onclick="showWeightDataManager()">Manage Data</button>
-              <button class="chart-action-btn danger" onclick="clearAllWeightData()">Clear All</button>
-            </div>
-          </div>
-          <div class="chart-canvas" style="width: 100%; margin: 0; padding: 0 2rem;">
-            <svg viewBox="0 0 700 160" class="progress-chart" style="width: 100%; height: 160px; display: block;">
-              <!-- Weight trend line -->
-              <path stroke="var(--accent-blue)" stroke-width="3" fill="none" stroke-linecap="round"/>
-              
-              <!-- Goal line -->
-              <path stroke="#ffd700" stroke-width="2" stroke-dasharray="5,5" style="display: none;"/>
-              <text x="620" y="75" fill="#ffd700" font-size="11">Goal</text>
-              
-              <!-- Y-axis labels -->
-              <text x="20" y="25" fill="rgba(255,255,255,0.7)" font-size="10">200</text>
-              <text x="20" y="85" fill="rgba(255,255,255,0.7)" font-size="10">190</text>
-              <text x="20" y="145" fill="rgba(255,255,255,0.7)" font-size="10">180</text>
-            </svg>
-          </div>
-          <div class="chart-timeline" style="display: flex; justify-content: space-between; margin-top: 1rem; padding: 0 2rem;">
-            <!-- Timeline labels will be populated by JavaScript -->
-          </div>
-        `;
-        console.log('SVG structure restored');
-      }
-      
-      // Generate chart data
-      const weights = filteredLogs.map(log => log.weight);
-      console.log('Extracted weights:', weights);
-      const minWeight = Math.min(...weights);
-      const maxWeight = Math.max(...weights);
-      const weightRange = maxWeight - minWeight || 10; // Prevent division by zero
-      console.log('Weight range:', { minWeight, maxWeight, weightRange });
-      
-      // Chart dimensions (properly aligned with timeline)
-      const chartWidth = 600; // Chart area width (650 - 50 margin)
-      const chartHeight = 120; // Usable chart height
-      const startX = 50; // Left margin for Y-axis labels
-      const startY = 140; // Bottom position
-      
-      // Generate SVG path points
-      let pathData = '';
-      const timelineLabels = [];
-      
-      filteredLogs.forEach((log, index) => {
-        let x, y;
-        
-        if (filteredLogs.length === 1) {
-          // Center single data point
-          x = startX + (chartWidth / 2);
-          y = startY - ((log.weight - minWeight) / (weightRange || 1)) * chartHeight;
-        } else {
-          x = startX + (index * (chartWidth / (filteredLogs.length - 1)));
-          y = startY - ((log.weight - minWeight) / (weightRange || 1)) * chartHeight;
-        }
-        
-        if (index === 0) {
-          pathData += `M ${x} ${y}`;
-        } else {
-          pathData += ` L ${x} ${y}`;
-        }
-        
-        // Format date for timeline
-        const date = new Date(log.date);
-        timelineLabels.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
-      });
-      
-      // Update the chart path
-      console.log('Generated path data:', pathData);
-      const chartPath = document.querySelector('.progress-chart path[stroke="var(--accent-blue)"]');
-      console.log('Chart path element found:', !!chartPath);
-      if (chartPath) {
-        chartPath.setAttribute('d', pathData);
-        console.log('Chart path updated successfully');
-      } else {
-        console.error('Chart path element not found!');
-      }
-      
-      // Update chart circles (data points)
+      // Generate bar chart with real data
       const svg = document.querySelector('.progress-chart');
-      console.log('SVG element found for circles:', !!svg);
+      console.log('SVG element found:', !!svg);
+      
       if (svg) {
-        // Remove old circles
-        const oldCircles = svg.querySelectorAll('circle[fill="var(--accent-blue)"]');
-        console.log('Removing', oldCircles.length, 'old circles');
-        oldCircles.forEach(circle => circle.remove());
+        // Clear existing bars
+        svg.querySelectorAll('rect').forEach(bar => bar.remove());
         
-        // Add new circles for each data point
-        console.log('Adding', filteredLogs.length, 'new circles');
-        filteredLogs.forEach((log, index) => {
-          let x, y;
+        // Calculate chart dimensions
+        const weights = filteredLogs.map(log => log.weight);
+        const minWeight = Math.min(...weights);
+        const maxWeight = Math.max(...weights);
+        const weightRange = maxWeight - minWeight || 10;
+        
+        console.log('Weight data:', { weights, minWeight, maxWeight, weightRange });
+        
+        // Bar chart settings
+        const chartWidth = 560; // Total chart area width
+        const chartHeight = 120; // Available height for bars
+        const barWidth = 40;
+        const numBars = Math.min(filteredLogs.length, 7); // Max 7 bars
+        const spacing = (chartWidth - (numBars * barWidth)) / (numBars + 1);
+        
+        // Generate bars for each data point
+        const timelineLabels = [];
+        filteredLogs.slice(0, 7).forEach((log, index) => {
+          const x = 20 + spacing + (index * (barWidth + spacing));
+          const weightPercent = (log.weight - minWeight) / (weightRange || 1);
+          const barHeight = Math.max(10, weightPercent * chartHeight);
+          const y = 140 - barHeight;
           
-          if (filteredLogs.length === 1) {
-            // Center single data point
-            x = startX + (chartWidth / 2);
-            y = startY - ((log.weight - minWeight) / (weightRange || 1)) * chartHeight;
-          } else {
-            x = startX + (index * (chartWidth / (filteredLogs.length - 1)));
-            y = startY - ((log.weight - minWeight) / (weightRange || 1)) * chartHeight;
-          }
+          // Create bar
+          const bar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+          bar.setAttribute('x', x);
+          bar.setAttribute('y', y);
+          bar.setAttribute('width', barWidth);
+          bar.setAttribute('height', barHeight);
+          bar.setAttribute('fill', index === filteredLogs.length - 1 ? 'var(--primary)' : 'var(--accent-blue)');
+          bar.setAttribute('rx', '4');
+          svg.appendChild(bar);
           
-          const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-          circle.setAttribute('cx', x);
-          circle.setAttribute('cy', y);
-          circle.setAttribute('r', index === filteredLogs.length - 1 ? '6' : '4');
-          circle.setAttribute('fill', 'var(--accent-blue)');
-          if (index === filteredLogs.length - 1) {
-            circle.setAttribute('stroke', 'white');
-            circle.setAttribute('stroke-width', '2');
-          }
-          svg.appendChild(circle);
+          // Add weight label on top of bar
+          const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          label.setAttribute('x', x + barWidth/2);
+          label.setAttribute('y', y - 5);
+          label.setAttribute('fill', 'white');
+          label.setAttribute('font-size', '10');
+          label.setAttribute('text-anchor', 'middle');
+          label.textContent = log.weight + ' lbs';
+          svg.appendChild(label);
+          
+          // Format date for timeline
+          const date = new Date(log.date);
+          timelineLabels.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
         });
-      }
-      
-      // Update timeline labels
-      const timeline = document.querySelector('.chart-timeline');
-      if (timeline) {
-        timeline.innerHTML = timelineLabels.map(label => 
-          `<span class="timeline-item">${label}</span>`
-        ).join('');
         
-        console.log('Timeline updated with', timelineLabels.length, 'labels for period:', period);
-      }
-      
-      // Update Y-axis labels with actual weight range
-      const yAxisLabels = svg.querySelectorAll('text[x="20"]');
-      yAxisLabels.forEach((label, index) => {
-        if (index === 0) {
-          label.textContent = Math.round(minWeight);
-        } else if (index === 1) {
-          label.textContent = Math.round((minWeight + maxWeight) / 2);
-        } else if (index === 2) {
-          label.textContent = Math.round(maxWeight);
+        // Update timeline labels
+        const timeline = document.querySelector('.chart-timeline');
+        if (timeline) {
+          timeline.innerHTML = timelineLabels.map(label => 
+            `<span class="timeline-item">${label}</span>`
+          ).join('');
         }
-      });
-      
-      // Update goal line if goal is set
-      const goalWeight = progressData.goalWeight;
-      const goalPath = svg.querySelector('path[stroke="#ffd700"]');
-      if (goalWeight && goalPath) {
-        const goalY = startY - ((goalWeight - minWeight) / weightRange) * chartHeight;
-        goalPath.setAttribute('d', `M ${startX} ${goalY} L ${startX + chartWidth} ${goalY}`);
-        goalPath.style.display = 'block';
-        console.log('Goal line updated with weight:', goalWeight);
-      } else if (goalPath) {
-        goalPath.style.display = 'none';
-        console.log('Goal line hidden (no goal weight set)');
+        
+        // Update Y-axis labels
+        const yAxisLabels = svg.querySelectorAll('text[x="5"]');
+        yAxisLabels.forEach((label, index) => {
+          if (index === 0) {
+            label.textContent = Math.round(maxWeight);
+          } else if (index === 1) {
+            label.textContent = Math.round((minWeight + maxWeight) / 2);
+          } else if (index === 2) {
+            label.textContent = Math.round(minWeight);
+          }
+        });
+        
+        // Update goal line
+        const goalWeight = progressData.goalWeight;
+        const goalLine = svg.querySelector('line[stroke="#ffd700"]');
+        if (goalWeight && goalLine) {
+          const goalPercent = (goalWeight - minWeight) / (weightRange || 1);
+          const goalY = 140 - (goalPercent * chartHeight);
+          goalLine.setAttribute('y1', goalY);
+          goalLine.setAttribute('y2', goalY);
+          goalLine.style.display = 'block';
+          
+          const goalText = svg.querySelector('text[fill="#ffd700"]');
+          if (goalText) {
+            goalText.setAttribute('y', goalY - 5);
+          }
+        }
+        
+        console.log('Bar chart generated successfully with', numBars, 'bars');
       }
       
       console.log('=== updateProgressChart COMPLETED SUCCESSFULLY ===');
+    }
+
+    // Notification function
+    function showNotification(message, type = 'success') {
+      const notification = document.createElement('div');
+      notification.className = `notification ${type}`;
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        font-weight: 500;
+        transform: translateX(400px);
+        transition: transform 0.3s ease;
+      `;
+      notification.textContent = message;
+      
+      document.body.appendChild(notification);
+      
+      // Slide in
+      setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+      }, 100);
+      
+      // Auto remove after 3 seconds
+      setTimeout(() => {
+        notification.style.transform = 'translateX(400px)';
+        setTimeout(() => {
+          document.body.removeChild(notification);
+        }, 300);
+      }, 3000);
     }
 
     // Weight Data Management Functions
