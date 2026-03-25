@@ -11243,7 +11243,7 @@
             <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
               <h4 style="margin: 0; color: white;">Weight Progress</h4>
               <div class="chart-actions" style="display: flex; gap: 0.5rem;">
-                <button class="primary-btn" onclick="openWeightLogModal()" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Log Weight</button>
+                <button class="primary-btn" onclick="logWeight()" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Log Weight</button>
                 <button class="chart-action-btn" onclick="showWeightDataManager()">Manage Data</button>
                 <button class="chart-action-btn danger" onclick="clearAllWeightData()">Clear All</button>
               </div>
@@ -11379,7 +11379,6 @@
           margin-top: 0.5rem;
           padding: 0 2rem;
           width: calc(100% - 4rem);
-          background: rgba(255,0,0,0.1);
         `;
         
         console.log('Timeline container styled. Plot area:', { plotStartX, plotWidth, barSpacing });
@@ -11403,8 +11402,6 @@
               color: rgba(255,255,255,0.8);
               font-size: 10px;
               white-space: nowrap;
-              background: rgba(0,255,0,0.3);
-              padding: 2px;
             ">${label}</span>
           `;
           
@@ -11425,14 +11422,14 @@
             <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
               <h4 style="margin: 0; color: white;">Weight Progress</h4>
               <div class="chart-actions" style="display: flex; gap: 0.5rem;">
-                <button class="primary-btn" onclick="openWeightLogModal()" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Log Weight</button>
+                <button class="primary-btn" onclick="logWeight()" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Log Weight</button>
                 <button class="chart-action-btn" onclick="showWeightDataManager()" disabled>Manage Data</button>
                 <button class="chart-action-btn danger" onclick="clearAllWeightData()" disabled>Clear All</button>
               </div>
             </div>
             <div style="text-align: center; padding: 4rem 2rem; color: white;">
               <p style="margin-bottom: 1.5rem; color: rgba(255,255,255,0.7);">Log your weight to see this chart.</p>
-              <button class="primary-btn" onclick="openWeightLogModal()">Log Your Weight</button>
+              <button class="primary-btn" onclick="logWeight()">Log Your Weight</button>
             </div>
           </div>
         `;
