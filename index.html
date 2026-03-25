@@ -12053,14 +12053,11 @@
       // Close modal
       closeWeightLogModal();
       
-      // Update chart immediately
-      updateProgressChart();
+      // Update all progress cards and chart immediately
+      updateAllProgressCards();
       
       // Show success message
       showNotification(`Weight logged: ${weight} lbs on ${date}`, 'success');
-      
-      // Refresh the chart
-      updateProgressChart();
       
       console.log('Weight logged:', newEntry);
     }
@@ -12353,8 +12350,8 @@
             if (goalMotivation) userGoal.motivation = goalMotivation;
             localStorage.setItem('userGoal', JSON.stringify(userGoal));
             
-            // Update UI
-            updateGoalDisplay();
+            // Update all progress cards and UI
+            updateAllProgressCards();
             
             // Close modal
             closeUserModal('set-goal-modal');
@@ -17587,18 +17584,16 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
       
       document.getElementById('weekly-weight-trend').textContent = weeklyTrend;
 
-      // Calculate goal progress
-      const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
-      const targetWeight = userGoal.targetWeight || progressData.goalWeight;
-      
-      if (targetWeight && weightLogs.length > 0) {
-        const startingWeight = userGoal.startingWeight || firstWeight; // Use first weight log as starting point
-        const totalNeeded = Math.abs(startingWeight - targetWeight);
+      // Calculate goal progress using unified data
+      if (goalWeight && weightLogs.length > 0) {
+        const startingWeight = firstWeight; // Use first weight log as starting point
+        const currentWeight = latestWeight;
+        const totalNeeded = Math.abs(startingWeight - goalWeight);
         const totalProgress = Math.abs(startingWeight - currentWeight);
         const progress = totalNeeded > 0 ? Math.min(100, (totalProgress / totalNeeded) * 100) : 100;
         
         // For weight loss: remaining = current - target (positive if above target)
-        const remaining = currentWeight - targetWeight;
+        const remaining = currentWeight - goalWeight;
         const goalAchieved = remaining <= 0; // Goal achieved when at or below target
         
         document.getElementById('goal-progress-percentage').textContent = `${Math.round(progress)}%`;
@@ -17637,13 +17632,8 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
         const latestRecentWeight = recentLogs[recentLogs.length - 1].weight;
         const weeklyChange = latestRecentWeight - oldestRecentWeight;
         
-        // Get user goal for weight loss app
-        const userGoal = JSON.parse(localStorage.getItem('userGoal') || '{}');
-        const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
-        const targetWeight = userGoal.targetWeight || progressData.goalWeight;
-        
         // For GLP-1 weight loss app, goal achieved means at or below target weight
-        const goalAchieved = targetWeight && currentWeight <= targetWeight;
+        const goalAchieved = goalWeight && latestWeight <= goalWeight;
         
         // Display weekly change with proper sign  
         const displayValue = Math.abs(weeklyChange);
