@@ -11087,127 +11087,153 @@
     }
 
     function updateProgressChart(period = 'week') {
-      console.log('=== updateProgressChart STARTED ===', period);
+      console.log('=== WEIGHT PROGRESS CHART (per spec) ===', period);
       
-      let progressData, weightLogs;
+      // Get weight logs and user goal
+      let progressData, weightLogs, userGoal;
       try {
         progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
         weightLogs = progressData.weightLogs || [];
-        console.log('Raw progressData from localStorage:', progressData);
-        console.log('weightLogs extracted:', weightLogs);
-        console.log('weightLogs.length:', weightLogs.length);
+        userGoal = JSON.parse(localStorage.getItem('userGoal') || '{}');
+        console.log('Raw data - weightLogs:', weightLogs.length, 'entries, goal:', userGoal.targetWeight);
       } catch (error) {
-        console.error('Error parsing localStorage data:', error);
+        console.error('Error parsing localStorage:', error);
         return;
       }
       
-      // Make sure we have valid weight logs with required fields
+      // Validate weight logs
       const validLogs = weightLogs.filter(log => log && log.weight && log.date);
-      console.log('Valid weight logs after filtering:', validLogs);
-      console.log('Valid logs count:', validLogs.length);
+      console.log('Valid logs:', validLogs.length);
       
       if (validLogs.length === 0) {
-        console.log('No valid weight logs found, showing empty state');
-        const chartContainer = document.querySelector('.weight-chart-container');
-        if (chartContainer) {
-          chartContainer.innerHTML = `
-            <div style="padding: 2rem 0;">
-              <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <h4 style="margin: 0; color: white;">Weight Progress</h4>
-                <div class="chart-actions" style="display: flex; gap: 0.5rem;">
-                  <button class="chart-action-btn" onclick="showWeightDataManager()" disabled>Manage Data</button>
-                  <button class="chart-action-btn danger" onclick="clearAllWeightData()" disabled>Clear All</button>
-                </div>
-              </div>
-              <div style="text-align: center; padding: 4rem 2rem; color: white;">
-                <p style="margin-bottom: 1.5rem; color: rgba(255,255,255,0.7);">Log your weight regularly to see your progress chart here.</p>
-                <button class="primary-btn" onclick="logWeight()" style="margin-top: 1rem;">
-                  Log Your Weight
-                </button>
-              </div>
-            </div>
-          `;
-        }
+        showEmptyChartState();
         return;
       }
       
-      // Use validLogs instead of weightLogs for further processing
-      let filteredLogs = validLogs;
+      // Generate calendar days for the selected period
+      const { calendarDays, aggregatedData } = generateCalendarData(validLogs, period);
+      console.log('Calendar data generated:', { calendarDays: calendarDays.length, aggregatedData: aggregatedData.length });
       
-      // Apply period filtering if needed
+      // Calculate Y-axis scale including goal weight
+      const weights = aggregatedData.map(entry => entry.weight).filter(w => w !== null);
+      const goalWeight = userGoal.targetWeight ? parseFloat(userGoal.targetWeight) : null;
+      const yScale = calculateYAxisScale(weights, goalWeight);
+      console.log('Y-axis scale:', yScale);
+      
+      // Restore chart structure if needed
+      ensureChartStructure();
+      
+      // Generate the bar chart
+      renderBarChart(calendarDays, aggregatedData, yScale, goalWeight, period);
+      
+      console.log('=== CHART GENERATION COMPLETED ===');
+    }
+    
+    function generateCalendarData(validLogs, period) {
       const now = new Date();
-      console.log('Current date for filtering:', now);
+      const calendarDays = [];
+      const dataByDate = {};
       
-      switch(period) {
-        case 'week':
-          const weekAgo = new Date(now.getTime() - (7 * 24 * 60 * 60 * 1000));
-          console.log('Week ago date:', weekAgo);
-          filteredLogs = validLogs.filter(log => {
-            const logDate = new Date(log.date);
-            console.log(`Checking log date ${log.date} (${logDate}) >= ${weekAgo}:`, logDate >= weekAgo);
-            return logDate >= weekAgo;
-          });
-          // If no data in last 7 days, show the most recent 7 entries instead
-          if (filteredLogs.length === 0 && validLogs.length > 0) {
-            console.log('No data in last 7 days, showing most recent entries instead');
-            filteredLogs = validLogs.slice(-7);
-          }
-          break;
-        case 'month':
-          const monthAgo = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
-          filteredLogs = validLogs.filter(log => new Date(log.date) >= monthAgo);
-          break;
-        case 'quarter':
-          const quarterAgo = new Date(now.getTime() - (90 * 24 * 60 * 60 * 1000));
-          filteredLogs = validLogs.filter(log => new Date(log.date) >= quarterAgo);
-          break;
-        default:
-          filteredLogs = validLogs; // Show all valid logs
-      }
-      
-      // Limit to maximum 7 entries for display
-      if (filteredLogs.length > 7) {
-        filteredLogs = filteredLogs.slice(-7);
-      }
-      
-      // Sort by date
-      filteredLogs.sort((a, b) => new Date(a.date) - new Date(b.date));
-      
-      console.log('After filtering and sorting for period', period, ':', filteredLogs);
-      
-      if (filteredLogs.length === 0) {
-        console.log('No logs in filtered period, showing period-specific empty message');
-        const chartContainer = document.querySelector('.weight-chart-container');
-        if (chartContainer) {
-          chartContainer.innerHTML = `
-            <div style="padding: 2rem 0;">
-              <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                <h4 style="margin: 0; color: white;">Weight Progress</h4>
-                <div class="chart-actions" style="display: flex; gap: 0.5rem;">
-                  <button class="chart-action-btn" onclick="showWeightDataManager()">Manage Data</button>
-                  <button class="chart-action-btn danger" onclick="clearAllWeightData()">Clear All</button>
-                </div>
-              </div>
-              <div style="text-align: center; padding: 4rem 2rem; color: white;">
-                <h4 style="margin-bottom: 1rem;">No Data for ${period === 'week' ? '7 Days' : period === 'month' ? '30 Days' : '3 Months'}</h4>
-                <p style="margin-bottom: 1.5rem; color: rgba(255,255,255,0.7);">Log more weight entries to see data for this time period.</p>
-                <button class="primary-btn" onclick="logWeight()">Log Weight Now</button>
-              </div>
-            </div>
-          `;
+      // Group existing data by date
+      validLogs.forEach(log => {
+        const dateKey = log.date; // ISO date format
+        if (!dataByDate[dateKey]) {
+          dataByDate[dateKey] = [];
         }
-        return;
+        dataByDate[dateKey].push(parseFloat(log.weight));
+      });
+      
+      // Generate calendar days based on period
+      let numDays;
+      switch(period) {
+        case 'week': numDays = 7; break;
+        case 'month': numDays = 30; break;
+        case 'quarter': numDays = 90; break;
+        default: numDays = 7;
       }
       
-      // WE HAVE DATA - Generate the bar chart
-      console.log('GENERATING BAR CHART with', filteredLogs.length, 'data points');
+      // For 7-day view: one bar per calendar day
+      // For 30/90-day views: we'll aggregate by week to avoid overcrowding
+      if (period === 'week') {
+        // 7-day view: one bar per day for last 7 days
+        for (let i = numDays - 1; i >= 0; i--) {
+          const date = new Date(now);
+          date.setDate(date.getDate() - i);
+          const dateKey = date.toISOString().split('T')[0];
+          
+          calendarDays.push({
+            date: dateKey,
+            displayDate: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+            hasData: !!dataByDate[dateKey],
+            weight: dataByDate[dateKey] ? dataByDate[dateKey][dataByDate[dateKey].length - 1] : null // Use last entry of day
+          });
+        }
+      } else {
+        // 30/90-day views: aggregate by week
+        const weeks = Math.ceil(numDays / 7);
+        for (let weekIndex = 0; weekIndex < weeks; weekIndex++) {
+          const weekStart = new Date(now);
+          weekStart.setDate(weekStart.getDate() - ((weeks - weekIndex) * 7));
+          const weekEnd = new Date(weekStart);
+          weekEnd.setDate(weekEnd.getDate() + 6);
+          
+          // Collect all weights for this week
+          const weekWeights = [];
+          for (let d = new Date(weekStart); d <= weekEnd; d.setDate(d.getDate() + 1)) {
+            const dateKey = d.toISOString().split('T')[0];
+            if (dataByDate[dateKey]) {
+              weekWeights.push(...dataByDate[dateKey]);
+            }
+          }
+          
+          const weekLabel = `${weekStart.getMonth() + 1}/${weekStart.getDate()}`;
+          calendarDays.push({
+            date: weekStart.toISOString().split('T')[0],
+            displayDate: weekLabel,
+            hasData: weekWeights.length > 0,
+            weight: weekWeights.length > 0 ? weekWeights.reduce((a, b) => a + b) / weekWeights.length : null // Average
+          });
+        }
+      }
       
-      // Make sure we have the chart structure - restore it if missing
+      return {
+        calendarDays,
+        aggregatedData: calendarDays
+      };
+    }
+    
+    function calculateYAxisScale(weights, goalWeight) {
+      if (weights.length === 0) {
+        return { min: 150, max: 200, range: 50 };
+      }
+      
+      const dataMin = Math.min(...weights);
+      const dataMax = Math.max(...weights);
+      
+      // Include goal weight in scale calculation
+      const allValues = [...weights];
+      if (goalWeight) allValues.push(goalWeight);
+      
+      const min = Math.min(...allValues);
+      const max = Math.max(...allValues);
+      
+      // Add 10% padding for better visualization
+      const range = Math.max(max - min, 10); // Minimum 10 unit range
+      const padding = range * 0.1;
+      
+      return {
+        min: Math.floor(min - padding),
+        max: Math.ceil(max + padding),
+        range: Math.ceil(max + padding) - Math.floor(min - padding)
+      };
+    }
+    
+    function ensureChartStructure() {
       const chartContainer = document.querySelector('.weight-chart-container');
       let svg = document.querySelector('.progress-chart');
       
       if (!svg) {
-        console.log('SVG not found, restoring chart structure...');
+        console.log('Restoring chart structure...');
         chartContainer.innerHTML = `
           <div style="padding: 2rem 0;">
             <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
@@ -11219,140 +11245,148 @@
             </div>
             <div class="chart-canvas" style="width: 100%; margin: 0; padding: 0 2rem;">
               <svg viewBox="0 0 600 160" class="progress-chart" style="width: 100%; height: 160px; display: block;">
-                <!-- Goal line -->
-                <line x1="50" y1="70" x2="550" y2="70" stroke="#ffd700" stroke-width="2" stroke-dasharray="5,5"/>
-                <text x="515" y="65" fill="#ffd700" font-size="11">Goal</text>
-                
-                <!-- Y-axis labels -->
-                <text x="5" y="25" fill="rgba(255,255,255,0.7)" font-size="10">200</text>
-                <text x="5" y="80" fill="rgba(255,255,255,0.7)" font-size="10">190</text>
-                <text x="5" y="135" fill="rgba(255,255,255,0.7)" font-size="10">180</text>
+                <!-- Chart content will be generated dynamically -->
               </svg>
             </div>
-            
-            <div class="chart-timeline" style="display: flex; justify-content: space-between; margin-top: 1rem; padding: 0 2rem;">
-              <!-- Timeline labels will be populated -->
+            <div class="chart-timeline" style="margin-top: 0.5rem; padding: 0 2rem;">
+              <!-- Timeline will be generated -->
             </div>
           </div>
         `;
-        svg = document.querySelector('.progress-chart');
-        console.log('Chart structure restored, SVG found:', !!svg);
       }
+    }
+    
+    function renderBarChart(calendarDays, aggregatedData, yScale, goalWeight, period) {
+      const svg = document.querySelector('.progress-chart');
       
-      // Clear existing dynamic content
-      svg.querySelectorAll('rect').forEach(rect => rect.remove());
-      svg.querySelectorAll('text[text-anchor="middle"]').forEach(text => text.remove());
+      // Clear existing content
+      svg.innerHTML = '';
       
-      // Calculate weight range for scaling
-      const weights = filteredLogs.map(log => parseFloat(log.weight));
-      const minWeight = Math.min(...weights);
-      const maxWeight = Math.max(...weights);
-      const weightRange = Math.max(maxWeight - minWeight, 10); // Minimum range of 10
-      
-      console.log('Weight scaling:', { weights, minWeight, maxWeight, weightRange });
-      
-      // Bar chart settings - simplified approach with proper distribution
-      const chartStartX = 50;
-      const chartEndX = 550;
-      const chartWidth = chartEndX - chartStartX; // 500px
+      const chartPadding = 50;
+      const chartWidth = 600 - (chartPadding * 2); // 500px
       const chartHeight = 100;
-      const chartStartY = 30;
-      const chartEndY = 140;
+      const chartTop = 20;
+      const chartBottom = 130;
       
-      console.log('Chart dimensions:', { chartStartX, chartEndX, chartWidth, chartStartY, chartEndY });
-      console.log('Weight data:', filteredLogs.map(log => `${log.date}: ${log.weight}lbs`));
-      
-      // Calculate bar positions to distribute evenly across chart width
-      const numBars = filteredLogs.length;
-      const barWidth = Math.min(40, chartWidth / (numBars * 1.5)); // Responsive bar width
-      const totalBarWidth = numBars * barWidth;
-      const totalSpacing = chartWidth - totalBarWidth;
-      const spacing = numBars > 1 ? totalSpacing / (numBars + 1) : totalSpacing / 2;
-      
-      console.log('Bar layout:', { numBars, barWidth, totalSpacing, spacing });
-      
-      // Generate bars and collect timeline data
-      const timelineLabels = [];
-      const barPositions = []; // Track bar positions for timeline alignment
-      
-      filteredLogs.forEach((log, index) => {
-        const x = chartStartX + spacing + (index * (barWidth + spacing));
-        barPositions.push(x + barWidth/2); // Center position of each bar
-        
-        // Calculate bar height based on weight
-        const weightPercent = (parseFloat(log.weight) - minWeight) / Math.max(weightRange, 1);
-        const barHeight = Math.max(15, weightPercent * chartHeight);
-        const y = chartEndY - barHeight;
-        
-        console.log(`Bar ${index}: date=${log.date}, weight=${log.weight}lbs, x=${x}, y=${y}, height=${barHeight}`);
-        
-        // Create bar
-        const bar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        bar.setAttribute('x', x);
-        bar.setAttribute('y', y);
-        bar.setAttribute('width', barWidth);
-        bar.setAttribute('height', barHeight);
-        bar.setAttribute('fill', index === numBars - 1 ? '#c61628' : '#3b82f6');
-        bar.setAttribute('rx', '3');
-        svg.appendChild(bar);
-        
-        // Add weight value label above bar
-        const weightLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        weightLabel.setAttribute('x', x + barWidth/2);
-        weightLabel.setAttribute('y', y - 5);
-        weightLabel.setAttribute('fill', 'white');
-        weightLabel.setAttribute('font-size', '10');
-        weightLabel.setAttribute('text-anchor', 'middle');
-        weightLabel.textContent = `${log.weight}`;
-        svg.appendChild(weightLabel);
-        
-        // Format date for timeline (MM/DD format)
-        const date = new Date(log.date);
-        const formattedDate = `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}`;
-        timelineLabels.push(formattedDate);
+      // Draw Y-axis labels
+      const yLabels = [yScale.max, Math.round((yScale.min + yScale.max) / 2), yScale.min];
+      yLabels.forEach((label, index) => {
+        const y = chartTop + (index * (chartHeight / 2));
+        const yLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        yLabel.setAttribute('x', '5');
+        yLabel.setAttribute('y', y);
+        yLabel.setAttribute('fill', 'rgba(255,255,255,0.7)');
+        yLabel.setAttribute('font-size', '10');
+        yLabel.textContent = label;
+        svg.appendChild(yLabel);
       });
       
-      // Update timeline labels positioned under each bar
+      // Draw goal line if available
+      if (goalWeight) {
+        const goalY = chartTop + ((yScale.max - goalWeight) / yScale.range) * chartHeight;
+        const goalLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        goalLine.setAttribute('x1', chartPadding);
+        goalLine.setAttribute('y1', goalY);
+        goalLine.setAttribute('x2', chartPadding + chartWidth);
+        goalLine.setAttribute('y2', goalY);
+        goalLine.setAttribute('stroke', '#ffd700');
+        goalLine.setAttribute('stroke-width', '2');
+        goalLine.setAttribute('stroke-dasharray', '5,5');
+        svg.appendChild(goalLine);
+        
+        const goalLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        goalLabel.setAttribute('x', chartPadding + chartWidth - 35);
+        goalLabel.setAttribute('y', goalY - 3);
+        goalLabel.setAttribute('fill', '#ffd700');
+        goalLabel.setAttribute('font-size', '10');
+        goalLabel.textContent = 'Goal';
+        svg.appendChild(goalLabel);
+      }
+      
+      // Draw bars
+      const numSlots = aggregatedData.length;
+      const barWidth = Math.min(40, chartWidth / (numSlots * 1.2));
+      const slotWidth = chartWidth / numSlots;
+      
+      const timelineLabels = [];
+      
+      aggregatedData.forEach((entry, index) => {
+        const x = chartPadding + (index * slotWidth) + (slotWidth - barWidth) / 2;
+        
+        if (entry.hasData && entry.weight !== null) {
+          // Draw bar for actual data
+          const weightPercent = (entry.weight - yScale.min) / yScale.range;
+          const barHeight = Math.max(5, weightPercent * chartHeight);
+          const y = chartBottom - barHeight;
+          
+          const bar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+          bar.setAttribute('x', x);
+          bar.setAttribute('y', y);
+          bar.setAttribute('width', barWidth);
+          bar.setAttribute('height', barHeight);
+          bar.setAttribute('fill', '#3b82f6');
+          bar.setAttribute('rx', '3');
+          svg.appendChild(bar);
+          
+          // Weight label above bar
+          const weightLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+          weightLabel.setAttribute('x', x + barWidth/2);
+          weightLabel.setAttribute('y', y - 5);
+          weightLabel.setAttribute('fill', 'white');
+          weightLabel.setAttribute('font-size', '9');
+          weightLabel.setAttribute('text-anchor', 'middle');
+          weightLabel.textContent = Math.round(entry.weight);
+          svg.appendChild(weightLabel);
+        } else {
+          // Show empty state indicator for missing days
+          const emptyIndicator = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+          emptyIndicator.setAttribute('x', x);
+          emptyIndicator.setAttribute('y', chartBottom - 8);
+          emptyIndicator.setAttribute('width', barWidth);
+          emptyIndicator.setAttribute('height', '3');
+          emptyIndicator.setAttribute('fill', 'rgba(255,255,255,0.3)');
+          emptyIndicator.setAttribute('rx', '1');
+          svg.appendChild(emptyIndicator);
+        }
+        
+        timelineLabels.push(entry.displayDate);
+      });
+      
+      // Update timeline
       const timeline = document.querySelector('.chart-timeline');
       if (timeline) {
-        // Create timeline with exact positioning to match bars
         timeline.style.cssText = `
-          position: relative;
-          height: 20px;
+          display: grid;
+          grid-template-columns: repeat(${numSlots}, 1fr);
+          text-align: center;
           margin-top: 0.5rem;
+          padding: 0 ${chartPadding}px;
         `;
-        
-        let timelineHTML = '';
-        timelineLabels.forEach((label, index) => {
-          const leftPosition = ((barPositions[index] - chartStartX) / chartWidth) * 100;
-          timelineHTML += `
-            <span style="
-              position: absolute; 
-              left: ${leftPosition}%; 
-              transform: translateX(-50%); 
-              color: rgba(255,255,255,0.8); 
-              font-size: 10px;
-              white-space: nowrap;
-            ">${label}</span>
-          `;
-        });
-        timeline.innerHTML = timelineHTML;
-        
-        console.log('Timeline labels:', timelineLabels);
-        console.log('Bar positions:', barPositions);
+        timeline.innerHTML = timelineLabels.map(label => 
+          `<span style="color: rgba(255,255,255,0.7); font-size: 9px;">${label}</span>`
+        ).join('');
       }
-      
-      // Update Y-axis labels with actual weight values
-      const yAxisLabels = svg.querySelectorAll('text[x="5"]');
-      if (yAxisLabels.length >= 3) {
-        yAxisLabels[0].textContent = Math.round(maxWeight);
-        yAxisLabels[1].textContent = Math.round((minWeight + maxWeight) / 2);
-        yAxisLabels[2].textContent = Math.round(minWeight);
+    }
+    
+    function showEmptyChartState() {
+      const chartContainer = document.querySelector('.weight-chart-container');
+      if (chartContainer) {
+        chartContainer.innerHTML = `
+          <div style="padding: 2rem 0;">
+            <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+              <h4 style="margin: 0; color: white;">Weight Progress</h4>
+              <div class="chart-actions" style="display: flex; gap: 0.5rem;">
+                <button class="chart-action-btn" onclick="showWeightDataManager()" disabled>Manage Data</button>
+                <button class="chart-action-btn danger" onclick="clearAllWeightData()" disabled>Clear All</button>
+              </div>
+            </div>
+            <div style="text-align: center; padding: 4rem 2rem; color: white;">
+              <p style="margin-bottom: 1.5rem; color: rgba(255,255,255,0.7);">Log your weight to see this chart.</p>
+              <button class="primary-btn" onclick="logWeight()">Log Your Weight</button>
+            </div>
+          </div>
+        `;
       }
-      
-      console.log('Y-axis values:', { maxWeight, midWeight: (minWeight + maxWeight) / 2, minWeight });
-      
-      console.log('=== BAR CHART GENERATION COMPLETED ===');
     }
 
     // Notification function
