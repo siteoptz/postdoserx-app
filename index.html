@@ -11220,8 +11220,8 @@
             <div class="chart-canvas" style="width: 100%; margin: 0; padding: 0 2rem;">
               <svg viewBox="0 0 600 160" class="progress-chart" style="width: 100%; height: 160px; display: block;">
                 <!-- Goal line -->
-                <line x1="20" y1="70" x2="580" y2="70" stroke="#ffd700" stroke-width="2" stroke-dasharray="5,5"/>
-                <text x="545" y="65" fill="#ffd700" font-size="11">Goal</text>
+                <line x1="50" y1="70" x2="550" y2="70" stroke="#ffd700" stroke-width="2" stroke-dasharray="5,5"/>
+                <text x="515" y="65" fill="#ffd700" font-size="11">Goal</text>
                 
                 <!-- Y-axis labels -->
                 <text x="5" y="25" fill="rgba(255,255,255,0.7)" font-size="10">200</text>
@@ -11251,21 +11251,24 @@
       
       console.log('Weight scaling:', { weights, minWeight, maxWeight, weightRange });
       
-      // Bar chart settings for 600px wide SVG
-      const chartWidth = 560;
+      // Bar chart settings for 600px wide SVG with proper alignment
+      const chartPadding = 50; // Left and right padding to match timeline
+      const chartWidth = 600 - (chartPadding * 2); // Available width: 500px
       const chartHeight = 100;
-      const barWidth = 40;
+      const barWidth = 30;
       const numBars = filteredLogs.length;
-      const totalBarsWidth = numBars * barWidth;
-      const totalSpacing = chartWidth - totalBarsWidth;
-      const spacing = totalSpacing / (numBars + 1);
       
-      console.log('Chart layout:', { chartWidth, numBars, barWidth, spacing });
+      // Calculate spacing to align bars with timeline labels
+      const availableSpace = chartWidth - (numBars * barWidth);
+      const spacing = numBars > 1 ? availableSpace / (numBars - 1) : 0;
       
-      // Generate bars and labels
+      console.log('Chart layout:', { chartWidth, numBars, barWidth, spacing, chartPadding });
+      
+      // Generate bars and labels with timeline alignment
       const timelineLabels = [];
       filteredLogs.forEach((log, index) => {
-        const x = spacing + (index * (barWidth + spacing));
+        // Position bars to align with timeline (distributed evenly across available width)
+        const x = chartPadding + (index * (barWidth + spacing));
         const weightPercent = (parseFloat(log.weight) - minWeight) / weightRange;
         const barHeight = Math.max(20, weightPercent * chartHeight);
         const y = 140 - barHeight;
@@ -11297,13 +11300,20 @@
         timelineLabels.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
       });
       
-      // Update timeline
+      // Update timeline with proper alignment using CSS Grid instead of flexbox
       const timeline = document.querySelector('.chart-timeline');
       if (timeline) {
+        timeline.style.cssText = `
+          display: grid;
+          grid-template-columns: repeat(${numBars}, 1fr);
+          margin-top: 1rem;
+          padding: 0 ${chartPadding}px;
+          text-align: center;
+        `;
         timeline.innerHTML = timelineLabels.map(label => 
-          `<span class="timeline-item">${label}</span>`
+          `<span class="timeline-item" style="color: rgba(255,255,255,0.7); font-size: 11px;">${label}</span>`
         ).join('');
-        console.log('Timeline updated with labels:', timelineLabels);
+        console.log('Timeline updated with aligned labels:', timelineLabels);
       }
       
       // Update Y-axis labels
