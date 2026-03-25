@@ -184,8 +184,20 @@
       padding: 0; 
     }
     
-    html { 
-      scroll-behavior: smooth; 
+    /* Prevent horizontal overflow globally */
+    html, body {
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+    }
+    
+    /* Ensure all elements respect container bounds */
+    * {
+      max-width: 100%;
+    }
+    
+    /* Exception for layout containers */
+    .sidebar, .main-content, .dashboard-container, .header {
+      max-width: none;
     }
     
     body { 
@@ -721,12 +733,15 @@
       padding: 3rem;
       background: transparent;
       min-height: 100vh;
+      overflow-x: hidden;
     }
     
     .view {
       display: none;
       max-width: 1400px;
       margin: 0 auto;
+      width: 100%;
+      overflow-x: hidden;
     }
     
     .view.active {
@@ -5890,8 +5905,8 @@
       .sidebar {
         position: fixed;
         top: 60px;
-        left: -320px;
-        width: 320px;
+        left: -min(320px, 85vw);
+        width: min(320px, 85vw);
         height: calc(100vh - 60px);
         z-index: 1000;
         transition: left 0.3s ease;
@@ -5964,8 +5979,8 @@
       .sidebar {
         top: 56px;
         height: calc(100vh - 56px);
-        width: 280px;
-        left: -280px;
+        width: min(280px, 85vw);
+        left: -min(280px, 85vw);
       }
       
       .main-content {
@@ -6018,6 +6033,167 @@
       }
     }
     
+    /* Comprehensive mobile responsive fixes */
+    @media (max-width: 768px) {
+      /* Dashboard cards */
+      .dashboard-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem;
+      }
+      
+      .quick-actions {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      }
+      
+      /* Symptoms page */
+      .symptoms-grid {
+        grid-template-columns: 1fr !important;
+      }
+      
+      .log-form {
+        grid-template-columns: 1fr !important;
+      }
+      
+      .rating-row {
+        grid-template-columns: 1fr !important;
+      }
+      
+      /* Progress cards */
+      .progress-overview {
+        grid-template-columns: 1fr !important;
+      }
+      
+      .analytics-grid {
+        grid-template-columns: 1fr !important;
+      }
+      
+      /* Medication grid */
+      .medication-grid {
+        grid-template-columns: 1fr !important;
+      }
+      
+      /* Recipe grid */
+      .recipe-grid {
+        grid-template-columns: 1fr !important;
+      }
+      
+      /* Content cards */
+      .content-card {
+        margin-left: 0;
+        margin-right: 0;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      
+      /* Forms responsive */
+      .form-row {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      /* Tables */
+      .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      /* Charts and SVG elements */
+      .chart-container svg {
+        max-width: 100%;
+        height: auto;
+      }
+      
+      /* Comprehensive progress specific */
+      .comprehensive-analysis-grid {
+        grid-template-columns: 1fr !important;
+      }
+      
+      .cycle-chart {
+        gap: 0.25rem !important;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      .cycle-day {
+        min-width: 80px;
+        flex-shrink: 0;
+      }
+      
+      /* AI recommendations */
+      .ai-recommendations {
+        grid-template-columns: 1fr !important;
+      }
+      
+      /* Insight cards */
+      .insights-grid {
+        grid-template-columns: 1fr !important;
+      }
+      
+      /* Correlation charts */
+      .correlation-grid {
+        grid-template-columns: 1fr !important;
+      }
+      
+      /* Modal responsive */
+      .modal-content {
+        width: 95vw;
+        max-width: 500px;
+        margin: 1rem auto;
+        max-height: calc(100vh - 2rem);
+        overflow-y: auto;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      /* Smaller padding for very small screens */
+      .main-content {
+        padding: 1rem 0.75rem;
+      }
+      
+      .content-card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+      
+      /* Compact buttons */
+      .btn, .primary-btn, .secondary-btn {
+        padding: 0.75rem;
+        font-size: 0.875rem;
+        width: 100%;
+        margin-bottom: 0.5rem;
+      }
+      
+      /* Stack action buttons */
+      .progress-actions, .card-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      
+      /* Compact cycle chart */
+      .cycle-day {
+        min-width: 60px;
+        padding: 0.25rem;
+      }
+      
+      /* Smaller text for tight spaces */
+      .stat-value {
+        font-size: 0.875rem;
+      }
+      
+      .metric-value {
+        font-size: 1rem;
+      }
+      
+      /* Form inputs full width */
+      .form-group input, 
+      .form-group select, 
+      .form-group textarea {
+        width: 100%;
+        box-sizing: border-box;
+      }
+    }
+
     /* Very small screens */
     @media (max-width: 360px) {
       .main-content {
@@ -6036,6 +6212,86 @@
       
       .view-title {
         font-size: 1.125rem;
+      }
+      
+      /* Ultra compact cycle chart */
+      .cycle-day {
+        min-width: 45px;
+        font-size: 0.7rem;
+      }
+      
+      /* Stack everything vertically */
+      .goal-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+    }
+    
+    /* Additional mobile overflow fixes */
+    @media (max-width: 768px) {
+      /* Fix specific components that cause overflow */
+      .weight-progress-chart {
+        width: 100%;
+        overflow: hidden;
+      }
+      
+      .weight-progress-chart svg {
+        max-width: 100%;
+        height: auto;
+      }
+      
+      /* Ensure data management modals fit */
+      .data-manager-modal .modal-content {
+        width: 95vw;
+        max-width: none;
+      }
+      
+      /* Fix long text overflow */
+      .symptom-note, .weight-note {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+      }
+      
+      /* Fix horizontal scroll on tables */
+      .symptom-log-table, .weight-log-table {
+        width: 100%;
+        overflow-x: auto;
+        display: block;
+        white-space: nowrap;
+      }
+      
+      .symptom-log-table th,
+      .symptom-log-table td,
+      .weight-log-table th,
+      .weight-log-table td {
+        padding: 0.5rem 0.25rem;
+        font-size: 0.875rem;
+      }
+      
+      /* Fix action button groups */
+      .chart-actions, .card-actions {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+      
+      /* Ensure horizontal scroll works on charts */
+      .chart-container {
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      /* Fix modal positioning on small screens */
+      .modal {
+        padding: 0.5rem;
+      }
+      
+      /* Compact notification positioning */
+      .notification {
+        left: 1rem;
+        right: 1rem;
+        width: auto;
       }
     }
   </style>
