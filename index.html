@@ -12266,14 +12266,21 @@
           const goalMotivation = document.getElementById('goal-motivation').value;
           
           if (goalWeight && !isNaN(goalWeight)) {
-            // Save goal to local storage
+            // Save goal to local storage (multiple locations for compatibility)
             const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
             progressData.goalWeight = parseFloat(goalWeight);
             progressData.goalSetDate = new Date().toISOString();
             if (goalTimeline) progressData.goalTimeline = goalTimeline;
             if (goalMotivation) progressData.goalMotivation = goalMotivation;
-            
             localStorage.setItem('progressData', JSON.stringify(progressData));
+            
+            // Also save to unified userGoal storage
+            const userGoal = JSON.parse(localStorage.getItem('userGoal') || '{}');
+            userGoal.targetWeight = parseFloat(goalWeight);
+            userGoal.goalSetDate = new Date().toISOString();
+            if (goalTimeline) userGoal.targetDate = goalTimeline;
+            if (goalMotivation) userGoal.motivation = goalMotivation;
+            localStorage.setItem('userGoal', JSON.stringify(userGoal));
             
             // Update UI
             updateGoalDisplay();
@@ -17847,12 +17854,13 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
       const weightLogs = JSON.parse(localStorage.getItem('weightLogs') || '[]').filter(log => log.weight && log.date);
       const userGoal = JSON.parse(localStorage.getItem('userGoal') || '{}');
       const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
+      const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
       const goalEl = document.getElementById('goal-tracking-content');
       
-      // Check multiple sources for goal data
-      const targetWeight = userGoal.targetWeight || medicationProfile.goal_weight || medicationProfile.goalWeight;
-      const targetDate = userGoal.targetDate || medicationProfile.goalDate;
-      const reason = userGoal.reason || medicationProfile.goalReason || userGoal.motivation;
+      // Check multiple sources for goal data (including progressData)
+      const targetWeight = userGoal.targetWeight || medicationProfile.goal_weight || medicationProfile.goalWeight || progressData.goalWeight;
+      const targetDate = userGoal.targetDate || medicationProfile.goalDate || progressData.goalTimeline;
+      const reason = userGoal.reason || medicationProfile.goalReason || userGoal.motivation || progressData.goalMotivation;
       
       if (!targetWeight || weightLogs.length === 0) {
         goalEl.innerHTML = `
