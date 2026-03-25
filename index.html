@@ -15357,83 +15357,6 @@ For clinical review and treatment optimization.`;
       showCustomModal('Tolerance Progress', content);
     }
     
-    function showRecommendationModal() {
-      const mealFeedback = JSON.parse(localStorage.getItem('mealFeedback') || '{}');
-      const feedbackCount = Object.keys(mealFeedback).length;
-      
-      let content = '<div style="padding: 2rem; text-align: left; color: white;">';
-      
-      content += `
-        <div style="text-align: center; margin-bottom: 2rem;">
-          <h3 style="color: white; margin-bottom: 0.5rem;">Smart Meal Recommendations</h3>
-          <p style="color: rgba(255, 255, 255, 0.8);">Personalized for your GLP-1 journey</p>
-        </div>
-      `;
-      
-      if (feedbackCount === 0) {
-        content += `
-          <h4 style="color: #10b981; margin-bottom: 1rem;">Universal GLP-1 Safe Meals:</h4>
-          <div style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
-            <p style="margin: 0; color: white;"><strong>Mediterranean Quinoa Bowl</strong></p>
-            <p style="margin: 0.25rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Protein-rich quinoa with olive oil, lemon, and herbs</p>
-            <p style="margin: 0.5rem 0; color: white;"><strong>Ginger Chicken Broth</strong></p>
-            <p style="margin: 0.25rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Anti-nausea properties, easy digestion</p>
-            <p style="margin: 0.5rem 0; color: white;"><strong>Banana Oatmeal</strong></p>
-            <p style="margin: 0.25rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Gentle carbs with potassium for energy</p>
-            <p style="margin: 0.5rem 0; color: white;"><strong>Baked Sweet Potato</strong></p>
-            <p style="margin: 0.25rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Complex carbs, easy on stomach</p>
-          </div>
-        `;
-      } else {
-        content += `
-          <h4 style="color: #10b981; margin-bottom: 1rem;">Based on Your Ratings:</h4>
-          <div style="background: rgba(16, 185, 129, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
-            <p style="margin: 0; color: white;"><strong>Mediterranean Quinoa Bowl</strong></p>
-            <p style="margin: 0.25rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">94% match based on your preferences</p>
-            <p style="margin: 0.5rem 0; color: white;"><strong>Ginger Chicken Soup</strong></p>
-            <p style="margin: 0.25rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Perfect for current cycle day</p>
-            <p style="margin: 0.5rem 0; color: white;"><strong>Banana Oat Smoothie</strong></p>
-            <p style="margin: 0.25rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Gentle morning option</p>
-          </div>
-        `;
-      }
-      
-      content += `
-        <h4 style="color: #8b5cf6; margin-bottom: 1rem;">New to Try:</h4>
-        <div style="background: rgba(139, 92, 246, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
-          <p style="margin: 0; color: white;"><strong>Roasted Sweet Potato Bowl</strong></p>
-          <p style="margin: 0.25rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Similar users rate 4.3/5 stars</p>
-          <p style="margin: 0.5rem 0; color: white;"><strong>Lemon Herb Salmon</strong></p>
-          <p style="margin: 0.25rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">High protein, low nausea risk</p>
-          <p style="margin: 0.5rem 0; color: white;"><strong>Cauliflower Rice Stir-fry</strong></p>
-          <p style="margin: 0.25rem 0; color: rgba(255, 255, 255, 0.8); font-size: 0.9rem;">Low-carb alternative with vegetables</p>
-        </div>
-        
-        <h4 style="color: #ef4444; margin-bottom: 1rem;">Skip Today:</h4>
-        <div style="background: rgba(239, 68, 68, 0.1); padding: 1.5rem; border-radius: 8px;">
-          <p style="margin: 0; color: white;">• Heavy cream sauces (high fat content)</p>
-          <p style="margin: 0.5rem 0; color: white;">• Spicy foods (may worsen nausea)</p>
-          <p style="margin: 0.5rem 0; color: white;">• Large portions (harder to digest)</p>
-          <p style="margin: 0.5rem 0; color: white;">• Fried or greasy foods</p>
-        </div>
-      `;
-      
-      // Add meal rating button
-      content += `
-        <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.2);">
-          <button onclick="closeModal(); setTimeout(() => { document.querySelector('[onclick=\\"showView(\\'symptoms\\')\"]').click(); setTimeout(() => { const ratingSection = document.querySelector('.rating-section'); if (ratingSection) ratingSection.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); }, 200);" 
-                  style="background: linear-gradient(135deg, #8b5cf6, #c084fc); color: white; padding: 1rem 2rem; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 16px rgba(139, 92, 246, 0.3);"
-                  onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 24px rgba(139, 92, 246, 0.4)';"
-                  onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 16px rgba(139, 92, 246, 0.3)';">
-            🌟 Rate Your Meals Now
-          </button>
-          <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; margin: 1rem 0 0 0;">Help us improve your recommendations by rating your meal experiences</p>
-        </div>
-      `;
-      
-      content += '</div>';
-      showCustomModal('Smart Recommendations', content);
-    }
     
     function showTrendModal_old() {
       const mealRatings = JSON.parse(localStorage.getItem('mealRatings') || '[]');
@@ -15522,6 +15445,19 @@ For clinical review and treatment optimization.`;
         content += '</div>';
         content += `<p style="color: var(--magenta); font-weight: 600;">${Math.min(12, mealRatings.length * 2)} total recommendations available based on your ${mealRatings.length} rating${mealRatings.length !== 1 ? 's' : ''}.</p>`;
       }
+      
+      // Add meal rating button
+      content += `
+        <div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.2);">
+          <button onclick="closeModal(); setTimeout(() => { document.querySelector('[onclick=\\"showView(\\'symptoms\\')\"]').click(); setTimeout(() => { const ratingSection = document.querySelector('.rating-section'); if (ratingSection) ratingSection.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); }, 200);" 
+                  style="background: linear-gradient(135deg, #8b5cf6, #c084fc); color: white; padding: 1rem 2rem; border: none; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 16px rgba(139, 92, 246, 0.3);"
+                  onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 24px rgba(139, 92, 246, 0.4)';"
+                  onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 16px rgba(139, 92, 246, 0.3)';">
+            🌟 Rate Your Meals Now
+          </button>
+          <p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; margin: 1rem 0 0 0;">Help us improve your recommendations by rating your meal experiences</p>
+        </div>
+      `;
       
       content += '</div>';
       showCustomModal('Smart Recommendations', content);
