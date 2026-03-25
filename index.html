@@ -11035,11 +11035,16 @@
 
     // Progress Analytics Functions
     function updateProgressChart() {
-      console.log('=== HEALTH-STYLE WEIGHT CHART ===');
+      console.log('=== UPDATEPROGRESSCHART CALLED ===');
+      console.log('Container element found:', !!document.querySelector('.weight-chart-container'));
+      console.log('createHealthStyleWeightWidget function exists:', typeof createHealthStyleWeightWidget);
+      console.log('showWeightDataManager function exists:', typeof showWeightDataManager);
+      console.log('clearAllWeightData function exists:', typeof clearAllWeightData);
       
       // Always show the Health-style weight widget with 7-day vs 28-day comparison
       const chartContainer = document.querySelector('.weight-chart-container');
       if (chartContainer) {
+        console.log('Found chart container, updating innerHTML...');
         // Include the action buttons above the chart widget
         chartContainer.innerHTML = `
           <div style="padding: 2rem 0;">
@@ -11072,9 +11077,12 @@
             ${createHealthStyleWeightWidget()}
           </div>
         `;
+        console.log('Chart container innerHTML updated successfully');
+      } else {
+        console.error('Chart container not found!');
       }
       
-      console.log('=== HEALTH-STYLE CHART WITH BUTTONS DISPLAYED ===');
+      console.log('=== UPDATEPROGRESSCHART COMPLETED ===');
     }
     
     function generateCalendarData(validLogs, period) {
