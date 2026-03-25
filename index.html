@@ -11647,7 +11647,7 @@
       const chartWidth = 600;
       const chartHeight = 200;
       const chartLeft = 50; // Space for y-axis labels
-      const chartRight = 560; // Use more width
+      const chartRight = 580; // Use nearly full width
       const chartTop = 20;
       const chartBottom = 160;
       const plotWidth = chartRight - chartLeft;
@@ -12068,8 +12068,16 @@
 
     // Weight Data Management Functions
     function showWeightDataManager() {
+      // Get weight logs from both storage locations
       const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
-      const weightLogs = progressData.weightLogs || [];
+      const progressLogs = progressData.weightLogs || [];
+      const directLogs = JSON.parse(localStorage.getItem('weightLogs') || '[]');
+      
+      // Combine and deduplicate
+      const allLogs = [...progressLogs, ...directLogs];
+      const weightLogs = allLogs.filter((log, index, arr) => 
+        index === arr.findIndex(l => l.date === log.date && l.weight === log.weight)
+      );
       
       if (weightLogs.length === 0) {
         showNotification('No weight data to manage', 'info');
@@ -12116,32 +12124,57 @@
     }
 
     function removeWeightEntry(index) {
+      // Get unified weight logs (same as in showWeightDataManager)
       const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
-      const weightLogs = progressData.weightLogs || [];
+      const progressLogs = progressData.weightLogs || [];
+      const directLogs = JSON.parse(localStorage.getItem('weightLogs') || '[]');
+      
+      const allLogs = [...progressLogs, ...directLogs];
+      const weightLogs = allLogs.filter((log, i, arr) => 
+        i === arr.findIndex(l => l.date === log.date && l.weight === log.weight)
+      );
       
       if (index >= 0 && index < weightLogs.length) {
-        const removedEntry = weightLogs.splice(index, 1)[0];
-        progressData.weightLogs = weightLogs;
+        const removedEntry = weightLogs[index];
+        
+        // Remove from both storage locations
+        const updatedProgressLogs = progressLogs.filter(log => 
+          !(log.date === removedEntry.date && log.weight === removedEntry.weight)
+        );
+        const updatedDirectLogs = directLogs.filter(log => 
+          !(log.date === removedEntry.date && log.weight === removedEntry.weight)
+        );
+        
+        // Save back to both locations
+        progressData.weightLogs = updatedProgressLogs;
         localStorage.setItem('progressData', JSON.stringify(progressData));
+        localStorage.setItem('weightLogs', JSON.stringify(updatedDirectLogs));
         
         showNotification(`Removed weight entry: ${removedEntry.weight} lbs from ${new Date(removedEntry.date).toLocaleDateString()}`, 'success');
         
-        // Refresh the data manager modal
+        // Refresh displays
         showWeightDataManager();
-        
-        // Update the chart
         updateProgressChart();
+        updateProgressOverview();
       }
     }
 
     function clearAllWeightData() {
       if (confirm('Are you sure you want to clear all weight data? This action cannot be undone.')) {
+        // Clear from both storage locations
         const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
         progressData.weightLogs = [];
         localStorage.setItem('progressData', JSON.stringify(progressData));
         
+        // Also clear the direct weightLogs storage
+        localStorage.setItem('weightLogs', JSON.stringify([]));
+        
         showNotification('All weight data has been cleared', 'success');
+        
+        // Refresh all progress displays
         updateProgressChart();
+        updateProgressOverview();
+        updateWeightTrendMetrics();
       }
     }
 
