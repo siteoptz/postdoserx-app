@@ -11049,18 +11049,6 @@
         chartContainer.innerHTML = `
           <div style="padding: 2rem 0;">
             <div class="chart-actions" style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-bottom: 1.5rem;">
-              <button class="chart-action-btn" onclick="showWeightDataManager()" style="
-                background: var(--slate-dark);
-                border: 1px solid var(--border-primary);
-                color: var(--text-secondary);
-                padding: 0.5rem 1rem;
-                border-radius: 6px;
-                font-size: 0.875rem;
-                cursor: pointer;
-                transition: all 0.2s ease;
-              " onmouseover="this.style.background='var(--slate)'" onmouseout="this.style.background='var(--slate-dark)'">
-                Manage Data
-              </button>
               <button class="chart-action-btn danger" onclick="clearAllWeightData()" style="
                 background: var(--accent-rose);
                 border: 1px solid var(--accent-rose);
@@ -11501,8 +11489,10 @@
         validLogs.sort((a, b) => new Date(a.date) - new Date(b.date));
       }
       
-      // Calculate trend if we have data
-      let trendText = "+14%";
+      // Calculate dynamic trend tags based on weight fluctuation
+      let trendText = "Steady";
+      let trendPercentage = "0%";
+      let trendLabel = "7-DAY VS. 28-DAY WEIGHT";
       let trendDescription = "Log weight data to see your trend analysis.";
       
       if (hasData && validLogs.length >= 2) {
@@ -11513,16 +11503,58 @@
           const recentAvg = recent.reduce((sum, log) => sum + parseFloat(log.weight), 0) / recent.length;
           const olderAvg = older.reduce((sum, log) => sum + parseFloat(log.weight), 0) / older.length;
           const change = ((recentAvg - olderAvg) / olderAvg) * 100;
+          const changeAbs = Math.abs(change);
           
-          trendText = change >= 0 ? `+${Math.abs(change).toFixed(1)}%` : `-${Math.abs(change).toFixed(1)}%`;
-          trendDescription = `Your recent weight trend shows ${Math.abs(change).toFixed(1)}% ${change >= 0 ? 'increase' : 'decrease'} compared to the previous period.`;
+          // Dynamic trend text based on change magnitude and direction
+          trendPercentage = change >= 0 ? `+${changeAbs.toFixed(1)}%` : `-${changeAbs.toFixed(1)}%`;
+          
+          if (changeAbs < 0.5) {
+            trendText = "Stable";
+            trendLabel = "CONSISTENT WEIGHT PATTERN";
+          } else if (change < -3) {
+            trendText = "Rapid Loss";
+            trendLabel = "ACCELERATED WEIGHT LOSS";
+          } else if (change < -1) {
+            trendText = "Good Loss";  
+            trendLabel = "HEALTHY WEIGHT LOSS";
+          } else if (change < 0) {
+            trendText = "Steady Loss";
+            trendLabel = "GRADUAL WEIGHT LOSS";
+          } else if (change < 1) {
+            trendText = "Slight Gain";
+            trendLabel = "MINOR WEIGHT INCREASE";
+          } else if (change < 3) {
+            trendText = "Gaining";
+            trendLabel = "WEIGHT INCREASE TREND";
+          } else {
+            trendText = "Rapid Gain";
+            trendLabel = "SIGNIFICANT WEIGHT GAIN";
+          }
+          
+          trendDescription = `Your recent ${changeAbs.toFixed(1)}% ${change >= 0 ? 'increase' : 'decrease'} compared to previous weeks shows ${trendText.toLowerCase()} progress.`;
         } else if (validLogs.length >= 2) {
           const firstWeight = validLogs[0].weight;
           const lastWeight = validLogs[validLogs.length - 1].weight;
           const totalChange = ((lastWeight - firstWeight) / firstWeight) * 100;
+          const changeAbs = Math.abs(totalChange);
           
-          trendText = totalChange >= 0 ? `+${Math.abs(totalChange).toFixed(1)}%` : `-${Math.abs(totalChange).toFixed(1)}%`;
-          trendDescription = `Overall weight change: ${Math.abs(totalChange).toFixed(1)}% ${totalChange >= 0 ? 'increase' : 'decrease'} since you started logging.`;
+          trendPercentage = totalChange >= 0 ? `+${changeAbs.toFixed(1)}%` : `-${changeAbs.toFixed(1)}%`;
+          
+          if (changeAbs < 1) {
+            trendText = "Maintaining";
+            trendLabel = "WEIGHT MAINTENANCE";
+          } else if (totalChange < -5) {
+            trendText = "Excellent Loss";
+            trendLabel = "OUTSTANDING PROGRESS";
+          } else if (totalChange < 0) {
+            trendText = "Losing Well";
+            trendLabel = "POSITIVE WEIGHT LOSS";
+          } else {
+            trendText = "Weight Gained";
+            trendLabel = "WEIGHT INCREASE OVERALL";
+          }
+          
+          trendDescription = `Overall ${changeAbs.toFixed(1)}% ${totalChange >= 0 ? 'increase' : 'decrease'} since you started logging.`;
         }
       }
       
@@ -11570,7 +11602,7 @@
               font-size: 22px;
               font-weight: 600;
               letter-spacing: -0.025em;
-            ">Steady</h3>
+            ">${trendText}</h3>
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="color: rgba(255,255,255,0.3);">
               <path d="M6 3L10 8L6 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -11587,7 +11619,7 @@
               color: #5E9EFF;
               font-size: 15px;
               font-weight: 700;
-            ">${trendText}</span>
+            ">${trendPercentage}</span>
             <span style="
               color: #8E8E93;
               font-size: 12px;
@@ -11599,7 +11631,7 @@
               text-transform: uppercase;
               letter-spacing: 0.06em;
               font-weight: 500;
-            ">7-DAY VS. 28-DAY WEIGHT</span>
+            ">${trendLabel}</span>
           </div>
           
           <!-- Body copy -->
