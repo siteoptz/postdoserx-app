@@ -11251,78 +11251,106 @@
       
       console.log('Weight scaling:', { weights, minWeight, maxWeight, weightRange });
       
-      // Bar chart settings for 600px wide SVG with proper alignment
-      const chartPadding = 50; // Left and right padding to match timeline
-      const chartWidth = 600 - (chartPadding * 2); // Available width: 500px
+      // Bar chart settings - simplified approach with proper distribution
+      const chartStartX = 50;
+      const chartEndX = 550;
+      const chartWidth = chartEndX - chartStartX; // 500px
       const chartHeight = 100;
-      const barWidth = 30;
+      const chartStartY = 30;
+      const chartEndY = 140;
+      
+      console.log('Chart dimensions:', { chartStartX, chartEndX, chartWidth, chartStartY, chartEndY });
+      console.log('Weight data:', filteredLogs.map(log => `${log.date}: ${log.weight}lbs`));
+      
+      // Calculate bar positions to distribute evenly across chart width
       const numBars = filteredLogs.length;
+      const barWidth = Math.min(40, chartWidth / (numBars * 1.5)); // Responsive bar width
+      const totalBarWidth = numBars * barWidth;
+      const totalSpacing = chartWidth - totalBarWidth;
+      const spacing = numBars > 1 ? totalSpacing / (numBars + 1) : totalSpacing / 2;
       
-      // Calculate spacing to align bars with timeline labels
-      const availableSpace = chartWidth - (numBars * barWidth);
-      const spacing = numBars > 1 ? availableSpace / (numBars - 1) : 0;
+      console.log('Bar layout:', { numBars, barWidth, totalSpacing, spacing });
       
-      console.log('Chart layout:', { chartWidth, numBars, barWidth, spacing, chartPadding });
-      
-      // Generate bars and labels with timeline alignment
+      // Generate bars and collect timeline data
       const timelineLabels = [];
+      const barPositions = []; // Track bar positions for timeline alignment
+      
       filteredLogs.forEach((log, index) => {
-        // Position bars to align with timeline (distributed evenly across available width)
-        const x = chartPadding + (index * (barWidth + spacing));
-        const weightPercent = (parseFloat(log.weight) - minWeight) / weightRange;
-        const barHeight = Math.max(20, weightPercent * chartHeight);
-        const y = 140 - barHeight;
+        const x = chartStartX + spacing + (index * (barWidth + spacing));
+        barPositions.push(x + barWidth/2); // Center position of each bar
         
-        console.log(`Bar ${index}: weight=${log.weight}, x=${x}, y=${y}, height=${barHeight}`);
+        // Calculate bar height based on weight
+        const weightPercent = (parseFloat(log.weight) - minWeight) / Math.max(weightRange, 1);
+        const barHeight = Math.max(15, weightPercent * chartHeight);
+        const y = chartEndY - barHeight;
         
-        // Create bar rectangle
+        console.log(`Bar ${index}: date=${log.date}, weight=${log.weight}lbs, x=${x}, y=${y}, height=${barHeight}`);
+        
+        // Create bar
         const bar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         bar.setAttribute('x', x);
         bar.setAttribute('y', y);
         bar.setAttribute('width', barWidth);
         bar.setAttribute('height', barHeight);
         bar.setAttribute('fill', index === numBars - 1 ? '#c61628' : '#3b82f6');
-        bar.setAttribute('rx', '4');
+        bar.setAttribute('rx', '3');
         svg.appendChild(bar);
         
-        // Add weight label
-        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        label.setAttribute('x', x + barWidth/2);
-        label.setAttribute('y', y - 5);
-        label.setAttribute('fill', 'white');
-        label.setAttribute('font-size', '10');
-        label.setAttribute('text-anchor', 'middle');
-        label.textContent = log.weight + ' lbs';
-        svg.appendChild(label);
+        // Add weight value label above bar
+        const weightLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        weightLabel.setAttribute('x', x + barWidth/2);
+        weightLabel.setAttribute('y', y - 5);
+        weightLabel.setAttribute('fill', 'white');
+        weightLabel.setAttribute('font-size', '10');
+        weightLabel.setAttribute('text-anchor', 'middle');
+        weightLabel.textContent = `${log.weight}`;
+        svg.appendChild(weightLabel);
         
-        // Format date for timeline
+        // Format date for timeline (MM/DD format)
         const date = new Date(log.date);
-        timelineLabels.push(date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+        const formattedDate = `${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getDate().toString().padStart(2, '0')}`;
+        timelineLabels.push(formattedDate);
       });
       
-      // Update timeline with proper alignment using CSS Grid instead of flexbox
+      // Update timeline labels positioned under each bar
       const timeline = document.querySelector('.chart-timeline');
       if (timeline) {
+        // Create timeline with exact positioning to match bars
         timeline.style.cssText = `
-          display: grid;
-          grid-template-columns: repeat(${numBars}, 1fr);
-          margin-top: 1rem;
-          padding: 0 ${chartPadding}px;
-          text-align: center;
+          position: relative;
+          height: 20px;
+          margin-top: 0.5rem;
         `;
-        timeline.innerHTML = timelineLabels.map(label => 
-          `<span class="timeline-item" style="color: rgba(255,255,255,0.7); font-size: 11px;">${label}</span>`
-        ).join('');
-        console.log('Timeline updated with aligned labels:', timelineLabels);
+        
+        let timelineHTML = '';
+        timelineLabels.forEach((label, index) => {
+          const leftPosition = ((barPositions[index] - chartStartX) / chartWidth) * 100;
+          timelineHTML += `
+            <span style="
+              position: absolute; 
+              left: ${leftPosition}%; 
+              transform: translateX(-50%); 
+              color: rgba(255,255,255,0.8); 
+              font-size: 10px;
+              white-space: nowrap;
+            ">${label}</span>
+          `;
+        });
+        timeline.innerHTML = timelineHTML;
+        
+        console.log('Timeline labels:', timelineLabels);
+        console.log('Bar positions:', barPositions);
       }
       
-      // Update Y-axis labels
-      const yLabels = svg.querySelectorAll('text[x="5"]');
-      if (yLabels.length >= 3) {
-        yLabels[0].textContent = Math.round(maxWeight);
-        yLabels[1].textContent = Math.round((minWeight + maxWeight) / 2);
-        yLabels[2].textContent = Math.round(minWeight);
+      // Update Y-axis labels with actual weight values
+      const yAxisLabels = svg.querySelectorAll('text[x="5"]');
+      if (yAxisLabels.length >= 3) {
+        yAxisLabels[0].textContent = Math.round(maxWeight);
+        yAxisLabels[1].textContent = Math.round((minWeight + maxWeight) / 2);
+        yAxisLabels[2].textContent = Math.round(minWeight);
       }
+      
+      console.log('Y-axis values:', { maxWeight, midWeight: (minWeight + maxWeight) / 2, minWeight });
       
       console.log('=== BAR CHART GENERATION COMPLETED ===');
     }
