@@ -11072,10 +11072,41 @@
       // Always show the Health-style weight widget with 7-day vs 28-day comparison
       const chartContainer = document.querySelector('.weight-chart-container');
       if (chartContainer) {
-        chartContainer.innerHTML = createHealthStyleWeightWidget();
+        // Include the action buttons above the chart widget
+        chartContainer.innerHTML = `
+          <div style="padding: 2rem 0;">
+            <div class="chart-actions" style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-bottom: 1.5rem;">
+              <button class="chart-action-btn" onclick="showWeightDataManager()" style="
+                background: var(--slate-dark);
+                border: 1px solid var(--border-primary);
+                color: var(--text-secondary);
+                padding: 0.5rem 1rem;
+                border-radius: 6px;
+                font-size: 0.875rem;
+                cursor: pointer;
+                transition: all 0.2s ease;
+              " onmouseover="this.style.background='var(--slate)'" onmouseout="this.style.background='var(--slate-dark)'">
+                Manage Data
+              </button>
+              <button class="chart-action-btn danger" onclick="clearAllWeightData()" style="
+                background: var(--accent-rose);
+                border: 1px solid var(--accent-rose);
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 6px;
+                font-size: 0.875rem;
+                cursor: pointer;
+                transition: all 0.2s ease;
+              " onmouseover="this.style.background='#b91c1c'" onmouseout="this.style.background='var(--accent-rose)'">
+                Clear All
+              </button>
+            </div>
+            ${createHealthStyleWeightWidget()}
+          </div>
+        `;
       }
       
-      console.log('=== HEALTH-STYLE CHART DISPLAYED ===');
+      console.log('=== HEALTH-STYLE CHART WITH BUTTONS DISPLAYED ===');
     }
     
     function generateCalendarData(validLogs, period) {
