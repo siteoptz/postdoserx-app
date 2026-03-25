@@ -11390,22 +11390,135 @@
       }
     }
 
+    // Generate functional SVG chart with real user data
+    function generateFunctionalChart(validLogs, goalWeight) {
+      // Default empty state
+      if (!validLogs || validLogs.length === 0) {
+        return {
+          svgContent: `
+            <!-- Empty state message -->
+            <text x="160" y="60" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="12">
+              Log weight data to see chart
+            </text>
+          `,
+          dateLabels: '<span style="color: rgba(255,255,255,0.4); font-size: 10px;">No data available</span>'
+        };
+      }
+      
+      // Sort logs by date and get last 7 entries for chart
+      const sortedLogs = [...validLogs].sort((a, b) => new Date(a.date) - new Date(b.date));
+      const chartData = sortedLogs.slice(-7); // Last 7 entries
+      
+      // Calculate chart dimensions
+      const chartWidth = 280;
+      const chartHeight = 80;
+      const paddingX = 20;
+      const paddingY = 20;
+      const plotWidth = chartWidth - (paddingX * 2);
+      const plotHeight = chartHeight - (paddingY * 2);
+      
+      // Calculate weight range
+      const weights = chartData.map(log => parseFloat(log.weight));
+      const minWeight = Math.min(...weights);
+      const maxWeight = Math.max(...weights);
+      const weightRange = maxWeight - minWeight;
+      const rangePadding = Math.max(2, weightRange * 0.1); // At least 2 lbs padding
+      const chartMinWeight = minWeight - rangePadding;
+      const chartMaxWeight = maxWeight + rangePadding;
+      const chartWeightRange = chartMaxWeight - chartMinWeight;
+      
+      // Include goal weight in range if provided
+      let adjustedMinWeight = chartMinWeight;
+      let adjustedMaxWeight = chartMaxWeight;
+      if (goalWeight) {
+        adjustedMinWeight = Math.min(chartMinWeight, goalWeight - 2);
+        adjustedMaxWeight = Math.max(chartMaxWeight, goalWeight + 2);
+      }
+      const finalWeightRange = adjustedMaxWeight - adjustedMinWeight;
+      
+      // Generate data points for line chart
+      let svgContent = '';
+      const points = [];
+      const dateLabels = [];
+      
+      chartData.forEach((log, index) => {
+        const x = paddingX + (index / Math.max(1, chartData.length - 1)) * plotWidth;
+        const y = paddingY + plotHeight - ((parseFloat(log.weight) - adjustedMinWeight) / finalWeightRange) * plotHeight;
+        
+        points.push(`${x},${y}`);
+        
+        // Date label
+        const date = new Date(log.date);
+        const dateLabel = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+        dateLabels.push(`<span style="color: rgba(255,255,255,0.6); font-size: 9px;">${dateLabel}</span>`);
+        
+        // Data point circle
+        svgContent += `<circle cx="${x}" cy="${y}" r="3" fill="#3b82f6" stroke="white" stroke-width="1.5" />`;
+        
+        // Weight value above point
+        svgContent += `<text x="${x}" y="${y - 8}" text-anchor="middle" fill="white" font-size="8">${log.weight}</text>`;
+      });
+      
+      // Generate line path
+      if (points.length > 1) {
+        svgContent += `<path d="M ${points.join(' L ')}" stroke="url(#weightLineGradient)" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />`;
+      }
+      
+      // Add goal line if available
+      if (goalWeight) {
+        const goalY = paddingY + plotHeight - ((goalWeight - adjustedMinWeight) / finalWeightRange) * plotHeight;
+        svgContent += `
+          <line x1="${paddingX}" y1="${goalY}" x2="${paddingX + plotWidth}" y2="${goalY}" stroke="rgba(34,197,94,0.7)" stroke-width="1.5" stroke-dasharray="4,2" />
+          <text x="${paddingX + plotWidth - 5}" y="${goalY - 3}" text-anchor="end" fill="rgba(34,197,94,0.9)" font-size="8">Goal: ${goalWeight}</text>
+        `;
+      }
+      
+      return {
+        svgContent: svgContent,
+        dateLabels: dateLabels.join('')
+      };
+    }
+    
     function createDashboardMiniCard() {
-      // Get actual weight data for dynamic chart
-      let progressData, weightLogs;
+      // Get actual weight data from BOTH storage locations (unified approach)
+      let weightLogs = [];
       try {
-        progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
-        weightLogs = progressData.weightLogs || [];
+        // Check progressData.weightLogs first
+        const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
+        const progressLogs = progressData.weightLogs || [];
+        
+        // Check weightLogs storage
+        const directLogs = JSON.parse(localStorage.getItem('weightLogs') || '[]');
+        
+        // Combine and deduplicate
+        const allLogs = [...progressLogs, ...directLogs];
+        const uniqueLogs = allLogs.filter((log, index, arr) => 
+          index === arr.findIndex(l => l.date === log.date && l.weight === log.weight)
+        );
+        
+        weightLogs = uniqueLogs;
+        
+        console.log('Weight data sources:', {
+          progressData: progressLogs.length,
+          weightLogs: directLogs.length,
+          combined: weightLogs.length
+        });
       } catch (error) {
+        console.error('Error loading weight data:', error);
         weightLogs = [];
       }
       
       const validLogs = weightLogs.filter(log => log && log.weight && log.date);
       const hasData = validLogs.length > 0;
       
+      // Sort by date and get recent data for chart
+      if (hasData) {
+        validLogs.sort((a, b) => new Date(a.date) - new Date(b.date));
+      }
+      
       // Calculate trend if we have data
       let trendText = "+14%";
-      let trendDescription = "After your workout today, your 7-day weight trend is similar to your 28-day trend.";
+      let trendDescription = "Log weight data to see your trend analysis.";
       
       if (hasData && validLogs.length >= 2) {
         const recent = validLogs.slice(-7); // Last 7 entries
@@ -11418,8 +11531,37 @@
           
           trendText = change >= 0 ? `+${Math.abs(change).toFixed(1)}%` : `-${Math.abs(change).toFixed(1)}%`;
           trendDescription = `Your recent weight trend shows ${Math.abs(change).toFixed(1)}% ${change >= 0 ? 'increase' : 'decrease'} compared to the previous period.`;
+        } else if (validLogs.length >= 2) {
+          const firstWeight = validLogs[0].weight;
+          const lastWeight = validLogs[validLogs.length - 1].weight;
+          const totalChange = ((lastWeight - firstWeight) / firstWeight) * 100;
+          
+          trendText = totalChange >= 0 ? `+${Math.abs(totalChange).toFixed(1)}%` : `-${Math.abs(totalChange).toFixed(1)}%`;
+          trendDescription = `Overall weight change: ${Math.abs(totalChange).toFixed(1)}% ${totalChange >= 0 ? 'increase' : 'decrease'} since you started logging.`;
         }
       }
+      
+      // Get goal weight from both storage locations
+      let goalWeight = null;
+      try {
+        // Check medicationProfile first
+        const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
+        goalWeight = medicationProfile.goal_weight || medicationProfile.goalWeight;
+        
+        // Fallback to progressData
+        if (!goalWeight) {
+          const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
+          goalWeight = progressData.goalWeight;
+        }
+        
+        console.log('Goal weight found:', goalWeight);
+      } catch (error) {
+        console.error('Error loading goal weight:', error);
+        goalWeight = null;
+      }
+      
+      // Generate functional SVG chart with real data
+      const chartSVG = generateFunctionalChart(validLogs, goalWeight);
       
       return `
         <div class="dashboard-mini-card" style="
@@ -11443,7 +11585,7 @@
               font-size: 18px;
               font-weight: 600;
               letter-spacing: -0.025em;
-            ">Steady</h3>
+            ">Weight Progress</h3>
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="color: rgba(255,255,255,0.4);">
               <path d="M7.5 5L12.5 10L7.5 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -11473,7 +11615,7 @@
               text-transform: uppercase;
               letter-spacing: 0.05em;
               font-weight: 500;
-            ">7-DAY VS. 28-DAY WEIGHT</span>
+            ">WEIGHT TREND ANALYSIS</span>
           </div>
 
           <!-- Body text -->
@@ -11486,25 +11628,22 @@
             ${trendDescription}
           </p>
 
-          <!-- Inset chart container -->
+          <!-- Functional weight chart -->
           <div class="chart-inset" style="
             position: relative;
             height: 120px;
             margin: 0 -8px;
           ">
-            <svg viewBox="0 0 320 120" style="
+            <svg id="functionalWeightChart" viewBox="0 0 320 120" style="
               width: 100%;
               height: 100%;
               overflow: visible;
             ">
               <defs>
-                <!-- Gradient for front line -->
                 <linearGradient id="weightLineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" style="stop-color:#a855f7;stop-opacity:1" />
                   <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
                 </linearGradient>
-                
-                <!-- Glow effect for last point -->
                 <filter id="blueGlow">
                   <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
                   <feMerge> 
@@ -11513,52 +11652,17 @@
                   </feMerge>
                 </filter>
               </defs>
-
-              <!-- Vertical grid lines on week boundaries -->
-              <g class="grid-lines">
-                <line x1="80" y1="10" x2="80" y2="90" stroke="rgba(255,255,255,0.1)" stroke-width="1" stroke-dasharray="2,3"/>
-                <line x1="160" y1="10" x2="160" y2="90" stroke="rgba(255,255,255,0.1)" stroke-width="1" stroke-dasharray="2,3"/>
-                <line x1="240" y1="10" x2="240" y2="90" stroke="rgba(255,255,255,0.1)" stroke-width="1" stroke-dasharray="2,3"/>
-              </g>
-
-              <!-- Baseline curve (thin white behind) -->
-              <path d="M 20 70 Q 80 60 120 65 T 200 55 T 280 60 Q 300 62 320 65" 
-                    stroke="rgba(255,255,255,0.3)" 
-                    stroke-width="2" 
-                    fill="none"/>
-
-              <!-- Front curve (thick gradient) -->
-              <path d="M 20 75 Q 60 45 100 50 Q 140 55 180 40 Q 220 45 260 35 Q 290 38 300 42" 
-                    stroke="url(#weightLineGradient)" 
-                    stroke-width="3" 
-                    fill="none"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"/>
-
-              <!-- Data points on front line -->
-              <circle cx="20" cy="75" r="2" fill="#a855f7"/>
-              <circle cx="60" cy="48" r="2" fill="#8b5cf6"/>
-              <circle cx="100" cy="50" r="2" fill="#7c3aed"/>
-              <circle cx="140" cy="52" r="2" fill="#6366f1"/>
-              <circle cx="180" cy="40" r="2" fill="#4f46e5"/>
-              <circle cx="220" cy="45" r="2" fill="#4338ca"/>
-              <circle cx="260" cy="35" r="2" fill="#3730a3"/>
-              
-              <!-- Last point (larger with glow) -->
-              <circle cx="300" cy="42" r="4" fill="#3b82f6" filter="url(#blueGlow)"/>
+              ${chartSVG.svgContent}
             </svg>
 
-            <!-- Date labels below chart -->
+            <!-- Dynamic date labels -->
             <div style="
               display: flex;
               justify-content: space-between;
               margin-top: 8px;
               padding: 0 20px;
             ">
-              <span style="color: rgba(255,255,255,0.5); font-size: 11px;">Feb 26</span>
-              <span style="color: rgba(255,255,255,0.5); font-size: 11px;">Mar 5</span>
-              <span style="color: rgba(255,255,255,0.5); font-size: 11px;">Mar 12</span>
-              <span style="color: rgba(255,255,255,0.5); font-size: 11px;">Mar 19</span>
+              ${chartSVG.dateLabels}
             </div>
           </div>
 
@@ -11702,6 +11806,106 @@
         </div>
       `;
     }
+    
+    function generateChartData(validLogs) {
+      if (!validLogs.length) {
+        // Empty state with placeholder message
+        return {
+          svgContent: `
+            <text x="160" y="60" fill="rgba(255,255,255,0.5)" font-size="14" text-anchor="middle">
+              Log weight data to see your progress
+            </text>
+          `,
+          dateLabels: `
+            <span style="color: rgba(255,255,255,0.3); font-size: 11px;">No data</span>
+            <span style="color: rgba(255,255,255,0.3); font-size: 11px;">Log weight</span>
+            <span style="color: rgba(255,255,255,0.3); font-size: 11px;">to see</span>
+            <span style="color: rgba(255,255,255,0.3); font-size: 11px;">progress</span>
+          `
+        };
+      }
+      
+      // Use the last 8 entries for chart (or all if less than 8)
+      const chartLogs = validLogs.slice(-8);
+      
+      // Calculate weight range for scaling
+      const weights = chartLogs.map(log => parseFloat(log.weight));
+      const minWeight = Math.min(...weights);
+      const maxWeight = Math.max(...weights);
+      const weightRange = Math.max(maxWeight - minWeight, 5); // Minimum range of 5lbs
+      
+      // Chart dimensions
+      const chartLeft = 20;
+      const chartRight = 300;
+      const chartTop = 20;
+      const chartBottom = 90;
+      const chartWidth = chartRight - chartLeft;
+      const chartHeight = chartBottom - chartTop;
+      
+      // Generate data points
+      const points = [];
+      const dataSpacing = chartLogs.length > 1 ? chartWidth / (chartLogs.length - 1) : 0;
+      
+      chartLogs.forEach((log, index) => {
+        const x = chartLogs.length === 1 ? chartLeft + chartWidth / 2 : chartLeft + (index * dataSpacing);
+        const weightPercent = weightRange > 0 ? (parseFloat(log.weight) - minWeight) / weightRange : 0.5;
+        const y = chartBottom - (weightPercent * chartHeight);
+        points.push({ x, y, weight: log.weight, date: log.date });
+      });
+      
+      // Generate SVG path for the line
+      let pathData = '';
+      if (points.length > 1) {
+        pathData = `M ${points[0].x} ${points[0].y}`;
+        for (let i = 1; i < points.length; i++) {
+          pathData += ` L ${points[i].x} ${points[i].y}`;
+        }
+      }
+      
+      // Generate SVG content
+      let svgContent = '';
+      
+      // Add grid lines
+      if (chartLogs.length > 3) {
+        const gridSpacing = chartWidth / 3;
+        for (let i = 1; i < 3; i++) {
+          const x = chartLeft + (i * gridSpacing);
+          svgContent += `<line x1="${x}" y1="${chartTop}" x2="${x}" y2="${chartBottom}" stroke="rgba(255,255,255,0.1)" stroke-width="1" stroke-dasharray="2,3"/>`;
+        }
+      }
+      
+      // Add connecting line
+      if (points.length > 1) {
+        svgContent += `<path d="${pathData}" stroke="url(#weightLineGradient)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>`;
+      }
+      
+      // Add data points
+      points.forEach((point, index) => {
+        const isLast = index === points.length - 1;
+        const radius = isLast ? 4 : 3;
+        const fill = isLast ? '#3b82f6' : '#8b5cf6';
+        const filter = isLast ? 'filter="url(#blueGlow)"' : '';
+        
+        svgContent += `<circle cx="${point.x}" cy="${point.y}" r="${radius}" fill="${fill}" ${filter}/>`;
+        
+        // Add weight label above point
+        svgContent += `<text x="${point.x}" y="${point.y - 8}" fill="white" font-size="10" text-anchor="middle" font-weight="500">${Math.round(point.weight)}</text>`;
+      });
+      
+      // Generate date labels
+      const dateLabels = points.length > 0 
+        ? points.map(point => {
+            const date = new Date(point.date);
+            const formattedDate = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            return `<span style="color: rgba(255,255,255,0.5); font-size: 11px;">${formattedDate}</span>`;
+          }).join('')
+        : '<span style="color: rgba(255,255,255,0.3); font-size: 11px;">No data</span>';
+      
+      return {
+        svgContent,
+        dateLabels
+      };
+    }
 
     // Modal functions
     function openWeightLogModal() {
@@ -11752,11 +11956,19 @@
       
       progressData.weightLogs.push(newEntry);
       
-      // Save to localStorage
+      // Save to localStorage (both locations for compatibility)
       localStorage.setItem('progressData', JSON.stringify(progressData));
+      
+      // Also save to weightLogs for compatibility
+      const weightLogs = JSON.parse(localStorage.getItem('weightLogs') || '[]');
+      weightLogs.push(newEntry);
+      localStorage.setItem('weightLogs', JSON.stringify(weightLogs));
       
       // Close modal
       closeWeightLogModal();
+      
+      // Update chart immediately
+      updateProgressChart();
       
       // Show success message
       showNotification(`Weight logged: ${weight} lbs on ${date}`, 'success');
@@ -11927,8 +12139,19 @@
             
             localStorage.setItem('progressData', JSON.stringify(progressData));
             
-            // Update UI
+            // Also save to weightLogs for compatibility
+            const weightLogs = JSON.parse(localStorage.getItem('weightLogs') || '[]');
+            weightLogs.push({
+              date: weightDate,
+              weight: parseFloat(currentWeight),
+              notes: weightNotes,
+              timestamp: Date.now()
+            });
+            localStorage.setItem('weightLogs', JSON.stringify(weightLogs));
+            
+            // Update UI and chart
             updateProgressDisplay();
+            updateProgressChart();
             
             // Update weight chart with new data
             console.log('About to update chart after weight logging');
