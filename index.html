@@ -11672,8 +11672,6 @@
       // Sort and get data for chart (last 7 weight logs only)
       const sortedLogs = [...validLogs].sort((a, b) => new Date(a.date) - new Date(b.date));
       const recentLogs = sortedLogs.slice(-7); // Show only last 7 weight logs
-      const sevenDayLogs = recentLogs; // All recent logs are for primary line
-      const twentyEightDayLogs = sortedLogs.slice(-28, -7); // Previous 21 logs for reference line
       
       if (recentLogs.length < 2) {
         return `
@@ -11731,15 +11729,18 @@
         }
       });
       
-      // Generate 28-day reference line (secondary, behind)
-      let referenceLinePath = '';
-      if (twentyEightDayLogs.length >= 2) {
-        const pathPoints = twentyEightDayLogs.map(log => {
-          const x = dateToX(log.date);
-          const y = weightToY(parseFloat(log.weight));
-          return `${x},${y}`;
-        });
-        referenceLinePath = `<path d="M ${pathPoints.join(' L ')}" stroke="#FFFFFF" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.4"/>`;
+      // Generate goal line (dotted horizontal line at target weight)
+      let goalLine = '';
+      if (goalWeight && goalWeight >= yMin && goalWeight <= yMax) {
+        const goalY = weightToY(goalWeight);
+        goalLine = `
+          <line x1="${chartLeft}" y1="${goalY}" x2="${chartRight}" y2="${goalY}" 
+                stroke="#10b981" stroke-width="2" stroke-dasharray="4,4" opacity="0.8"/>
+          <text x="${chartRight - 5}" y="${goalY - 5}" text-anchor="end" fill="#10b981" 
+                font-size="11" font-family="-apple-system, BlinkMacSystemFont, sans-serif">
+            Goal: ${goalWeight} lbs
+          </text>
+        `;
       }
       
       // Generate 7-day primary line with gradient
@@ -11834,8 +11835,8 @@
           <!-- Grid lines -->
           ${gridLines.join('')}
           
-          <!-- 28-day reference line (middle layer) -->
-          ${referenceLinePath}
+          <!-- Goal line (middle layer) -->
+          ${goalLine}
           
           <!-- 7-day primary line (front layer) -->
           ${primaryLinePath}
