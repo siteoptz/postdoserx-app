@@ -11751,8 +11751,8 @@
       let dataPoints = '';
       let endGlow = '';
       
-      if (sevenDayLogs.length >= 1) {
-        const pathPoints = sevenDayLogs.map(log => {
+      if (recentLogs.length >= 1) {
+        const pathPoints = recentLogs.map(log => {
           const x = dateToX(log.date);
           const y = weightToY(parseFloat(log.weight));
           return `${x},${y}`;
@@ -11763,10 +11763,10 @@
         }
         
         // Generate data point circles
-        sevenDayLogs.forEach((log, index) => {
+        recentLogs.forEach((log, index) => {
           const x = dateToX(log.date);
           const y = weightToY(parseFloat(log.weight));
-          const isLast = index === sevenDayLogs.length - 1;
+          const isLast = index === recentLogs.length - 1;
           
           if (isLast) {
             // Larger end cap with glow
@@ -11776,7 +11776,7 @@
             `;
           } else {
             // Regular data points
-            const gradientProgress = index / (sevenDayLogs.length - 1);
+            const gradientProgress = index / (recentLogs.length - 1);
             const pointColor = gradientProgress < 0.5 ? '#9B8FD9' : '#5E9EFF';
             dataPoints += `<circle cx="${x}" cy="${y}" r="3" fill="${pointColor}" stroke="white" stroke-width="1.5"/>`;
           }
