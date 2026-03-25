@@ -11034,6 +11034,61 @@
     });
 
     // Progress Analytics Functions
+    
+    // Unified data retrieval function for all progress components
+    function getUnifiedWeightData() {
+      let weightLogs = [];
+      try {
+        // Check progressData.weightLogs first
+        const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
+        const progressLogs = progressData.weightLogs || [];
+        
+        // Check weightLogs storage
+        const directLogs = JSON.parse(localStorage.getItem('weightLogs') || '[]');
+        
+        // Combine and deduplicate
+        const allLogs = [...progressLogs, ...directLogs];
+        const uniqueLogs = allLogs.filter((log, index, arr) => 
+          index === arr.findIndex(l => l.date === log.date && l.weight === log.weight)
+        );
+        
+        weightLogs = uniqueLogs;
+      } catch (error) {
+        console.error('Error loading weight data:', error);
+        weightLogs = [];
+      }
+      
+      const validLogs = weightLogs.filter(log => log && log.weight && log.date);
+      
+      // Sort by date
+      if (validLogs.length > 0) {
+        validLogs.sort((a, b) => new Date(a.date) - new Date(b.date));
+      }
+      
+      // Get goal weight from both storage locations
+      let goalWeight = null;
+      try {
+        const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
+        goalWeight = medicationProfile.goal_weight || medicationProfile.goalWeight;
+        
+        if (!goalWeight) {
+          const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
+          goalWeight = progressData.goalWeight;
+        }
+      } catch (error) {
+        console.error('Error loading goal weight:', error);
+        goalWeight = null;
+      }
+      
+      return {
+        validLogs,
+        hasData: validLogs.length > 0,
+        goalWeight,
+        firstWeight: validLogs.length > 0 ? validLogs[0].weight : null,
+        latestWeight: validLogs.length > 0 ? validLogs[validLogs.length - 1].weight : null
+      };
+    }
+    
     function updateProgressChart() {
       console.log('=== UPDATEPROGRESSCHART CALLED ===');
       console.log('Container element found:', !!document.querySelector('.weight-chart-container'));
@@ -11453,41 +11508,8 @@
     }
     
     function createHealthStyleWeightWidget() {
-      // Get actual weight data from BOTH storage locations (unified approach)
-      let weightLogs = [];
-      try {
-        // Check progressData.weightLogs first
-        const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
-        const progressLogs = progressData.weightLogs || [];
-        
-        // Check weightLogs storage
-        const directLogs = JSON.parse(localStorage.getItem('weightLogs') || '[]');
-        
-        // Combine and deduplicate
-        const allLogs = [...progressLogs, ...directLogs];
-        const uniqueLogs = allLogs.filter((log, index, arr) => 
-          index === arr.findIndex(l => l.date === log.date && l.weight === log.weight)
-        );
-        
-        weightLogs = uniqueLogs;
-        
-        console.log('Weight data sources:', {
-          progressData: progressLogs.length,
-          weightLogs: directLogs.length,
-          combined: weightLogs.length
-        });
-      } catch (error) {
-        console.error('Error loading weight data:', error);
-        weightLogs = [];
-      }
-      
-      const validLogs = weightLogs.filter(log => log && log.weight && log.date);
-      const hasData = validLogs.length > 0;
-      
-      // Sort by date and get recent data for chart
-      if (hasData) {
-        validLogs.sort((a, b) => new Date(a.date) - new Date(b.date));
-      }
+      // Use unified data retrieval
+      const { validLogs, hasData, goalWeight } = getUnifiedWeightData();
       
       // Calculate dynamic trend tags based on weight fluctuation
       let trendText = "Steady";
@@ -11556,25 +11578,6 @@
           
           trendDescription = `Overall ${changeAbs.toFixed(1)}% ${totalChange >= 0 ? 'increase' : 'decrease'} since you started logging.`;
         }
-      }
-      
-      // Get goal weight from both storage locations
-      let goalWeight = null;
-      try {
-        // Check medicationProfile first
-        const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
-        goalWeight = medicationProfile.goal_weight || medicationProfile.goalWeight;
-        
-        // Fallback to progressData
-        if (!goalWeight) {
-          const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
-          goalWeight = progressData.goalWeight;
-        }
-        
-        console.log('Goal weight found:', goalWeight);
-      } catch (error) {
-        console.error('Error loading goal weight:', error);
-        goalWeight = null;
       }
       
       // Generate Health app-style chart
@@ -12453,64 +12456,23 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
       }
     }
 
+    // Comprehensive function to update ALL progress cards with unified data
+    function updateAllProgressCards() {
+      console.log('Updating all progress cards with unified data...');
+      try {
+        updateProgressOverview();
+        updateWeightTrendMetrics(); 
+        updateGoalTrackingContent();
+        updateProgressChart();
+        console.log('All progress cards updated successfully');
+      } catch (error) {
+        console.error('Error updating progress cards:', error);
+      }
+    }
+    
     function updateProgressDisplay() {
-      // Update progress cards with real data from localStorage
-      const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
-      const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
-      
-      if (progressData.weightLogs && progressData.weightLogs.length > 0) {
-        const latestWeight = progressData.weightLogs[progressData.weightLogs.length - 1].weight;
-        const startingWeight = progressData.weightLogs[0].weight;
-        const totalLoss = startingWeight - latestWeight;
-        
-        // Update weight loss card (with null check)
-        const weightValueElement = document.querySelector('.weight-card .progress-value');
-        if (weightValueElement) {
-          weightValueElement.textContent = `${totalLoss >= 0 ? '-' : '+'}${Math.abs(totalLoss).toFixed(1)} lbs`;
-        }
-        
-        // Update current weight display (with null check)
-        const currentWeightElement = document.querySelector('.current-weight');
-        if (currentWeightElement) {
-          currentWeightElement.textContent = `${latestWeight} lbs`;
-        }
-      }
-      
-      // Update goal progress if goal is set
-      if (progressData.goalWeight) {
-        const goalWeightElement = document.querySelector('.goal-weight');
-        if (goalWeightElement) {
-          goalWeightElement.textContent = `Target: ${progressData.goalWeight} lbs`;
-        }
-        
-        if (progressData.weightLogs && progressData.weightLogs.length > 0) {
-          const currentWeight = progressData.weightLogs[progressData.weightLogs.length - 1].weight;
-          const startingWeight = progressData.weightLogs[0].weight;
-          const totalNeeded = startingWeight - progressData.goalWeight;
-          const achieved = startingWeight - currentWeight;
-          const progressPercent = Math.min((achieved / totalNeeded) * 100, 100);
-          
-          const goalValueElement = document.querySelector('.goal-card .progress-value');
-          if (goalValueElement) {
-            goalValueElement.textContent = `${Math.round(progressPercent)}%`;
-          }
-          
-          const progressFillElement = document.querySelector('.progress-fill');
-          if (progressFillElement) {
-            progressFillElement.style.width = `${progressPercent}%`;
-          }
-          
-          const remaining = currentWeight - progressData.goalWeight;
-          const goalTrackingElement = document.querySelector('.goal-tracking .stat-value');
-          if (goalTrackingElement) {
-            if (remaining > 0) {
-              goalTrackingElement.textContent = `${remaining.toFixed(1)} lbs`;
-            } else {
-              goalTrackingElement.textContent = 'Goal Reached!';
-            }
-          }
-        }
-      }
+      // Use the comprehensive update function instead
+      updateAllProgressCards();
     }
 
     function updateGoalDisplay() {
@@ -17565,16 +17527,15 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
     // =============================================================================
 
     function updateProgressPage() {
-      updateProgressOverview();
-      updateWeightTrendMetrics();
+      // Update all progress cards with unified data
+      updateAllProgressCards();
+      // Update additional insights
       updateInjectionCorrelationInsights();
-      updateGoalTrackingContent();
-      updateProgressChart();
     }
 
     function updateProgressOverview() {
-      const weightLogs = JSON.parse(localStorage.getItem('weightLogs') || '[]').filter(log => log.weight && log.date);
-      const userGoal = JSON.parse(localStorage.getItem('userGoal') || '{}');
+      // Use unified data retrieval
+      const { validLogs: weightLogs, hasData, goalWeight, firstWeight, latestWeight } = getUnifiedWeightData();
       
       if (weightLogs.length === 0) {
         document.getElementById('total-weight-lost').textContent = '0 lbs';
@@ -17588,12 +17549,8 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
         return;
       }
 
-      // Sort weight logs by date
-      weightLogs.sort((a, b) => new Date(a.date) - new Date(b.date));
-      
-      const firstWeight = weightLogs[0].weight;
-      const currentWeight = weightLogs[weightLogs.length - 1].weight;
-      const totalLost = firstWeight - currentWeight;
+      // Data is already sorted in getUnifiedWeightData()
+      const totalLost = firstWeight - latestWeight;
       
       // Calculate weekly trend (last 7 days)
       const oneWeekAgo = new Date();
@@ -17721,27 +17678,14 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
     }
 
     function updateWeightTrendMetrics() {
-      const weightLogs = JSON.parse(localStorage.getItem('weightLogs') || '[]').filter(log => log.weight && log.date);
+      // Use unified data retrieval
+      const { validLogs: weightLogs, hasData, goalWeight, latestWeight } = getUnifiedWeightData();
       const metricsEl = document.getElementById('weight-trend-metrics');
       
-      // Get user's goal from both possible storage locations
-      let userGoal = {};
-      try {
-        const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
-        const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
-        
-        userGoal = {
-          targetWeight: medicationProfile.goal_weight || medicationProfile.goalWeight || progressData.goalWeight,
-          isLossGoal: true // Default assumption for GLP-1 users
-        };
-        
-        // Determine if goal is weight loss or gain
-        if (weightLogs.length > 0 && userGoal.targetWeight) {
-          const currentWeight = weightLogs[weightLogs.length - 1].weight;
-          userGoal.isLossGoal = userGoal.targetWeight < currentWeight;
-        }
-      } catch (error) {
-        console.log('Could not determine user goal:', error);
+      // Determine if goal is weight loss or gain
+      let isLossGoal = true; // Default assumption for GLP-1 users
+      if (latestWeight && goalWeight) {
+        isLossGoal = goalWeight < latestWeight;
       }
       
       if (weightLogs.length < 2) {
@@ -17989,16 +17933,23 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
     }
 
     function updateGoalTrackingContent() {
-      const weightLogs = JSON.parse(localStorage.getItem('weightLogs') || '[]').filter(log => log.weight && log.date);
-      const userGoal = JSON.parse(localStorage.getItem('userGoal') || '{}');
-      const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
-      const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
+      // Use unified data retrieval
+      const { validLogs: weightLogs, hasData, goalWeight: targetWeight, firstWeight, latestWeight } = getUnifiedWeightData();
       const goalEl = document.getElementById('goal-tracking-content');
       
-      // Check multiple sources for goal data (including progressData)
-      const targetWeight = userGoal.targetWeight || medicationProfile.goal_weight || medicationProfile.goalWeight || progressData.goalWeight;
-      const targetDate = userGoal.targetDate || medicationProfile.goalDate || progressData.goalTimeline;
-      const reason = userGoal.reason || medicationProfile.goalReason || userGoal.motivation || progressData.goalMotivation;
+      // Get additional goal data from various sources
+      let targetDate = null;
+      let reason = null;
+      try {
+        const userGoal = JSON.parse(localStorage.getItem('userGoal') || '{}');
+        const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
+        const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
+        
+        targetDate = userGoal.targetDate || medicationProfile.goalDate || progressData.goalTimeline;
+        reason = userGoal.reason || medicationProfile.goalReason || userGoal.motivation || progressData.goalMotivation;
+      } catch (error) {
+        console.error('Error loading additional goal data:', error);
+      }
       
       if (!targetWeight || weightLogs.length === 0) {
         goalEl.innerHTML = `
@@ -18018,9 +17969,9 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
         return;
       }
 
-      weightLogs.sort((a, b) => new Date(b.date) - new Date(a.date));
-      const currentWeight = weightLogs[0].weight;
-      const startingWeight = userGoal.startingWeight || weightLogs[weightLogs.length - 1].weight;
+      // Data is already sorted, use latest and first weights
+      const currentWeight = latestWeight;
+      const startingWeight = firstWeight;
       
       // Determine goal direction (loss or gain)
       const isWeightLossGoal = startingWeight > targetWeight;
