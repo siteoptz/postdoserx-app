@@ -11087,48 +11087,15 @@
     }
 
     function updateProgressChart(period = 'week') {
-      console.log('=== WEIGHT PROGRESS CHART (per spec) ===', period);
-      console.log('Current timestamp:', new Date().toISOString());
+      console.log('=== DASHBOARD MINI-CARD ===', period);
       
-      // Get weight logs and user goal
-      let progressData, weightLogs, userGoal;
-      try {
-        progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
-        weightLogs = progressData.weightLogs || [];
-        userGoal = JSON.parse(localStorage.getItem('userGoal') || '{}');
-        console.log('Raw data - weightLogs:', weightLogs.length, 'entries, goal:', userGoal.targetWeight);
-        console.log('All weight logs:', weightLogs);
-      } catch (error) {
-        console.error('Error parsing localStorage:', error);
-        return;
+      // Always show the dashboard mini-card instead of the old chart
+      const chartContainer = document.querySelector('.weight-chart-container');
+      if (chartContainer) {
+        chartContainer.innerHTML = createDashboardMiniCard();
       }
       
-      // Validate weight logs
-      const validLogs = weightLogs.filter(log => log && log.weight && log.date);
-      console.log('Valid logs:', validLogs.length);
-      
-      if (validLogs.length === 0) {
-        showEmptyChartState();
-        return;
-      }
-      
-      // Generate calendar days for the selected period
-      const { calendarDays, aggregatedData } = generateCalendarData(validLogs, period);
-      console.log('Calendar data generated:', { calendarDays: calendarDays.length, aggregatedData: aggregatedData.length });
-      
-      // Calculate Y-axis scale including goal weight
-      const weights = aggregatedData.map(entry => entry.weight).filter(w => w !== null);
-      const goalWeight = userGoal.targetWeight ? parseFloat(userGoal.targetWeight) : null;
-      const yScale = calculateYAxisScale(weights, goalWeight);
-      console.log('Y-axis scale:', yScale);
-      
-      // Restore chart structure if needed
-      ensureChartStructure();
-      
-      // Generate the bar chart
-      renderBarChart(calendarDays, aggregatedData, yScale, goalWeight, period);
-      
-      console.log('=== CHART GENERATION COMPLETED ===');
+      console.log('=== MINI-CARD DISPLAYED ===');
     }
     
     function generateCalendarData(validLogs, period) {
@@ -11424,6 +11391,36 @@
     }
 
     function createDashboardMiniCard() {
+      // Get actual weight data for dynamic chart
+      let progressData, weightLogs;
+      try {
+        progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
+        weightLogs = progressData.weightLogs || [];
+      } catch (error) {
+        weightLogs = [];
+      }
+      
+      const validLogs = weightLogs.filter(log => log && log.weight && log.date);
+      const hasData = validLogs.length > 0;
+      
+      // Calculate trend if we have data
+      let trendText = "+14%";
+      let trendDescription = "After your workout today, your 7-day weight trend is similar to your 28-day trend.";
+      
+      if (hasData && validLogs.length >= 2) {
+        const recent = validLogs.slice(-7); // Last 7 entries
+        const older = validLogs.slice(-14, -7); // Previous 7 entries
+        
+        if (recent.length > 0 && older.length > 0) {
+          const recentAvg = recent.reduce((sum, log) => sum + parseFloat(log.weight), 0) / recent.length;
+          const olderAvg = older.reduce((sum, log) => sum + parseFloat(log.weight), 0) / older.length;
+          const change = ((recentAvg - olderAvg) / olderAvg) * 100;
+          
+          trendText = change >= 0 ? `+${Math.abs(change).toFixed(1)}%` : `-${Math.abs(change).toFixed(1)}%`;
+          trendDescription = `Your recent weight trend shows ${Math.abs(change).toFixed(1)}% ${change >= 0 ? 'increase' : 'decrease'} compared to the previous period.`;
+        }
+      }
+      
       return `
         <div class="dashboard-mini-card" style="
           background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
@@ -11463,7 +11460,7 @@
               color: #3b82f6;
               font-size: 14px;
               font-weight: 600;
-            ">+14%</span>
+            ">${trendText}</span>
             <span style="
               width: 3px;
               height: 3px;
@@ -11486,7 +11483,7 @@
             line-height: 1.5;
             margin: 0 0 20px 0;
           ">
-            After your workout today, your 7-day weight trend is similar to your 28-day trend.
+            ${trendDescription}
           </p>
 
           <!-- Inset chart container -->
