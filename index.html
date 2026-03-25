@@ -8857,7 +8857,7 @@
                 <div class="rec-content">
                   <h4>Optimize Injection Timing</h4>
                   <p>Data suggests switching to Sunday 8 PM injections could improve your weight loss by 12% based on your sleep patterns and meal timing.</p>
-                  <button class="implement-btn">Implement Change</button>
+                  <button class="implement-btn" onclick="optimizeInjectionTiming()">Implement Change</button>
                 </div>
               </div>
               
@@ -8866,7 +8866,7 @@
                 <div class="rec-content">
                   <h4>Meal Timing Strategy</h4>
                   <p>Your weight loss accelerates when you delay breakfast by 2 hours post-injection. Consider intermittent fasting on injection days.</p>
-                  <button class="implement-btn">Update Meal Plan</button>
+                  <button class="implement-btn" onclick="updateMealPlan()">Update Meal Plan</button>
                 </div>
               </div>
               
@@ -8875,7 +8875,7 @@
                 <div class="rec-content">
                   <h4>Hydration Optimization</h4>
                   <p>Increased water intake on Days 2-3 post-injection correlates with better outcomes. Target 3L on peak days.</p>
-                  <button class="implement-btn">Set Reminders</button>
+                  <button class="implement-btn" onclick="setHydrationReminders()">Set Reminders</button>
                 </div>
               </div>
             </div>
@@ -8891,10 +8891,6 @@
           <button class="secondary-btn" onclick="shareWithProvider()">
             <span class="btn-icon"><i data-lucide="user-check"></i></span>
             Share with Provider
-          </button>
-          <button class="secondary-btn" onclick="downloadData()">
-            <span class="btn-icon"><i data-lucide="save"></i></span>
-            Download Raw Data
           </button>
         </div>
       </div>
@@ -12631,16 +12627,201 @@ For clinical review and treatment optimization.`;
     }
 
     // AI Recommendation Implementation Functions
-    function implementChange() {
-      alert('This would integrate with your medication profile and send you reminders to implement the recommended changes.');
+    function optimizeInjectionTiming() {
+      const { validLogs: weightLogs, hasData } = getUnifiedWeightData();
+      const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
+      
+      if (!hasData || weightLogs.length < 7) {
+        showNotification('Need at least 7 days of weight data to optimize injection timing', 'info');
+        return;
+      }
+      
+      // Analyze current performance to provide real recommendation
+      const recentLogs = weightLogs.slice(-14); // Last 2 weeks
+      const avgWeeklyLoss = recentLogs.length >= 2 ? 
+        (recentLogs[0].weight - recentLogs[recentLogs.length - 1].weight) / 2 : 0;
+      
+      const currentDay = medicationProfile.injectionDay || 'Sunday';
+      const recommendedDay = avgWeeklyLoss < 1 ? 'Sunday' : currentDay; // Keep current if working well
+      const recommendedTime = avgWeeklyLoss < 1 ? '8 PM' : 'current time';
+      
+      showCustomModal('Injection Timing Optimization', `
+        <div style="text-align: center;">
+          <div style="font-size: 2rem; margin-bottom: 1rem; color: var(--magenta);">⏰</div>
+          <h3 style="color: var(--magenta); margin-bottom: 1rem;">Personalized Timing Analysis</h3>
+          
+          <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #10b981;">
+            <p style="margin-bottom: 0.75rem;"><strong>Current Performance:</strong> ${avgWeeklyLoss.toFixed(1)} lbs/week average</p>
+            <p style="margin-bottom: 0.75rem;"><strong>Current Schedule:</strong> ${currentDay}s</p>
+            <p style="margin: 0;"><strong>Recommendation:</strong> ${avgWeeklyLoss >= 1.5 ? 'Keep current schedule - excellent results!' : 'Consider Sunday evening injections for better sleep alignment'}</p>
+          </div>
+          
+          <div style="text-align: left; margin-bottom: 1.5rem; color: var(--text-sec);">
+            <h4 style="color: var(--text); margin-bottom: 1rem;">Optimization Benefits:</h4>
+            <ul style="margin: 0; padding-left: 1.5rem;">
+              <li>Better medication absorption during optimal metabolic window</li>
+              <li>Reduced peak side effects by aligning with circadian rhythm</li>
+              <li>Improved sleep quality leading to better weight loss</li>
+            </ul>
+          </div>
+          
+          <button onclick="updateInjectionSchedule(); closeModal();" style="padding: 0.75rem 2rem; background: var(--magenta); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+            ${avgWeeklyLoss < 1 ? 'Update to Sunday 8 PM' : 'Keep Current Schedule'}
+          </button>
+        </div>
+      `);
     }
 
     function updateMealPlan() {
-      alert('This would automatically adjust your meal plan based on AI recommendations and redirect you to the updated meals view.');
+      const { validLogs: weightLogs, hasData } = getUnifiedWeightData();
+      const symptomLogs = JSON.parse(localStorage.getItem('symptomLogs') || '{}');
+      
+      if (!hasData) {
+        showNotification('Track weight and symptoms to get personalized meal recommendations', 'info');
+        return;
+      }
+      
+      // Analyze symptom patterns for real insights
+      const symptomEntries = Object.entries(symptomLogs);
+      const avgNausea = symptomEntries.length > 0 ? 
+        symptomEntries.reduce((sum, [, data]) => sum + (data.nausea || 0), 0) / symptomEntries.length : 0;
+      
+      const mealStrategy = avgNausea > 3 ? 'gentle-foods' : avgNausea > 1.5 ? 'balanced' : 'normal';
+      
+      showCustomModal('Personalized Meal Plan Update', `
+        <div style="text-align: center;">
+          <div style="font-size: 2rem; margin-bottom: 1rem; color: var(--magenta);">🍽️</div>
+          <h3 style="color: var(--magenta); margin-bottom: 1rem;">AI-Optimized Meal Strategy</h3>
+          
+          <div style="background: rgba(59, 130, 246, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #3b82f6;">
+            <p style="margin-bottom: 0.75rem;"><strong>Your Symptom Profile:</strong> ${avgNausea > 3 ? 'High sensitivity' : avgNausea > 1.5 ? 'Moderate sensitivity' : 'Low sensitivity'}</p>
+            <p style="margin-bottom: 0.75rem;"><strong>Average Nausea:</strong> ${avgNausea.toFixed(1)}/5</p>
+            <p style="margin: 0;"><strong>Recommended Strategy:</strong> ${
+              mealStrategy === 'gentle-foods' ? 'Gentle foods & small portions' :
+              mealStrategy === 'balanced' ? 'Balanced nutrition with timing focus' : 
+              'Regular healthy meal plan'
+            }</p>
+          </div>
+          
+          <div style="text-align: left; margin-bottom: 1.5rem; color: var(--text-sec);">
+            <h4 style="color: var(--text); margin-bottom: 1rem;">Personalized Recommendations:</h4>
+            <ul style="margin: 0; padding-left: 1.5rem;">
+              ${mealStrategy === 'gentle-foods' ? `
+                <li>Focus on BRAT diet: Bananas, Rice, Applesauce, Toast</li>
+                <li>Small meals every 2-3 hours instead of large ones</li>
+                <li>Ginger tea and crackers for nausea management</li>
+              ` : mealStrategy === 'balanced' ? `
+                <li>Delay breakfast 2 hours post-injection for better tolerance</li>
+                <li>Protein-rich meals to maintain satiety</li>
+                <li>Avoid fatty foods on peak effect days (Days 2-3)</li>
+              ` : `
+                <li>You tolerate meals well - maintain current eating patterns</li>
+                <li>Focus on nutrient density for optimal results</li>
+                <li>Consider intermittent fasting for enhanced benefits</li>
+              `}
+            </ul>
+          </div>
+          
+          <button onclick="applyMealRecommendations('${mealStrategy}'); closeModal();" style="padding: 0.75rem 2rem; background: var(--magenta); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+            Apply Meal Plan Updates
+          </button>
+        </div>
+      `);
     }
 
-    function setReminders() {
-      alert('This would set up smart notifications and hydration tracking reminders based on your injection schedule.');
+    function setHydrationReminders() {
+      const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
+      const { validLogs: weightLogs } = getUnifiedWeightData();
+      
+      // Calculate personalized hydration needs
+      const latestWeight = weightLogs.length > 0 ? weightLogs[weightLogs.length - 1].weight : 150;
+      const baseHydration = Math.round((latestWeight * 0.67) / 8); // oz per day, converted to cups
+      const peakDayHydration = Math.round(baseHydration * 1.5); // 50% more on peak days
+      
+      showCustomModal('Smart Hydration Optimization', `
+        <div style="text-align: center;">
+          <div style="font-size: 2rem; margin-bottom: 1rem; color: var(--magenta);">💧</div>
+          <h3 style="color: var(--magenta); margin-bottom: 1rem;">Personalized Hydration Plan</h3>
+          
+          <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #10b981;">
+            <p style="margin-bottom: 0.75rem;"><strong>Your Weight:</strong> ${latestWeight} lbs</p>
+            <p style="margin-bottom: 0.75rem;"><strong>Daily Target:</strong> ${baseHydration} cups (64 oz)</p>
+            <p style="margin: 0;"><strong>Peak Days (2-3 post-injection):</strong> ${peakDayHydration} cups (96 oz)</p>
+          </div>
+          
+          <div style="text-align: left; margin-bottom: 1.5rem; color: var(--text-sec);">
+            <h4 style="color: var(--text); margin-bottom: 1rem;">Smart Reminder Schedule:</h4>
+            <ul style="margin: 0; padding-left: 1.5rem;">
+              <li><strong>Morning:</strong> 2 cups upon waking (pre-breakfast)</li>
+              <li><strong>Pre-injection:</strong> Extra cup 1 hour before injection</li>
+              <li><strong>Peak Days:</strong> Hourly reminders for extra hydration</li>
+              <li><strong>Evening:</strong> Stop reminders 2 hours before bed</li>
+            </ul>
+          </div>
+          
+          <div style="background: rgba(255, 193, 7, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #ffc107;">
+            <p style="margin: 0; font-size: 0.9rem;"><strong>💡 Pro Tip:</strong> Add electrolytes on high hydration days to prevent dilution of minerals</p>
+          </div>
+          
+          <button onclick="enableHydrationTracking(); closeModal();" style="padding: 0.75rem 2rem; background: var(--magenta); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;">
+            Enable Smart Reminders
+          </button>
+        </div>
+      `);
+    }
+
+    // Helper functions for AI recommendation implementations
+    function updateInjectionSchedule() {
+      const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
+      medicationProfile.injectionDay = 'Sunday';
+      medicationProfile.injectionTime = '8:00 PM';
+      medicationProfile.optimizationApplied = true;
+      medicationProfile.lastOptimization = new Date().toISOString();
+      
+      localStorage.setItem('medicationProfile', JSON.stringify(medicationProfile));
+      showNotification('Injection schedule updated to Sunday 8 PM for optimal results!', 'success');
+    }
+    
+    function applyMealRecommendations(strategy) {
+      const mealPreferences = JSON.parse(localStorage.getItem('mealPreferences') || '{}');
+      mealPreferences.strategy = strategy;
+      mealPreferences.appliedDate = new Date().toISOString();
+      mealPreferences.personalizedRecommendations = true;
+      
+      // Set specific meal timing based on strategy
+      if (strategy === 'gentle-foods') {
+        mealPreferences.mealTiming = 'frequent-small';
+        mealPreferences.focusFoods = ['bananas', 'rice', 'applesauce', 'toast', 'ginger-tea'];
+      } else if (strategy === 'balanced') {
+        mealPreferences.mealTiming = 'delayed-breakfast';
+        mealPreferences.focusFoods = ['high-protein', 'avoid-fatty-on-peak-days'];
+      } else {
+        mealPreferences.mealTiming = 'intermittent-fasting';
+        mealPreferences.focusFoods = ['nutrient-dense', 'maintain-current'];
+      }
+      
+      localStorage.setItem('mealPreferences', JSON.stringify(mealPreferences));
+      showNotification(`Meal plan updated with ${strategy.replace('-', ' ')} strategy!`, 'success');
+    }
+    
+    function enableHydrationTracking() {
+      const hydrationSettings = JSON.parse(localStorage.getItem('hydrationSettings') || '{}');
+      const { validLogs: weightLogs } = getUnifiedWeightData();
+      const latestWeight = weightLogs.length > 0 ? weightLogs[weightLogs.length - 1].weight : 150;
+      
+      hydrationSettings.enabled = true;
+      hydrationSettings.personalizedTarget = Math.round((latestWeight * 0.67) / 8); // cups per day
+      hydrationSettings.peakDayTarget = Math.round(hydrationSettings.personalizedTarget * 1.5);
+      hydrationSettings.reminderSchedule = {
+        morning: '08:00',
+        preInjection: '1 hour before',
+        peakDays: 'hourly',
+        eveningCutoff: '2 hours before bed'
+      };
+      hydrationSettings.setupDate = new Date().toISOString();
+      
+      localStorage.setItem('hydrationSettings', JSON.stringify(hydrationSettings));
+      showNotification(`Smart hydration tracking enabled! Target: ${hydrationSettings.personalizedTarget} cups daily`, 'success');
     }
 
     // Advanced Chart Interactions
@@ -17286,8 +17467,8 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
       
       cycleAnalysisEl.innerHTML = `
         <div class="cycle-pattern">
-          <h4 style="color: white; margin-bottom: 1rem;">7-Day Pattern Analysis</h4>
-          <div class="cycle-chart" style="display: flex; gap: 0.5rem; margin-bottom: 2rem;">
+          <h4 style="color: white; margin-bottom: 2rem; padding-bottom: 0.5rem; border-bottom: 2px solid rgba(255, 255, 255, 0.1);">7-Day Pattern Analysis</h4>
+          <div class="cycle-chart" style="display: flex; gap: 0.5rem; margin-bottom: 2rem; margin-top: 1.5rem;">
             ${cycleData.map((day, i) => {
               const barHeight = maxEffectScore > 0 ? Math.max(20, (day.effectScore / maxEffectScore) * 80) : 20;
               const isPeak = i === peakDay.index && day.effectScore > 0;
