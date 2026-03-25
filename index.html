@@ -11130,7 +11130,11 @@
       
       // Restore the chart structure if it was replaced
       const chartContainer = document.querySelector('.weight-chart-container');
+      console.log('Chart container found:', !!chartContainer);
+      console.log('Progress chart exists:', !!chartContainer?.querySelector('.progress-chart'));
+      
       if (chartContainer && !chartContainer.querySelector('.progress-chart')) {
+        console.log('Restoring SVG chart structure...');
         chartContainer.innerHTML = `
           <div class="chart-canvas">
             <svg viewBox="0 0 400 200" class="progress-chart">
@@ -11159,13 +11163,16 @@
             <!-- Timeline labels will be populated by JavaScript -->
           </div>
         `;
+        console.log('SVG structure restored');
       }
       
       // Generate chart data
       const weights = filteredLogs.map(log => log.weight);
+      console.log('Extracted weights:', weights);
       const minWeight = Math.min(...weights);
       const maxWeight = Math.max(...weights);
       const weightRange = maxWeight - minWeight || 10; // Prevent division by zero
+      console.log('Weight range:', { minWeight, maxWeight, weightRange });
       
       // Chart dimensions
       const chartWidth = 360; // Leave margin for labels
@@ -11201,19 +11208,27 @@
       });
       
       // Update the chart path
+      console.log('Generated path data:', pathData);
       const chartPath = document.querySelector('.progress-chart path[stroke="var(--accent-blue)"]');
+      console.log('Chart path element found:', !!chartPath);
       if (chartPath) {
         chartPath.setAttribute('d', pathData);
+        console.log('Chart path updated successfully');
+      } else {
+        console.error('Chart path element not found!');
       }
       
       // Update chart circles (data points)
       const svg = document.querySelector('.progress-chart');
+      console.log('SVG element found for circles:', !!svg);
       if (svg) {
         // Remove old circles
         const oldCircles = svg.querySelectorAll('circle[fill="var(--accent-blue)"]');
+        console.log('Removing', oldCircles.length, 'old circles');
         oldCircles.forEach(circle => circle.remove());
         
         // Add new circles for each data point
+        console.log('Adding', filteredLogs.length, 'new circles');
         filteredLogs.forEach((log, index) => {
           let x, y;
           
@@ -11266,9 +11281,13 @@
         const goalY = startY - ((goalWeight - minWeight) / weightRange) * chartHeight;
         goalPath.setAttribute('d', `M 20 ${goalY} L 380 ${goalY}`);
         goalPath.style.display = 'block';
+        console.log('Goal line updated with weight:', goalWeight);
       } else if (goalPath) {
         goalPath.style.display = 'none';
+        console.log('Goal line hidden (no goal weight set)');
       }
+      
+      console.log('=== updateProgressChart COMPLETED SUCCESSFULLY ===');
     }
 
     function logWeight() {
@@ -16882,28 +16901,6 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
       `;
     }
 
-    function updateProgressChart() {
-      // Note: This would ideally generate an SVG chart based on actual user weight data
-      // For now, we'll update the chart container to indicate it needs user data
-      const weightLogs = JSON.parse(localStorage.getItem('weightLogs') || '[]').filter(log => log.weight && log.date);
-      const chartContainer = document.querySelector('.weight-chart-container');
-      
-      if (weightLogs.length < 2) {
-        chartContainer.innerHTML = `
-          <div style="text-align: center; padding: 2rem; color: white;">
-            <h4>Weight Progress Chart</h4>
-            <p>Log your weight regularly to see your progress chart here.</p>
-            <button class="primary-btn" onclick="logWeight()" style="margin-top: 1rem;">
-              Log Your Weight
-            </button>
-          </div>
-        `;
-        return;
-      }
-
-      // Keep existing SVG for now but could be enhanced with real data
-      // The existing chart will show until we implement dynamic chart generation
-    }
 
     // =============================================================================
     // AI PERSONALIZATION FUNCTIONS
