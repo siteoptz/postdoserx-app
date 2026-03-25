@@ -2199,10 +2199,11 @@
     }
     .ai-suggestion, .pattern-note, .correlation-note, .importance-note {
       font-size: 0.75rem;
-      color: var(--text-sec);
-      background: rgba(198, 22, 141, 0.1);
+      color: white;
+      background: #c6168d;
       padding: 0.25rem 0.5rem;
       border-radius: 12px;
+      font-weight: 500;
     }
 
     .rating-slider {
@@ -8066,8 +8067,7 @@
               <span class="btn-icon"><i data-lucide="bar-chart-3"></i></span>
               Log & Analyze Symptoms
             </button>
-            <button class="secondary-btn" onclick="quickCopyYesterday()">Copy Yesterday's Log</button>
-            <button class="secondary-btn" onclick="viewSymptomHistory()">
+            <button class="secondary-btn" onclick="viewSymptomHistory()" style="background: #c6168d; color: white; border: 1px solid #c6168d;">
               <span class="btn-icon"><i data-lucide="history"></i></span>
               View Previous Logs
             </button>
@@ -17485,21 +17485,25 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
             <h4 style="color: white; margin: 0; padding-bottom: 0.5rem; border-bottom: 2px solid rgba(255, 255, 255, 0.1);">7-Day Pattern Analysis</h4>
             <button onclick="showView('symptoms')" style="padding: 0.5rem 1rem; background: #c6168d; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 500;">Log Symptoms</button>
           </div>
-          <div class="cycle-chart" style="display: flex; gap: 0.5rem; margin-bottom: 2rem; margin-top: 2rem;">
+          <div class="cycle-chart" style="display: flex; gap: 0.5rem; margin-bottom: 2rem; margin-top: 2rem; height: 180px; overflow: hidden;">
             ${cycleData.map((day, i) => {
-              const barHeight = maxEffectScore > 0 ? Math.max(20, (day.effectScore / maxEffectScore) * 80) : 20;
+              const barHeight = maxEffectScore > 0 ? Math.max(15, (day.effectScore / maxEffectScore) * 60) : 15;
               const isPeak = i === peakDay.index && day.effectScore > 0;
               
               return `
-                <div class="cycle-day ${i === 0 ? 'injection-day' : ''} ${isPeak ? 'peak-day' : ''}" style="flex: 1; text-align: center; padding: 0.5rem; border-radius: 6px; background: ${i === 0 ? 'rgba(198, 22, 141, 0.2)' : isPeak ? 'rgba(255, 193, 7, 0.2)' : 'rgba(255, 255, 255, 0.05)'};">
-                  <div class="day-marker" style="color: white; font-weight: 600; margin-bottom: 0.5rem;">${day.dayLabel}</div>
-                  <div class="effect-bar" style="height: ${barHeight}px; background: ${i === 0 ? 'var(--magenta)' : isPeak ? '#ffc107' : 'var(--teal)'}; border-radius: 4px; margin: 0 auto 0.5rem; width: 20px;"></div>
-                  <div class="day-label" style="color: rgba(255, 255, 255, 0.8); font-size: 0.8rem; margin-bottom: 0.25rem;">${day.cycleDayLabel}</div>
-                  <div class="effect-value" style="color: white; font-size: 0.9rem; font-weight: 600;">
-                    ${day.symptoms.length > 0 ? `${day.effectScore.toFixed(1)}` : '--'}
+                <div class="cycle-day ${i === 0 ? 'injection-day' : ''} ${isPeak ? 'peak-day' : ''}" style="flex: 1; text-align: center; padding: 0.4rem; border-radius: 6px; background: ${i === 0 ? 'rgba(198, 22, 141, 0.2)' : isPeak ? 'rgba(255, 193, 7, 0.2)' : 'rgba(255, 255, 255, 0.05)'}; height: 160px; display: flex; flex-direction: column; justify-content: space-between;">
+                  <div>
+                    <div class="day-marker" style="color: white; font-weight: 600; margin-bottom: 0.4rem; font-size: 0.9rem;">${day.dayLabel}</div>
+                    <div class="effect-bar" style="height: ${barHeight}px; background: ${i === 0 ? '#c6168d' : isPeak ? '#ffc107' : '#14b8a6'}; border-radius: 3px; margin: 0 auto; width: 18px;"></div>
                   </div>
-                  <div style="color: rgba(255, 255, 255, 0.6); font-size: 0.7rem;">
-                    ${day.symptoms.length} logs
+                  <div>
+                    <div class="day-label" style="color: rgba(255, 255, 255, 0.8); font-size: 0.75rem; margin-bottom: 0.2rem;">${day.cycleDayLabel}</div>
+                    <div class="effect-value" style="color: white; font-size: 0.8rem; font-weight: 600;">
+                      ${day.symptoms.length > 0 ? `${day.effectScore.toFixed(1)}` : '--'}
+                    </div>
+                    <div style="color: rgba(255, 255, 255, 0.6); font-size: 0.65rem;">
+                      ${day.symptoms.length} logs
+                    </div>
                   </div>
                 </div>
               `;
