@@ -11263,15 +11263,18 @@
       // Clear existing content
       svg.innerHTML = '';
       
-      // Use full width with minimal padding
-      const chartStartX = 40;
-      const chartEndX = 580;
-      const chartWidth = chartEndX - chartStartX; // 540px full width
+      // Define plot area excluding Y-axis labels
+      const yAxisWidth = 35; // Space for Y-axis labels
+      const plotStartX = yAxisWidth;
+      const plotEndX = 580;
+      const plotWidth = plotEndX - plotStartX; // Plot area width excluding Y-axis
       const chartHeight = 100;
       const chartTop = 20;
       const chartBottom = 130;
       
-      console.log('Full width chart:', { chartStartX, chartEndX, chartWidth });
+      const numBars = aggregatedData.length;
+      
+      console.log('Plot dimensions:', { plotStartX, plotEndX, plotWidth, numBars });
       
       // Draw Y-axis labels
       const yLabels = [yScale.max, Math.round((yScale.min + yScale.max) / 2), yScale.min];
@@ -11290,9 +11293,9 @@
       if (goalWeight) {
         const goalY = chartTop + ((yScale.max - goalWeight) / yScale.range) * chartHeight;
         const goalLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        goalLine.setAttribute('x1', chartStartX);
+        goalLine.setAttribute('x1', plotStartX);
         goalLine.setAttribute('y1', goalY);
-        goalLine.setAttribute('x2', chartEndX);
+        goalLine.setAttribute('x2', plotEndX);
         goalLine.setAttribute('y2', goalY);
         goalLine.setAttribute('stroke', '#ffd700');
         goalLine.setAttribute('stroke-width', '2');
@@ -11300,7 +11303,7 @@
         svg.appendChild(goalLine);
         
         const goalLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        goalLabel.setAttribute('x', chartEndX - 30);
+        goalLabel.setAttribute('x', plotEndX - 30);
         goalLabel.setAttribute('y', goalY - 3);
         goalLabel.setAttribute('fill', '#ffd700');
         goalLabel.setAttribute('font-size', '10');
@@ -11308,20 +11311,18 @@
         svg.appendChild(goalLabel);
       }
       
-      // Calculate bar positions to fill entire chart width
-      const numSlots = aggregatedData.length;
-      const slotWidth = chartWidth / numSlots;
-      const barWidth = Math.min(50, slotWidth * 0.8); // 80% of slot width
+      // Calculate bar dimensions
+      const barSpacing = plotWidth / numBars; // Equal spacing across plot width
+      const barWidth = Math.min(40, barSpacing * 0.7); // 70% of available space per bar
       
       const timelineLabels = [];
-      const barCenters = []; // Track exact center positions for timeline alignment
       
       aggregatedData.forEach((entry, index) => {
-        const slotCenter = chartStartX + (index * slotWidth) + (slotWidth / 2);
-        const x = slotCenter - (barWidth / 2);
-        barCenters.push(slotCenter);
+        // Use same scale for bars: position at center of each slot
+        const barCenter = plotStartX + (index + 0.5) * barSpacing;
+        const x = barCenter - (barWidth / 2);
         
-        console.log(`Bar ${index}: slot center=${slotCenter}, x=${x}, width=${barWidth}`);
+        console.log(`Bar ${index}: center=${barCenter}, x=${x}, spacing=${barSpacing}`);
         
         if (entry.hasData && entry.weight !== null) {
           // Draw bar for actual data
@@ -11340,7 +11341,7 @@
           
           // Weight label above bar
           const weightLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-          weightLabel.setAttribute('x', slotCenter);
+          weightLabel.setAttribute('x', barCenter);
           weightLabel.setAttribute('y', y - 5);
           weightLabel.setAttribute('fill', 'white');
           weightLabel.setAttribute('font-size', '9');
@@ -11362,21 +11363,22 @@
         timelineLabels.push(entry.displayDate);
       });
       
-      // Update timeline to match exact bar positions
+      // Timeline with relative positioning using (i+0.5)/N*100% formula
       const timeline = document.querySelector('.chart-timeline');
       if (timeline) {
+        // Set timeline container to match plot width exactly (excluding Y-axis)
         timeline.style.cssText = `
           position: relative;
           height: 20px;
           margin-top: 0.5rem;
-          padding: 0 2rem;
+          margin-left: ${yAxisWidth}px;
+          width: ${plotWidth}px;
         `;
         
-        // Position each label exactly under its bar center
+        // Position each label using the exact formula: (i+0.5)/N*100%
         let timelineHTML = '';
         timelineLabels.forEach((label, index) => {
-          // Calculate percentage position relative to chart area
-          const leftPercent = ((barCenters[index] - chartStartX) / chartWidth) * 100;
+          const leftPercent = ((index + 0.5) / numBars) * 100;
           timelineHTML += `
             <span style="
               position: absolute;
@@ -11390,7 +11392,9 @@
         });
         timeline.innerHTML = timelineHTML;
         
-        console.log('Timeline positioned at:', barCenters.map((center, i) => `${timelineLabels[i]}: ${center}px`));
+        console.log('Timeline formula applied:', timelineLabels.map((label, i) => 
+          `${label}: ${((i + 0.5) / numBars * 100).toFixed(1)}%`
+        ));
       }
     }
     
