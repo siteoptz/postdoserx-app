@@ -11071,8 +11071,14 @@
         const chartContainer = document.querySelector('.weight-chart-container');
         if (chartContainer) {
           chartContainer.innerHTML = `
+            <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+              <h4 style="margin: 0; color: white;">Weight Progress</h4>
+              <div class="chart-actions" style="display: flex; gap: 0.5rem;">
+                <button class="chart-action-btn" onclick="showWeightDataManager()" style="background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; opacity: 0.5;" disabled>Manage Data</button>
+                <button class="chart-action-btn" onclick="clearAllWeightData()" style="background: rgba(220,53,69,0.8); color: white; border: 1px solid rgba(220,53,69,0.5); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; opacity: 0.5;" disabled>Clear All</button>
+              </div>
+            </div>
             <div style="text-align: center; padding: 2rem; color: white;">
-              <h4 style="margin-bottom: 1rem;">Weight Progress Chart</h4>
               <p style="margin-bottom: 1.5rem; color: rgba(255,255,255,0.7);">Log your weight regularly to see your progress chart here.</p>
               <button class="primary-btn" onclick="logWeight()" style="margin-top: 1rem;">
                 Log Your Weight
@@ -11118,6 +11124,13 @@
         const chartContainer = document.querySelector('.weight-chart-container');
         if (chartContainer) {
           chartContainer.innerHTML = `
+            <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+              <h4 style="margin: 0; color: white;">Weight Progress</h4>
+              <div class="chart-actions" style="display: flex; gap: 0.5rem;">
+                <button class="chart-action-btn" onclick="showWeightDataManager()" style="background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; cursor: pointer;">Manage Data</button>
+                <button class="chart-action-btn" onclick="clearAllWeightData()" style="background: rgba(220,53,69,0.8); color: white; border: 1px solid rgba(220,53,69,0.5); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; cursor: pointer;">Clear All</button>
+              </div>
+            </div>
             <div style="text-align: center; padding: 2rem; color: white;">
               <h4 style="margin-bottom: 1rem;">No Data for ${period === 'week' ? '7 Days' : period === 'month' ? '30 Days' : '3 Months'}</h4>
               <p style="margin-bottom: 1.5rem; color: rgba(255,255,255,0.7);">Log more weight entries to see data for this time period.</p>
@@ -11136,12 +11149,19 @@
       if (chartContainer && !chartContainer.querySelector('.progress-chart')) {
         console.log('Restoring SVG chart structure...');
         chartContainer.innerHTML = `
-          <div class="chart-canvas">
-            <svg viewBox="0 0 400 200" class="progress-chart">
+          <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h4 style="margin: 0; color: white;">Weight Progress</h4>
+            <div class="chart-actions" style="display: flex; gap: 0.5rem;">
+              <button class="chart-action-btn" onclick="showWeightDataManager()" style="background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; cursor: pointer;">Manage Data</button>
+              <button class="chart-action-btn" onclick="clearAllWeightData()" style="background: rgba(220,53,69,0.8); color: white; border: 1px solid rgba(220,53,69,0.5); padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; cursor: pointer;">Clear All</button>
+            </div>
+          </div>
+          <div class="chart-canvas" style="width: 100%;">
+            <svg viewBox="0 0 800 200" class="progress-chart" style="width: 100%; height: 200px;">
               <!-- Grid lines -->
               <defs>
-                <pattern id="grid" width="40" height="20" patternUnits="userSpaceOnUse">
-                  <path d="M 40 0 L 0 0 0 20" fill="none" stroke="#e5e5e5" stroke-width="1"/>
+                <pattern id="grid" width="80" height="20" patternUnits="userSpaceOnUse">
+                  <path d="M 80 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
                 </pattern>
               </defs>
               <rect width="100%" height="100%" fill="url(#grid)" />
@@ -11151,15 +11171,15 @@
               
               <!-- Goal line -->
               <path stroke="#ffd700" stroke-width="2" stroke-dasharray="5,5" style="display: none;"/>
-              <text x="385" y="95" fill="#ffd700" font-size="12">Goal</text>
+              <text x="770" y="95" fill="#ffd700" font-size="12">Goal</text>
               
               <!-- Y-axis labels -->
-              <text x="10" y="30" fill="#666" font-size="10">200</text>
-              <text x="10" y="110" fill="#666" font-size="10">190</text>
-              <text x="10" y="190" fill="#666" font-size="10">180</text>
+              <text x="10" y="30" fill="rgba(255,255,255,0.7)" font-size="10">200</text>
+              <text x="10" y="110" fill="rgba(255,255,255,0.7)" font-size="10">190</text>
+              <text x="10" y="190" fill="rgba(255,255,255,0.7)" font-size="10">180</text>
             </svg>
           </div>
-          <div class="chart-timeline">
+          <div class="chart-timeline" style="display: flex; justify-content: space-between; margin-top: 0.5rem; padding: 0 20px;">
             <!-- Timeline labels will be populated by JavaScript -->
           </div>
         `;
@@ -11174,10 +11194,10 @@
       const weightRange = maxWeight - minWeight || 10; // Prevent division by zero
       console.log('Weight range:', { minWeight, maxWeight, weightRange });
       
-      // Chart dimensions
-      const chartWidth = 360; // Leave margin for labels
+      // Chart dimensions (updated for full width)
+      const chartWidth = 760; // Full width minus margins
       const chartHeight = 160;
-      const startX = 20;
+      const startX = 30;
       const startY = 180;
       
       // Generate SVG path points
@@ -11279,7 +11299,7 @@
       const goalPath = svg.querySelector('path[stroke="#ffd700"]');
       if (goalWeight && goalPath) {
         const goalY = startY - ((goalWeight - minWeight) / weightRange) * chartHeight;
-        goalPath.setAttribute('d', `M 20 ${goalY} L 380 ${goalY}`);
+        goalPath.setAttribute('d', `M 30 ${goalY} L 770 ${goalY}`);
         goalPath.style.display = 'block';
         console.log('Goal line updated with weight:', goalWeight);
       } else if (goalPath) {
@@ -11288,6 +11308,85 @@
       }
       
       console.log('=== updateProgressChart COMPLETED SUCCESSFULLY ===');
+    }
+
+    // Weight Data Management Functions
+    function showWeightDataManager() {
+      const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
+      const weightLogs = progressData.weightLogs || [];
+      
+      if (weightLogs.length === 0) {
+        showNotification('No weight data to manage', 'info');
+        return;
+      }
+      
+      const modal = document.getElementById('modal');
+      const modalContent = document.querySelector('.modal-content');
+      
+      modalContent.innerHTML = `
+        <div class="modal-header">
+          <h2>Manage Weight Data</h2>
+          <span class="close" onclick="closeModal()">&times;</span>
+        </div>
+        <div class="modal-body">
+          <p style="margin-bottom: 1rem; color: var(--text-secondary);">
+            Select entries to remove from your weight tracking history:
+          </p>
+          <div class="weight-data-list" style="max-height: 300px; overflow-y: auto;">
+            ${weightLogs.map((log, index) => `
+              <div class="weight-entry" style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem; background: rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 0.5rem;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                  <span style="font-weight: 600; color: var(--primary);">${log.weight} lbs</span>
+                  <span style="color: var(--text-secondary); font-size: 0.9rem;">${new Date(log.date).toLocaleDateString('en-US', { 
+                    weekday: 'short', 
+                    month: 'short', 
+                    day: 'numeric', 
+                    year: 'numeric' 
+                  })}</span>
+                </div>
+                <button onclick="removeWeightEntry(${index})" style="background: rgba(220,53,69,0.8); color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; cursor: pointer;">
+                  Remove
+                </button>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="secondary-btn" onclick="closeModal()">Done</button>
+        </div>
+      `;
+      
+      modal.style.display = 'flex';
+    }
+
+    function removeWeightEntry(index) {
+      const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
+      const weightLogs = progressData.weightLogs || [];
+      
+      if (index >= 0 && index < weightLogs.length) {
+        const removedEntry = weightLogs.splice(index, 1)[0];
+        progressData.weightLogs = weightLogs;
+        localStorage.setItem('progressData', JSON.stringify(progressData));
+        
+        showNotification(`Removed weight entry: ${removedEntry.weight} lbs from ${new Date(removedEntry.date).toLocaleDateString()}`, 'success');
+        
+        // Refresh the data manager modal
+        showWeightDataManager();
+        
+        // Update the chart
+        updateProgressChart();
+      }
+    }
+
+    function clearAllWeightData() {
+      if (confirm('Are you sure you want to clear all weight data? This action cannot be undone.')) {
+        const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
+        progressData.weightLogs = [];
+        localStorage.setItem('progressData', JSON.stringify(progressData));
+        
+        showNotification('All weight data has been cleared', 'success');
+        updateProgressChart();
+      }
     }
 
     function logWeight() {
