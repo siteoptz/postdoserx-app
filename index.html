@@ -5863,6 +5863,33 @@
       backdrop-filter: blur(4px);
     }
     
+    /* Mobile close button - hidden by default */
+    .mobile-close-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      padding: 0.5rem;
+      cursor: pointer;
+      position: absolute;
+      right: 1rem;
+      top: 1rem;
+      z-index: 1001;
+      border-radius: 4px;
+      transition: background-color 0.2s ease;
+    }
+    
+    .mobile-close-btn:hover {
+      background-color: var(--slate);
+    }
+    
+    .sidebar-header {
+      position: relative;
+      height: 0;
+      overflow: visible;
+    }
+    
     /* Large tablets and down */
     @media (max-width: 1024px) {
       .main-content {
@@ -5895,6 +5922,11 @@
         display: block;
       }
       
+      /* Show mobile close button */
+      .mobile-close-btn {
+        display: block;
+      }
+      
       /* Dashboard layout changes */
       .dashboard-container {
         margin-top: 60px;
@@ -5905,8 +5937,8 @@
       .sidebar {
         position: fixed;
         top: 60px;
-        left: -min(320px, 85vw);
-        width: min(320px, 85vw);
+        left: -280px;
+        width: 280px;
         height: calc(100vh - 60px);
         z-index: 1000;
         transition: left 0.3s ease;
@@ -5979,8 +6011,8 @@
       .sidebar {
         top: 56px;
         height: calc(100vh - 56px);
-        width: min(280px, 85vw);
-        left: -min(280px, 85vw);
+        width: 260px;
+        left: -260px;
       }
       
       .main-content {
@@ -6359,6 +6391,11 @@
   <div class="dashboard-container">
     <!-- Sidebar Navigation -->
     <nav class="sidebar">
+      <div class="sidebar-header">
+        <button class="mobile-close-btn" onclick="closeMobileSidebar()" aria-label="Close menu">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
       <div class="nav-section">
         <div class="nav-title">Dashboard</div>
         <ul class="nav-list">
