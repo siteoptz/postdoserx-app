@@ -11136,10 +11136,22 @@
       
       // Apply period filtering if needed
       const now = new Date();
+      console.log('Current date for filtering:', now);
+      
       switch(period) {
         case 'week':
           const weekAgo = new Date(now.getTime() - (7 * 24 * 60 * 60 * 1000));
-          filteredLogs = validLogs.filter(log => new Date(log.date) >= weekAgo);
+          console.log('Week ago date:', weekAgo);
+          filteredLogs = validLogs.filter(log => {
+            const logDate = new Date(log.date);
+            console.log(`Checking log date ${log.date} (${logDate}) >= ${weekAgo}:`, logDate >= weekAgo);
+            return logDate >= weekAgo;
+          });
+          // If no data in last 7 days, show the most recent 7 entries instead
+          if (filteredLogs.length === 0 && validLogs.length > 0) {
+            console.log('No data in last 7 days, showing most recent entries instead');
+            filteredLogs = validLogs.slice(-7);
+          }
           break;
         case 'month':
           const monthAgo = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
@@ -11190,13 +11202,41 @@
       // WE HAVE DATA - Generate the bar chart
       console.log('GENERATING BAR CHART with', filteredLogs.length, 'data points');
       
-      // Make sure we have the static chart structure to work with
+      // Make sure we have the chart structure - restore it if missing
       const chartContainer = document.querySelector('.weight-chart-container');
-      const svg = document.querySelector('.progress-chart');
+      let svg = document.querySelector('.progress-chart');
       
       if (!svg) {
-        console.error('SVG element not found in DOM');
-        return;
+        console.log('SVG not found, restoring chart structure...');
+        chartContainer.innerHTML = `
+          <div style="padding: 2rem 0;">
+            <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+              <h4 style="margin: 0; color: white;">Weight Progress</h4>
+              <div class="chart-actions" style="display: flex; gap: 0.5rem;">
+                <button class="chart-action-btn" onclick="showWeightDataManager()">Manage Data</button>
+                <button class="chart-action-btn danger" onclick="clearAllWeightData()">Clear All</button>
+              </div>
+            </div>
+            <div class="chart-canvas" style="width: 100%; margin: 0; padding: 0 2rem;">
+              <svg viewBox="0 0 600 160" class="progress-chart" style="width: 100%; height: 160px; display: block;">
+                <!-- Goal line -->
+                <line x1="20" y1="70" x2="580" y2="70" stroke="#ffd700" stroke-width="2" stroke-dasharray="5,5"/>
+                <text x="545" y="65" fill="#ffd700" font-size="11">Goal</text>
+                
+                <!-- Y-axis labels -->
+                <text x="5" y="25" fill="rgba(255,255,255,0.7)" font-size="10">200</text>
+                <text x="5" y="80" fill="rgba(255,255,255,0.7)" font-size="10">190</text>
+                <text x="5" y="135" fill="rgba(255,255,255,0.7)" font-size="10">180</text>
+              </svg>
+            </div>
+            
+            <div class="chart-timeline" style="display: flex; justify-content: space-between; margin-top: 1rem; padding: 0 2rem;">
+              <!-- Timeline labels will be populated -->
+            </div>
+          </div>
+        `;
+        svg = document.querySelector('.progress-chart');
+        console.log('Chart structure restored, SVG found:', !!svg);
       }
       
       // Clear existing dynamic content
