@@ -8728,42 +8728,10 @@
             <h3>Weight Progress Chart</h3>
           </div>
           
-          <div class="weight-chart-container" style="padding: 2rem 0;">
-            <!-- Health-style widget replaces the chart area directly -->
-            <div class="chart-actions" style="display: flex; justify-content: flex-end; gap: 0.5rem; margin-bottom: 1.5rem;">
-              <button class="chart-action-btn" onclick="showWeightDataManager()">Manage Data</button>
-              <button class="chart-action-btn danger" onclick="clearAllWeightData()">Clear All</button>
-            </div>
-            <div class="chart-canvas" style="width: 100%; margin: 0; padding: 0 2rem;">
-              <svg viewBox="0 0 600 160" class="progress-chart" style="width: 100%; height: 160px; display: block;">
-                <!-- Weight bars (7 bars for 7 days) -->
-                <rect x="40" y="60" width="40" height="80" fill="var(--accent-blue)" rx="4"/>
-                <rect x="120" y="50" width="40" height="90" fill="var(--accent-blue)" rx="4"/>
-                <rect x="200" y="45" width="40" height="95" fill="var(--accent-blue)" rx="4"/>
-                <rect x="280" y="40" width="40" height="100" fill="var(--accent-blue)" rx="4"/>
-                <rect x="360" y="38" width="40" height="102" fill="var(--accent-blue)" rx="4"/>
-                <rect x="440" y="35" width="40" height="105" fill="var(--accent-blue)" rx="4"/>
-                <rect x="520" y="30" width="40" height="110" fill="var(--primary)" rx="4"/>
-                
-                <!-- Goal line -->
-                <line x1="20" y1="70" x2="580" y2="70" stroke="#ffd700" stroke-width="2" stroke-dasharray="5,5"/>
-                <text x="545" y="65" fill="#ffd700" font-size="11">Goal</text>
-                
-                <!-- Y-axis labels -->
-                <text x="5" y="25" fill="rgba(255,255,255,0.7)" font-size="10">200</text>
-                <text x="5" y="80" fill="rgba(255,255,255,0.7)" font-size="10">190</text>
-                <text x="5" y="135" fill="rgba(255,255,255,0.7)" font-size="10">180</text>
-              </svg>
-            </div>
-            
-            <div class="chart-timeline" style="display: flex; justify-content: space-between; margin-top: 1rem; padding: 0 2rem;">
-              <span class="timeline-item">Mon</span>
-              <span class="timeline-item">Tue</span>
-              <span class="timeline-item">Wed</span>
-              <span class="timeline-item">Thu</span>
-              <span class="timeline-item">Fri</span>
-              <span class="timeline-item">Sat</span>
-              <span class="timeline-item">Sun</span>
+          <div class="weight-chart-container">
+            <!-- Will be populated by updateProgressChart() function -->
+            <div style="padding: 2rem; text-align: center; color: var(--text-secondary);">
+              Loading chart...
             </div>
           </div>
         </div>
