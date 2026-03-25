@@ -17481,11 +17481,11 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
       
       cycleAnalysisEl.innerHTML = `
         <div class="cycle-pattern">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-top: 1.5rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; padding-top: 2rem;">
             <h4 style="color: white; margin: 0; padding-bottom: 0.5rem; border-bottom: 2px solid rgba(255, 255, 255, 0.1);">7-Day Pattern Analysis</h4>
-            <button onclick="showView('symptoms')" style="padding: 0.5rem 1rem; background: var(--magenta); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 500;">Log Symptoms</button>
+            <button onclick="showView('symptoms')" style="padding: 0.5rem 1rem; background: #c6168d; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 500;">Log Symptoms</button>
           </div>
-          <div class="cycle-chart" style="display: flex; gap: 0.5rem; margin-bottom: 2rem; margin-top: 1.5rem;">
+          <div class="cycle-chart" style="display: flex; gap: 0.5rem; margin-bottom: 2rem; margin-top: 2rem;">
             ${cycleData.map((day, i) => {
               const barHeight = maxEffectScore > 0 ? Math.max(20, (day.effectScore / maxEffectScore) * 80) : 20;
               const isPeak = i === peakDay.index && day.effectScore > 0;
@@ -17559,7 +17559,7 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
               <li>Statistical significance analysis for each correlation</li>
             </ul>
             <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem;">
-              <button onclick="showView('symptoms')" style="padding: 0.75rem 1.5rem; background: var(--magenta); color: white; border: none; border-radius: 6px; cursor: pointer;">
+              <button onclick="showView('symptoms')" style="padding: 0.75rem 1.5rem; background: #c6168d; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 500;">
                 Log Symptoms
               </button>
               <button onclick="showView('progress')" style="padding: 0.75rem 1.5rem; background: var(--teal); color: white; border: none; border-radius: 6px; cursor: pointer;">
