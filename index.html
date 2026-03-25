@@ -5608,6 +5608,168 @@
       font-weight: 700;
     }
     
+    /* Premium Upgrade Card Styling */
+    .premium-upgrade-card {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      border: 3px solid;
+      border-image: linear-gradient(135deg, #ffd700, #ff6b6b, #4ecdc4) 1;
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(255, 215, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+      animation: premium-glow 3s ease-in-out infinite alternate;
+    }
+    
+    @keyframes premium-glow {
+      0% { box-shadow: 0 20px 40px rgba(255, 215, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1); }
+      100% { box-shadow: 0 25px 50px rgba(255, 215, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2); }
+    }
+    
+    .upgrade-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+    }
+    
+    .upgrade-crown {
+      background: linear-gradient(135deg, #ffd700, #ffed4e);
+      color: #1a1a2e;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+    }
+    
+    .upgrade-title h3 {
+      font-size: 1.75rem;
+      background: linear-gradient(135deg, #ffd700, #ff6b6b);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin: 0 0 0.5rem 0;
+    }
+    
+    .upgrade-subtitle {
+      color: rgba(255, 255, 255, 0.8);
+      margin: 0;
+      font-size: 1rem;
+    }
+    
+    .upgrade-price {
+      text-align: right;
+      color: white;
+    }
+    
+    .price-amount {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #ffd700;
+    }
+    
+    .price-period {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+    
+    .upgrade-benefits {
+      margin: 2rem 0;
+    }
+    
+    .benefit-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      border-left: 3px solid #4ecdc4;
+    }
+    
+    .benefit-icon {
+      color: #4ecdc4;
+      font-size: 1.25rem;
+      margin-top: 0.25rem;
+      flex-shrink: 0;
+    }
+    
+    .benefit-text strong {
+      color: #ffd700;
+      display: block;
+      margin-bottom: 0.25rem;
+      font-size: 1.1rem;
+    }
+    
+    .benefit-text p {
+      color: rgba(255, 255, 255, 0.85);
+      margin: 0;
+      line-height: 1.4;
+    }
+    
+    .upgrade-cta {
+      text-align: center;
+      margin: 2rem 0;
+    }
+    
+    .premium-upgrade-btn {
+      background: linear-gradient(135deg, #ff6b6b, #ffd700);
+      color: #1a1a2e;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 20px rgba(255, 107, 107, 0.3);
+      margin-bottom: 1rem;
+    }
+    
+    .premium-upgrade-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+    }
+    
+    .upgrade-guarantee {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+    
+    .upgrade-guarantee strong {
+      color: #4ecdc4;
+    }
+    
+    .upgrade-testimonial {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1.5rem;
+      border-radius: 8px;
+      border-left: 3px solid #ff6b6b;
+      margin-top: 1.5rem;
+    }
+    
+    .upgrade-testimonial p {
+      color: rgba(255, 255, 255, 0.9);
+      margin: 0 0 0.5rem 0;
+      font-style: italic;
+    }
+    
+    .upgrade-testimonial span {
+      color: #ffd700;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    
     .grocery-categories {
       display: flex;
       flex-direction: column;
@@ -8649,47 +8811,67 @@
           </div>
         </div>
         
-        <!-- Premium Advanced Analytics -->
-        <div class="content-card premium-feature advanced-analytics">
-          <div class="premium-header">
-            <div class="premium-title-section">
-              <h3>Advanced Symptom Analytics</h3>
+        <!-- Premium Advanced Analytics - Upgrade Modal Style -->
+        <div class="content-card premium-upgrade-card advanced-analytics">
+          <div class="upgrade-header">
+            <div class="upgrade-crown">
+              <i data-lucide="crown"></i>
             </div>
-            <div class="premium-value">
-              <span class="savings-badge">Analyzing your symptom patterns</span>
+            <div class="upgrade-title">
+              <h3>🚀 Unlock Advanced Symptom Analytics</h3>
+              <p class="upgrade-subtitle">Get the same insights your doctor uses to optimize GLP-1 therapy</p>
+            </div>
+            <div class="upgrade-price">
+              <span class="price-amount">$12.99</span>
+              <span class="price-period">/month</span>
             </div>
           </div>
           
-          <div class="premium-preview">
-            <p class="hero-subtitle">Get the same insights your doctor uses to optimize GLP-1 therapy, delivered instantly to your dashboard</p>
-
-            <div class="preview-features">
-              <div class="preview-feature">
-                <div class="feature-icon premium-icon"><i data-lucide="database"></i></div>
-                <div class="feature-content">
-                  <h4>Comprehensive Correlation Analysis</h4>
-                  <p>Deep dive into how diet, sleep, exercise, and medication timing affect your symptoms</p>
-                  <div class="feature-benefit">See patterns your doctor would charge $85 to identify</div>
-                </div>
-              </div>
-              <div class="preview-feature">
-                <div class="feature-icon premium-icon"><i data-lucide="bot"></i></div>
-                <div class="feature-content">
-                  <h4>Predictive Symptom Modeling</h4>
-                  <p>AI-powered predictions for upcoming injection cycles with personalized recommendations</p>
-                  <div class="feature-benefit">Prevent side effects before they happen</div>
-                </div>
-              </div>
-              <div class="preview-feature">
-                <div class="feature-icon premium-icon"><i data-lucide="trending-up"></i></div>
-                <div class="feature-content">
-                  <h4>Long-term Trend Analysis</h4>
-                  <p>90-day and yearly reports showing your progress and optimization opportunities</p>
-                  <div class="feature-benefit">Track progress like clinical studies do</div>
-                </div>
+          <div class="upgrade-benefits">
+            <div class="benefit-item">
+              <i data-lucide="database" class="benefit-icon"></i>
+              <div class="benefit-text">
+                <strong>Comprehensive Correlation Analysis</strong>
+                <p>Deep dive into how diet, sleep, exercise, and medication timing affect your symptoms</p>
               </div>
             </div>
+            <div class="benefit-item">
+              <i data-lucide="bot" class="benefit-icon"></i>
+              <div class="benefit-text">
+                <strong>Predictive Symptom Modeling</strong>
+                <p>AI-powered predictions for upcoming injection cycles with personalized recommendations</p>
+              </div>
+            </div>
+            <div class="benefit-item">
+              <i data-lucide="trending-up" class="benefit-icon"></i>
+              <div class="benefit-text">
+                <strong>Long-term Trend Analysis</strong>
+                <p>90-day and yearly reports showing your progress and optimization opportunities</p>
+              </div>
+            </div>
+            <div class="benefit-item">
+              <i data-lucide="file-text" class="benefit-icon"></i>
+              <div class="benefit-text">
+                <strong>Medical Reports for Your Doctor</strong>
+                <p>Professional symptom reports you can share with your healthcare provider</p>
+              </div>
+            </div>
+          </div>
 
+          <div class="upgrade-cta">
+            <button class="premium-upgrade-btn" onclick="showPremiumModal('analytics')">
+              <i data-lucide="zap"></i>
+              <span>Upgrade to Premium</span>
+            </button>
+            <div class="upgrade-guarantee">
+              <p><strong>✅ 30-day money-back guarantee</strong></p>
+              <p>• No commitments • Cancel anytime • Full refund if not satisfied</p>
+            </div>
+          </div>
+
+          <div class="upgrade-testimonial">
+            <p><em>"These analytics helped me identify that eating 2 hours after injection reduces my nausea by 60%. Worth every penny!"</em></p>
+            <span>- Sarah M., Premium User</span>
           </div>
         </div>
       </div>
