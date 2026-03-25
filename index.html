@@ -11239,6 +11239,7 @@
             <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
               <h4 style="margin: 0; color: white;">Weight Progress</h4>
               <div class="chart-actions" style="display: flex; gap: 0.5rem;">
+                <button class="primary-btn" onclick="openWeightLogModal()" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Log Weight</button>
                 <button class="chart-action-btn" onclick="showWeightDataManager()">Manage Data</button>
                 <button class="chart-action-btn danger" onclick="clearAllWeightData()">Clear All</button>
               </div>
@@ -11262,11 +11263,15 @@
       // Clear existing content
       svg.innerHTML = '';
       
-      const chartPadding = 50;
-      const chartWidth = 600 - (chartPadding * 2); // 500px
+      // Use full width with minimal padding
+      const chartStartX = 40;
+      const chartEndX = 580;
+      const chartWidth = chartEndX - chartStartX; // 540px full width
       const chartHeight = 100;
       const chartTop = 20;
       const chartBottom = 130;
+      
+      console.log('Full width chart:', { chartStartX, chartEndX, chartWidth });
       
       // Draw Y-axis labels
       const yLabels = [yScale.max, Math.round((yScale.min + yScale.max) / 2), yScale.min];
@@ -11285,9 +11290,9 @@
       if (goalWeight) {
         const goalY = chartTop + ((yScale.max - goalWeight) / yScale.range) * chartHeight;
         const goalLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        goalLine.setAttribute('x1', chartPadding);
+        goalLine.setAttribute('x1', chartStartX);
         goalLine.setAttribute('y1', goalY);
-        goalLine.setAttribute('x2', chartPadding + chartWidth);
+        goalLine.setAttribute('x2', chartEndX);
         goalLine.setAttribute('y2', goalY);
         goalLine.setAttribute('stroke', '#ffd700');
         goalLine.setAttribute('stroke-width', '2');
@@ -11295,7 +11300,7 @@
         svg.appendChild(goalLine);
         
         const goalLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        goalLabel.setAttribute('x', chartPadding + chartWidth - 35);
+        goalLabel.setAttribute('x', chartEndX - 30);
         goalLabel.setAttribute('y', goalY - 3);
         goalLabel.setAttribute('fill', '#ffd700');
         goalLabel.setAttribute('font-size', '10');
@@ -11303,20 +11308,25 @@
         svg.appendChild(goalLabel);
       }
       
-      // Draw bars
+      // Calculate bar positions to fill entire chart width
       const numSlots = aggregatedData.length;
-      const barWidth = Math.min(40, chartWidth / (numSlots * 1.2));
       const slotWidth = chartWidth / numSlots;
+      const barWidth = Math.min(50, slotWidth * 0.8); // 80% of slot width
       
       const timelineLabels = [];
+      const barCenters = []; // Track exact center positions for timeline alignment
       
       aggregatedData.forEach((entry, index) => {
-        const x = chartPadding + (index * slotWidth) + (slotWidth - barWidth) / 2;
+        const slotCenter = chartStartX + (index * slotWidth) + (slotWidth / 2);
+        const x = slotCenter - (barWidth / 2);
+        barCenters.push(slotCenter);
+        
+        console.log(`Bar ${index}: slot center=${slotCenter}, x=${x}, width=${barWidth}`);
         
         if (entry.hasData && entry.weight !== null) {
           // Draw bar for actual data
           const weightPercent = (entry.weight - yScale.min) / yScale.range;
-          const barHeight = Math.max(5, weightPercent * chartHeight);
+          const barHeight = Math.max(8, weightPercent * chartHeight);
           const y = chartBottom - barHeight;
           
           const bar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
@@ -11330,7 +11340,7 @@
           
           // Weight label above bar
           const weightLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-          weightLabel.setAttribute('x', x + barWidth/2);
+          weightLabel.setAttribute('x', slotCenter);
           weightLabel.setAttribute('y', y - 5);
           weightLabel.setAttribute('fill', 'white');
           weightLabel.setAttribute('font-size', '9');
@@ -11341,9 +11351,9 @@
           // Show empty state indicator for missing days
           const emptyIndicator = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
           emptyIndicator.setAttribute('x', x);
-          emptyIndicator.setAttribute('y', chartBottom - 8);
+          emptyIndicator.setAttribute('y', chartBottom - 5);
           emptyIndicator.setAttribute('width', barWidth);
-          emptyIndicator.setAttribute('height', '3');
+          emptyIndicator.setAttribute('height', '2');
           emptyIndicator.setAttribute('fill', 'rgba(255,255,255,0.3)');
           emptyIndicator.setAttribute('rx', '1');
           svg.appendChild(emptyIndicator);
@@ -11352,19 +11362,35 @@
         timelineLabels.push(entry.displayDate);
       });
       
-      // Update timeline
+      // Update timeline to match exact bar positions
       const timeline = document.querySelector('.chart-timeline');
       if (timeline) {
         timeline.style.cssText = `
-          display: grid;
-          grid-template-columns: repeat(${numSlots}, 1fr);
-          text-align: center;
+          position: relative;
+          height: 20px;
           margin-top: 0.5rem;
-          padding: 0 ${chartPadding}px;
+          padding: 0 2rem;
         `;
-        timeline.innerHTML = timelineLabels.map(label => 
-          `<span style="color: rgba(255,255,255,0.7); font-size: 9px;">${label}</span>`
-        ).join('');
+        
+        // Position each label exactly under its bar center
+        let timelineHTML = '';
+        timelineLabels.forEach((label, index) => {
+          // Calculate percentage position relative to chart area
+          const leftPercent = ((barCenters[index] - chartStartX) / chartWidth) * 100;
+          timelineHTML += `
+            <span style="
+              position: absolute;
+              left: ${leftPercent}%;
+              transform: translateX(-50%);
+              color: rgba(255,255,255,0.8);
+              font-size: 10px;
+              white-space: nowrap;
+            ">${label}</span>
+          `;
+        });
+        timeline.innerHTML = timelineHTML;
+        
+        console.log('Timeline positioned at:', barCenters.map((center, i) => `${timelineLabels[i]}: ${center}px`));
       }
     }
     
@@ -11376,13 +11402,14 @@
             <div class="chart-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
               <h4 style="margin: 0; color: white;">Weight Progress</h4>
               <div class="chart-actions" style="display: flex; gap: 0.5rem;">
+                <button class="primary-btn" onclick="openWeightLogModal()" style="padding: 0.5rem 1rem; font-size: 0.875rem;">Log Weight</button>
                 <button class="chart-action-btn" onclick="showWeightDataManager()" disabled>Manage Data</button>
                 <button class="chart-action-btn danger" onclick="clearAllWeightData()" disabled>Clear All</button>
               </div>
             </div>
             <div style="text-align: center; padding: 4rem 2rem; color: white;">
               <p style="margin-bottom: 1.5rem; color: rgba(255,255,255,0.7);">Log your weight to see this chart.</p>
-              <button class="primary-btn" onclick="logWeight()">Log Your Weight</button>
+              <button class="primary-btn" onclick="openWeightLogModal()">Log Your Weight</button>
             </div>
           </div>
         `;
