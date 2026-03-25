@@ -11088,6 +11088,7 @@
 
     function updateProgressChart(period = 'week') {
       console.log('=== WEIGHT PROGRESS CHART (per spec) ===', period);
+      console.log('Current timestamp:', new Date().toISOString());
       
       // Get weight logs and user goal
       let progressData, weightLogs, userGoal;
@@ -11096,6 +11097,7 @@
         weightLogs = progressData.weightLogs || [];
         userGoal = JSON.parse(localStorage.getItem('userGoal') || '{}');
         console.log('Raw data - weightLogs:', weightLogs.length, 'entries, goal:', userGoal.targetWeight);
+        console.log('All weight logs:', weightLogs);
       } catch (error) {
         console.error('Error parsing localStorage:', error);
         return;
@@ -11232,6 +11234,8 @@
       const chartContainer = document.querySelector('.weight-chart-container');
       let svg = document.querySelector('.progress-chart');
       
+      console.log('ensureChartStructure called - chartContainer found:', !!chartContainer, 'svg found:', !!svg);
+      
       if (!svg) {
         console.log('Restoring chart structure...');
         chartContainer.innerHTML = `
@@ -11365,6 +11369,8 @@
       
       // Timeline positioned to exactly match bar centers
       const timeline = document.querySelector('.chart-timeline');
+      console.log('Timeline element found:', !!timeline);
+      
       if (timeline) {
         // Set timeline container width to match SVG canvas area
         timeline.style.cssText = `
@@ -11373,7 +11379,10 @@
           margin-top: 0.5rem;
           padding: 0 2rem;
           width: calc(100% - 4rem);
+          background: rgba(255,0,0,0.1);
         `;
+        
+        console.log('Timeline container styled. Plot area:', { plotStartX, plotWidth, barSpacing });
         
         // Position each label exactly under its bar using pixel positioning
         let timelineHTML = '';
@@ -11394,12 +11403,17 @@
               color: rgba(255,255,255,0.8);
               font-size: 10px;
               white-space: nowrap;
+              background: rgba(0,255,0,0.3);
+              padding: 2px;
             ">${label}</span>
           `;
           
-          console.log(`Label ${index} "${label}": bar at ${barCenter}px, timeline at ${leftPercent.toFixed(1)}%`);
+          console.log(`TIMELINE CALC: Label ${index} "${label}": bar at ${barCenter}px, adjusted=${adjustedBarCenter}px, timeline at ${leftPercent.toFixed(1)}%`);
         });
         timeline.innerHTML = timelineHTML;
+        console.log('Timeline HTML updated:', timelineHTML.substring(0, 200) + '...');
+      } else {
+        console.error('Timeline element not found in DOM!');
       }
     }
     
