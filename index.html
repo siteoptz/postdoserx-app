@@ -4514,7 +4514,9 @@
     /* Blue gradient theme action buttons - matching grocery page */
     body.comprehensive-progress-active .comprehensive-actions .button-professional,
     body.comprehensive-progress-active .comprehensive-actions .button-professional--accent,
-    body.comprehensive-progress-active .comprehensive-actions .button-professional--outline {
+    body.comprehensive-progress-active .comprehensive-actions .button-professional--outline,
+    button[onclick*="exportComprehensiveReport"],
+    button[onclick*="shareWithProvider"] {
       background: linear-gradient(135deg, #2563EB, #1A1A1A) !important;
       border: 1px solid #2563EB !important;
       color: #ffffff !important;
@@ -4523,7 +4525,9 @@
 
     body.comprehensive-progress-active .comprehensive-actions .button-professional:hover,
     body.comprehensive-progress-active .comprehensive-actions .button-professional--accent:hover,
-    body.comprehensive-progress-active .comprehensive-actions .button-professional--outline:hover {
+    body.comprehensive-progress-active .comprehensive-actions .button-professional--outline:hover,
+    button[onclick*="exportComprehensiveReport"]:hover,
+    button[onclick*="shareWithProvider"]:hover {
       background: linear-gradient(135deg, #2563EB, #2A2A2A) !important;
       border: 1px solid #2563EB !important;
       color: #ffffff !important;
