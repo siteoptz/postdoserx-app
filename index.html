@@ -4511,27 +4511,23 @@
       border: 1px solid var(--gold-light);
     }
 
-    /* Purple theme action buttons */
-    body.comprehensive-progress-active .comprehensive-actions .button-professional {
-      background: linear-gradient(135deg, #8B5CF6 0%, #3B82F6 100%);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      color: white;
-    }
-
+    /* Blue gradient theme action buttons - matching grocery page */
+    body.comprehensive-progress-active .comprehensive-actions .button-professional,
+    body.comprehensive-progress-active .comprehensive-actions .button-professional--accent,
     body.comprehensive-progress-active .comprehensive-actions .button-professional--outline {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      color: white;
-      backdrop-filter: blur(10px);
+      background: linear-gradient(135deg, #2563EB, #1A1A1A) !important;
+      border: 1px solid #2563EB !important;
+      color: #ffffff !important;
+      box-shadow: 0 0 60px rgba(139, 92, 246, 0.25) !important;
     }
 
-    body.comprehensive-progress-active .comprehensive-actions .button-professional:hover {
-      background: linear-gradient(135deg, #7C3AED 0%, #2563EB 100%);
-      transform: translateY(-2px);
-    }
-
+    body.comprehensive-progress-active .comprehensive-actions .button-professional:hover,
+    body.comprehensive-progress-active .comprehensive-actions .button-professional--accent:hover,
     body.comprehensive-progress-active .comprehensive-actions .button-professional--outline:hover {
-      background: rgba(255, 255, 255, 0.2);
+      background: linear-gradient(135deg, #2563EB, #2A2A2A) !important;
+      border: 1px solid #2563EB !important;
+      color: #ffffff !important;
+      box-shadow: 0 0 60px rgba(139, 92, 246, 0.4) !important;
       transform: translateY(-2px);
     }
 
@@ -6707,6 +6703,16 @@
   /* SKIP FOR NOW BUTTON */
   button[onclick*="skipSetup"] {
     background: #2563EB !important;
+    color: #ffffff !important;
+    border: 1px solid #2563EB !important;
+    box-shadow: 0 0 60px rgba(139, 92, 246, 0.25) !important;
+  }
+  
+  /* GROCERY PAGE BUTTONS - Generate List, Clear All, Export */
+  button[onclick*="generateGroceryList"],
+  button[onclick*="clearGroceryList"], 
+  button[onclick*="exportGroceryList"] {
+    background: linear-gradient(135deg, #2563EB, #1A1A1A) !important;
     color: #ffffff !important;
     border: 1px solid #2563EB !important;
     box-shadow: 0 0 60px rgba(139, 92, 246, 0.25) !important;
