@@ -6123,10 +6123,13 @@
       right: 0;
       bottom: 0;
       background: rgba(0, 0, 0, 0.7);
-      z-index: 999;
+      z-index: 1000;
       backdrop-filter: blur(4px);
       touch-action: manipulation;
       cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
     }
     
     /* Mobile close button - hidden by default */
@@ -6201,25 +6204,32 @@
       
       /* Hide sidebar by default on mobile */
       .sidebar {
-        position: fixed;
-        top: 60px;
-        left: -280px;
-        width: 280px;
-        height: calc(100vh - 60px);
-        z-index: 1000;
-        transition: left 0.3s ease;
-        overflow-y: auto;
+        position: fixed !important;
+        top: 60px !important;
+        left: -280px !important;
+        width: 280px !important;
+        height: calc(100vh - 60px) !important;
+        z-index: 1001 !important;
+        transition: left 0.3s ease !important;
+        overflow-y: auto !important;
+        background: var(--charcoal) !important;
+        border-right: 1px solid var(--slate) !important;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3) !important;
       }
       
       /* Show sidebar when mobile menu is open */
       .sidebar.mobile-open {
-        left: 0;
+        left: 0 !important;
+        display: block !important;
+        visibility: visible !important;
       }
       
       /* Show overlay when sidebar is open */
       .sidebar-overlay.active {
         display: block !important;
-        z-index: 999 !important;
+        z-index: 1000 !important;
+        opacity: 1 !important;
+        visibility: visible !important;
       }
       
       /* Mobile user dropdown adjustments */
@@ -6306,10 +6316,20 @@
       }
       
       .sidebar {
-        top: 56px;
-        height: calc(100vh - 56px);
-        width: 260px;
-        left: -260px;
+        top: 56px !important;
+        height: calc(100vh - 56px) !important;
+        width: 260px !important;
+        left: -260px !important;
+        position: fixed !important;
+        z-index: 1001 !important;
+        background: var(--charcoal) !important;
+        border-right: 1px solid var(--slate) !important;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3) !important;
+        transition: left 0.3s ease !important;
+      }
+      
+      .sidebar.mobile-open {
+        left: 0 !important;
       }
       
       .main-content {
@@ -6892,13 +6912,15 @@
       top: 0 !important;
       left: -100% !important;
       height: 100vh !important;
-      z-index: 1000 !important;
+      z-index: 1001 !important;
       transition: left 0.3s ease !important;
-      background: var(--color-background) !important;
-      border-right: 1px solid var(--color-border-default) !important;
+      background: var(--charcoal) !important;
+      border-right: 1px solid var(--slate) !important;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3) !important;
     }
     
-    .sidebar.active {
+    .sidebar.active,
+    .sidebar.mobile-open {
       left: 0 !important;
     }
     
@@ -10262,11 +10284,13 @@
       console.log('Toggle sidebar clicked'); // Debug log
       
       if (sidebar && overlay) {
+        // Toggle both class names for compatibility
         sidebar.classList.toggle('mobile-open');
+        sidebar.classList.toggle('active');
         overlay.classList.toggle('active');
         
         // Prevent body scroll when sidebar is open
-        if (sidebar.classList.contains('mobile-open')) {
+        if (sidebar.classList.contains('mobile-open') || sidebar.classList.contains('active')) {
           document.body.style.overflow = 'hidden';
           document.body.style.position = 'fixed';
           document.body.style.width = '100%';
@@ -10289,6 +10313,7 @@
       
       if (sidebar && overlay) {
         sidebar.classList.remove('mobile-open');
+        sidebar.classList.remove('active');
         overlay.classList.remove('active');
         document.body.style.overflow = '';
         document.body.style.position = '';
