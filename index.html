@@ -7328,6 +7328,27 @@
         </div>
         
         <div class="dropdown-section">
+          <div class="section-title">Progress & Stats</div>
+          <div class="dropdown-item" id="dropdown-progress-stats">
+            Loading progress data...
+          </div>
+        </div>
+        
+        <div class="dropdown-section">
+          <div class="section-title">My Rated Meals</div>
+          <div class="dropdown-item" id="dropdown-rated-meals">
+            Loading meal ratings...
+          </div>
+        </div>
+        
+        <div class="dropdown-section">
+          <div class="section-title">Daily Meal Log</div>
+          <div class="dropdown-item" id="dropdown-meal-log">
+            Loading meal log...
+          </div>
+        </div>
+        
+        <div class="dropdown-section">
           <div class="section-title">Account</div>
           <div class="dropdown-item" onclick="openUserModal('profile-modal')">
             Profile & Settings
@@ -12266,11 +12287,119 @@
       }
     });
     
+    // Function to update user dropdown with real data
+    function updateUserDropdownWithRealData() {
+      const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
+      const userTier = localStorage.getItem('userTier') || 'trial';
+      
+      // Update user name
+      const nameElement = document.getElementById('dropdown-user-name');
+      if (nameElement && medicationProfile.name) {
+        nameElement.textContent = medicationProfile.name;
+      } else if (nameElement) {
+        nameElement.textContent = 'User';
+      }
+      
+      // Update user email
+      const emailElement = document.getElementById('dropdown-user-email');
+      if (emailElement && medicationProfile.email) {
+        emailElement.textContent = medicationProfile.email;
+      } else if (emailElement) {
+        emailElement.textContent = 'user@postdoserx.com';
+      }
+      
+      // Update user tier
+      const tierElement = document.getElementById('dropdown-user-tier');
+      if (tierElement) {
+        const tierText = userTier === 'premium' ? 'Premium Account' : 'Trial Account';
+        tierElement.textContent = tierText;
+      }
+      
+      // Update Progress & Stats section
+      updateProgressStatsDropdown();
+      
+      // Update My Rated Meals section
+      updateRatedMealsDropdown();
+      
+      // Update Daily Meal Log section
+      updateMealLogDropdown();
+      
+      console.log('User dropdown updated with real data:', {
+        name: medicationProfile.name || 'User',
+        email: medicationProfile.email || 'user@postdoserx.com',
+        tier: userTier
+      });
+    }
+    
+    // Function to update Progress & Stats dropdown section
+    function updateProgressStatsDropdown() {
+      const progressElement = document.getElementById('dropdown-progress-stats');
+      if (!progressElement) return;
+      
+      // Get real data from localStorage
+      const weightData = JSON.parse(localStorage.getItem('weightData') || '[]');
+      const mealFeedback = JSON.parse(localStorage.getItem('mealFeedback') || '{}');
+      const symptomData = JSON.parse(localStorage.getItem('symptomData') || '{}');
+      
+      const weightCount = weightData.length;
+      const mealCount = Object.keys(mealFeedback).length;
+      const symptomCount = Object.keys(symptomData).length;
+      
+      if (weightCount === 0 && mealCount === 0 && symptomCount === 0) {
+        progressElement.innerHTML = 'No tracking data yet';
+      } else {
+        progressElement.innerHTML = `${weightCount} weight logs, ${mealCount} meal ratings, ${symptomCount} symptom logs`;
+      }
+    }
+    
+    // Function to update My Rated Meals dropdown section
+    function updateRatedMealsDropdown() {
+      const mealsElement = document.getElementById('dropdown-rated-meals');
+      if (!mealsElement) return;
+      
+      const mealFeedback = JSON.parse(localStorage.getItem('mealFeedback') || '{}');
+      const ratedMeals = Object.keys(mealFeedback);
+      
+      if (ratedMeals.length === 0) {
+        mealsElement.innerHTML = 'No meals rated yet';
+      } else {
+        const totalRatings = ratedMeals.length;
+        const avgRating = ratedMeals.reduce((sum, date) => {
+          return sum + (mealFeedback[date].rating || 0);
+        }, 0) / totalRatings;
+        
+        mealsElement.innerHTML = `${totalRatings} meals rated (avg ${avgRating.toFixed(1)}/5)`;
+      }
+    }
+    
+    // Function to update Daily Meal Log dropdown section
+    function updateMealLogDropdown() {
+      const logElement = document.getElementById('dropdown-meal-log');
+      if (!logElement) return;
+      
+      const mealFeedback = JSON.parse(localStorage.getItem('mealFeedback') || '{}');
+      const dates = Object.keys(mealFeedback).sort().reverse(); // Most recent first
+      
+      if (dates.length === 0) {
+        logElement.innerHTML = 'No meal logs yet';
+      } else {
+        const latestDate = dates[0];
+        const totalDays = dates.length;
+        const formattedDate = new Date(latestDate).toLocaleDateString();
+        
+        logElement.innerHTML = `${totalDays} days logged (latest: ${formattedDate})`;
+      }
+    }
+
     // Initialize everything on page load
     document.addEventListener('DOMContentLoaded', function() {
       // Initialize form handlers for modals
       initializeWeightLogForm();
       initializeGoalForm();
+      
+      // Update user dropdown with real data
+      updateUserDropdownWithRealData();
+      
       // Load and display saved medication profile (single consolidated call)
       const savedProfile = localStorage.getItem('medicationProfile');
       if (savedProfile) {
@@ -16489,14 +16618,8 @@ For clinical review and treatment optimization.`;
           updateDashboardWithProfile(updatedProfile);
           console.log('updateDashboardWithProfile called');
           
-          // Update UI elements
-          document.getElementById('dropdown-user-name').textContent = formData.name;
-          if (formData.email) {
-            const emailElement = document.getElementById('dropdown-user-email');
-            if (emailElement) {
-              emailElement.textContent = formData.email;
-            }
-          }
+          // Update UI elements using the centralized function
+          updateUserDropdownWithRealData();
           
           // Close modal
           closeUserModal('profile-modal');
@@ -17019,6 +17142,9 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
       
       // Update Advanced Recipe Analytics with new rating data
       updateRecipeAnalytics();
+      
+      // Update user dropdown with new data
+      updateUserDropdownWithRealData();
       
       console.log('Meal rating submitted:', currentFeedback);
     }
