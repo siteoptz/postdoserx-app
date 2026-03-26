@@ -6262,8 +6262,24 @@
       
       /* Improved sidebar touch interaction */
       .sidebar {
-        touch-action: manipulation !important;
+        touch-action: pan-y !important;
         -webkit-overflow-scrolling: touch !important;
+        overflow-y: auto !important;
+        overscroll-behavior: contain !important;
+      }
+      
+      /* Ensure sidebar content is scrollable */
+      .sidebar .nav-section,
+      .sidebar .nav-list {
+        touch-action: pan-y !important;
+        -webkit-overflow-scrolling: touch !important;
+      }
+      
+      /* Additional mobile scrolling support */
+      @supports (-webkit-overflow-scrolling: touch) {
+        .sidebar {
+          -webkit-overflow-scrolling: touch !important;
+        }
       }
       
       /* Fix mobile menu toggle visibility */
@@ -10308,15 +10324,24 @@
         sidebar.classList.toggle('active');
         overlay.classList.toggle('active');
         
-        // Prevent body scroll when sidebar is open
+        // Prevent body scroll when sidebar is open, but allow sidebar scrolling
         if (sidebar.classList.contains('mobile-open') || sidebar.classList.contains('active')) {
-          document.body.style.overflow = 'hidden';
+          // Store current scroll position
+          const scrollY = window.scrollY;
           document.body.style.position = 'fixed';
+          document.body.style.top = `-${scrollY}px`;
           document.body.style.width = '100%';
+          document.body.style.overflow = 'hidden';
+          document.body.dataset.scrollY = scrollY.toString();
         } else {
-          document.body.style.overflow = '';
+          // Restore scroll position
+          const scrollY = document.body.dataset.scrollY;
           document.body.style.position = '';
+          document.body.style.top = '';
           document.body.style.width = '';
+          document.body.style.overflow = '';
+          window.scrollTo(0, parseInt(scrollY || '0'));
+          delete document.body.dataset.scrollY;
         }
         
         console.log('Sidebar classes:', sidebar.className); // Debug log
@@ -10334,9 +10359,15 @@
         sidebar.classList.remove('mobile-open');
         sidebar.classList.remove('active');
         overlay.classList.remove('active');
-        document.body.style.overflow = '';
+        
+        // Restore scroll position
+        const scrollY = document.body.dataset.scrollY;
         document.body.style.position = '';
+        document.body.style.top = '';
         document.body.style.width = '';
+        document.body.style.overflow = '';
+        window.scrollTo(0, parseInt(scrollY || '0'));
+        delete document.body.dataset.scrollY;
       }
     }
     
