@@ -4516,23 +4516,53 @@
     body.comprehensive-progress-active .comprehensive-actions .button-professional--accent,
     body.comprehensive-progress-active .comprehensive-actions .button-professional--outline,
     button[onclick*="exportComprehensiveReport"],
-    button[onclick*="shareWithProvider"] {
+    button[onclick*="shareWithProvider"],
+    .comprehensive-export-btn,
+    .comprehensive-share-btn {
       background: linear-gradient(135deg, #2563EB, #1A1A1A) !important;
       border: 1px solid #2563EB !important;
       color: #ffffff !important;
       box-shadow: 0 0 60px rgba(139, 92, 246, 0.25) !important;
+      padding: 1rem 1.5rem !important;
+      border-radius: 12px !important;
+      font-size: 1rem !important;
+      font-weight: 600 !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 0.75rem !important;
+      transition: all 0.3s ease !important;
+      min-width: 200px !important;
+      justify-content: center !important;
     }
 
     body.comprehensive-progress-active .comprehensive-actions .button-professional:hover,
     body.comprehensive-progress-active .comprehensive-actions .button-professional--accent:hover,
     body.comprehensive-progress-active .comprehensive-actions .button-professional--outline:hover,
     button[onclick*="exportComprehensiveReport"]:hover,
-    button[onclick*="shareWithProvider"]:hover {
+    button[onclick*="shareWithProvider"]:hover,
+    .comprehensive-export-btn:hover,
+    .comprehensive-share-btn:hover {
       background: linear-gradient(135deg, #2563EB, #2A2A2A) !important;
       border: 1px solid #2563EB !important;
       color: #ffffff !important;
       box-shadow: 0 0 60px rgba(139, 92, 246, 0.4) !important;
       transform: translateY(-2px);
+    }
+
+    /* Icon styling for comprehensive progress buttons */
+    .comprehensive-export-btn i,
+    .comprehensive-share-btn i {
+      font-size: 1.1rem !important;
+      color: #ffffff !important;
+    }
+
+    /* Layout adjustment for comprehensive actions */
+    .comprehensive-actions {
+      display: flex !important;
+      gap: 1rem !important;
+      justify-content: center !important;
+      align-items: center !important;
+      margin: 2rem 0 !important;
     }
 
     /* NUCLEAR ROBOTO FONT OVERRIDE - ABSOLUTE HIGHEST SPECIFICITY */
@@ -10069,8 +10099,14 @@
 
         <!-- Export and Sharing Options -->
         <div class="comprehensive-actions">
-          <button class="button-professional--accent" onclick="exportComprehensiveReport()">Export Detailed Report</button>
-          <button class="button-professional--outline" onclick="shareWithProvider()">Share with Provider</button>
+          <button class="button-professional--accent comprehensive-export-btn" onclick="exportComprehensiveReport()">
+            <i data-lucide="bar-chart-3"></i>
+            Export Detailed Report
+          </button>
+          <button class="button-professional--outline comprehensive-share-btn" onclick="shareWithProvider()">
+            <i data-lucide="user-check"></i>
+            Share with Provider
+          </button>
         </div>
       </div>
 
