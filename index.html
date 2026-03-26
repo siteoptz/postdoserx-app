@@ -5748,18 +5748,15 @@
     }
     
     .benefit-icon {
-      color: var(--color-text-inverse);
+      color: var(--accent-blue);
       font-size: 1.25rem;
       margin-top: 0.25rem;
       flex-shrink: 0;
-      background: linear-gradient(135deg, var(--accent-blue), var(--charcoal));
-      border-radius: var(--radius-medium);
       width: 32px;
       height: 32px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: var(--elevation-medium);
     }
     
     .milestone-icon {
@@ -6715,6 +6712,465 @@
     box-shadow: 0 0 60px rgba(139, 92, 246, 0.25) !important;
   }
   
+  /* PREMIUM UPGRADE BUTTON - CUSTOM PROMINENT STYLING */
+  .premium-upgrade-button,
+  .premium-upgrade-button-main {
+    position: relative;
+    padding: 0 !important;
+    margin: 0 auto 1rem auto !important;
+    border: none !important;
+    background: none !important;
+    cursor: pointer !important;
+    width: auto !important;
+    max-width: 280px !important;
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    transform: scale(1) !important;
+    transition: all 0.3s ease !important;
+    display: block !important;
+  }
+  
+  .premium-upgrade-button:hover,
+  .premium-upgrade-button-main:hover {
+    transform: scale(1.02) translateY(-2px) !important;
+    box-shadow: 0 20px 40px rgba(139, 92, 246, 0.4) !important;
+  }
+  
+  .upgrade-btn-gradient,
+  .premium-btn-content {
+    display: block !important;
+    background: linear-gradient(135deg, #8B5CF6, #7C3AED, #6366F1) !important;
+    padding: 1.5rem 2rem !important;
+    border-radius: 12px !important;
+    position: relative !important;
+    overflow: hidden !important;
+    text-align: center !important;
+  }
+  
+  .upgrade-btn-gradient::before,
+  .premium-btn-content::before {
+    content: '' !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: -100% !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent) !important;
+    transition: left 0.8s ease !important;
+  }
+  
+  .premium-upgrade-button:hover .upgrade-btn-gradient::before,
+  .premium-upgrade-button-main:hover .premium-btn-content::before {
+    left: 100% !important;
+  }
+  
+  .upgrade-btn-text,
+  .premium-btn-main {
+    display: block !important;
+    color: #ffffff !important;
+    font-size: 1.1rem !important;
+    font-weight: 800 !important;
+    margin-bottom: 0.125rem !important;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+    position: relative !important;
+    z-index: 2 !important;
+    letter-spacing: 0.5px !important;
+    text-transform: uppercase !important;
+  }
+  
+  .upgrade-btn-subtitle,
+  .premium-btn-desc {
+    display: block !important;
+    color: rgba(255,255,255,0.95) !important;
+    font-size: 0.8rem !important;
+    font-weight: 600 !important;
+    position: relative !important;
+    z-index: 2 !important;
+    font-style: italic !important;
+    letter-spacing: 0.25px !important;
+  }
+  
+  .premium-btn-icon {
+    display: block !important;
+    font-size: 1.2rem !important;
+    margin-bottom: 0.25rem !important;
+    position: relative !important;
+    z-index: 2 !important;
+    animation: pulse 2s infinite !important;
+  }
+  
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+  
+  /* COMPREHENSIVE MOBILE RESPONSIVENESS */
+  @media (max-width: 768px) {
+    /* Main Layout */
+    .dashboard-container {
+      flex-direction: column !important;
+      min-height: 100vh !important;
+    }
+    
+    .sidebar {
+      width: 100% !important;
+      position: fixed !important;
+      top: 0 !important;
+      left: -100% !important;
+      height: 100vh !important;
+      z-index: 1000 !important;
+      transition: left 0.3s ease !important;
+      background: var(--color-background) !important;
+      border-right: 1px solid var(--color-border-default) !important;
+    }
+    
+    .sidebar.active {
+      left: 0 !important;
+    }
+    
+    .main-content {
+      width: 100% !important;
+      margin-left: 0 !important;
+      padding: 1rem !important;
+      min-height: 100vh !important;
+    }
+    
+    /* Meals Page - Weekly Grid */
+    .weekly-meal-grid {
+      display: block !important;
+      gap: 1rem !important;
+    }
+    
+    .day-card {
+      width: 100% !important;
+      margin-bottom: 1.5rem !important;
+      border-radius: 8px !important;
+      overflow: hidden !important;
+    }
+    
+    .day-header {
+      padding: 1rem !important;
+      background: var(--color-surface-elevated) !important;
+    }
+    
+    .day-name {
+      font-size: 1.25rem !important;
+      font-weight: 600 !important;
+    }
+    
+    .day-date {
+      font-size: 0.875rem !important;
+      opacity: 0.7 !important;
+    }
+    
+    .meals-container {
+      padding: 0 !important;
+    }
+    
+    .meal-slot {
+      padding: 1rem !important;
+      border-bottom: 1px solid var(--color-border-subtle) !important;
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 0.75rem !important;
+    }
+    
+    .meal-slot:last-child {
+      border-bottom: none !important;
+    }
+    
+    .meal-time-section {
+      display: flex !important;
+      align-items: center !important;
+      gap: 0.5rem !important;
+      margin-bottom: 0.5rem !important;
+    }
+    
+    .meal-time {
+      font-size: 0.875rem !important;
+      font-weight: 600 !important;
+      color: var(--accent-blue) !important;
+    }
+    
+    .meal-period {
+      font-size: 0.75rem !important;
+      color: var(--color-text-secondary) !important;
+      background: var(--color-surface-elevated) !important;
+      padding: 0.25rem 0.5rem !important;
+      border-radius: 12px !important;
+    }
+    
+    .meal-content {
+      flex: 1 !important;
+    }
+    
+    .meal-title {
+      font-size: 1.1rem !important;
+      font-weight: 600 !important;
+      margin-bottom: 0.5rem !important;
+      line-height: 1.3 !important;
+    }
+    
+    .meal-description {
+      font-size: 0.875rem !important;
+      line-height: 1.4 !important;
+      color: var(--color-text-secondary) !important;
+      margin-bottom: 0.75rem !important;
+    }
+    
+    .meal-tags {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 0.5rem !important;
+      margin-bottom: 1rem !important;
+    }
+    
+    .meal-tag {
+      font-size: 0.75rem !important;
+      padding: 0.25rem 0.5rem !important;
+      border-radius: 12px !important;
+      font-weight: 500 !important;
+    }
+    
+    .meal-actions {
+      display: flex !important;
+      gap: 0.5rem !important;
+      flex-wrap: wrap !important;
+    }
+    
+    .meal-actions button {
+      flex: 1 !important;
+      min-width: 80px !important;
+      font-size: 0.75rem !important;
+      padding: 0.5rem 0.75rem !important;
+    }
+    
+    /* Content Cards */
+    .content-card {
+      margin-bottom: 1rem !important;
+      padding: 1rem !important;
+      border-radius: 8px !important;
+    }
+    
+    .content-header h2 {
+      font-size: 1.5rem !important;
+      margin-bottom: 0.5rem !important;
+    }
+    
+    /* Grocery Page */
+    .category-card {
+      margin-bottom: 1.5rem !important;
+    }
+    
+    .ingredient-grid {
+      display: block !important;
+      gap: 0.5rem !important;
+    }
+    
+    .ingredient-item {
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      padding: 0.75rem !important;
+      margin-bottom: 0.5rem !important;
+      border-radius: 6px !important;
+      background: var(--color-surface) !important;
+    }
+    
+    .ingredient-info {
+      flex: 1 !important;
+    }
+    
+    .ingredient-name {
+      font-size: 0.9rem !important;
+      font-weight: 600 !important;
+      margin-bottom: 0.25rem !important;
+    }
+    
+    .ingredient-details {
+      font-size: 0.75rem !important;
+      color: var(--color-text-secondary) !important;
+      margin-bottom: 0.25rem !important;
+    }
+    
+    .ingredient-nutrition {
+      font-size: 0.7rem !important;
+      color: var(--color-text-tertiary) !important;
+    }
+    
+    .ingredient-controls {
+      display: flex !important;
+      align-items: center !important;
+      gap: 0.5rem !important;
+    }
+    
+    .quantity-controls {
+      display: flex !important;
+      align-items: center !important;
+      gap: 0.25rem !important;
+    }
+    
+    .quantity-controls button {
+      width: 32px !important;
+      height: 32px !important;
+      font-size: 0.875rem !important;
+    }
+    
+    .quantity-display {
+      min-width: 24px !important;
+      text-align: center !important;
+      font-size: 0.875rem !important;
+    }
+    
+    /* Symptoms Page */
+    .symptom-tracker {
+      display: block !important;
+      gap: 1rem !important;
+    }
+    
+    .tracking-card {
+      width: 100% !important;
+      margin-bottom: 1rem !important;
+    }
+    
+    /* Progress Page */
+    .progress-grid {
+      display: block !important;
+      gap: 1rem !important;
+    }
+    
+    .progress-card {
+      width: 100% !important;
+      margin-bottom: 1rem !important;
+    }
+    
+    /* Modals */
+    .modal-content {
+      width: 95% !important;
+      max-width: 95% !important;
+      margin: 1rem !important;
+      padding: 1rem !important;
+      border-radius: 8px !important;
+    }
+    
+    .modal-header {
+      flex-direction: column !important;
+      gap: 0.5rem !important;
+      align-items: flex-start !important;
+    }
+    
+    .modal-close {
+      position: absolute !important;
+      top: 1rem !important;
+      right: 1rem !important;
+    }
+    
+    /* Buttons */
+    .button-professional,
+    .button-professional--outline,
+    .button-professional--accent {
+      padding: 0.75rem 1rem !important;
+      font-size: 0.875rem !important;
+      border-radius: 6px !important;
+    }
+    
+    /* Premium Upgrade Button Mobile */
+    .premium-upgrade-button,
+    .premium-upgrade-button-main {
+      max-width: 100% !important;
+      width: 100% !important;
+    }
+    
+    .premium-btn-content,
+    .upgrade-btn-gradient {
+      padding: 1rem 1.5rem !important;
+    }
+    
+    /* Forms */
+    .form-group {
+      margin-bottom: 1rem !important;
+    }
+    
+    .form-row {
+      flex-direction: column !important;
+      gap: 1rem !important;
+    }
+    
+    .form-col {
+      width: 100% !important;
+    }
+    
+    input, select, textarea {
+      font-size: 16px !important; /* Prevents zoom on iOS */
+      padding: 0.75rem !important;
+    }
+    
+    /* Charts and Analytics */
+    .chart-container {
+      overflow-x: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+    }
+    
+    .chart-container canvas {
+      min-width: 300px !important;
+    }
+    
+    /* Navigation */
+    .nav-list {
+      padding: 0 !important;
+    }
+    
+    .nav-item {
+      margin-bottom: 0.5rem !important;
+    }
+    
+    .nav-link {
+      padding: 1rem !important;
+      font-size: 1rem !important;
+      border-radius: 6px !important;
+    }
+    
+    /* Utilities */
+    .text-center-mobile {
+      text-align: center !important;
+    }
+    
+    .hide-mobile {
+      display: none !important;
+    }
+    
+    .show-mobile {
+      display: block !important;
+    }
+    
+    /* Prevent horizontal scroll */
+    html, body {
+      overflow-x: hidden !important;
+    }
+    
+    * {
+      max-width: 100% !important;
+      box-sizing: border-box !important;
+    }
+  }
+  
+  /* Tablet Styles */
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .weekly-meal-grid {
+      grid-template-columns: 1fr 1fr !important;
+      gap: 1rem !important;
+    }
+    
+    .day-card {
+      margin-bottom: 1rem !important;
+    }
+    
+    .main-content {
+      padding: 1.5rem !important;
+    }
+  }
+  
   </style>
 </head>
 <body>
@@ -6781,9 +7237,6 @@
     <!-- Sidebar Navigation -->
     <nav class="sidebar">
       <div class="sidebar-header">
-        <button class="button-professional" onclick="closeMobileSidebar()" aria-label="Close menu">
-          <i data-lucide="x"></i>
-        </button>
       </div>
       <div class="nav-section">
         <div class="nav-title">Dashboard</div>
@@ -7514,12 +7967,17 @@
               </div>
               <div class="meals-container">
                 <div class="meal-slot">
-                  <div class="meal-time">7:00 AM - Morning</div>
-                  <div class="meal-title">Smoothie Bowl</div>
-                  <div class="meal-description">Mango smoothie bowl topped with coconut flakes and hemp seeds</div>
-                  <div class="meal-tags">
-                    <span class="meal-tag light">Light</span>
-                    <span class="meal-tag comfort">Refreshing</span>
+                  <div class="meal-time-section">
+                    <div class="meal-time">7:00 AM</div>
+                    <div class="meal-period">Morning</div>
+                  </div>
+                  <div class="meal-content">
+                    <div class="meal-title">Smoothie Bowl</div>
+                    <div class="meal-description">Mango smoothie bowl topped with coconut flakes and hemp seeds</div>
+                    <div class="meal-tags">
+                      <span class="meal-tag light">Light</span>
+                      <span class="meal-tag comfort">Refreshing</span>
+                    </div>
                   </div>
                   <div class="meal-actions">
                     <button class="button-professional--outline" onclick="viewRecipe('smoothie-bowl-thu')">Recipe</button>
@@ -7529,12 +7987,17 @@
                 </div>
                 
                 <div class="meal-slot">
-                  <div class="meal-time">10:00 AM - Mid-Morning</div>
-                  <div class="meal-title">Bone Broth</div>
-                  <div class="meal-description">Warm bone broth with a pinch of sea salt and herbs</div>
-                  <div class="meal-tags">
-                    <span class="meal-tag gentle">Gentle</span>
-                    <span class="meal-tag protein">Protein</span>
+                  <div class="meal-time-section">
+                    <div class="meal-time">10:00 AM</div>
+                    <div class="meal-period">Mid-Morning</div>
+                  </div>
+                  <div class="meal-content">
+                    <div class="meal-title">Bone Broth</div>
+                    <div class="meal-description">Warm bone broth with a pinch of sea salt and herbs</div>
+                    <div class="meal-tags">
+                      <span class="meal-tag gentle">Gentle</span>
+                      <span class="meal-tag protein">Protein</span>
+                    </div>
                   </div>
                   <div class="meal-actions">
                     <button class="button-professional--outline" onclick="viewRecipe('bone-broth-thu')">Recipe</button>
@@ -7544,12 +8007,17 @@
                 </div>
                 
                 <div class="meal-slot">
-                  <div class="meal-time">1:00 PM - Lunch</div>
-                  <div class="meal-title">Quinoa Buddha Bowl</div>
-                  <div class="meal-description">Quinoa with roasted chickpeas, avocado, and tahini dressing</div>
-                  <div class="meal-tags">
-                    <span class="meal-tag protein">Protein</span>
-                    <span class="meal-tag comfort">Satisfying</span>
+                  <div class="meal-time-section">
+                    <div class="meal-time">1:00 PM</div>
+                    <div class="meal-period">Lunch</div>
+                  </div>
+                  <div class="meal-content">
+                    <div class="meal-title">Quinoa Buddha Bowl</div>
+                    <div class="meal-description">Quinoa with roasted chickpeas, avocado, and tahini dressing</div>
+                    <div class="meal-tags">
+                      <span class="meal-tag protein">Protein</span>
+                      <span class="meal-tag comfort">Satisfying</span>
+                    </div>
                   </div>
                   <div class="meal-actions">
                     <button class="button-professional--outline" onclick="viewRecipe('buddha-bowl-thu')">Recipe</button>
@@ -7559,12 +8027,17 @@
                 </div>
                 
                 <div class="meal-slot">
-                  <div class="meal-time">4:00 PM - Mid-Afternoon</div>
-                  <div class="meal-title">Cucumber Water & Rice Cakes</div>
-                  <div class="meal-description">Infused cucumber water with plain brown rice cakes</div>
-                  <div class="meal-tags">
-                    <span class="meal-tag light">Light</span>
-                    <span class="meal-tag gentle">Gentle</span>
+                  <div class="meal-time-section">
+                    <div class="meal-time">4:00 PM</div>
+                    <div class="meal-period">Mid-Afternoon</div>
+                  </div>
+                  <div class="meal-content">
+                    <div class="meal-title">Cucumber Water & Rice Cakes</div>
+                    <div class="meal-description">Infused cucumber water with plain brown rice cakes</div>
+                    <div class="meal-tags">
+                      <span class="meal-tag light">Light</span>
+                      <span class="meal-tag gentle">Gentle</span>
+                    </div>
                   </div>
                   <div class="meal-actions">
                     <button class="button-professional--outline" onclick="viewRecipe('cucumber-ricecakes-thu')">Recipe</button>
@@ -7574,12 +8047,17 @@
                 </div>
                 
                 <div class="meal-slot">
-                  <div class="meal-time">7:00 PM - Dinner</div>
-                  <div class="meal-title">Grilled Chicken with Cauliflower Rice</div>
-                  <div class="meal-description">Herb-marinated chicken breast with garlic cauliflower rice</div>
-                  <div class="meal-tags">
-                    <span class="meal-tag protein">High Protein</span>
-                    <span class="meal-tag light">Light</span>
+                  <div class="meal-time-section">
+                    <div class="meal-time">7:00 PM</div>
+                    <div class="meal-period">Dinner</div>
+                  </div>
+                  <div class="meal-content">
+                    <div class="meal-title">Grilled Chicken with Cauliflower Rice</div>
+                    <div class="meal-description">Herb-marinated chicken breast with garlic cauliflower rice</div>
+                    <div class="meal-tags">
+                      <span class="meal-tag protein">High Protein</span>
+                      <span class="meal-tag light">Light</span>
+                    </div>
                   </div>
                   <div class="meal-actions">
                     <button class="button-professional--outline" onclick="viewRecipe('chicken-cauliflower-thu')">Recipe</button>
@@ -8539,7 +9017,7 @@
           <!-- Beverages & Liquids -->
           <div class="content-card category-card">
             <div class="category-header">
-              <h4>🥤 Beverages & Liquids</h4>
+              <h4>Beverages & Liquids</h4>
               <span class="category-count" id="beverage-count">0 items</span>
             </div>
             <div class="ingredient-grid" id="beverage-ingredients">
@@ -8969,9 +9447,12 @@
           </div>
 
           <div class="upgrade-cta">
-            <button class="button-professional--accent" onclick="showPremiumModal('analytics')">
-              <i data-lucide="zap"></i>
-              <span>Upgrade to Premium</span>
+            <button class="premium-upgrade-button-main" onclick="showPremiumModal('analytics')">
+              <span class="premium-btn-content">
+                <span class="premium-btn-icon">🚀</span>
+                <span class="premium-btn-main">Unlock Premium</span>
+                <span class="premium-btn-desc">Get Advanced Insights</span>
+              </span>
             </button>
             <div class="upgrade-guarantee">
               <p><strong>✅ 30-day money-back guarantee</strong></p>
@@ -15626,7 +16107,12 @@ For clinical review and treatment optimization.`;
             </div>
             
             <div class="upgrade-cta">
-              <button class="button-professional--accent" onclick="showUpgradeModal()">Upgrade to Premium</button>
+              <button class="premium-upgrade-button" onclick="showUpgradeModal()">
+                <span class="upgrade-btn-gradient">
+                  <span class="upgrade-btn-text">🚀 Upgrade to Premium</span>
+                  <span class="upgrade-btn-subtitle">Unlock Advanced Analytics</span>
+                </span>
+              </button>
               <button class="button-professional--outline" onclick="startFreeTrial()">Start 7-Day Free Trial</button>
               <div class="trial-offer">No credit card required • Full access • Cancel anytime</div>
             </div>
