@@ -6135,28 +6135,39 @@
     /* Mobile close button - hidden by default */
     .mobile-close-btn {
       display: none;
-      background: none;
-      border: none;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       color: var(--text-primary);
-      font-size: 1.5rem;
-      padding: 0.5rem;
+      font-size: 1.25rem;
+      padding: 8px;
       cursor: pointer;
       position: absolute;
       right: 1rem;
       top: 1rem;
-      z-index: 1001;
-      border-radius: 4px;
-      transition: background-color 0.2s ease;
+      z-index: 1002;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
     
     .mobile-close-btn:hover {
-      background-color: var(--slate);
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: scale(1.05);
     }
     
     .sidebar-header {
       position: relative;
-      height: 0;
-      overflow: visible;
+      height: 60px;
+      padding: 1rem;
+      border-bottom: 1px solid var(--slate);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
     }
     
     /* Large tablets and down */
@@ -6193,7 +6204,7 @@
       
       /* Show mobile close button */
       .mobile-close-btn {
-        display: block;
+        display: flex !important;
       }
       
       /* Dashboard layout changes */
@@ -6330,6 +6341,11 @@
       
       .sidebar.mobile-open {
         left: 0 !important;
+      }
+      
+      /* Show mobile close button on small screens */
+      .mobile-close-btn {
+        display: flex !important;
       }
       
       .main-content {
@@ -6907,10 +6923,10 @@
     }
     
     .sidebar {
-      width: 100% !important;
+      width: 280px !important;
       position: fixed !important;
       top: 0 !important;
-      left: -100% !important;
+      left: -280px !important;
       height: 100vh !important;
       z-index: 1001 !important;
       transition: left 0.3s ease !important;
@@ -7332,6 +7348,9 @@
     <!-- Sidebar Navigation -->
     <nav class="sidebar">
       <div class="sidebar-header">
+        <button class="mobile-close-btn" onclick="closeMobileSidebar()" aria-label="Close sidebar">
+          <i data-lucide="x"></i>
+        </button>
       </div>
       <div class="nav-section">
         <div class="nav-title">Dashboard</div>
