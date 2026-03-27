@@ -13,6 +13,12 @@
   
   <!-- Lucide Icons CDN -->
   <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
+  <!-- Chart.js for analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- API Client -->
+  <script src="js/api.js"></script>
+  <!-- Authentication and Initialization -->
+  <script src="js/auth-init.js"></script>
   <style>
     :root {
       /* MANDATORY Dark Background System - PostDoseRX Branding Guidelines */
@@ -48,6 +54,58 @@
       --border: #3A3A3A;       /* Dark theme border color */
       
       /* Dark Theme Text Colors */
+      
+      /* Login Modal Styles */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 10000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+      }
+      
+      .modal-content {
+        background-color: var(--color-surface);
+        margin: 15% auto;
+        padding: 2rem;
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        width: 80%;
+        max-width: 400px;
+        color: var(--white);
+      }
+      
+      .modal-content h2 {
+        margin-bottom: 1rem;
+        color: var(--white);
+      }
+      
+      .form-group {
+        margin-bottom: 1rem;
+      }
+      
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--silver);
+      }
+      
+      .form-group input {
+        width: 100%;
+        padding: 0.75rem;
+        background-color: var(--color-background);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--white);
+      }
+      
+      .form-group input:focus {
+        outline: none;
+        border-color: var(--accent-blue);
+      }
       --text: #ffffff;          /* Primary white text */
       --text-sec: #CACACA;     /* Secondary light text */
       --text-muted: #9A9A9A;   /* Muted text */
@@ -10491,8 +10549,13 @@
         setupComplete: medication && dose && frequency
       };
       
-      // Save to localStorage for persistence
-      localStorage.setItem('medicationProfile', JSON.stringify(medicationProfile));
+      // Save to API for persistence
+      if (window.appAuth && window.appState.isAuthenticated) {
+        window.appAuth.saveUserProfile(medicationProfile);
+      } else {
+        // Fallback to localStorage if not authenticated
+        localStorage.setItem('medicationProfile', JSON.stringify(medicationProfile));
+      }
       
       // Update dashboard UI elements
       updateDashboardWithProfile(medicationProfile);
@@ -10502,7 +10565,11 @@
         const nextDate = calculateNextInjection(lastInjection, injectionDay, frequency);
         document.getElementById('next-injection').value = nextDate;
         medicationProfile.nextInjection = nextDate;
-        localStorage.setItem('medicationProfile', JSON.stringify(medicationProfile));
+        if (window.appAuth && window.appState.isAuthenticated) {
+          window.appAuth.saveUserProfile(medicationProfile);
+        } else {
+          localStorage.setItem('medicationProfile', JSON.stringify(medicationProfile));
+        }
       }
     }
     
@@ -11413,7 +11480,15 @@
         mealFeedback[today] = {};
       }
       mealFeedback[today].impact = impact;
-      localStorage.setItem('mealFeedback', JSON.stringify(mealFeedback));
+      
+      if (window.appAuth && window.appState.isAuthenticated) {
+        // Convert to API format and save
+        const ratingsData = {};
+        ratingsData[`impact-${today}`] = { feedback: impact };
+        window.appAuth.saveMealRatings(ratingsData);
+      } else {
+        localStorage.setItem('mealFeedback', JSON.stringify(mealFeedback));
+      }
       
       console.log(`Meal impact recorded: ${impact}`);
     }
@@ -11704,15 +11779,26 @@
         timestamp: new Date().toLocaleString()
       };
       
-      // Save to localStorage
-      const existingLogs = JSON.parse(localStorage.getItem('symptomLogs') || '[]');
-      const logIndex = existingLogs.findIndex(log => log.date === today);
-      if (logIndex >= 0) {
-        existingLogs[logIndex] = logData;
+      // Save to API or localStorage
+      if (window.appAuth && window.appState.isAuthenticated) {
+        const symptoms = {
+          nausea: parseInt(nausea),
+          fatigue: parseInt(fatigue), 
+          appetite: parseInt(appetite),
+          sleep: parseInt(sleep)
+        };
+        window.appAuth.saveSymptomLog(today, symptoms, note);
       } else {
-        existingLogs.push(logData);
+        // Fallback to localStorage if not authenticated
+        const existingLogs = JSON.parse(localStorage.getItem('symptomLogs') || '[]');
+        const logIndex = existingLogs.findIndex(log => log.date === today);
+        if (logIndex >= 0) {
+          existingLogs[logIndex] = logData;
+        } else {
+          existingLogs.push(logData);
+        }
+        localStorage.setItem('symptomLogs', JSON.stringify(existingLogs));
       }
-      localStorage.setItem('symptomLogs', JSON.stringify(existingLogs));
       
       // Update symptom data (already done by individual sliders, but refresh intelligence)
       updateSymptomIntelligence();
@@ -12400,10 +12486,20 @@
       // Update user dropdown with real data
       updateUserDropdownWithRealData();
       
-      // Load and display saved medication profile (single consolidated call)
-      const savedProfile = localStorage.getItem('medicationProfile');
-      if (savedProfile) {
-        const profileData = JSON.parse(savedProfile);
+      // Load and display medication profile from API or localStorage
+      let profileData = null;
+      if (window.appAuth && window.appState.isAuthenticated && window.appState.profile) {
+        // Load from API (already loaded in auth-init.js)
+        profileData = await window.appAuth.loadUserProfile();
+      } else {
+        // Fallback to localStorage for non-authenticated users
+        const savedProfile = localStorage.getItem('medicationProfile');
+        if (savedProfile) {
+          profileData = JSON.parse(savedProfile);
+        }
+      }
+      
+      if (profileData) {
         
         // Populate form fields
         if (document.getElementById('medication-select')) {
@@ -13502,13 +13598,22 @@
       
       progressData.weightLogs.push(newEntry);
       
-      // Save to localStorage (both locations for compatibility)
-      localStorage.setItem('progressData', JSON.stringify(progressData));
-      
-      // Also save to weightLogs for compatibility
-      const weightLogs = JSON.parse(localStorage.getItem('weightLogs') || '[]');
-      weightLogs.push(newEntry);
-      localStorage.setItem('weightLogs', JSON.stringify(weightLogs));
+      // Save to API or localStorage
+      if (window.appAuth && window.appState.isAuthenticated) {
+        window.appAuth.saveProgressLog({
+          weight: weight,
+          date: date,
+          notes: ''
+        });
+      } else {
+        // Fallback to localStorage if not authenticated
+        localStorage.setItem('progressData', JSON.stringify(progressData));
+        
+        // Also save to weightLogs for compatibility
+        const weightLogs = JSON.parse(localStorage.getItem('weightLogs') || '[]');
+        weightLogs.push(newEntry);
+        localStorage.setItem('weightLogs', JSON.stringify(weightLogs));
+      }
       
       // Close modal
       closeWeightLogModal();
