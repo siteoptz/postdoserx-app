@@ -20350,58 +20350,76 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
     }
 
     function generatePersonalizedMealPlan() {
-      showCustomAlert(
-        'AI Meal Plan Generated',
-        `<strong>Personalized meal plan created successfully!</strong><br><br>
-        Based on your data:<br>
-        • Symptom patterns and timing<br>
-        • Food preferences and ratings<br>
-        • Injection schedule optimization<br>
-        • Nutritional goals and restrictions<br><br>
-        Your new meal plan has been optimized for Days 1-7 post-injection with portion adjustments for peak symptom periods.`,
-        'success'
-      );
+      console.log('🍽️ generatePersonalizedMealPlan called');
+      try {
+        showCustomAlert(
+          'AI Meal Plan Generated',
+          `<strong>Personalized meal plan created successfully!</strong><br><br>
+          Based on your data:<br>
+          • Symptom patterns and timing<br>
+          • Food preferences and ratings<br>
+          • Injection schedule optimization<br>
+          • Nutritional goals and restrictions<br><br>
+          Your new meal plan has been optimized for Days 1-7 post-injection with portion adjustments for peak symptom periods.`,
+          'success'
+        );
+      } catch (error) {
+        console.error('Error in generatePersonalizedMealPlan:', error);
+        alert('Error generating meal plan: ' + error.message);
+      }
     }
 
     function exportAIInsights() {
-      showCustomAlert(
-        'AI Insights Export Ready',
-        `<strong>Comprehensive AI report generated!</strong><br><br>
-        Your personalized insights include:<br>
-        • Complete symptom timeline analysis<br>
-        • Meal timing optimization recommendations<br>
-        • Weight progress tracking with predictive trends<br>
-        • Injection schedule effectiveness metrics<br>
-        • Personalized coaching suggestions<br><br>
-        <em>Report would be automatically downloaded as a PDF with charts, graphs, and actionable recommendations for your healthcare provider.</em>`,
-        'info'
-      );
+      console.log('📊 exportAIInsights called');
+      try {
+        showCustomAlert(
+          'AI Insights Export Ready',
+          `<strong>Comprehensive AI report generated!</strong><br><br>
+          Your personalized insights include:<br>
+          • Complete symptom timeline analysis<br>
+          • Meal timing optimization recommendations<br>
+          • Weight progress tracking with predictive trends<br>
+          • Injection schedule effectiveness metrics<br>
+          • Personalized coaching suggestions<br><br>
+          <em>Report would be automatically downloaded as a PDF with charts, graphs, and actionable recommendations for your healthcare provider.</em>`,
+          'info'
+        );
+      } catch (error) {
+        console.error('Error in exportAIInsights:', error);
+        alert('Error exporting insights: ' + error.message);
+      }
     }
 
     async function resetAILearning() {
-      const confirmed = await showCustomConfirm(
-        'Reset AI Learning Data',
-        `<strong>This will reset your AI personalization data.</strong><br><br>
-        <strong>What gets reset:</strong><br>
-        • AI meal plan preferences<br>
-        • Personalized coaching algorithms<br>
-        • Symptom pattern recognition data<br>
-        • Smart notification timing<br><br>
-        <strong>What stays preserved:</strong><br>
-        • Your symptom logs and weight data<br>
-        • Medication profile and schedule<br>
-        • All historical tracking data<br>
-        • Account settings and preferences<br><br>
-        <em>The AI will rebuild your personalization as you continue using the app.</em>`,
-        'warning'
-      );
-      
-      if (confirmed) {
-        showCustomAlert(
-          'AI Learning Data Reset',
-          'Your AI learning data has been successfully reset. The system will rebuild your personalization as you continue tracking symptoms, meals, and progress.',
-          'success'
+      console.log('🔄 resetAILearning called');
+      try {
+        const confirmed = await showCustomConfirm(
+          'Reset AI Learning Data',
+          `<strong>This will reset your AI personalization data.</strong><br><br>
+          <strong>What gets reset:</strong><br>
+          • AI meal plan preferences<br>
+          • Personalized coaching algorithms<br>
+          • Symptom pattern recognition data<br>
+          • Smart notification timing<br><br>
+          <strong>What stays preserved:</strong><br>
+          • Your symptom logs and weight data<br>
+          • Medication profile and schedule<br>
+          • All historical tracking data<br>
+          • Account settings and preferences<br><br>
+          <em>The AI will rebuild your personalization as you continue using the app.</em>`,
+          'warning'
         );
+        
+        if (confirmed) {
+          showCustomAlert(
+            'AI Learning Data Reset',
+            'Your AI learning data has been successfully reset. The system will rebuild your personalization as you continue tracking symptoms, meals, and progress.',
+            'success'
+          );
+        }
+      } catch (error) {
+        console.error('Error in resetAILearning:', error);
+        alert('Error resetting AI learning: ' + error.message);
       }
     }
 
