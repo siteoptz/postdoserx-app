@@ -21526,7 +21526,10 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
 
         analyticsEl.innerHTML = `
           <div class="pattern-analysis">
-            <h5 style="color: var(--text); margin-bottom: 1rem;">Cycle-Based Symptom Patterns</h5>
+            <h5 style="color: var(--text); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-size: 1.2rem;">🎯</span>
+              Personalized GLP-1 Side Effect Management
+            </h5>
             ${analysis.patterns.map(pattern => `
               <div class="pattern-item" style="margin-bottom: 0.75rem; padding: 0.75rem; background: var(--sand-light); border-radius: 6px;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
@@ -21538,10 +21541,16 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
             `).join('')}
           </div>
           <div class="prediction-section">
-            <h5 style="color: var(--text); margin: 1.5rem 0 1rem 0;">Smart Predictions</h5>
+            <h5 style="color: var(--text); margin: 1.5rem 0 1rem 0; display: flex; align-items: center; gap: 0.5rem;">
+              <span style="font-size: 1.2rem;">🧠</span>
+              Intelligent Meal Planning Assistant
+            </h5>
             <div class="prediction-card" style="padding: 1rem; background: linear-gradient(135deg, var(--navy), var(--navy-light)); border-radius: 8px; color: white;">
-              <div style="margin-bottom: 0.5rem;"><strong>Next 48 Hours Forecast:</strong></div>
-              <div style="font-size: 0.9rem; opacity: 0.9;">${analysis.nextSymptomPrediction || 'Symptoms expected to remain stable based on your cycle pattern'}</div>
+              <div style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span style="font-size: 1rem;">🍽️</span>
+                <strong>Your Personalized Meal Strategy:</strong>
+              </div>
+              <div style="font-size: 0.9rem; opacity: 0.9;">${analysis.nextSymptomPrediction || 'Based on your injection cycle and meal patterns, focus on gentle, protein-rich meals for optimal GLP-1 response and minimal side effects'}</div>
             </div>
           </div>
         `;
