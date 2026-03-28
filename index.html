@@ -20409,20 +20409,22 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
     function showCustomAlert(title, message, type = 'info') {
       const modal = createCustomModal(title, message, type, false);
       document.body.appendChild(modal);
-      modal.style.display = 'block';
       
-      // Auto-focus the OK button
+      // Use the same activation pattern as existing modals
       setTimeout(() => {
+        modal.classList.add('active');
         const okButton = modal.querySelector('.modal-ok-btn');
         if (okButton) okButton.focus();
-      }, 100);
+      }, 10);
       
       return new Promise((resolve) => {
         const okButton = modal.querySelector('.modal-ok-btn');
         const closeModal = () => {
-          modal.style.display = 'none';
-          document.body.removeChild(modal);
-          resolve(true);
+          modal.classList.remove('active');
+          setTimeout(() => {
+            document.body.removeChild(modal);
+            resolve(true);
+          }, 300);
         };
         
         okButton.addEventListener('click', closeModal);
@@ -20442,22 +20444,24 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
     function showCustomConfirm(title, message, type = 'warning') {
       const modal = createCustomModal(title, message, type, true);
       document.body.appendChild(modal);
-      modal.style.display = 'block';
       
-      // Auto-focus the Cancel button for safety
+      // Use the same activation pattern as existing modals
       setTimeout(() => {
+        modal.classList.add('active');
         const cancelButton = modal.querySelector('.modal-cancel-btn');
         if (cancelButton) cancelButton.focus();
-      }, 100);
+      }, 10);
       
       return new Promise((resolve) => {
         const okButton = modal.querySelector('.modal-ok-btn');
         const cancelButton = modal.querySelector('.modal-cancel-btn');
         
         const closeModal = (result) => {
-          modal.style.display = 'none';
-          document.body.removeChild(modal);
-          resolve(result);
+          modal.classList.remove('active');
+          setTimeout(() => {
+            document.body.removeChild(modal);
+            resolve(result);
+          }, 300);
         };
         
         okButton.addEventListener('click', () => closeModal(true));
@@ -20478,7 +20482,7 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
 
     function createCustomModal(title, message, type, isConfirm) {
       const modal = document.createElement('div');
-      modal.className = 'custom-modal';
+      modal.className = 'modal-overlay';
       modal.style.cssText = `
         position: fixed;
         top: 0;
@@ -20486,12 +20490,13 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
         width: 100%;
         height: 100%;
         background: rgba(0, 0, 0, 0.8);
-        display: none;
+        display: flex;
         justify-content: center;
         align-items: center;
         z-index: 10000;
-        backdrop-filter: blur(4px);
-        -webkit-backdrop-filter: blur(4px);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
       `;
       
       const iconMap = {
@@ -20512,17 +20517,21 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
       const color = colorMap[type] || '#3b82f6';
       
       modal.innerHTML = `
-        <div class="custom-modal-content" style="
-          background: linear-gradient(135deg, var(--charcoal) 0%, var(--slate-dark) 50%, var(--charcoal) 100%);
-          border: 1px solid var(--slate);
-          border-radius: 12px;
-          padding: 2rem;
+        <div class="modal-content" style="
+          background: var(--bg-primary);
+          color: var(--text);
+          border: 1px solid var(--border-color);
+          border-radius: 16px;
           max-width: 500px;
           width: 90%;
-          box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-          text-align: center;
+          max-height: 90vh;
+          overflow-y: auto;
           position: relative;
-          overflow: hidden;
+          transform: scale(0.8);
+          transition: transform 0.3s ease;
+          box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+          text-align: center;
+          padding: 2rem;
         ">
           <div style="
             position: absolute;
