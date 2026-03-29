@@ -10646,6 +10646,8 @@
         } else {
           localStorage.setItem('medicationProfile', JSON.stringify(medicationProfile));
         }
+        // Update dashboard again with the calculated next injection date
+        updateDashboardWithProfile(medicationProfile);
       }
     }
     
@@ -10734,6 +10736,7 @@
       // Update last injection
       if (profileLastInjection && profile.lastInjection) {
         const lastDate = new Date(profile.lastInjection);
+        console.log('Updating last injection display:', profile.lastInjection, lastDate);
         profileLastInjection.textContent = lastDate.toLocaleDateString('en-US', { 
           weekday: 'long', 
           year: 'numeric', 
@@ -10746,6 +10749,7 @@
       if (profileNextInjection) {
         if (profile.nextInjection) {
           const nextDate = new Date(profile.nextInjection);
+          console.log('Updating next injection display:', profile.nextInjection, nextDate);
           profileNextInjection.textContent = nextDate.toLocaleDateString('en-US', { 
             weekday: 'long', 
             year: 'numeric', 
@@ -10753,6 +10757,7 @@
             day: 'numeric' 
           });
         } else {
+          console.log('No next injection date set');
           profileNextInjection.textContent = 'Not scheduled';
         }
       }
