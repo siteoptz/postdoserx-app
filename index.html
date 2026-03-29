@@ -7397,6 +7397,194 @@
     }
   }
   
+  /* Theme Toggle Button */
+  .theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    margin-right: 1rem;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+  }
+  
+  .theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+  
+  .theme-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid var(--text-primary);
+  }
+  
+  .theme-icon-half {
+    width: 50%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+  }
+  
+  .theme-icon-dark {
+    left: 0;
+    background: #000;
+  }
+  
+  .theme-icon-light {
+    right: 0;
+    background: #fff;
+  }
+  
+  /* Light Theme Styles */
+  body.light-theme {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #ffffff 100%);
+    color: var(--charcoal);
+  }
+  
+  body.light-theme .header {
+    background: var(--white);
+    color: var(--charcoal);
+  }
+  
+  body.light-theme .sidebar {
+    background: var(--white);
+    border-right: 1px solid #e9ecef;
+  }
+  
+  body.light-theme .nav-item {
+    color: var(--charcoal);
+  }
+  
+  body.light-theme .nav-item:hover,
+  body.light-theme .nav-item.active {
+    background: var(--magenta);
+    color: white;
+  }
+  
+  body.light-theme .nav-item.active .nav-icon {
+    stroke: white;
+  }
+  
+  body.light-theme .content-card {
+    background: var(--white);
+    border: 1px solid #e9ecef;
+    color: var(--charcoal);
+  }
+  
+  body.light-theme .modal-overlay .modal-content {
+    background: var(--white);
+    color: var(--charcoal);
+    border: 1px solid #e9ecef;
+  }
+  
+  body.light-theme .modal-header {
+    background: #f8f9fa;
+    color: var(--charcoal);
+    border-bottom: 1px solid #e9ecef;
+  }
+  
+  body.light-theme .button-professional {
+    background: var(--magenta);
+    border-color: var(--magenta);
+  }
+  
+  body.light-theme .button-professional:hover {
+    background: #b91c7c;
+    border-color: #b91c7c;
+  }
+  
+  body.light-theme .button-professional--outline {
+    border-color: var(--magenta);
+    color: var(--magenta);
+  }
+  
+  body.light-theme .button-professional--outline:hover {
+    background: var(--magenta);
+    color: white;
+  }
+  
+  body.light-theme .user-dropdown {
+    background: var(--white);
+    border: 1px solid #e9ecef;
+  }
+  
+  body.light-theme .dropdown-header {
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+  }
+  
+  body.light-theme .dropdown-item:hover {
+    background: #f8f9fa;
+  }
+  
+  body.light-theme .nav-icon {
+    stroke: var(--charcoal);
+  }
+  
+  body.light-theme .logo {
+    color: var(--charcoal);
+  }
+  
+  body.light-theme .brand-rx {
+    color: var(--magenta);
+  }
+  
+  body.light-theme .theme-icon {
+    border-color: var(--charcoal);
+  }
+  
+  body.light-theme .theme-toggle:hover {
+    background: rgba(0, 0, 0, 0.1);
+  }
+  
+  body.light-theme .user-profile {
+    color: var(--charcoal);
+  }
+  
+  body.light-theme .user-avatar {
+    background: var(--magenta);
+    color: white;
+  }
+  
+  body.light-theme .main-content {
+    background: transparent;
+  }
+  
+  /* Text colors for light theme */
+  body.light-theme h1, 
+  body.light-theme h2, 
+  body.light-theme h3, 
+  body.light-theme h4, 
+  body.light-theme h5, 
+  body.light-theme h6 {
+    color: var(--charcoal);
+  }
+  
+  body.light-theme p,
+  body.light-theme span,
+  body.light-theme div {
+    color: var(--charcoal);
+  }
+  
+  body.light-theme .card-title {
+    color: var(--charcoal);
+  }
+  
+  body.light-theme .view-title {
+    background: linear-gradient(135deg, var(--charcoal), var(--magenta));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
   </style>
 </head>
 <body>
@@ -7409,6 +7597,12 @@
       <span>PostDose<span class="brand-rx">RX</span></span>
     </a>
     <div class="user-area">
+      <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle light/dark theme">
+        <div class="theme-icon">
+          <div class="theme-icon-half theme-icon-dark"></div>
+          <div class="theme-icon-half theme-icon-light"></div>
+        </div>
+      </button>
       <div class="user-profile" onclick="toggleUserDropdown()">
         <div class="user-avatar" id="user-avatar">D</div>
         <div class="user-info">
@@ -16249,6 +16443,37 @@ For clinical review and treatment optimization.`;
       localStorage.clear();
       window.location.href = 'https://postdoserx.com/login.html';
     }
+
+    // Theme Toggle Functions
+    function toggleTheme() {
+      const body = document.body;
+      const isLightTheme = body.classList.contains('light-theme');
+      
+      if (isLightTheme) {
+        // Switch to dark theme
+        body.classList.remove('light-theme');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        // Switch to light theme
+        body.classList.add('light-theme');
+        localStorage.setItem('theme', 'light');
+      }
+    }
+    
+    function initializeTheme() {
+      // Check for saved theme preference or default to dark
+      const savedTheme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      
+      if (savedTheme === 'light' || (!savedTheme && !prefersDark)) {
+        document.body.classList.add('light-theme');
+      }
+    }
+    
+    // Initialize theme on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeTheme();
+    });
 
     function redirectToUpgrade() {
       // Redirect to Stripe checkout for premium subscription
