@@ -6824,23 +6824,9 @@
         padding: 0.5rem;
       }
       
-      /* Reset modal close button positioning on mobile to work with modal layout */
-      .modal-close, .close-btn {
-        /* Remove fixed screen positioning, let it position relative to modal-header */
-        position: absolute !important;
-        top: 1rem !important;
-        right: 1rem !important;
-        z-index: 10001 !important;
-      }
-      
-      /* Ensure user dropdown modal close buttons position correctly within modal */
-      .modal-overlay .modal-header .modal-close,
-      .modal-overlay .modal-content .modal-close,
-      .modal-header .button-professional.modal-close {
-        position: absolute !important;
-        top: 1rem !important;
-        right: 1rem !important;
-        z-index: 10001 !important;
+      /* Move modal header down 10px on popup modals */
+      .modal-overlay .modal-header {
+        margin-top: 10px !important;
       }
       
       /* Compact notification positioning */
