@@ -16126,9 +16126,53 @@ For clinical review and treatment optimization.`;
     }
 
     function showCancelConfirmation() {
-      if (confirm('Are you sure you want to cancel your subscription? You will lose access to premium features at the end of your billing period.')) {
-        cancelSubscription();
-      }
+      showCustomModal('Cancel Premium Subscription', `
+        <div style="text-align: center;">
+          <div style="font-size: 2.5rem; margin-bottom: 1.5rem; color: #ff6b6b;">⚠️</div>
+          <h3 style="color: #ff6b6b; margin-bottom: 1rem; font-weight: 600;">Are you sure you want to cancel?</h3>
+          
+          <div style="background: rgba(255, 107, 107, 0.1); border: 1px solid rgba(255, 107, 107, 0.3); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; text-align: left;">
+            <h4 style="color: var(--text-primary); margin-bottom: 1rem; font-weight: 600;">You will lose access to:</h4>
+            <ul style="color: var(--text-secondary); line-height: 1.6; margin: 0; padding-left: 1.5rem;">
+              <li>🤖 AI-Powered Meal Planning & Recommendations</li>
+              <li>📊 Advanced Analytics & Progress Tracking</li>
+              <li>💊 Intelligent Injection Timing Optimization</li>
+              <li>🎯 Personalized Symptom Management</li>
+              <li>📈 Comprehensive Progress Reports</li>
+              <li>🔮 Predictive Health Insights</li>
+              <li>⚡ Premium Support & Priority Features</li>
+            </ul>
+          </div>
+          
+          <div style="background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.3); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0;">
+            <p style="color: var(--text-primary); margin: 0; font-weight: 500;">
+              <i data-lucide="info" style="stroke: #ffc107; width: 18px; height: 18px; margin-right: 0.5rem; vertical-align: middle;"></i>
+              Your access will continue until the end of your current billing cycle. You can reactivate anytime before then.
+            </p>
+          </div>
+          
+          <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+            <button class="button-professional--outline" onclick="closeModal()" style="min-width: 120px;">
+              Keep Premium
+            </button>
+            <button class="button-professional" onclick="confirmCancellation()" style="min-width: 120px; background: #ff6b6b; border-color: #ff6b6b;">
+              Yes, Cancel
+            </button>
+          </div>
+        </div>
+      `);
+      
+      // Initialize Lucide icons for the modal
+      setTimeout(() => {
+        if (typeof lucide !== 'undefined' && lucide.createIcons) {
+          lucide.createIcons();
+        }
+      }, 100);
+    }
+    
+    function confirmCancellation() {
+      closeModal();
+      cancelSubscription();
     }
 
     function performSignOut() {
