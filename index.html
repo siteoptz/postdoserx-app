@@ -16126,60 +16126,106 @@ For clinical review and treatment optimization.`;
     }
 
     function showCancelConfirmation() {
-      showCustomModal('Cancel Premium Subscription', `
-        <div style="text-align: center;">
-          <div style="margin-bottom: 1.5rem;">
-            <i data-lucide="alert-triangle" style="stroke: #ff6b6b; width: 48px; height: 48px;"></i>
-          </div>
-          <h3 style="color: #ff6b6b; margin-bottom: 1rem; font-weight: 600;">Are you sure you want to cancel?</h3>
-          
-          <div style="background: rgba(255, 107, 107, 0.1); border: 1px solid rgba(255, 107, 107, 0.3); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; text-align: left;">
-            <h4 style="color: var(--text-primary); margin-bottom: 1rem; font-weight: 600;">You will lose access to:</h4>
-            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-              <div style="display: flex; align-items: center; gap: 0.75rem; color: var(--text-secondary);">
-                <i data-lucide="brain" style="stroke: var(--text-secondary); width: 18px; height: 18px; flex-shrink: 0;"></i>
-                <span>AI-Powered Meal Planning & Recommendations</span>
-              </div>
-              <div style="display: flex; align-items: center; gap: 0.75rem; color: var(--text-secondary);">
-                <i data-lucide="bar-chart-3" style="stroke: var(--text-secondary); width: 18px; height: 18px; flex-shrink: 0;"></i>
-                <span>Advanced Analytics & Progress Tracking</span>
-              </div>
-              <div style="display: flex; align-items: center; gap: 0.75rem; color: var(--text-secondary);">
-                <i data-lucide="timer" style="stroke: var(--text-secondary); width: 18px; height: 18px; flex-shrink: 0;"></i>
-                <span>Intelligent Injection Timing Optimization</span>
-              </div>
-              <div style="display: flex; align-items: center; gap: 0.75rem; color: var(--text-secondary);">
-                <i data-lucide="target" style="stroke: var(--text-secondary); width: 18px; height: 18px; flex-shrink: 0;"></i>
-                <span>Personalized Symptom Management</span>
-              </div>
-              <div style="display: flex; align-items: center; gap: 0.75rem; color: var(--text-secondary);">
-                <i data-lucide="trending-up" style="stroke: var(--text-secondary); width: 18px; height: 18px; flex-shrink: 0;"></i>
-                <span>Comprehensive Progress Reports</span>
-              </div>
-              <div style="display: flex; align-items: center; gap: 0.75rem; color: var(--text-secondary);">
-                <i data-lucide="eye" style="stroke: var(--text-secondary); width: 18px; height: 18px; flex-shrink: 0;"></i>
-                <span>Predictive Health Insights</span>
-              </div>
-              <div style="display: flex; align-items: center; gap: 0.75rem; color: var(--text-secondary);">
-                <i data-lucide="zap" style="stroke: var(--text-secondary); width: 18px; height: 18px; flex-shrink: 0;"></i>
-                <span>Premium Support & Priority Features</span>
-              </div>
+      // Detect user tier - check multiple sources
+      const userTierElement = document.getElementById('user-tier');
+      const dropdownTierElement = document.getElementById('dropdown-user-tier');
+      const userTier = (userTierElement?.textContent || dropdownTierElement?.textContent || 'trial').toLowerCase();
+      const isPremium = userTier.includes('premium');
+      
+      // Set content based on user tier
+      const modalTitle = isPremium ? 'Cancel Premium Subscription' : 'Cancel Trial Account';
+      const warningColor = isPremium ? '#ff6b6b' : '#f59e0b';
+      const headerText = isPremium ? 'Are you sure you want to cancel your premium subscription?' : 'Are you sure you want to delete your trial account?';
+      
+      const contentSection = isPremium ? `
+        <div style="background: rgba(255, 107, 107, 0.1); border: 1px solid rgba(255, 107, 107, 0.3); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; text-align: left;">
+          <h4 style="color: var(--text-primary); margin-bottom: 1rem; font-weight: 600;">You will lose access to:</h4>
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; color: var(--text-secondary);">
+              <i data-lucide="brain" style="stroke: var(--text-secondary); width: 18px; height: 18px; flex-shrink: 0;"></i>
+              <span>AI-Powered Meal Planning & Recommendations</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem; color: var(--text-secondary);">
+              <i data-lucide="bar-chart-3" style="stroke: var(--text-secondary); width: 18px; height: 18px; flex-shrink: 0;"></i>
+              <span>Advanced Analytics & Progress Tracking</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem; color: var(--text-secondary);">
+              <i data-lucide="timer" style="stroke: var(--text-secondary); width: 18px; height: 18px; flex-shrink: 0;"></i>
+              <span>Intelligent Injection Timing Optimization</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem; color: var(--text-secondary);">
+              <i data-lucide="target" style="stroke: var(--text-secondary); width: 18px; height: 18px; flex-shrink: 0;"></i>
+              <span>Personalized Symptom Management</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem; color: var(--text-secondary);">
+              <i data-lucide="trending-up" style="stroke: var(--text-secondary); width: 18px; height: 18px; flex-shrink: 0;"></i>
+              <span>Comprehensive Progress Reports</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem; color: var(--text-secondary);">
+              <i data-lucide="eye" style="stroke: var(--text-secondary); width: 18px; height: 18px; flex-shrink: 0;"></i>
+              <span>Predictive Health Insights</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem; color: var(--text-secondary);">
+              <i data-lucide="zap" style="stroke: var(--text-secondary); width: 18px; height: 18px; flex-shrink: 0;"></i>
+              <span>Premium Support & Priority Features</span>
             </div>
           </div>
-          
-          <div style="background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.3); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0;">
-            <p style="color: var(--text-primary); margin: 0; font-weight: 500; display: flex; align-items: center; gap: 0.5rem;">
-              <i data-lucide="info" style="stroke: #ffc107; width: 18px; height: 18px; flex-shrink: 0;"></i>
-              <span>Your access will continue until the end of your current billing cycle. You can reactivate anytime before then.</span>
-            </p>
+        </div>` : `
+        <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0; text-align: left;">
+          <h4 style="color: var(--text-primary); margin-bottom: 1rem; font-weight: 600;">Deleting your trial account will:</h4>
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <div style="display: flex; align-items: center; gap: 0.75rem; color: var(--text-secondary);">
+              <i data-lucide="trash-2" style="stroke: var(--text-secondary); width: 18px; height: 18px; flex-shrink: 0;"></i>
+              <span>Permanently delete all your health data and progress</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem; color: var(--text-secondary);">
+              <i data-lucide="user-x" style="stroke: var(--text-secondary); width: 18px; height: 18px; flex-shrink: 0;"></i>
+              <span>Remove your account and profile information</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem; color: var(--text-secondary);">
+              <i data-lucide="database" style="stroke: var(--text-secondary); width: 18px; height: 18px; flex-shrink: 0;"></i>
+              <span>Delete your medication tracking and symptom logs</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem; color: var(--text-secondary);">
+              <i data-lucide="calendar" style="stroke: var(--text-secondary); width: 18px; height: 18px; flex-shrink: 0;"></i>
+              <span>Remove your meal plans and progress history</span>
+            </div>
           </div>
+        </div>`;
+      
+      const infoSection = isPremium ? `
+        <div style="background: rgba(255, 193, 7, 0.1); border: 1px solid rgba(255, 193, 7, 0.3); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0;">
+          <p style="color: var(--text-primary); margin: 0; font-weight: 500; display: flex; align-items: center; gap: 0.5rem;">
+            <i data-lucide="info" style="stroke: #ffc107; width: 18px; height: 18px; flex-shrink: 0;"></i>
+            <span>Your premium access will continue until the end of your current billing cycle. You can reactivate anytime before then.</span>
+          </p>
+        </div>` : `
+        <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0;">
+          <p style="color: var(--text-primary); margin: 0; font-weight: 500; display: flex; align-items: center; gap: 0.5rem;">
+            <i data-lucide="alert-circle" style="stroke: #ef4444; width: 18px; height: 18px; flex-shrink: 0;"></i>
+            <span>This action cannot be undone. All your data will be permanently deleted and cannot be recovered.</span>
+          </p>
+        </div>`;
+      
+      const keepButtonText = isPremium ? 'Keep Premium' : 'Keep Trial';
+      const cancelButtonText = isPremium ? 'Yes, Cancel' : 'Yes, Delete Account';
+      
+      showCustomModal(modalTitle, `
+        <div style="text-align: center;">
+          <div style="margin-bottom: 1.5rem;">
+            <i data-lucide="alert-triangle" style="stroke: ${warningColor}; width: 48px; height: 48px;"></i>
+          </div>
+          <h3 style="color: ${warningColor}; margin-bottom: 1rem; font-weight: 600;">${headerText}</h3>
+          
+          ${contentSection}
+          ${infoSection}
           
           <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
             <button class="button-professional--outline" onclick="closeModal()" style="min-width: 120px;">
-              Keep Premium
+              ${keepButtonText}
             </button>
-            <button class="button-professional" onclick="confirmCancellation()" style="min-width: 120px; background: #ff6b6b; border-color: #ff6b6b;">
-              Yes, Cancel
+            <button class="button-professional" onclick="confirmCancellation()" style="min-width: 120px; background: ${warningColor}; border-color: ${warningColor};">
+              ${cancelButtonText}
             </button>
           </div>
         </div>
