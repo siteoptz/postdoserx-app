@@ -6824,16 +6824,18 @@
         padding: 0.5rem;
       }
       
-      /* Ensure modal close button doesn't block header on mobile */
+      /* Position modal close button at very top above header on mobile */
       .modal-close, .close-btn {
-        top: calc(72px + 1rem) !important; /* Header height (72px) + 1rem spacing */
+        top: 1rem !important; /* At the very top of screen */
+        z-index: 10001 !important; /* Above modal content */
       }
       
       /* More specific targeting for user dropdown modal close buttons */
       .modal-overlay .modal-header .modal-close,
       .modal-overlay .modal-content .modal-close,
       .modal-header .button-professional.modal-close {
-        top: calc(72px + 1rem) !important; /* Header height (72px) + 1rem spacing */
+        top: 1rem !important; /* At the very top of screen */
+        z-index: 10001 !important; /* Above modal content and header */
       }
       
       /* Compact notification positioning */
