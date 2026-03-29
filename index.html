@@ -7443,146 +7443,220 @@
     background: #fff;
   }
   
-  /* Light Theme Styles */
+  /* Light Theme Styles - Complete Overhaul */
   body.light-theme {
-    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #ffffff 100%);
-    color: var(--charcoal);
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 50%, #ffffff 100%) !important;
+    color: var(--charcoal) !important;
   }
   
+  /* Header */
   body.light-theme .header {
-    background: var(--white);
-    color: var(--charcoal);
+    background: var(--white) !important;
+    color: var(--charcoal) !important;
   }
   
+  /* Sidebar */
   body.light-theme .sidebar {
-    background: var(--white);
-    border-right: 1px solid #e9ecef;
+    background: var(--white) !important;
+    border-right: 1px solid #e9ecef !important;
+    color: var(--charcoal) !important;
   }
   
+  /* Navigation */
   body.light-theme .nav-item {
-    color: var(--charcoal);
+    color: var(--charcoal) !important;
   }
   
   body.light-theme .nav-item:hover,
   body.light-theme .nav-item.active {
-    background: var(--magenta);
-    color: white;
+    background: var(--magenta) !important;
+    color: white !important;
   }
   
-  body.light-theme .nav-item.active .nav-icon {
-    stroke: white;
-  }
-  
-  body.light-theme .content-card {
-    background: var(--white);
-    border: 1px solid #e9ecef;
-    color: var(--charcoal);
-  }
-  
-  body.light-theme .modal-overlay .modal-content {
-    background: var(--white);
-    color: var(--charcoal);
-    border: 1px solid #e9ecef;
-  }
-  
-  body.light-theme .modal-header {
-    background: #f8f9fa;
-    color: var(--charcoal);
-    border-bottom: 1px solid #e9ecef;
-  }
-  
-  body.light-theme .button-professional {
-    background: var(--magenta);
-    border-color: var(--magenta);
-  }
-  
-  body.light-theme .button-professional:hover {
-    background: #b91c7c;
-    border-color: #b91c7c;
-  }
-  
-  body.light-theme .button-professional--outline {
-    border-color: var(--magenta);
-    color: var(--magenta);
-  }
-  
-  body.light-theme .button-professional--outline:hover {
-    background: var(--magenta);
-    color: white;
-  }
-  
-  body.light-theme .user-dropdown {
-    background: var(--white);
-    border: 1px solid #e9ecef;
-  }
-  
-  body.light-theme .dropdown-header {
-    background: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
-  }
-  
-  body.light-theme .dropdown-item:hover {
-    background: #f8f9fa;
+  body.light-theme .nav-item.active .nav-icon,
+  body.light-theme .nav-item:hover .nav-icon {
+    stroke: white !important;
   }
   
   body.light-theme .nav-icon {
-    stroke: var(--charcoal);
+    stroke: var(--charcoal) !important;
   }
   
+  /* All Cards and Content */
+  body.light-theme .content-card,
+  body.light-theme .card,
+  body.light-theme .day-card {
+    background: var(--white) !important;
+    border: 1px solid #e9ecef !important;
+    color: var(--charcoal) !important;
+  }
+  
+  /* Fix specific card backgrounds that might be using gradients */
+  body.light-theme .content-card,
+  body.light-theme .medication-setup,
+  body.light-theme .ai-recommendations,
+  body.light-theme .day-card.injection-day,
+  body.light-theme .comprehensive-analytics .content-card {
+    background: var(--white) !important;
+  }
+  
+  /* Modals */
+  body.light-theme .modal-overlay .modal-content {
+    background: var(--white) !important;
+    color: var(--charcoal) !important;
+    border: 1px solid #e9ecef !important;
+  }
+  
+  body.light-theme .modal-header {
+    background: #f8f9fa !important;
+    color: var(--charcoal) !important;
+    border-bottom: 1px solid #e9ecef !important;
+  }
+  
+  /* Buttons - ALL blue to magenta */
+  body.light-theme .button-professional {
+    background: var(--magenta) !important;
+    border-color: var(--magenta) !important;
+    color: white !important;
+  }
+  
+  body.light-theme .button-professional:hover {
+    background: #b91c7c !important;
+    border-color: #b91c7c !important;
+  }
+  
+  body.light-theme .button-professional--outline {
+    border-color: var(--magenta) !important;
+    color: var(--magenta) !important;
+    background: transparent !important;
+  }
+  
+  body.light-theme .button-professional--outline:hover {
+    background: var(--magenta) !important;
+    color: white !important;
+  }
+  
+  /* User Dropdown */
+  body.light-theme .user-dropdown {
+    background: var(--white) !important;
+    border: 1px solid #e9ecef !important;
+  }
+  
+  body.light-theme .dropdown-header {
+    background: #f8f9fa !important;
+    border-bottom: 1px solid #e9ecef !important;
+    color: var(--charcoal) !important;
+  }
+  
+  body.light-theme .dropdown-item {
+    color: var(--charcoal) !important;
+  }
+  
+  body.light-theme .dropdown-item:hover {
+    background: #f8f9fa !important;
+  }
+  
+  /* Logo and Branding */
   body.light-theme .logo {
-    color: var(--charcoal);
+    color: var(--charcoal) !important;
   }
   
   body.light-theme .brand-rx {
-    color: var(--magenta);
+    color: var(--magenta) !important;
   }
   
+  /* Theme Toggle */
   body.light-theme .theme-icon {
-    border-color: var(--charcoal);
+    border-color: var(--charcoal) !important;
   }
   
   body.light-theme .theme-toggle:hover {
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0.1) !important;
   }
   
+  /* User Profile */
   body.light-theme .user-profile {
-    color: var(--charcoal);
+    color: var(--charcoal) !important;
   }
   
   body.light-theme .user-avatar {
-    background: var(--magenta);
-    color: white;
+    background: var(--magenta) !important;
+    color: white !important;
   }
   
+  body.light-theme .user-name,
+  body.light-theme .user-tier,
+  body.light-theme .dropdown-user-name,
+  body.light-theme .dropdown-user-email,
+  body.light-theme .dropdown-user-tier {
+    color: var(--charcoal) !important;
+  }
+  
+  /* Main Content */
   body.light-theme .main-content {
-    background: transparent;
+    background: transparent !important;
+    color: var(--charcoal) !important;
   }
   
-  /* Text colors for light theme */
+  /* ALL Text Elements */
   body.light-theme h1, 
   body.light-theme h2, 
   body.light-theme h3, 
   body.light-theme h4, 
   body.light-theme h5, 
-  body.light-theme h6 {
-    color: var(--charcoal);
-  }
-  
+  body.light-theme h6,
   body.light-theme p,
   body.light-theme span,
-  body.light-theme div {
-    color: var(--charcoal);
+  body.light-theme div,
+  body.light-theme label,
+  body.light-theme .card-title,
+  body.light-theme .view-subtitle,
+  body.light-theme .section-title {
+    color: var(--charcoal) !important;
   }
   
-  body.light-theme .card-title {
-    color: var(--charcoal);
-  }
-  
+  /* View Titles with gradient */
   body.light-theme .view-title {
-    background: linear-gradient(135deg, var(--charcoal), var(--magenta));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    background: linear-gradient(135deg, var(--charcoal), var(--magenta)) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+  }
+  
+  /* Fix ALL blue gradients and backgrounds - replace with magenta */
+  body.light-theme .nav-item.active,
+  body.light-theme .premium-feature,
+  body.light-theme .trial-feature {
+    background: var(--magenta) !important;
+  }
+  
+  /* Icon backgrounds - ALL blue to magenta */
+  body.light-theme .nav-icon-bg,
+  body.light-theme .feature-icon,
+  body.light-theme .icon-bg,
+  body.light-theme .sidebar-header {
+    background: var(--magenta) !important;
+  }
+  
+  /* Specific icon containers that might have blue backgrounds */
+  body.light-theme [style*="background: var(--accent-blue)"],
+  body.light-theme [style*="background-color: var(--accent-blue)"],
+  body.light-theme [style*="background: linear-gradient"][style*="var(--accent-blue)"] {
+    background: var(--magenta) !important;
+  }
+  
+  /* Force override any inline styles with blue */
+  body.light-theme * {
+    color: inherit;
+  }
+  
+  /* Input and form elements */
+  body.light-theme input,
+  body.light-theme textarea,
+  body.light-theme select {
+    background: white !important;
+    color: var(--charcoal) !important;
+    border-color: #e9ecef !important;
   }
   
   </style>
@@ -16458,6 +16532,26 @@ For clinical review and treatment optimization.`;
         body.classList.add('light-theme');
         localStorage.setItem('theme', 'light');
       }
+      
+      // Force update inline styles for blue to magenta conversion
+      convertBlueToMagenta();
+    }
+    
+    function convertBlueToMagenta() {
+      if (!document.body.classList.contains('light-theme')) return;
+      
+      // Find all elements with inline blue styles and convert to magenta
+      const allElements = document.querySelectorAll('*[style*="var(--accent-blue)"], *[style*="#0ea5e9"], *[style*="rgb(14, 165, 233)"]');
+      
+      allElements.forEach(element => {
+        let style = element.getAttribute('style') || '';
+        // Replace all blue color variations with magenta
+        style = style.replace(/var\(--accent-blue\)/g, 'var(--magenta)');
+        style = style.replace(/#0ea5e9/g, 'var(--magenta)');
+        style = style.replace(/rgb\(14,\s*165,\s*233\)/g, 'var(--magenta)');
+        style = style.replace(/rgba\(14,\s*165,\s*233/g, 'rgba(198, 22, 141');
+        element.setAttribute('style', style);
+      });
     }
     
     function initializeTheme() {
@@ -16467,6 +16561,10 @@ For clinical review and treatment optimization.`;
       
       if (savedTheme === 'light' || (!savedTheme && !prefersDark)) {
         document.body.classList.add('light-theme');
+        // Apply blue to magenta conversions after DOM is fully loaded
+        setTimeout(() => {
+          convertBlueToMagenta();
+        }, 100);
       }
     }
     
