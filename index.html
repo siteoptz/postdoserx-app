@@ -20882,6 +20882,12 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
           </div>
         </div>
       `;
+      
+      // Initialize Lucide icons after adding content
+      if (window.lucide && window.lucide.createIcons) {
+        window.lucide.createIcons();
+      }
+      
       return;
 
       // Sort weights by date
