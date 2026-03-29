@@ -19268,7 +19268,8 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
           description: 'Track nausea, fatigue, and overall wellness',
           impact: 'Improves AI recommendations by 15%',
           action: () => showView('symptoms'),
-          priority: 1
+          priority: 1,
+          icon: 'trending-up'
         });
       }
       
@@ -19284,7 +19285,8 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
           description: 'Track your GLP-1 weight loss journey',
           impact: 'Enables trend analysis and goal tracking',
           action: () => showView('progress'),
-          priority: 2
+          priority: 2,
+          icon: 'weight'
         });
       }
       
@@ -19296,7 +19298,8 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
           description: 'Help AI learn your food preferences',
           impact: 'Unlocks personalized meal recommendations',
           action: () => showView('feedback'),
-          priority: 1
+          priority: 1,
+          icon: 'star'
         });
       }
       
@@ -19313,7 +19316,8 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
             description: 'Review gentle meal plan and stock up on bland foods',
             impact: 'Reduces post-injection symptoms',
             action: () => showView('meals'),
-            priority: 0
+            priority: 0,
+            icon: 'syringe'
           });
         }
       }
@@ -19332,7 +19336,7 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
         <div class="action-item" onclick="${action.action.toString().replace('() => ', '').replace('()', '')}()" style="cursor: pointer;">
           <div class="action-checkbox">
             <div class="checkbox-icon">
-              <i data-lucide="circle"></i>
+              <i data-lucide="${action.icon}"></i>
             </div>
           </div>
           <div class="action-content">
@@ -19345,6 +19349,13 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
           </div>
         </div>
       `).join('');
+      
+      // Initialize Lucide icons after updating the content
+      setTimeout(() => {
+        if (typeof lucide !== 'undefined' && lucide.createIcons) {
+          lucide.createIcons();
+        }
+      }, 100);
     }
     
     // Update recent activity with real user data
