@@ -6824,6 +6824,11 @@
         padding: 0.5rem;
       }
       
+      /* Ensure modal close button doesn't block header on mobile */
+      .modal-close, .close-btn {
+        top: calc(72px + 1rem) !important; /* Header height (72px) + 1rem spacing */
+      }
+      
       /* Compact notification positioning */
       .notification {
         left: 1rem;
