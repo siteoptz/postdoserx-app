@@ -10735,7 +10735,9 @@
       
       // Update last injection
       if (profileLastInjection && profile.lastInjection) {
-        const lastDate = new Date(profile.lastInjection);
+        // Parse date as local timezone to avoid timezone offset issues
+        const dateParts = profile.lastInjection.split('-');
+        const lastDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
         console.log('Updating last injection display:', profile.lastInjection, lastDate);
         profileLastInjection.textContent = lastDate.toLocaleDateString('en-US', { 
           weekday: 'long', 
@@ -10748,7 +10750,9 @@
       // Update next injection
       if (profileNextInjection) {
         if (profile.nextInjection) {
-          const nextDate = new Date(profile.nextInjection);
+          // Parse date as local timezone to avoid timezone offset issues
+          const dateParts = profile.nextInjection.split('-');
+          const nextDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
           console.log('Updating next injection display:', profile.nextInjection, nextDate);
           profileNextInjection.textContent = nextDate.toLocaleDateString('en-US', { 
             weekday: 'long', 
