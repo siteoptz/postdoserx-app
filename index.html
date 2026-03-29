@@ -593,6 +593,7 @@
     }
     .user-dropdown.show { display: block; }
     .dropdown-header {
+      position: relative;
       padding: 16px;
       text-align: center;
       border-bottom: 1px solid var(--slate);
@@ -7415,6 +7416,9 @@
       <!-- User Dropdown Menu -->
       <div class="user-dropdown" id="user-dropdown">
         <div class="dropdown-header">
+          <button class="mobile-close-btn" onclick="toggleUserDropdown()" aria-label="Close user dropdown">
+            <i data-lucide="x"></i>
+          </button>
           <div class="dropdown-user-name" id="dropdown-user-name">Demo User</div>
           <div class="dropdown-user-email" id="dropdown-user-email">demo@postdoserx.com</div>
           <div class="dropdown-user-tier" id="dropdown-user-tier">Trial Account</div>
