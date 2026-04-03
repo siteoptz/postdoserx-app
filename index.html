@@ -24524,24 +24524,14 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
 
     // Update auth state on initialization
     document.addEventListener('DOMContentLoaded', function() {
-      // Check if user is authenticated
-      const isAuthenticated = window.appState?.isAuthenticated || false;
-      updateAuthState(isAuthenticated);
-      
-      // Listen for auth state changes
-      if (window.appState) {
-        const originalState = window.appState.isAuthenticated;
-        Object.defineProperty(window.appState, 'isAuthenticated', {
-          get: function() {
-            return this._isAuthenticated;
-          },
-          set: function(value) {
-            this._isAuthenticated = value;
-            updateAuthState(value);
-          }
-        });
-        window.appState.isAuthenticated = originalState;
-      }
+      // For demo mode, always show user profile and hide auth buttons
+      setTimeout(() => {
+        const hasUser = window.appState?.user;
+        const isDemo = window.appState?.user?.id === 'demo-user';
+        
+        // If we have a user (including demo), show profile UI
+        updateAuthState(hasUser || isDemo);
+      }, 100);
     });
   </script>
 </body>
