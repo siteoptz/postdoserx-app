@@ -62,9 +62,21 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: 'Failed to fetch user data' });
       }
 
+      // Format response for frontend compatibility
+      const formattedUser = {
+        id: userData.id,
+        email: userData.email,
+        name: userData.name,
+        tier: userData.tier,
+        created_at: userData.created_at
+      };
+
+      const profile = userData.user_profiles ? userData.user_profiles[0] : null;
+      
       return res.status(200).json({
         success: true,
-        user: userData
+        user: formattedUser,
+        profile: profile
       });
 
     } catch (error) {

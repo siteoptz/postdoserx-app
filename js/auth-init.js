@@ -428,39 +428,48 @@ document.addEventListener('DOMContentLoaded', async function() {
       
       console.log('✅ Stored tokens and cleaned URL');
       
-      // FORCE authenticated state - no matter what
-      window.appState.user = {
-        id: userId,
-        email: 'authenticated@postdoserx.com',
-        name: 'Authenticated User',
-        tier: 'premium'
-      };
-      window.appState.profile = {
-        medication: null,
-        dose_amount: null,
-        injection_day: null,
-        preferences: {}
-      };
-      window.appState.isAuthenticated = true;
+      // Verify token with API to get real user data
+      const response = await fetch('https://app.postdoserx.com/api/auth/me', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       
-      console.log('✅ FORCED authentication state - will NOT redirect to login');
+      if (response.ok) {
+        const userData = await response.json();
+        if (userData.success && userData.user) {
+          // Set up authenticated user state with real data
+          window.appState.user = userData.user;
+          window.appState.profile = userData.profile || {
+            medication: null,
+            dose_amount: null,
+            injection_day: null,
+            preferences: {}
+          };
+          window.appState.isAuthenticated = true;
+          
+          console.log('✅ Token verified, user authenticated:', userData.user.email);
+          
+          // Initialize app
+          console.log('🚀 Calling initializeApp...');
+          await initializeApp();
+          console.log('✅ initializeApp completed successfully');
+          
+          // CRITICAL: Return early to prevent any further auth logic
+          console.log('🛑 RETURNING EARLY - no further auth checks will run');
+          return;
+        }
+      }
       
-      // Try to initialize app
-      console.log('🚀 Calling initializeApp...');
-      await initializeApp();
-      console.log('✅ initializeApp completed successfully');
-      
-      // CRITICAL: Return early to prevent any further auth logic
-      console.log('🛑 RETURNING EARLY - no further auth checks will run');
-      return;
+      // If token verification fails, clear tokens and fall through to normal auth
+      console.log('❌ Token verification failed, clearing tokens');
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('user_id');
       
     } catch (error) {
       console.error('❌ ERROR in token processing:', error);
-      // Even if there's an error, still force authenticated state and return early
-      window.appState.isAuthenticated = true;
-      window.appState.user = { id: userId, email: 'error@postdoserx.com', name: 'User', tier: 'premium' };
-      console.log('🛑 ERROR FALLBACK - still returning early to prevent redirect');
-      return;
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('user_id');
     }
   }
   
@@ -478,7 +487,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   } else if (isAppDomain) {
     // Only redirect to login if on app domain and not authenticated
     console.log('❌ NOT authenticated on app domain - REDIRECTING TO LOGIN');
-    window.location.href = 'https://postdoserx.com/login.html';
+    window.location.href = 'https://app.postdoserx.com/api/login';
   } else {
     // On marketing site - allow demo access for preview
     console.log('🏠 On marketing site - showing demo preview');
