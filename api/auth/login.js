@@ -138,7 +138,7 @@ export default async function handler(req, res) {
           tier: user.tier
         },
         token,
-        redirectUrl: `https://postdoserx.com/success.html?token=${token}&user_id=${user.id}`
+        redirectUrl: `https://app.postdoserx.com?token=${token}&user_id=${user.id}`
       });
 
     } catch (error) {

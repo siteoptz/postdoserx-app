@@ -11,25 +11,54 @@ window.appState = {
 
 // Authentication functions
 async function checkAuthentication() {
-  // Skip authentication - just show the app directly
-  console.log('🔍 Bypassing authentication to allow app to function');
-  
-  // Set up basic user state for the app to work
-  window.appState.user = {
-    id: 'demo-user',
-    email: 'user@example.com',
-    name: 'Demo User',
-    tier: 'premium'
-  };
-  window.appState.profile = {
-    medication: null,
-    dose_amount: null,
-    injection_day: null,
-    preferences: {}
-  };
-  window.appState.isAuthenticated = true;
-  
-  return true;
+  try {
+    // Check for existing token first
+    const storedToken = localStorage.getItem('auth_token');
+    const storedUserId = localStorage.getItem('user_id');
+    
+    if (!storedToken || !storedUserId) {
+      console.log('🔍 No authentication token found, requiring login');
+      return false;
+    }
+    
+    // Verify token with API
+    const response = await fetch('https://app.postdoserx.com/api/auth/me', {
+      headers: {
+        'Authorization': `Bearer ${storedToken}`
+      }
+    });
+    
+    if (!response.ok) {
+      console.log('🔍 Invalid token, clearing and requiring login');
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('user_id');
+      return false;
+    }
+    
+    const userData = await response.json();
+    
+    if (userData.success && userData.user) {
+      // Set up authenticated user state
+      window.appState.user = userData.user;
+      window.appState.profile = userData.profile || {
+        medication: null,
+        dose_amount: null,
+        injection_day: null,
+        preferences: {}
+      };
+      window.appState.isAuthenticated = true;
+      
+      console.log('✅ User authenticated:', userData.user.email);
+      return true;
+    }
+    
+    return false;
+  } catch (error) {
+    console.error('Authentication check failed:', error);
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('user_id');
+    return false;
+  }
 }
 
 function showLoginPrompt() {
@@ -397,8 +426,33 @@ document.addEventListener('DOMContentLoaded', async function() {
     console.log('✅ Stored authentication tokens from URL');
   }
   
+  // Check if we're on the app domain (requires authentication)
+  const isAppDomain = window.location.hostname === 'app.postdoserx.com';
+  
   const isAuthenticated = await checkAuthentication();
+  
   if (isAuthenticated) {
+    await initializeApp();
+  } else if (isAppDomain) {
+    // Only redirect to login if on app domain and not authenticated
+    console.log('🔄 Redirecting to login page - authentication required');
+    window.location.href = 'https://postdoserx.com/login.html';
+  } else {
+    // On marketing site - allow demo access for preview
+    console.log('🏠 On marketing site - showing demo preview');
+    window.appState.user = {
+      id: 'demo-user',
+      email: 'user@example.com', 
+      name: 'Demo User',
+      tier: 'trial'
+    };
+    window.appState.profile = {
+      medication: null,
+      dose_amount: null,
+      injection_day: null,
+      preferences: {}
+    };
+    window.appState.isAuthenticated = false;
     await initializeApp();
   }
 });
