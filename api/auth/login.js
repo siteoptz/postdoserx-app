@@ -31,13 +31,29 @@ export default async function handler(req, res) {
   });
 
   if (req.method === 'POST') {
-    const { email, name, provider = 'google', tier = 'trial' } = req.body;
+    const { email, name, provider = 'google', tier = 'trial', stripe_session_id } = req.body;
 
     if (!email) {
       return res.status(400).json({ error: 'Email is required' });
     }
 
     try {
+      // Check for completed Stripe checkout session
+      let userTier = tier;
+      if (stripe_session_id) {
+        const { data: checkoutData, error: checkoutError } = await supabase
+          .from('checkout_sessions')
+          .select('*')
+          .eq('session_id', stripe_session_id)
+          .eq('customer_email', email)
+          .single();
+
+        if (checkoutData && !checkoutError) {
+          userTier = 'premium'; // User completed premium checkout
+          console.log('Found completed Stripe checkout for:', email);
+        }
+      }
+
       // Check if user exists in database
       let { data: existingUser, error: fetchError } = await supabase
         .from('users')
@@ -54,7 +70,7 @@ export default async function handler(req, res) {
           .insert([{
             email,
             name: name || email.split('@')[0],
-            tier
+            tier: userTier
           }])
           .select()
           .single();
@@ -79,10 +95,10 @@ export default async function handler(req, res) {
         }
       }
 
-      // Verify tier with GHL if needed
+      // Verify tier with GHL and create contact if needed
       if (user) {
         try {
-          const ghlTier = await verifyTierWithGHL(email);
+          const ghlTier = await verifyOrCreateGHLContact(email, user.name, user.tier);
           if (ghlTier && ghlTier !== user.tier) {
             // Update user tier based on GHL data
             const { error: updateError } = await supabase
@@ -137,8 +153,8 @@ export default async function handler(req, res) {
   return res.status(405).json({ error: 'Method not allowed' });
 }
 
-// Verify user tier with GoHighLevel
-async function verifyTierWithGHL(email) {
+// Find existing GHL contact
+async function findGHLContact(email) {
   try {
     const response = await fetch(`https://services.leadconnectorhq.com/contacts/?locationId=${GHL_LOCATION_ID}&limit=100`, {
       headers: {
@@ -153,9 +169,51 @@ async function verifyTierWithGHL(email) {
     }
 
     const data = await response.json();
-    const contact = data.contacts?.find(c => 
+    return data.contacts?.find(c => 
       c.email && c.email.toLowerCase() === email.toLowerCase()
     );
+  } catch (error) {
+    console.error('Error finding GHL contact:', error);
+    return null;
+  }
+}
+
+// Create new GHL contact
+async function createGHLContact(email, name, tier = 'trial') {
+  try {
+    const tags = tier === 'premium' ? ['postdoserx-premium', 'active-subscriber'] : ['postdoserx-trial'];
+    
+    const response = await fetch(`https://services.leadconnectorhq.com/contacts/`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${GHL_API_KEY}`,
+        'Content-Type': 'application/json',
+        'Version': '2021-07-28'
+      },
+      body: JSON.stringify({
+        locationId: GHL_LOCATION_ID,
+        email,
+        firstName: name ? name.split(' ')[0] : email.split('@')[0],
+        lastName: name ? name.split(' ').slice(1).join(' ') : '',
+        tags
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to create GHL contact: ${response.status}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error creating GHL contact:', error);
+    throw error;
+  }
+}
+
+// Verify user tier with GoHighLevel and create contact if not exists
+async function verifyOrCreateGHLContact(email, name = null, userTier = 'trial') {
+  try {
+    const contact = await findGHLContact(email);
 
     if (contact && contact.tags) {
       const tags = contact.tags;
@@ -163,6 +221,16 @@ async function verifyTierWithGHL(email) {
         return 'premium';
       } else if (tags.some(tag => tag.toLowerCase().includes('trial') || tag.includes('postdoserx-trial'))) {
         return 'trial';
+      }
+    } else if (!contact) {
+      // Contact doesn't exist in GHL, create it
+      console.log('Creating new GHL contact for:', email);
+      try {
+        await createGHLContact(email, name, userTier);
+        return userTier;
+      } catch (createError) {
+        console.error('Failed to create GHL contact:', createError);
+        return userTier; // Return the intended tier even if GHL creation fails
       }
     }
 

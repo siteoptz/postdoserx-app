@@ -7,10 +7,26 @@ CREATE TABLE users (
   email VARCHAR(255) UNIQUE NOT NULL,
   name VARCHAR(255),
   stripe_customer_id VARCHAR(255),
+  subscription_id VARCHAR(255),
+  subscription_status VARCHAR(50),
   ghl_contact_id VARCHAR(255),
   tier VARCHAR(50) DEFAULT 'trial',  -- 'trial' | 'premium'
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Stripe checkout sessions (tracks completed payments)
+CREATE TABLE checkout_sessions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  customer_id VARCHAR(255),
+  customer_email VARCHAR(255) NOT NULL,
+  session_id VARCHAR(255) UNIQUE NOT NULL,
+  subscription_id VARCHAR(255),
+  amount_total INTEGER,
+  currency VARCHAR(3),
+  payment_status VARCHAR(50),
+  completed_at TIMESTAMPTZ DEFAULT NOW(),
+  created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- User profile & medication (personalization source)
