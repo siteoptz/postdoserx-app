@@ -487,7 +487,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   } else if (isAppDomain) {
     // Only redirect to login if on app domain and not authenticated
     console.log('❌ NOT authenticated on app domain - REDIRECTING TO LOGIN');
-    window.location.href = 'https://app.postdoserx.com/api/login';
+    window.location.href = 'https://app.postdoserx.com/login.html';
   } else {
     // On marketing site - allow demo access for preview
     console.log('🏠 On marketing site - showing demo preview');
