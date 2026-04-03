@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.38.4",
-    "jose": "^4.15.4"
+    "jose": "^4.15.4",
+    "stripe": "^22.0.0"
   },
   "devDependencies": {
     "@vercel/node": "^3.0.12"

@@ -55,6 +55,131 @@
       
       /* Dark Theme Text Colors */
       
+      /* Authentication and Pricing Styles */
+      .auth-buttons {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      
+      .auth-btn {
+        font-size: 0.9rem;
+        padding: 0.5rem 1rem;
+        white-space: nowrap;
+      }
+      
+      .pricing-dropdown-wrapper {
+        position: relative;
+      }
+      
+      .pricing-trigger {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      
+      .pricing-arrow {
+        width: 16px;
+        height: 16px;
+        transition: transform 0.2s ease;
+      }
+      
+      .pricing-dropdown-wrapper.open .pricing-arrow {
+        transform: rotate(180deg);
+      }
+      
+      .pricing-dropdown {
+        position: absolute;
+        top: calc(100% + 0.5rem);
+        right: 0;
+        background: var(--color-surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1rem;
+        min-width: 320px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        display: none;
+      }
+      
+      .pricing-dropdown.open {
+        display: block;
+      }
+      
+      .pricing-option {
+        padding: 1rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        background: var(--color-background);
+      }
+      
+      .pricing-option:last-child {
+        margin-bottom: 0;
+      }
+      
+      .pricing-option.featured {
+        border-color: var(--accent-blue);
+        position: relative;
+      }
+      
+      .pricing-option.featured::before {
+        content: 'Popular';
+        position: absolute;
+        top: -8px;
+        left: 1rem;
+        background: var(--accent-blue);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+      
+      .plan-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.5rem;
+      }
+      
+      .plan-header h4 {
+        margin: 0;
+        color: var(--white);
+        font-size: 1.1rem;
+        font-weight: 600;
+      }
+      
+      .plan-price {
+        color: var(--accent-blue);
+        font-weight: 700;
+        font-size: 1.2rem;
+      }
+      
+      .plan-price span {
+        font-size: 0.9rem;
+        color: var(--silver);
+        font-weight: 400;
+      }
+      
+      .pricing-option p {
+        color: var(--silver);
+        margin: 0 0 1rem 0;
+        font-size: 0.9rem;
+      }
+      
+      .plan-actions {
+        display: flex;
+        gap: 0.75rem;
+      }
+      
+      .plan-btn {
+        flex: 1;
+        font-size: 0.85rem;
+        padding: 0.5rem 0.75rem;
+        text-align: center;
+      }
+      
       /* Login Modal Styles */
       .modal {
         display: none;
@@ -7706,14 +7831,53 @@
       <span>PostDose<span class="brand-rx">RX</span></span>
     </a>
     <div class="user-area">
-      <!-- Theme toggle hidden for now -->
-      <!-- <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle light/dark theme">
-        <div class="theme-icon">
-          <div class="theme-icon-half theme-icon-dark"></div>
-          <div class="theme-icon-half theme-icon-light"></div>
+      <!-- Authentication buttons for non-authenticated users -->
+      <div class="auth-buttons" id="auth-buttons" style="display: none;">
+        <button class="button-professional--outline auth-btn" onclick="openLoginModal()">
+          Sign In
+        </button>
+        <div class="pricing-dropdown-wrapper">
+          <button class="button-professional auth-btn pricing-trigger" onclick="togglePricingDropdown()">
+            Get Started
+            <i data-lucide="chevron-down" class="pricing-arrow"></i>
+          </button>
+          <div class="pricing-dropdown" id="pricing-dropdown">
+            <div class="pricing-option">
+              <div class="plan-header">
+                <h4>Starter Plan</h4>
+                <div class="plan-price">$19<span>/month</span></div>
+              </div>
+              <p>Essential features for your GLP-1 journey</p>
+              <div class="plan-actions">
+                <button class="button-professional--outline plan-btn" onclick="startCheckout('starter', 'monthly')">
+                  Monthly
+                </button>
+                <button class="button-professional plan-btn" onclick="startCheckout('starter', 'yearly')">
+                  Yearly ($15/mo)
+                </button>
+              </div>
+            </div>
+            <div class="pricing-option featured">
+              <div class="plan-header">
+                <h4>Pro Plan</h4>
+                <div class="plan-price">$39<span>/month</span></div>
+              </div>
+              <p>Advanced tracking and AI personalization</p>
+              <div class="plan-actions">
+                <button class="button-professional--outline plan-btn" onclick="startCheckout('pro', 'monthly')">
+                  Monthly
+                </button>
+                <button class="button-professional--accent plan-btn" onclick="startCheckout('pro', 'yearly')">
+                  Yearly ($29/mo)
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-      </button> -->
-      <div class="user-profile" onclick="toggleUserDropdown()">
+      </div>
+      
+      <!-- User profile dropdown for authenticated users -->
+      <div class="user-profile" id="user-profile" onclick="toggleUserDropdown()">
         <div class="user-avatar" id="user-avatar">D</div>
         <div class="user-info">
           <div class="user-name" id="user-name">Demo User</div>
@@ -24265,6 +24429,127 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
     });
 
     console.log('🚀 GLP-1 Journey Engine initialized - Premium Features fully integrated');
+
+    // Authentication and Pricing Functions
+    function togglePricingDropdown() {
+      const wrapper = document.querySelector('.pricing-dropdown-wrapper');
+      const dropdown = document.getElementById('pricing-dropdown');
+      
+      if (wrapper && dropdown) {
+        wrapper.classList.toggle('open');
+        dropdown.classList.toggle('open');
+      }
+    }
+
+    function openLoginModal() {
+      // Redirect to the OAuth login flow
+      window.location.href = 'https://app.postdoserx.com/login.html';
+    }
+
+    async function startCheckout(plan, billingCycle) {
+      try {
+        console.log(`🛒 Starting checkout for ${plan} plan (${billingCycle})`);
+        
+        // Close pricing dropdown
+        const wrapper = document.querySelector('.pricing-dropdown-wrapper');
+        const dropdown = document.getElementById('pricing-dropdown');
+        if (wrapper && dropdown) {
+          wrapper.classList.remove('open');
+          dropdown.classList.remove('open');
+        }
+        
+        // Show loading state
+        const button = event.target;
+        const originalText = button.textContent;
+        button.textContent = 'Loading...';
+        button.disabled = true;
+        
+        // Create checkout session
+        const response = await fetch('/api/stripe/create-checkout-session', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            plan,
+            billingCycle
+          }),
+        });
+        
+        const result = await response.json();
+        
+        if (result.error) {
+          throw new Error(result.error);
+        }
+        
+        if (result.url) {
+          console.log('✅ Checkout session created, redirecting to Stripe...');
+          window.location.href = result.url;
+        } else {
+          throw new Error('No checkout URL received');
+        }
+        
+      } catch (error) {
+        console.error('❌ Checkout error:', error);
+        
+        // Reset button
+        if (event?.target) {
+          event.target.textContent = originalText || 'Try Again';
+          event.target.disabled = false;
+        }
+        
+        alert(`Checkout failed: ${error.message}. Please try again or contact support.`);
+      }
+    }
+
+    // Update the auth state based on authentication status
+    function updateAuthState(isAuthenticated) {
+      const authButtons = document.getElementById('auth-buttons');
+      const userProfile = document.getElementById('user-profile');
+      
+      if (isAuthenticated) {
+        // Hide auth buttons, show user profile
+        if (authButtons) authButtons.style.display = 'none';
+        if (userProfile) userProfile.style.display = 'flex';
+      } else {
+        // Show auth buttons, hide user profile  
+        if (authButtons) authButtons.style.display = 'flex';
+        if (userProfile) userProfile.style.display = 'none';
+      }
+    }
+
+    // Close pricing dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+      const wrapper = document.querySelector('.pricing-dropdown-wrapper');
+      const dropdown = document.getElementById('pricing-dropdown');
+      
+      if (wrapper && dropdown && !wrapper.contains(event.target)) {
+        wrapper.classList.remove('open');
+        dropdown.classList.remove('open');
+      }
+    });
+
+    // Update auth state on initialization
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check if user is authenticated
+      const isAuthenticated = window.appState?.isAuthenticated || false;
+      updateAuthState(isAuthenticated);
+      
+      // Listen for auth state changes
+      if (window.appState) {
+        const originalState = window.appState.isAuthenticated;
+        Object.defineProperty(window.appState, 'isAuthenticated', {
+          get: function() {
+            return this._isAuthenticated;
+          },
+          set: function(value) {
+            this._isAuthenticated = value;
+            updateAuthState(value);
+          }
+        });
+        window.appState.isAuthenticated = originalState;
+      }
+    });
   </script>
 </body>
 </html>

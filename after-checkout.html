@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PostDoseRX - Payment Received</title>
+    <link href="https://fonts.googleapis.com/css2?family=InterVariable:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'InterVariable', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #0D0D0D 0%, #1A1A1A 100%);
+            color: #ffffff;
+        }
+        .container {
+            background: #1A1A1A;
+            border: 1px solid #2A2A2A;
+            padding: 3rem;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            margin: 2rem;
+        }
+        .success-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        h1 {
+            color: #ffffff;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        p {
+            color: #9A9A9A;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        .google-signin-container {
+            margin: 2rem 0;
+            display: flex;
+            justify-content: center;
+        }
+        .btn {
+            background: #2563EB;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+        }
+        .btn:hover {
+            background: #1d4ed8;
+        }
+        .reference {
+            font-size: 0.8rem;
+            color: #6A6A6A;
+            margin-top: 2rem;
+            word-break: break-all;
+        }
+        .link {
+            color: #2563EB;
+            text-decoration: none;
+        }
+        .link:hover {
+            text-decoration: underline;
+        }
+        .error {
+            color: #DC2626;
+            background: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #2A2A2A;
+            border-top: 3px solid #2563EB;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 8px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">✅</div>
+        <h1 id="title">Payment Received!</h1>
+        <p id="message">
+            Thank you for your purchase. Continue with Google to finish setting up your account. 
+            Use the <strong>same email</strong> you used at checkout so we can link your plan.
+        </p>
+        
+        <div class="google-signin-container" id="googleSigninContainer">
+            <div id="google-signin">
+                <!-- Google Sign-In button will be inserted here -->
+            </div>
+        </div>
+        
+        <p style="font-size: 0.9rem; color: #6A6A6A;">
+            If you're not redirected automatically, you can 
+            <a href="https://app.postdoserx.com" class="link">click here to continue</a>
+        </p>
+
+        <div id="error-container" style="display: none;">
+            <div class="error" id="error-message"></div>
+        </div>
+        
+        <div class="reference" id="reference"></div>
+    </div>
+
+    <script>
+        console.log('=== AFTER CHECKOUT PAGE LOADED ===');
+        console.log('Current URL:', window.location.href);
+        
+        // Get session ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionId = urlParams.get('session_id');
+        
+        console.log('Session ID:', sessionId);
+        
+        if (!sessionId) {
+            showError('Missing checkout session. Please try again or contact support.');
+            return;
+        }
+        
+        // Show session reference
+        document.getElementById('reference').textContent = `Reference: ${sessionId}`;
+        
+        // Verify session and init Google Sign-In
+        verifySessionAndInit();
+
+        async function verifySessionAndInit() {
+            console.log('=== VERIFYING SESSION ===');
+            
+            try {
+                // Verify session with backend
+                const verifyResponse = await fetch('/api/stripe/verify-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ sessionId }),
+                });
+                
+                if (!verifyResponse.ok) {
+                    console.log('Session verification failed, proceeding anyway');
+                    // Continue with Google Sign-In even if verification fails
+                }
+                
+                await initGoogleSignIn();
+                
+            } catch (error) {
+                console.error('Session verification error:', error);
+                // Continue with Google Sign-In anyway
+                await initGoogleSignIn();
+            }
+        }
+
+        async function initGoogleSignIn() {
+            console.log('=== INITIALIZING GOOGLE SIGN-IN ===');
+            
+            try {
+                // Get Google Client ID from config API
+                const configResponse = await fetch('https://app.postdoserx.com/api/config');
+                
+                if (!configResponse.ok) {
+                    throw new Error('Failed to load configuration');
+                }
+                
+                const config = await configResponse.json();
+                
+                if (!config.googleClientId) {
+                    throw new Error('Google Client ID not configured');
+                }
+
+                console.log('Loading Google Sign-In script...');
+                
+                // Load Google Sign-In script
+                const script = document.createElement('script');
+                script.src = 'https://accounts.google.com/gsi/client';
+                script.onload = () => {
+                    console.log('Google API loaded');
+                    
+                    if (!window.google || !window.google.accounts) {
+                        throw new Error('Google API not properly loaded');
+                    }
+                    
+                    try {
+                        window.google.accounts.id.initialize({
+                            client_id: config.googleClientId,
+                            callback: handleCredentialResponse
+                        });
+
+                        console.log('Google OAuth initialized');
+
+                        window.google.accounts.id.renderButton(
+                            document.getElementById('google-signin'),
+                            {
+                                theme: 'filled_blue',
+                                size: 'large',
+                                text: 'continue_with',
+                                width: 300,
+                                logo_alignment: 'left'
+                            }
+                        );
+                        
+                        console.log('Google Sign-In button rendered');
+                        
+                    } catch (initError) {
+                        throw initError;
+                    }
+                };
+                
+                script.onerror = () => {
+                    throw new Error('Failed to load Google API script');
+                };
+                
+                document.head.appendChild(script);
+                
+            } catch (error) {
+                console.error('Google Sign-In initialization failed:', error);
+                showError('Failed to initialize Google Sign-In. Please refresh and try again.');
+            }
+        }
+
+        async function handleCredentialResponse(response) {
+            console.log('=== GOOGLE OAUTH CALLBACK ===');
+            
+            try {
+                // Decode JWT to get user info
+                const userInfo = JSON.parse(atob(response.credential.split('.')[1]));
+                
+                console.log('User info:', userInfo);
+                console.log('Session ID:', sessionId);
+                
+                // Show loading state
+                document.getElementById('google-signin').innerHTML = 
+                    '<div class="btn">Signing you in<span class="loading"></span></div>';
+                
+                const requestBody = {
+                    email: userInfo.email,
+                    name: userInfo.name,
+                    provider: 'google',
+                    stripe_session_id: sessionId,
+                    credential: response.credential
+                };
+                
+                console.log('Sending authentication request...');
+                
+                // Send to login API with session ID
+                const loginResponse = await fetch('https://app.postdoserx.com/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                console.log('Login response status:', loginResponse.status);
+                
+                const result = await loginResponse.json();
+                console.log('Login result:', result);
+                
+                if (result.success) {
+                    console.log('✅ Authentication successful!');
+                    
+                    // Update UI to show success
+                    document.getElementById('title').textContent = 'Welcome to PostDoseRX!';
+                    document.getElementById('message').textContent = 'Your account is ready. Redirecting to your dashboard...';
+                    document.getElementById('google-signin').innerHTML = 
+                        '<div style="color: #10b981; font-weight: 500;">✓ Authentication successful!</div>';
+                    
+                    // Redirect after a short delay
+                    setTimeout(() => {
+                        window.location.href = result.redirectUrl;
+                    }, 2000);
+                    
+                } else {
+                    throw new Error(result.error || 'Authentication failed');
+                }
+                
+            } catch (error) {
+                console.error('Authentication failed:', error);
+                showError(`Authentication failed: ${error.message}. Please try again.`);
+                
+                // Reset Google Sign-In button
+                setTimeout(() => {
+                    initGoogleSignIn();
+                }, 3000);
+            }
+        }
+        
+        function showError(message) {
+            document.getElementById('error-message').textContent = message;
+            document.getElementById('error-container').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
