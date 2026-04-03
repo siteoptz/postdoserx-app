@@ -61,7 +61,6 @@ export default async function handler(req, res) {
       if (email && plan) {
         setPendingPlanFromCheckout(email, {
           plan,
-          billingCycle: session.metadata?.billingCycle,
           stripeSessionId: session.id,
           stripeCustomerId: typeof session.customer === 'string' 
             ? session.customer 

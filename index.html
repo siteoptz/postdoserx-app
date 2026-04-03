@@ -7844,31 +7844,25 @@
           <div class="pricing-dropdown" id="pricing-dropdown">
             <div class="pricing-option">
               <div class="plan-header">
-                <h4>Starter Plan</h4>
-                <div class="plan-price">$19<span>/month</span></div>
+                <h4>Trial Plan</h4>
+                <div class="plan-price">$9.99<span>/month</span></div>
               </div>
-              <p>Essential features for your GLP-1 journey</p>
+              <p>Start your GLP-1 journey with basic tracking</p>
               <div class="plan-actions">
-                <button class="button-professional--outline plan-btn" onclick="startCheckout('starter', 'monthly')">
-                  Monthly
-                </button>
-                <button class="button-professional plan-btn" onclick="startCheckout('starter', 'yearly')">
-                  Yearly ($15/mo)
+                <button class="button-professional plan-btn" onclick="startCheckout('trial')">
+                  Start Trial
                 </button>
               </div>
             </div>
             <div class="pricing-option featured">
               <div class="plan-header">
-                <h4>Pro Plan</h4>
-                <div class="plan-price">$39<span>/month</span></div>
+                <h4>Premium Plan</h4>
+                <div class="plan-price">$19.99<span>/month</span></div>
               </div>
-              <p>Advanced tracking and AI personalization</p>
+              <p>Complete GLP-1 optimization with AI insights</p>
               <div class="plan-actions">
-                <button class="button-professional--outline plan-btn" onclick="startCheckout('pro', 'monthly')">
-                  Monthly
-                </button>
-                <button class="button-professional--accent plan-btn" onclick="startCheckout('pro', 'yearly')">
-                  Yearly ($29/mo)
+                <button class="button-professional--accent plan-btn" onclick="startCheckout('premium')">
+                  Go Premium
                 </button>
               </div>
             </div>
@@ -24446,9 +24440,9 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
       window.location.href = 'https://app.postdoserx.com/login.html';
     }
 
-    async function startCheckout(plan, billingCycle) {
+    async function startCheckout(plan) {
       try {
-        console.log(`🛒 Starting checkout for ${plan} plan (${billingCycle})`);
+        console.log(`🛒 Starting checkout for ${plan} plan`);
         
         // Close pricing dropdown
         const wrapper = document.querySelector('.pricing-dropdown-wrapper');
@@ -24471,8 +24465,7 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            plan,
-            billingCycle
+            plan
           }),
         });
         

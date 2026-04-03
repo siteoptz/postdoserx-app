@@ -10,27 +10,21 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { plan, billingCycle, priceId } = req.body;
+    const { plan, priceId } = req.body;
 
-    if (!plan || !billingCycle) {
+    if (!plan) {
       return res.status(400).json({ 
-        error: 'plan and billingCycle are required' 
+        error: 'plan is required' 
       });
     }
 
-    // Price ID mapping based on environment variables
+    // Price ID mapping for PostDoseRX plans
     const priceIdMap = {
-      starter: {
-        monthly: process.env.STRIPE_STARTER_MONTHLY_PRICE_ID,
-        yearly: process.env.STRIPE_STARTER_YEARLY_PRICE_ID,
-      },
-      pro: {
-        monthly: process.env.STRIPE_PRO_MONTHLY_PRICE_ID,
-        yearly: process.env.STRIPE_PRO_YEARLY_PRICE_ID,
-      },
+      trial: process.env.STRIPE_POSTDOSE_TRIAL_PRICE_ID,
+      premium: process.env.STRIPE_POSTDOSE_PREMIUM_PRICE_ID,
     };
 
-    const resolvedPriceId = priceId || priceIdMap[plan]?.[billingCycle];
+    const resolvedPriceId = priceId || priceIdMap[plan];
     
     if (!resolvedPriceId) {
       return res.status(400).json({ 
@@ -40,7 +34,7 @@ export default async function handler(req, res) {
 
     const baseUrl = process.env.NEXTAUTH_URL || 'https://postdoserx.com';
 
-    console.log(`🛒 Creating Stripe checkout session for plan: ${plan}, billing: ${billingCycle}`);
+    console.log(`🛒 Creating Stripe checkout session for plan: ${plan}`);
 
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
@@ -52,13 +46,11 @@ export default async function handler(req, res) {
       cancel_url: `${baseUrl}/?canceled=1`,
       metadata: { 
         plan, 
-        billingCycle, 
         source: 'postdoserx' 
       },
       subscription_data: {
         metadata: { 
           plan, 
-          billingCycle, 
           source: 'postdoserx' 
         },
       },

@@ -39,8 +39,7 @@ export default async function handler(req, res) {
         id: session.id,
         customer_email: session.customer_details?.email,
         payment_status: session.payment_status,
-        plan: session.metadata?.plan,
-        billing_cycle: session.metadata?.billingCycle
+        plan: session.metadata?.plan
       }
     });
 
