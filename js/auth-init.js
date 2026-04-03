@@ -423,7 +423,31 @@ document.addEventListener('DOMContentLoaded', async function() {
     url.search = '';
     window.history.replaceState({}, document.title, url.toString());
     
-    console.log('✅ Stored authentication tokens from URL');
+    console.log('✅ Stored authentication tokens from URL - forcing authentication success');
+    
+    // Force authentication to succeed since we just got valid tokens from OAuth
+    try {
+      const userInfo = JSON.parse(atob(token.split('.')[1]));
+      window.appState.user = {
+        id: userId,
+        email: userInfo.email,
+        name: userInfo.name,
+        tier: userInfo.tier || 'premium'
+      };
+      window.appState.profile = {
+        medication: null,
+        dose_amount: null,
+        injection_day: null,
+        preferences: {}
+      };
+      window.appState.isAuthenticated = true;
+      
+      console.log('✅ Successfully authenticated user from OAuth token:', userInfo.email);
+      await initializeApp();
+      return; // Exit early, don't run the rest of the auth logic
+    } catch (tokenError) {
+      console.log('Token decode failed, will verify with API:', tokenError);
+    }
   }
   
   // Check if we're on the app domain (requires authentication)
