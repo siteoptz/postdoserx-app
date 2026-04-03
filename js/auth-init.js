@@ -379,6 +379,24 @@ function createCompatibilityLayer() {
 document.addEventListener('DOMContentLoaded', async function() {
   createCompatibilityLayer();
   
+  // Handle tokens from URL (OAuth redirect) to prevent loops
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get('token');
+  const userId = urlParams.get('user_id');
+  
+  if (token && userId) {
+    // Store tokens and clean URL
+    localStorage.setItem('auth_token', token);
+    localStorage.setItem('user_id', userId);
+    
+    // Clean URL to prevent redirect loops
+    const url = new URL(window.location);
+    url.search = '';
+    window.history.replaceState({}, document.title, url.toString());
+    
+    console.log('✅ Stored authentication tokens from URL');
+  }
+  
   const isAuthenticated = await checkAuthentication();
   if (isAuthenticated) {
     await initializeApp();
