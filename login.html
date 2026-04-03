@@ -83,17 +83,27 @@
     </div>
 
     <script>
+        console.log('=== LOGIN PAGE LOADED ===');
+        console.log('Current URL:', window.location.href);
+        
         // Get URL parameters
         const urlParams = new URLSearchParams(window.location.search);
         const stripeSuccess = urlParams.get('stripe_success');
         const sessionId = urlParams.get('session_id');
         
+        console.log('URL parameters:');
+        console.log('- stripe_success:', stripeSuccess);
+        console.log('- session_id:', sessionId);
+        console.log('- all params:', Object.fromEntries(urlParams.entries()));
+        
         if (stripeSuccess === 'true' && sessionId) {
+            console.log('Stripe success flow detected - storing session ID');
             // Store session ID for use during Google authentication
             localStorage.setItem('stripe_session_id', sessionId);
             document.getElementById('message').textContent = 
                 'Thank you for your purchase. Please authenticate with Google to access your premium PostDoseRX account.';
         } else {
+            console.log('Regular login flow (not from Stripe)');
             // Regular login (not from Stripe)
             document.querySelector('.success-icon').textContent = '🔐';
             document.querySelector('h1').textContent = 'Welcome to PostDoseRX';
@@ -101,37 +111,62 @@
                 'Please authenticate with Google to access your PostDoseRX account.';
         }
         
+        console.log('Initializing Google Sign-In...');
         // Always show Google Sign-In button
         initGoogleSignIn();
 
         async function initGoogleSignIn() {
+            console.log('=== INITIALIZING GOOGLE SIGN-IN ===');
             try {
+                console.log('Fetching config from API...');
                 // Get Google Client ID from environment variables
                 const configResponse = await fetch('https://app.postdoserx.com/api/config');
+                console.log('Config response status:', configResponse.status);
+                
                 const config = await configResponse.json();
+                console.log('Config response:', config);
                 
                 if (!config.googleClientId) {
                     throw new Error('Google Client ID not configured');
                 }
 
+                console.log('Loading Google Sign-In script...');
                 // Load Google Sign-In script
                 const script = document.createElement('script');
                 script.src = 'https://accounts.google.com/gsi/client';
                 script.onload = () => {
-                    window.google.accounts.id.initialize({
-                        client_id: config.googleClientId,
-                        callback: handleCredentialResponse
-                    });
+                    console.log('Google API loaded, initializing...');
+                    
+                    if (!window.google || !window.google.accounts) {
+                        console.error('Google API not properly loaded');
+                        return;
+                    }
+                    
+                    try {
+                        window.google.accounts.id.initialize({
+                            client_id: config.googleClientId,
+                            callback: handleCredentialResponse
+                        });
 
-                    window.google.accounts.id.renderButton(
-                        document.getElementById('google-signin'),
-                        {
-                            theme: 'outline',
-                            size: 'large',
-                            text: 'continue_with',
-                            width: 300
-                        }
-                    );
+                        console.log('Google OAuth initialized successfully');
+
+                        window.google.accounts.id.renderButton(
+                            document.getElementById('google-signin'),
+                            {
+                                theme: 'outline',
+                                size: 'large',
+                                text: 'continue_with',
+                                width: 300
+                            }
+                        );
+                        
+                        console.log('Google Sign-In button rendered');
+                    } catch (initError) {
+                        console.error('Error during Google initialization:', initError);
+                    }
+                };
+                script.onerror = (error) => {
+                    console.error('Failed to load Google API script:', error);
                 };
                 document.head.appendChild(script);
             } catch (error) {
@@ -143,10 +178,25 @@
         }
 
         async function handleCredentialResponse(response) {
+            console.log('=== OAUTH CALLBACK STARTED ===');
+            console.log('Response received:', response);
+            
             try {
                 // Decode JWT to get user info
                 const userInfo = JSON.parse(atob(response.credential.split('.')[1]));
                 const sessionId = localStorage.getItem('stripe_session_id');
+                
+                console.log('Decoded user info:', userInfo);
+                console.log('Stripe session ID from localStorage:', sessionId);
+                
+                const requestBody = {
+                    email: userInfo.email,
+                    name: userInfo.name,
+                    provider: 'google',
+                    stripe_session_id: sessionId
+                };
+                
+                console.log('Sending request to login API with body:', requestBody);
                 
                 // Send to login API with session ID
                 const loginResponse = await fetch('https://app.postdoserx.com/api/auth/login', {
@@ -154,27 +204,32 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        email: userInfo.email,
-                        name: userInfo.name,
-                        provider: 'google',
-                        stripe_session_id: sessionId
-                    })
+                    body: JSON.stringify(requestBody)
                 });
 
+                console.log('Login API response status:', loginResponse.status);
+                console.log('Login API response headers:', Object.fromEntries(loginResponse.headers.entries()));
+                
                 const result = await loginResponse.json();
+                console.log('Login API response body:', result);
                 
                 if (result.success) {
+                    console.log('Login successful! Redirecting to:', result.redirectUrl);
+                    
                     // Clear stored session ID
                     localStorage.removeItem('stripe_session_id');
                     
                     // Redirect to dashboard with token
                     window.location.href = result.redirectUrl;
                 } else {
+                    console.error('Login API returned error:', result.error);
                     throw new Error(result.error || 'Login failed');
                 }
             } catch (error) {
-                console.error('Login error:', error);
+                console.error('=== OAUTH CALLBACK FAILED ===');
+                console.error('Error details:', error);
+                console.error('Error stack:', error.stack);
+                
                 document.getElementById('message').innerHTML = 
                     'Authentication failed. Please try again or <a href="https://app.postdoserx.com" style="color: #667eea;">continue to the app</a>.';
             }
