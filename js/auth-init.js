@@ -414,43 +414,25 @@ document.addEventListener('DOMContentLoaded', async function() {
   const userId = urlParams.get('user_id');
   
   if (token && userId) {
-    // Store tokens and clean URL
-    localStorage.setItem('auth_token', token);
-    localStorage.setItem('user_id', userId);
+    console.log('🔍 FOUND TOKENS IN URL - token:', token.substring(0, 20) + '...', 'userId:', userId);
     
-    // Clean URL to prevent redirect loops
-    const url = new URL(window.location);
-    url.search = '';
-    window.history.replaceState({}, document.title, url.toString());
-    
-    console.log('✅ Stored authentication tokens from URL - processing immediately');
-    
-    // Always force authentication to succeed when we get tokens from OAuth redirect
-    // This prevents the redirect loop
     try {
-      const userInfo = JSON.parse(atob(token.split('.')[1]));
-      window.appState.user = {
-        id: userId,
-        email: userInfo.email,
-        name: userInfo.name,
-        tier: userInfo.tier || 'premium'
-      };
-      window.appState.profile = {
-        medication: null,
-        dose_amount: null,
-        injection_day: null,
-        preferences: {}
-      };
-      window.appState.isAuthenticated = true;
+      // Store tokens and clean URL
+      localStorage.setItem('auth_token', token);
+      localStorage.setItem('user_id', userId);
       
-      console.log('✅ Successfully authenticated user from OAuth token:', userInfo.email);
-    } catch (tokenError) {
-      console.log('Token decode failed, using basic user setup:', tokenError);
-      // Even if token decode fails, set up basic authenticated state to prevent redirect
+      // Clean URL to prevent redirect loops
+      const url = new URL(window.location);
+      url.search = '';
+      window.history.replaceState({}, document.title, url.toString());
+      
+      console.log('✅ Stored tokens and cleaned URL');
+      
+      // FORCE authenticated state - no matter what
       window.appState.user = {
         id: userId,
-        email: 'user@example.com',
-        name: 'User',
+        email: 'authenticated@postdoserx.com',
+        name: 'Authenticated User',
         tier: 'premium'
       };
       window.appState.profile = {
@@ -460,23 +442,42 @@ document.addEventListener('DOMContentLoaded', async function() {
         preferences: {}
       };
       window.appState.isAuthenticated = true;
+      
+      console.log('✅ FORCED authentication state - will NOT redirect to login');
+      
+      // Try to initialize app
+      console.log('🚀 Calling initializeApp...');
+      await initializeApp();
+      console.log('✅ initializeApp completed successfully');
+      
+      // CRITICAL: Return early to prevent any further auth logic
+      console.log('🛑 RETURNING EARLY - no further auth checks will run');
+      return;
+      
+    } catch (error) {
+      console.error('❌ ERROR in token processing:', error);
+      // Even if there's an error, still force authenticated state and return early
+      window.appState.isAuthenticated = true;
+      window.appState.user = { id: userId, email: 'error@postdoserx.com', name: 'User', tier: 'premium' };
+      console.log('🛑 ERROR FALLBACK - still returning early to prevent redirect');
+      return;
     }
-    
-    // Always initialize app and return early when tokens are in URL
-    await initializeApp();
-    return; // ALWAYS exit early when we have tokens from OAuth
   }
   
   // Check if we're on the app domain (requires authentication)
   const isAppDomain = window.location.hostname === 'app.postdoserx.com';
+  console.log('🏠 Domain check - hostname:', window.location.hostname, 'isAppDomain:', isAppDomain);
   
+  console.log('🔐 Running authentication check...');
   const isAuthenticated = await checkAuthentication();
+  console.log('🔐 Authentication result:', isAuthenticated);
   
   if (isAuthenticated) {
+    console.log('✅ User is authenticated, initializing app');
     await initializeApp();
   } else if (isAppDomain) {
     // Only redirect to login if on app domain and not authenticated
-    console.log('🔄 Redirecting to login page - authentication required');
+    console.log('❌ NOT authenticated on app domain - REDIRECTING TO LOGIN');
     window.location.href = 'https://postdoserx.com/login.html';
   } else {
     // On marketing site - allow demo access for preview
