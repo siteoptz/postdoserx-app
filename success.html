@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to PostDoseRX</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .container {
+            background: white;
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+        }
+        .success-icon {
+            color: #10b981;
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+        h1 {
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        p {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        .btn {
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover {
+            background: #5a67d8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">✅</div>
+        <h1 id="title">Welcome to PostDoseRX!</h1>
+        <p id="message">Authentication successful! Redirecting to your dashboard...</p>
+        
+        <a href="https://app.postdoserx.com" class="btn" id="dashboard-btn" style="display: none;">
+            Go to Dashboard
+        </a>
+    </div>
+
+    <script>
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        const userId = urlParams.get('user_id');
+        
+        if (token && userId) {
+            // Store authentication tokens
+            localStorage.setItem('auth_token', token);
+            localStorage.setItem('user_id', userId);
+            
+            // Show success message for premium users if they came from Stripe
+            const wasStripeUser = localStorage.getItem('stripe_session_id');
+            if (wasStripeUser) {
+                document.getElementById('title').textContent = 'Premium Account Activated!';
+                document.getElementById('message').textContent = 'Thank you for your purchase. Your premium PostDoseRX account is now active.';
+                localStorage.removeItem('stripe_session_id'); // Clean up
+            }
+            
+            // Auto-redirect after 3 seconds
+            setTimeout(() => {
+                window.location.href = 'https://app.postdoserx.com';
+            }, 3000);
+            
+            // Show manual button after 2 seconds
+            setTimeout(() => {
+                document.getElementById('dashboard-btn').style.display = 'inline-block';
+                document.getElementById('message').innerHTML = 'Taking too long? <br><br>';
+            }, 5000);
+            
+        } else {
+            // No tokens provided
+            document.getElementById('title').textContent = 'Authentication Required';
+            document.getElementById('message').innerHTML = 'No authentication tokens found. <a href="https://postdoserx.com/login.html" style="color: #667eea;">Please sign in</a> to continue.';
+        }
+    </script>
+</body>
+</html>

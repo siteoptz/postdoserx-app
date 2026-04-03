@@ -441,22 +441,39 @@ function createCompatibilityLayer() {
 document.addEventListener('DOMContentLoaded', async function() {
   createCompatibilityLayer();
   
-  // Check if we're on the login page to avoid redirect loop
-  const isOnLoginPage = window.location.pathname === '/login.html' || 
-                       window.location.href.includes('login.html');
+  // Check if we're on app.postdoserx.com (the actual dashboard)
+  const isDashboardDomain = window.location.hostname === 'app.postdoserx.com';
   
-  if (isOnLoginPage) {
-    console.log('👋 On login page, skipping authentication check');
-    return;
-  }
-  
-  const isAuthenticated = await checkAuthentication();
-  if (isAuthenticated) {
-    await initializeApp();
+  if (isDashboardDomain) {
+    // Try to authenticate for dashboard access
+    const isAuthenticated = await checkAuthentication();
+    if (isAuthenticated) {
+      await initializeApp();
+    } else {
+      // Redirect to login if not authenticated
+      console.log('🔄 Redirecting to login page');
+      window.location.href = 'https://postdoserx.com/login.html';
+    }
   } else {
-    // Redirect to login page if not authenticated
-    console.log('🔄 Redirecting to login page');
-    window.location.href = 'https://postdoserx.com/login.html';
+    // For postdoserx.com (public site), allow demo access
+    console.log('🔍 On public site, providing demo access');
+    
+    // Set up basic user state for demo
+    window.appState.user = {
+      id: 'demo-user',
+      email: 'user@example.com',
+      name: 'Demo User',
+      tier: 'trial'
+    };
+    window.appState.profile = {
+      medication: null,
+      dose_amount: null,
+      injection_day: null,
+      preferences: {}
+    };
+    window.appState.isAuthenticated = false; // Demo mode
+    
+    await initializeApp();
   }
 });
 
