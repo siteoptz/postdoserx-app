@@ -18,14 +18,31 @@ async function checkAuthentication() {
     const userId = urlParams.get('user_id');
     
     if (token && userId) {
+      console.log('📥 Found token in URL, storing and cleaning');
       // Store token and clean URL
       localStorage.setItem('auth_token', token);
       localStorage.setItem('user_id', userId);
       
-      // Clean URL parameters
+      // Clean URL parameters immediately to prevent redirect loop
       const url = new URL(window.location);
       url.search = '';
       window.history.replaceState({}, document.title, url.toString());
+      
+      // Set up user state immediately from token
+      try {
+        const userInfo = JSON.parse(atob(token.split('.')[1]));
+        window.appState.user = {
+          id: userId,
+          email: userInfo.email,
+          name: userInfo.name,
+          tier: userInfo.tier || 'trial'
+        };
+        window.appState.isAuthenticated = true;
+        console.log('✅ User authenticated from URL token:', userInfo.email);
+        return true;
+      } catch (tokenError) {
+        console.log('Token decode failed, will verify with API');
+      }
     }
     
     // Check for existing token
@@ -423,6 +440,15 @@ function createCompatibilityLayer() {
 // Initialize authentication on page load
 document.addEventListener('DOMContentLoaded', async function() {
   createCompatibilityLayer();
+  
+  // Check if we're on the login page to avoid redirect loop
+  const isOnLoginPage = window.location.pathname === '/login.html' || 
+                       window.location.href.includes('login.html');
+  
+  if (isOnLoginPage) {
+    console.log('👋 On login page, skipping authentication check');
+    return;
+  }
   
   const isAuthenticated = await checkAuthentication();
   if (isAuthenticated) {
