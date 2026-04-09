@@ -408,6 +408,61 @@ function createCompatibilityLayer() {
 document.addEventListener('DOMContentLoaded', async function() {
   createCompatibilityLayer();
   
+  // Check if we're on the app domain (requires authentication)
+  const isAppDomain = window.location.hostname === 'app.postdoserx.com';
+  console.log('🏠 Domain check - hostname:', window.location.hostname, 'isAppDomain:', isAppDomain);
+  
+  if (isAppDomain) {
+    // Use dashboard authentication system for app.postdoserx.com
+    console.log('🔐 Using dashboard authentication system...');
+    
+    // Wait for dashboardAuthReady event or initialize directly
+    if (typeof initializeDashboardAuth === 'function') {
+      const isAuthenticated = await initializeDashboardAuth();
+      
+      if (isAuthenticated) {
+        // Get user data from dashboard auth system
+        const user = getCurrentUser();
+        window.appState.user = user;
+        window.appState.profile = {
+          medication: user.medication || null,
+          dose_amount: user.dose_amount || null,
+          injection_day: user.injection_day || null,
+          preferences: user.preferences || {}
+        };
+        window.appState.isAuthenticated = true;
+        
+        console.log('✅ Dashboard auth completed, initializing app');
+        await initializeApp();
+      }
+      // If not authenticated, dashboard auth will handle redirect
+    } else {
+      // Fallback to legacy auth if dashboard auth not available
+      console.log('⚠️ Dashboard auth not available, using legacy auth');
+      await legacyAuthFlow();
+    }
+  } else {
+    // On marketing site - allow demo access for preview
+    console.log('🏠 On marketing site - showing demo preview');
+    window.appState.user = {
+      id: 'demo-user',
+      email: 'user@example.com', 
+      name: 'Demo User',
+      tier: 'trial'
+    };
+    window.appState.profile = {
+      medication: null,
+      dose_amount: null,
+      injection_day: null,
+      preferences: {}
+    };
+    window.appState.isAuthenticated = false;
+    await initializeApp();
+  }
+});
+
+// Legacy authentication flow (kept for backwards compatibility)
+async function legacyAuthFlow() {
   // Handle tokens from URL (OAuth redirect) to prevent loops
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get('token');
@@ -473,11 +528,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
   }
   
-  // Check if we're on the app domain (requires authentication)
-  const isAppDomain = window.location.hostname === 'app.postdoserx.com';
-  console.log('🏠 Domain check - hostname:', window.location.hostname, 'isAppDomain:', isAppDomain);
-  
-  console.log('🔐 Running authentication check...');
+  console.log('🔐 Running legacy authentication check...');
   const isAuthenticated = await checkAuthentication();
   console.log('🔐 Authentication result:', isAuthenticated);
   
@@ -485,23 +536,35 @@ document.addEventListener('DOMContentLoaded', async function() {
     console.log('✅ User is authenticated, initializing app');
     await initializeApp();
   } else {
-    // On marketing site - allow demo access for preview
-    console.log('🏠 On marketing site - showing demo preview');
-    window.appState.user = {
-      id: 'demo-user',
-      email: 'user@example.com', 
-      name: 'Demo User',
-      tier: 'trial'
-    };
-    window.appState.profile = {
-      medication: null,
-      dose_amount: null,
-      injection_day: null,
-      preferences: {}
-    };
-    window.appState.isAuthenticated = false;
-    await initializeApp();
+    // Redirect to login for app domain
+    window.location.href = 'https://postdoserx.com/login.html';
   }
+}
+
+// Create API wrapper to use dashboard auth system
+function createAPIWrapper() {
+  // Override existing API functions to use dashboard auth when available
+  if (typeof authenticatedFetch === 'function') {
+    // Update the postDoseRXAPI functions to use the new auth system
+    window.postDoseRXAPI.request = async function(endpoint, options = {}) {
+      try {
+        const response = await authenticatedFetch(endpoint, options);
+        return await response.json();
+      } catch (error) {
+        if (error.message === 'Authentication failed') {
+          // Dashboard auth will handle redirect
+          throw new Error('Authentication required');
+        }
+        throw error;
+      }
+    };
+  }
+}
+
+// Call API wrapper when dashboard auth is ready
+window.addEventListener('dashboardAuthReady', (event) => {
+  console.log('Dashboard auth ready, setting up API wrapper');
+  createAPIWrapper();
 });
 
 // Export functions for global access
@@ -516,5 +579,6 @@ window.appAuth = {
   loadMealRatings,
   saveMealRatings,
   loadMealPlan,
-  initializeApp
+  initializeApp,
+  legacyAuthFlow
 };

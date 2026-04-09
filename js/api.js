@@ -32,6 +32,22 @@ class PostDoseRXAPI {
 
   // Generic API request method
   async request(endpoint, options = {}) {
+    // Use dashboard auth system if available
+    if (typeof authenticatedFetch === 'function') {
+      try {
+        const response = await authenticatedFetch(endpoint, options);
+        const data = await response.json();
+        return data;
+      } catch (error) {
+        if (error.message === 'Authentication failed') {
+          // Dashboard auth will handle redirect
+          return;
+        }
+        throw error;
+      }
+    }
+    
+    // Fallback to legacy API client
     const url = `${this.baseURL}${endpoint}`;
     const config = {
       headers: this.getAuthHeaders(),
