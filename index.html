@@ -14716,9 +14716,9 @@
       if (shareTextArea) {
         shareTextArea.value = `My PostDoseRX Progress Update:
 
-🎯 Current Weight: ${currentWeight !== null ? currentWeight + ' lbs' : 'Not logged'}
-🏆 Goal: ${goalWeight !== null ? goalWeight + ' lbs' : 'Not set'}
-📈 Progress: ${weightLoss > 0 ? '-' + weightLoss.toFixed(1) + ' lbs' : 'Starting journey'}
+<span class="icon-professional icon-professional--target"></span> Current Weight: ${currentWeight !== null ? currentWeight + ' lbs' : 'Not logged'}
+<span class="icon-professional icon-professional--trophy"></span> Goal: ${goalWeight !== null ? goalWeight + ' lbs' : 'Not set'}
+<span class="icon-professional icon-professional--progress"></span> Progress: ${weightLoss > 0 ? '-' + weightLoss.toFixed(1) + ' lbs' : 'Starting journey'}
 
 Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #GLP1`;
       }
@@ -18007,9 +18007,9 @@ For clinical review and treatment optimization.`;
             <label for="share-text">Share Message</label>
             <textarea id="share-text" rows="4">My PostDoseRX Progress Update:
 
-🎯 Current Weight: Loading...
-🏆 Goal: Loading...
-📈 Progress: Loading...
+<span class="icon-professional icon-professional--target"></span> Current Weight: Loading...
+<span class="icon-professional icon-professional--trophy"></span> Goal: Loading...
+<span class="icon-professional icon-professional--progress"></span> Progress: Loading...
 
 Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #GLP1</textarea>
           </div>
@@ -20869,7 +20869,7 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
             }
           } else if (period === 'month') {
             if (absChange >= 8) {
-              return 'Incredible monthly results! 🏆';
+              return 'Incredible monthly results! <span class="icon-professional icon-professional--trophy"></span>';
             } else if (absChange >= 4) {
               return 'Amazing progress this month!';
             } else if (absChange >= 2) {
@@ -21190,7 +21190,7 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
           </div>
           <div class="stat">
             <div class="stat-value" style="color: ${goalAchieved ? '#10b981' : neededRate <= 2 ? '#10b981' : neededRate <= 3 ? '#f59e0b' : '#ef4444'};">
-              ${goalAchieved ? '🏆' : (neededRate > 0 ? neededRate.toFixed(1) : '✅')}
+              ${goalAchieved ? '<span class="icon-professional icon-professional--trophy"></span>' : (neededRate > 0 ? neededRate.toFixed(1) : '<span class="icon-professional icon-professional--success"></span>')}
             </div>
             <div class="stat-label">${goalAchieved ? 'Success!' : (neededRate > 0 ? 'lbs/week needed' : 'On track')}</div>
           </div>
@@ -21782,14 +21782,14 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
           <h4>Predictive Insights</h4>
           <div class="insight-list">
             ${weeklyRate >= 1 ? 
-              '<p>🎯 You\'re losing weight faster than average. Great job!</p>' :
+              '<p><span class="icon-professional icon-professional--target"></span> You\'re losing weight faster than average. Great job!</p>' :
               weeklyRate >= 0.5 ?
-              '<p>📈 Steady progress. You\'re on track for sustainable weight loss.</p>' :
+              '<p><span class="icon-professional icon-professional--progress"></span> Steady progress. You\'re on track for sustainable weight loss.</p>' :
               '<p>🔄 Consider adjusting meal timing or medication schedule.</p>'
             }
             ${userGoal.targetWeight && goalTimeline !== 'Not set' ?
-              `<p>🎯 At current rate, you'll reach your goal in ${goalTimeline}.</p>` :
-              '<p>📋 Set a weight goal to get timeline predictions.</p>'
+              `<p><span class="icon-professional icon-professional--target"></span> At current rate, you'll reach your goal in ${goalTimeline}.</p>` :
+              '<p><span class="icon-professional icon-professional--goal"></span> Set a weight goal to get timeline predictions.</p>'
             }
           </div>
         </div>
@@ -21832,7 +21832,7 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
       
       switch (type) {
         case 'injection-timing':
-          modalTitle = '🎯 Injection Timing Optimization - Premium Feature';
+          modalTitle = '<span class="icon-professional icon-professional--target"></span> Injection Timing Optimization - Premium Feature';
           modalContent = `
             <div style="text-align: center;">
               <div style="font-size: 2rem; margin-bottom: 1rem; color: var(--accent-blue);">⏰</div>
@@ -21885,7 +21885,7 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
           modalTitle = '⚖️ Weight Management Strategies - Premium Feature';
           modalContent = `
             <div style="text-align: center;">
-              <div style="font-size: 2rem; margin-bottom: 1rem; color: var(--accent-emerald);">📊</div>
+              <div style="font-size: 2rem; margin-bottom: 1rem; color: var(--accent-emerald);"><span class="icon-professional icon-professional--analytics" style="font-size: 2rem;"></span></div>
               <h3 style="color: var(--accent-emerald); margin-bottom: 1rem; font-weight: 600;">Advanced Weight Management Intelligence</h3>
               <p style="color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.5;">Break through plateaus with AI-powered strategies tailored to your GLP-1 medication response and metabolic patterns.</p>
               
@@ -21915,7 +21915,7 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
               </div>
 
               <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
-                <div style="font-size: 0.9rem; color: var(--accent-emerald); font-weight: 600;">🎯 Proven Results:</div>
+                <div style="font-size: 0.9rem; color: var(--accent-emerald); font-weight: 600;"><span class="icon-professional icon-professional--target"></span> Proven Results:</div>
                 <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">
                   • 67% of users break plateaus within 2 weeks<br>
                   • Average 2.3x faster progress with personalized strategies<br>
@@ -22015,7 +22015,7 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
               </div>
 
               <div style="background: rgba(217, 119, 6, 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
-                <div style="font-size: 0.9rem; color: var(--accent-amber); font-weight: 600;">🎯 Meal Success Rate:</div>
+                <div style="font-size: 0.9rem; color: var(--accent-amber); font-weight: 600;"><span class="icon-professional icon-professional--target"></span> Meal Success Rate:</div>
                 <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">
                   • 73% improvement in meal tolerance<br>
                   • 45% reduction in post-meal nausea<br>
@@ -22032,7 +22032,7 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
           break;
           
         case 'goal-achievement':
-          modalTitle = '🏆 Goal Achievement Accelerator - Premium Feature';
+          modalTitle = '<span class="icon-professional icon-professional--trophy"></span> Goal Achievement Accelerator - Premium Feature';
           modalContent = `
             <div style="text-align: center;">
               <div style="font-size: 2rem; margin-bottom: 1rem; color: var(--accent-purple);">🚀</div>
@@ -22065,7 +22065,7 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
               </div>
 
               <div style="background: rgba(139, 92, 246, 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
-                <div style="font-size: 0.9rem; color: var(--accent-purple); font-weight: 600;">🏆 Success Rate:</div>
+                <div style="font-size: 0.9rem; color: var(--accent-purple); font-weight: 600;"><span class="icon-professional icon-professional--trophy"></span> Success Rate:</div>
                 <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">
                   • 84% of users reach their goals 40% faster<br>
                   • 92% stay motivated through difficult phases<br>
@@ -22115,7 +22115,7 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
               </div>
 
               <div style="background: rgba(37, 99, 235, 0.1); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
-                <div style="font-size: 0.9rem; color: var(--accent-blue); font-weight: 600;">🎯 Proven Results:</div>
+                <div style="font-size: 0.9rem; color: var(--accent-blue); font-weight: 600;"><span class="icon-professional icon-professional--target"></span> Proven Results:</div>
                 <div style="font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.5rem;">
                   • 78% better outcomes with AI recommendations<br>
                   • Personalized insights updated weekly<br>
@@ -22163,7 +22163,7 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
     }
 
     function exportAIInsights() {
-      console.log('📊 exportAIInsights called');
+      console.log('Analytics exportAIInsights called');
       try {
         showCustomAlert(
           'AI Insights Export Ready',
@@ -22749,7 +22749,7 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
         analyticsEl.innerHTML = `
           <div class="glp1-side-effect-management" style="margin-bottom: 2rem;">
             <h5 style="color: var(--text); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
-              <span style="font-size: 1.2rem;">🎯</span>
+              <span class="icon-professional icon-professional--target" style="font-size: 1.2rem;"></span>
               Personalized GLP-1 Side Effect Management
             </h5>
             
@@ -22811,7 +22811,7 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
             
             <div style="display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
               <div style="padding: 1rem; background: var(--sand-light); border-radius: 8px; text-align: center;">
-                <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">📊</div>
+                <div style="font-size: 1.5rem; margin-bottom: 0.5rem;"><span class="icon-professional icon-professional--analytics"></span></div>
                 <div style="font-weight: 600; color: var(--text); margin-bottom: 0.25rem;">Meal Success Rate</div>
                 <div style="font-size: 1.2rem; color: var(--accent-emerald); font-weight: 700;">${Math.round((analysis.patterns?.length || 0) * 12 + 73)}%</div>
                 <div style="font-size: 0.8rem; color: var(--text-sec);">With AI recommendations</div>
@@ -22825,7 +22825,7 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
               </div>
               
               <div style="padding: 1rem; background: var(--sand-light); border-radius: 8px; text-align: center;">
-                <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🎯</div>
+                <div style="font-size: 1.5rem; margin-bottom: 0.5rem;"><span class="icon-professional icon-professional--target"></span></div>
                 <div style="font-weight: 600; color: var(--text); margin-bottom: 0.25rem;">Personalized Recipes</div>
                 <div style="font-size: 1.2rem; color: var(--accent-amber); font-weight: 700;">${Math.max(5, (analysis.patterns?.length || 0) * 3)}</div>
                 <div style="font-size: 0.8rem; color: var(--text-sec);">Matched to your profile</div>

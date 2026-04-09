@@ -309,6 +309,81 @@ body::before {
 .transition-normal { transition: var(--transition-normal); }
 .transition-slow { transition: var(--transition-slow); }
 
+/* Professional Icon System */
+.icon-professional {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: var(--radius-subtle);
+  background-color: var(--color-surface-elevated);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-semibold);
+  font-size: 0.75rem;
+  transition: var(--transition-fast);
+}
+
+.icon-professional--target {
+  background-color: rgba(37, 99, 235, 0.1);
+  color: var(--accent-blue);
+}
+
+.icon-professional--target::before {
+  content: "⊙";
+  font-size: 0.9rem;
+}
+
+.icon-professional--trophy {
+  background-color: rgba(245, 158, 11, 0.1);
+  color: var(--accent-amber);
+}
+
+.icon-professional--trophy::before {
+  content: "◆";
+  font-size: 0.8rem;
+}
+
+.icon-professional--progress {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--accent-emerald);
+}
+
+.icon-professional--progress::before {
+  content: "↗";
+  font-size: 0.9rem;
+}
+
+.icon-professional--analytics {
+  background-color: rgba(139, 92, 246, 0.1);
+  color: var(--accent-purple);
+}
+
+.icon-professional--analytics::before {
+  content: "□";
+  font-size: 0.8rem;
+}
+
+.icon-professional--success {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: var(--accent-emerald);
+}
+
+.icon-professional--success::before {
+  content: "✓";
+  font-size: 0.9rem;
+}
+
+.icon-professional--goal {
+  background-color: rgba(37, 99, 235, 0.1);
+  color: var(--accent-blue);
+}
+
+.icon-professional--goal::before {
+  content: "◈";
+  font-size: 0.8rem;
+}
+
 /* Professional Components */
 .card-professional {
   background-color: var(--color-surface);
