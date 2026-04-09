@@ -10139,13 +10139,13 @@
           <div class="upgrade-cta">
             <button class="premium-upgrade-button-main" onclick="redirectToUpgrade()">
               <span class="premium-btn-content">
-                <span class="premium-btn-icon">🚀</span>
+                <span class="premium-btn-icon"><span class="icon-professional icon-professional--target"></span></span>
                 <span class="premium-btn-main">Unlock Premium</span>
                 <span class="premium-btn-desc">Get Advanced Insights</span>
               </span>
             </button>
             <div class="upgrade-guarantee">
-              <p><strong>✅ 30-day money-back guarantee</strong></p>
+              <p><strong><span class="icon-professional icon-professional--success"></span> 30-day money-back guarantee</strong></p>
               <p>• No commitments • Cancel anytime • Full refund if not satisfied</p>
             </div>
           </div>
@@ -15081,7 +15081,7 @@ For clinical review and treatment optimization.`;
           </div>
           
           <div style="background: rgba(255, 193, 7, 0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #ffc107;">
-            <p style="margin: 0; font-size: 0.9rem;"><strong>💡 Pro Tip:</strong> Add electrolytes on high hydration days to prevent dilution of minerals</p>
+            <p style="margin: 0; font-size: 0.9rem;"><strong><span class="icon-professional icon-professional--goal"></span> Pro Tip:</strong> Add electrolytes on high hydration days to prevent dilution of minerals</p>
           </div>
           
           <button class="button-professional" onclick="enableHydrationTracking(); closeModal();">
@@ -17393,7 +17393,7 @@ For clinical review and treatment optimization.`;
       // Add meal rating button
       content += '<div style="text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.2);">';
       content += '<button class="button-professional--accent" onclick="navigateToMealRating()" style="font-size: 1.1rem;">';
-      content += '🌟 Rate Your Meals Now';
+      content += '<span class="icon-professional icon-professional--success"></span> Rate Your Meals Now';
       content += '</button>';
       content += '<p style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; margin: 1rem 0 0 0;">Help us improve your recommendations by rating your meal experiences</p>';
       content += '</div>';
@@ -19218,8 +19218,8 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
       
       const trendDirection = recentAvg > avgRating + 0.3 ? 'Improving' :
                            recentAvg < avgRating - 0.3 ? 'Declining' : 'Stable';
-      const trendIcon = trendDirection === 'Improving' ? '↗️' :
-                       trendDirection === 'Declining' ? '↘️' : '→';
+      const trendIcon = trendDirection === 'Improving' ? '<span class="icon-professional icon-professional--progress"></span>' :
+                       trendDirection === 'Declining' ? '<span class="icon-professional icon-professional--analytics"></span>' : '<span class="icon-professional icon-professional--target"></span>';
       
       toleranceTrendEl.innerHTML = `
         <div style="color: var(--accent-emerald); font-size: 2rem; margin-bottom: 0.5rem;">${avgRating.toFixed(1)}/5</div>
@@ -19979,10 +19979,10 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
           <div class="action-content">
             <div class="action-title">${action.title}</div>
             <div class="action-description">${action.description}</div>
-            <div class="action-impact">💡 ${action.impact}</div>
+            <div class="action-impact"><span class="icon-professional icon-professional--goal"></span> ${action.impact}</div>
           </div>
           <div class="action-go">
-            <button class="btn-action">Go →</button>
+            <button class="btn-action">Go <span class="icon-professional icon-professional--target"></span></button>
           </div>
         </div>
       `).join('');
@@ -20880,7 +20880,7 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
           } else {
             // Total progress
             if (absChange >= 20) {
-              return 'Life-changing transformation! 🌟';
+              return 'Life-changing transformation! <span class="icon-professional icon-professional--trophy"></span>';
             } else if (absChange >= 10) {
               return 'Outstanding results!';
             } else if (absChange >= 5) {
@@ -21151,7 +21151,7 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
           <div class="goal-weight">Target: ${targetWeight} lbs</div>
           ${targetDate ? `
             <div class="target-date" style="font-size: 0.9rem; color: ${onTrack ? '#10b981' : '#f59e0b'}; margin-top: 0.25rem;">
-              📅 ${dateStatus}
+              <span class="icon-professional icon-professional--target"></span> ${dateStatus}
             </div>
           ` : ''}
         </div>
@@ -21167,7 +21167,7 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
             color: rgba(255,255,255,0.9);
             font-size: 0.9rem;
           ">
-            💪 "${reason}"
+            <span class="icon-professional icon-professional--trophy"></span> "${reason}"
           </div>
         ` : ''}
         
@@ -21178,13 +21178,13 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
         <div class="goal-stats">
           <div class="stat">
             <div class="stat-value" style="color: ${goalAchieved ? '#10b981' : '#ffffff'};">
-              ${goalAchieved ? '🎉' : remaining.toFixed(1)}
+              ${goalAchieved ? '<span class="icon-professional icon-professional--trophy"></span>' : remaining.toFixed(1)}
             </div>
             <div class="stat-label">${goalAchieved ? 'Goal achieved!' : 'lbs to goal'}</div>
           </div>
           <div class="stat">
             <div class="stat-value" style="color: ${goalAchieved ? '#10b981' : onTrack ? '#10b981' : '#f59e0b'};">
-              ${goalAchieved ? '✅' : (weeksToGoal > 0 && weeksToGoal < 100 ? weeksToGoal : targetDate ? Math.ceil(daysToTarget/7) : '--')}
+              ${goalAchieved ? '<span class="icon-professional icon-professional--success"></span>' : (weeksToGoal > 0 && weeksToGoal < 100 ? weeksToGoal : targetDate ? Math.ceil(daysToTarget/7) : '--')}
             </div>
             <div class="stat-label">${goalAchieved ? 'Complete' : (targetDate ? 'weeks to target' : 'weeks estimated')}</div>
           </div>
