@@ -735,6 +735,11 @@
       font-size: 13px;
       color: var(--text-sec);
       margin-bottom: 8px;
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      word-break: break-all;
     }
     .dropdown-user-tier {
       font-size: 12px;
@@ -11129,14 +11134,9 @@
     function updateDashboardWithProfile(profile) {
       console.log('updateDashboardWithProfile called with:', profile);
       
-      // Update user name in header
-      const userNameElement = document.getElementById('user-name');
-      if (userNameElement && profile.name) {
-        console.log('Updating user name to:', profile.name);
-        userNameElement.textContent = profile.name;
-      } else {
-        console.log('Could not update user name. Element found:', !!userNameElement, 'Name:', profile.name);
-      }
+      // Skip updating user name in header - this should only be updated by Google auth data
+      // The user's personal name comes from Google authentication, not medication profile
+      console.log('Skipping user name update in header - using Google auth name instead');
       
       // Update user name in profile section
       const profileNameDisplay = document.getElementById('profile-name-display');
@@ -13127,6 +13127,191 @@
       }
     });
     
+    // Function to update dashboard with API data
+    function updateDashboardWithAPIData(data) {
+      console.log('📊 Updating dashboard with API data:', data);
+      
+      // Update with user profile data
+      if (data.profile) {
+        updateDashboardWithProfile(data.profile);
+      }
+      
+      // Update symptoms data
+      if (data.symptoms) {
+        updateSymptomDisplays(data.symptoms);
+      }
+      
+      // Update meal ratings
+      if (data.mealPlan) {
+        updateMealPlanDisplays(data.mealPlan);
+      }
+      
+      // Update progress tracking
+      if (data.progress) {
+        updateProgressDisplays(data.progress);
+      }
+      
+      // Update dashboard stats
+      if (data.dashboardStats) {
+        updateDashboardStats(data.dashboardStats);
+      }
+      
+      console.log('✅ Dashboard updated with user-specific API data');
+    }
+    
+    // Function to show blank dashboard for new users
+    function showBlankDashboard() {
+      console.log('🆕 Showing blank dashboard for new user');
+      
+      // Clear all data displays
+      clearSymptomDisplays();
+      clearMealDisplays();
+      clearProgressDisplays();
+      
+      // Show welcome/onboarding state
+      showOnboardingPrompts();
+      
+      console.log('✅ Blank dashboard displayed for new user');
+    }
+    
+    // Function to clear symptom displays
+    function clearSymptomDisplays() {
+      const symptomElements = document.querySelectorAll('.symptom-log, .symptom-count, .symptom-trend');
+      symptomElements.forEach(el => {
+        el.textContent = '0';
+      });
+    }
+    
+    // Function to clear meal displays  
+    function clearMealDisplays() {
+      const mealElements = document.querySelectorAll('.meal-rating, .meal-count, .safe-percentage');
+      mealElements.forEach(el => {
+        el.textContent = '0';
+      });
+    }
+    
+    // Function to clear progress displays
+    function clearProgressDisplays() {
+      const progressElements = document.querySelectorAll('.progress-log, .weight-trend, .streak-count');
+      progressElements.forEach(el => {
+        el.textContent = '0';
+      });
+    }
+    
+    // Function to show onboarding prompts
+    function showOnboardingPrompts() {
+      // Show medication setup card if not completed
+      const medicationCard = document.getElementById('medication-setup-card');
+      if (medicationCard) {
+        medicationCard.style.display = 'block';
+      }
+      
+      // Show welcome messages for empty sections
+      const emptySections = document.querySelectorAll('.empty-state-message');
+      emptySections.forEach(section => {
+        section.style.display = 'block';
+      });
+    }
+    
+    // Function to update dashboard with user profile data
+    function updateDashboardWithProfile(profile) {
+      console.log('updateDashboardWithProfile called with:', profile);
+      
+      // Skip updating user name in header - this should only be updated by Google auth data
+      // The user's personal name comes from Google authentication, not medication profile
+      console.log('Skipping user name update in header - using Google auth name instead');
+      
+      // Update user name in profile section
+      const profileNameDisplay = document.getElementById('profile-name-display');
+      if (profileNameDisplay && profile.first_name) {
+        profileNameDisplay.textContent = `${profile.first_name} ${profile.last_name || ''}`.trim();
+      }
+      
+      // Update medication name throughout dashboard
+      const medicationNameElements = document.querySelectorAll('#medication-name');
+      medicationNameElements.forEach(el => {
+        if (profile.medication) {
+          el.textContent = profile.medication;
+        }
+      });
+      
+      // Update dose information
+      const doseElements = document.querySelectorAll('.dose-display');
+      doseElements.forEach(el => {
+        if (profile.dose) {
+          el.textContent = profile.dose;
+        }
+      });
+      
+      // Update injection day
+      const injectionDayElements = document.querySelectorAll('.injection-day-display');
+      injectionDayElements.forEach(el => {
+        if (profile.injection_day !== null) {
+          const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+          el.textContent = days[profile.injection_day];
+        }
+      });
+      
+      // Update goals
+      if (profile.goals && profile.goals.length > 0) {
+        const goalsElements = document.querySelectorAll('.goals-display');
+        goalsElements.forEach(el => {
+          el.textContent = profile.goals.join(', ');
+        });
+      }
+    }
+    
+    // Function to update symptom displays with API data
+    function updateSymptomDisplays(symptoms) {
+      console.log('📈 Updating symptom displays with:', symptoms);
+      
+      // Update symptom count
+      const symptomCountEl = document.getElementById('totalSymptomLogs');
+      if (symptomCountEl) {
+        symptomCountEl.textContent = `${symptoms.length} symptom log${symptoms.length !== 1 ? 's' : ''}`;
+      }
+      
+      // Update recent symptoms list
+      // This would populate the symptom history section with real data
+    }
+    
+    // Function to update meal plan displays
+    function updateMealPlanDisplays(mealPlan) {
+      console.log('🍽️ Updating meal plan displays with:', mealPlan);
+      
+      // Update meal plan section with user-specific data
+      if (mealPlan && mealPlan.plan_data) {
+        // This would populate the meal planning section with real data
+      }
+    }
+    
+    // Function to update progress displays  
+    function updateProgressDisplays(progress) {
+      console.log('📊 Updating progress displays with:', progress);
+      
+      // Update progress tracking with user-specific data
+      if (progress && progress.length > 0) {
+        // This would populate the progress tracking section with real data
+      }
+    }
+    
+    // Function to update dashboard stats
+    function updateDashboardStats(stats) {
+      console.log('📋 Updating dashboard stats with:', stats);
+      
+      // Update streak counter
+      const streakEl = document.getElementById('currentStreak');
+      if (streakEl && stats.currentStreak !== undefined) {
+        streakEl.textContent = stats.currentStreak;
+      }
+      
+      // Update week progress
+      const weekProgressEl = document.getElementById('weekProgress');
+      if (weekProgressEl && stats.weekProgress !== undefined) {
+        weekProgressEl.textContent = stats.weekProgress;
+      }
+    }
+    
     // Function to update user dropdown with real data
     function updateUserDropdownWithRealData() {
       const userTier = localStorage.getItem('userTier') || 'trial';
@@ -13242,61 +13427,36 @@
       // Update user dropdown with real data
       updateUserDropdownWithRealData();
       
-      // Load and display medication profile from API or localStorage
-      let profileData = null;
-      if (window.appAuth && window.appState.isAuthenticated && window.appState.profile) {
-        // Load from API (already loaded in auth-init.js)
-        profileData = await window.appAuth.loadUserProfile();
+      // Load user-specific dashboard data from API instead of localStorage
+      console.log('🚀 Initializing dashboard with user-specific data...');
+      
+      if (window.appAuth && window.appState.isAuthenticated) {
+        // Load from API for authenticated users
+        const dashboardData = await window.appAuth.loadDashboardDataFromAPI();
+        
+        if (dashboardData) {
+          console.log('✅ Using API data for dashboard');
+          updateDashboardWithAPIData(dashboardData);
+        } else {
+          console.log('⚠️ No API data available, showing blank dashboard');
+          showBlankDashboard();
+        }
       } else {
-        // Fallback to localStorage for non-authenticated users
+        // Fallback to localStorage for non-authenticated users (demo mode)
+        console.log('⚠️ User not authenticated, loading demo data from localStorage');
         const savedProfile = localStorage.getItem('medicationProfile');
         if (savedProfile) {
-          profileData = JSON.parse(savedProfile);
+          const profileData = JSON.parse(savedProfile);
+          updateDashboardWithProfile(profileData);
+          populateFormFields(profileData);
+        } else {
+          showBlankDashboard();
         }
       }
       
-      if (profileData) {
-        
-        // Populate form fields
-        if (document.getElementById('medication-select')) {
-          document.getElementById('medication-select').value = profileData.medication || '';
-        }
-        if (document.getElementById('dose-input')) {
-          document.getElementById('dose-input').value = profileData.dose || '';
-        }
-        if (document.getElementById('frequency-select')) {
-          document.getElementById('frequency-select').value = profileData.frequency || '';
-        }
-        if (document.getElementById('last-injection')) {
-          document.getElementById('last-injection').value = profileData.lastInjection || '';
-        }
-        if (document.getElementById('next-injection')) {
-          document.getElementById('next-injection').value = profileData.nextInjection || '';
-        }
-        if (document.getElementById('injection-day')) {
-          document.getElementById('injection-day').value = profileData.injectionDay || '';
-        }
-        
-        // Update dashboard display with profile data
-        updateDashboardWithProfile(profileData);
-        
-        // Update meal plan with profile data
-        updateMealPlanWithProfile();
-        
-        // Update current week display on meals page
-        updateCurrentWeekDisplay();
-        
-        // Update injection day information throughout the app
-        updateInjectionDayInfo();
-        
-        // Hide setup card if profile is complete
-        if (profileData.setupComplete) {
-          const setupCard = document.getElementById('medication-setup-card');
-          if (setupCard) {
-            setupCard.style.display = 'none';
-          }
-        }
-      }
+      // Additional initialization that applies to all users
+      updateMealIntelligence();
+      updateDashboardMetrics();
       
       // Initialize symptom tracking system
       initializeSymptomData();
@@ -13306,8 +13466,10 @@
       
       // Handle initial hash navigation
       const hash = window.location.hash.substring(1);
-      if (hash) {
+      if (hash && ['home', 'symptoms', 'meals', 'progress', 'settings'].includes(hash)) {
         showView(hash, false);
+      } else {
+        showView('home', false);
       }
       
       // Schedule automatic meal plan regeneration
@@ -13324,17 +13486,49 @@
       
       // Initialize Injection Cycle Analysis with actual user data
       updateInjectionCycleAnalysis();
+    });
+    
+    // Function to populate form fields with profile data
+    function populateFormFields(profileData) {
+      if (!profileData) return;
       
-      // Initialize Symptom-Weight Correlation with actual user data
-      updateSymptomWeightCorrelation();
-      
-      // Set default date for last injection (one week ago)
-      const lastInjectionInput = document.getElementById('last-injection');
-      if (lastInjectionInput && !lastInjectionInput.value) {
-        const weekAgo = new Date();
-        weekAgo.setDate(weekAgo.getDate() - 7);
-        lastInjectionInput.value = weekAgo.toISOString().split('T')[0];
+      // Populate form fields
+      if (document.getElementById('medication-select')) {
+        document.getElementById('medication-select').value = profileData.medication || '';
       }
+      if (document.getElementById('dose-input')) {
+        document.getElementById('dose-input').value = profileData.dose || '';
+      }
+      if (document.getElementById('frequency-select')) {
+        document.getElementById('frequency-select').value = profileData.frequency || '';
+      }
+      if (document.getElementById('last-injection')) {
+        document.getElementById('last-injection').value = profileData.lastInjection || '';
+      }
+      if (document.getElementById('next-injection')) {
+        document.getElementById('next-injection').value = profileData.nextInjection || '';
+      }
+      if (document.getElementById('injection-day')) {
+        document.getElementById('injection-day').value = profileData.injectionDay || '';
+      }
+      
+      // Update meal plan with profile data
+      updateMealPlanWithProfile();
+      
+      // Update current week display on meals page
+      updateCurrentWeekDisplay();
+      
+      // Update injection day information throughout the app
+      updateInjectionDayInfo();
+      
+      // Hide setup card if profile is complete
+      if (profileData.setupComplete) {
+        const setupCard = document.getElementById('medication-setup-card');
+        if (setupCard) {
+          setupCard.style.display = 'none';
+        }
+      }
+    }
       
       // Add click handlers to all navigation links
       document.querySelectorAll('.nav-link').forEach(link => {

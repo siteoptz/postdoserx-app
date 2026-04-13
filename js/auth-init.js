@@ -819,5 +819,44 @@ window.appAuth = {
   loadMealPlan,
   initializeApp,
   legacyAuthFlow,
-  updateDashboardUIWithRealUser
+  updateDashboardUIWithRealUser,
+  loadDashboardDataFromAPI
 };
+
+// Load user-specific dashboard data from Supabase API
+async function loadDashboardDataFromAPI() {
+  console.log('🗄️ Loading dashboard data from API...');
+  
+  const token = localStorage.getItem('auth_token');
+  if (!token) {
+    console.log('❌ No auth token found, cannot load dashboard data');
+    return null;
+  }
+
+  try {
+    const response = await fetch('https://postdoserx.com/api/dashboard/data', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`API request failed: ${response.status}`);
+    }
+
+    const result = await response.json();
+    
+    if (result.success) {
+      console.log('✅ Dashboard data loaded from API:', result.data);
+      return result.data;
+    } else {
+      console.error('❌ API returned error:', result.error);
+      return null;
+    }
+  } catch (error) {
+    console.error('❌ Failed to load dashboard data from API:', error);
+    return null;
+  }
+}
