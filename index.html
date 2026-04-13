@@ -13616,11 +13616,80 @@
       console.log('Navigation system initialized');
     });
     
+    // Immediate navigation setup - run as soon as possible
+    function setupNavigationImmediate() {
+      console.log('🚀 Setting up navigation immediately...');
+      
+      // Wait for DOM to be ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', attachNavigationListeners);
+      } else {
+        // DOM is already ready
+        attachNavigationListeners();
+      }
+    }
+    
+    function attachNavigationListeners() {
+      console.log('🔗 Attaching navigation listeners...');
+      
+      const navLinks = document.querySelectorAll('.nav-link');
+      console.log('🧭 Found nav links:', navLinks.length);
+      
+      navLinks.forEach((link, index) => {
+        const viewId = link.getAttribute('data-view');
+        console.log(`📍 Nav link ${index}: "${viewId}"`);
+        
+        // Remove any existing listeners first
+        link.removeEventListener('click', handleNavClick);
+        
+        // Add new listener
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          console.log('🖱️ Navigation clicked:', viewId);
+          
+          if (viewId) {
+            showView(viewId);
+            
+            // Ensure user profile stays visible after navigation
+            ensureUserProfileVisible();
+            
+            handleNavClick(); // Close mobile sidebar
+            console.log('✅ View switched to:', viewId);
+          } else {
+            console.log('❌ No viewId found');
+          }
+        });
+      });
+      
+      console.log('✅ Navigation listeners attached');
+    }
+    
+    // Call immediately
+    setupNavigationImmediate();
+    
     // Function to update dashboard metrics (placeholder)
     function updateDashboardMetrics() {
       console.log('📊 Updating dashboard metrics');
       // This function can be enhanced to update any dashboard metrics
       // For now it's just a placeholder to prevent errors
+    }
+    
+    // Function to ensure user profile stays visible during navigation
+    function ensureUserProfileVisible() {
+      console.log('👤 Ensuring user profile remains visible');
+      
+      // Check if we have authentication data
+      const hasUser = window.appState?.user || 
+                     localStorage.getItem('authToken') || 
+                     sessionStorage.getItem('authToken');
+      
+      if (hasUser) {
+        // Force user profile to stay visible
+        updateAuthState(true);
+        console.log('✅ User profile visibility ensured');
+      } else {
+        console.log('❌ No user authentication found');
+      }
     }
     
     // Function to populate form fields with profile data
