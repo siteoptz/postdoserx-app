@@ -4,15 +4,35 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2024-06-20',
 });
 
+// CORS headers
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+  'Access-Control-Allow-Credentials': 'true'
+};
+
 export default async function handler(req, res) {
+  // Set CORS headers for all requests
+  Object.entries(corsHeaders).forEach(([key, value]) => {
+    res.setHeader(key, value);
+  });
+
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
+    console.log('📥 Checkout session request received:', req.body);
     const { plan, priceId } = req.body;
 
     if (!plan) {
+      console.error('❌ No plan provided in request');
       return res.status(400).json({ 
         error: 'plan is required' 
       });
@@ -21,7 +41,7 @@ export default async function handler(req, res) {
     // Price ID mapping for PostDoseRX plans
     const priceIdMap = {
       trial: process.env.STRIPE_POSTDOSE_TRIAL_PRICE_ID,
-      premium: process.env.STRIPE_POSTDOSE_PREMIUM_PRICE_ID,
+      premium: process.env.STRIPE_POSTDOSE_PREMIUM_PRICE_ID || 'price_1OaKA1JNKLJfZdYsLNz29mNl', // Fallback for PostDoseRX premium
     };
 
     const resolvedPriceId = priceId || priceIdMap[plan];
@@ -31,6 +51,8 @@ export default async function handler(req, res) {
         error: 'Invalid plan or price not configured' 
       });
     }
+    
+    console.log(`🔍 Using price ID: ${resolvedPriceId} for plan: ${plan}`);
 
     const baseUrl = process.env.NEXTAUTH_URL || 'https://app.postdoserx.com';
 
