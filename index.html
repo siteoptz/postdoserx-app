@@ -13129,23 +13129,25 @@
     
     // Function to update user dropdown with real data
     function updateUserDropdownWithRealData() {
-      const medicationProfile = JSON.parse(localStorage.getItem('medicationProfile') || '{}');
       const userTier = localStorage.getItem('userTier') || 'trial';
+      
+      // Get real user data from Google authentication (stored in window.appState)
+      const realUser = window.appState?.user || {};
+      const userName = realUser.name || realUser.email || 'User';
+      const userEmail = realUser.email || 'user@example.com';
+      
+      console.log('Updating dropdown with real user data:', { userName, userEmail, userTier });
       
       // Update user name
       const nameElement = document.getElementById('dropdown-user-name');
-      if (nameElement && medicationProfile.name) {
-        nameElement.textContent = medicationProfile.name;
-      } else if (nameElement) {
-        nameElement.textContent = 'User';
+      if (nameElement) {
+        nameElement.textContent = userName;
       }
       
       // Update user email
       const emailElement = document.getElementById('dropdown-user-email');
-      if (emailElement && medicationProfile.email) {
-        emailElement.textContent = medicationProfile.email;
-      } else if (emailElement) {
-        emailElement.textContent = 'user@postdoserx.com';
+      if (emailElement) {
+        emailElement.textContent = userEmail;
       }
       
       // Update user tier
@@ -13165,8 +13167,8 @@
       updateMealLogDropdown();
       
       console.log('User dropdown updated with real data:', {
-        name: medicationProfile.name || 'User',
-        email: medicationProfile.email || 'user@postdoserx.com',
+        name: userName,
+        email: userEmail,
         tier: userTier
       });
     }
