@@ -8133,27 +8133,27 @@
           <div class="profile-grid">
             <div class="profile-item">
               <label>Name:</label>
-              <span id="profile-name-display">Your Name</span>
+              <span id="profile-name-display">Not set</span>
             </div>
             <div class="profile-item">
               <label>Medication:</label>
-              <span id="profile-medication-display">Ozempic (Semaglutide)</span>
+              <span id="profile-medication-display">Not set</span>
             </div>
             <div class="profile-item">
               <label>Current Dose:</label>
-              <span id="profile-dose-display">1.0 mg weekly</span>
+              <span id="profile-dose-display">Not set</span>
             </div>
             <div class="profile-item">
               <label>Injection Day:</label>
-              <span id="profile-injection-day-display">Sundays</span>
+              <span id="profile-injection-day-display">Not set</span>
             </div>
             <div class="profile-item">
               <label>Last Injection:</label>
-              <span id="profile-last-injection">Sunday, Mar 10, 2024</span>
+              <span id="profile-last-injection">Not set</span>
             </div>
             <div class="profile-item">
               <label>Next Injection:</label>
-              <span id="profile-next-injection" class="highlight">Sunday, Mar 17, 2024</span>
+              <span id="profile-next-injection" class="highlight">Not set</span>
             </div>
             <div class="profile-item">
               <label>Time on Medication:</label>
@@ -13014,10 +13014,13 @@
         link.classList.remove('active');
       });
       
-      // Add active class to current nav link
-      const activeLink = document.querySelector(`[onclick*="showView('${activeViewId}')"]`);
+      // Add active class to current nav link using data-view attribute
+      const activeLink = document.querySelector(`[data-view="${activeViewId}"]`);
       if (activeLink) {
         activeLink.classList.add('active');
+        console.log('✅ Updated navigation highlight for:', activeViewId);
+      } else {
+        console.log('⚠️ Could not find nav link for:', activeViewId);
       }
     }
     
@@ -13227,6 +13230,25 @@
         profileNameDisplay.textContent = `${profile.first_name} ${profile.last_name || ''}`.trim();
       }
       
+      // Update medication display in profile dropdown
+      const profileMedicationDisplay = document.getElementById('profile-medication-display');
+      if (profileMedicationDisplay && profile.medication) {
+        profileMedicationDisplay.textContent = profile.medication;
+      }
+      
+      // Update dose display in profile dropdown
+      const profileDoseDisplay = document.getElementById('profile-dose-display');
+      if (profileDoseDisplay && profile.dose) {
+        profileDoseDisplay.textContent = `${profile.dose} weekly`;
+      }
+      
+      // Update injection day display in profile dropdown
+      const profileInjectionDayDisplay = document.getElementById('profile-injection-day-display');
+      if (profileInjectionDayDisplay && profile.injection_day !== null) {
+        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        profileInjectionDayDisplay.textContent = `${days[profile.injection_day]}s`;
+      }
+      
       // Update medication name throughout dashboard
       const medicationNameElements = document.querySelectorAll('#medication-name');
       medicationNameElements.forEach(el => {
@@ -13258,6 +13280,40 @@
         goalsElements.forEach(el => {
           el.textContent = profile.goals.join(', ');
         });
+      }
+    }
+    
+    // Function to update subscription information based on user tier
+    function updateSubscriptionDisplay(user) {
+      console.log('🔄 Updating subscription display for user:', user);
+      
+      const tierElement = document.getElementById('subscription-tier');
+      const priceElement = document.getElementById('subscription-price');
+      const nextElement = document.getElementById('subscription-next');
+      
+      if (user && user.tier) {
+        if (user.tier === 'trial') {
+          if (tierElement) tierElement.textContent = 'Trial Plan';
+          if (priceElement) priceElement.textContent = 'Free for 7 days';
+          if (nextElement) nextElement.textContent = 'Trial expires in 7 days';
+        } else if (user.tier === 'premium') {
+          if (tierElement) tierElement.textContent = 'Premium Plan';
+          if (priceElement) priceElement.textContent = '$19.99/month';
+          // Calculate next billing date (30 days from now)
+          const nextBilling = new Date();
+          nextBilling.setDate(nextBilling.getDate() + 30);
+          const formattedDate = nextBilling.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+          });
+          if (nextElement) nextElement.textContent = `Next billing: ${formattedDate}`;
+        }
+      } else {
+        // Default to trial if no user data
+        if (tierElement) tierElement.textContent = 'Trial Plan';
+        if (priceElement) priceElement.textContent = 'Free for 7 days';
+        if (nextElement) nextElement.textContent = 'Trial expires in 7 days';
       }
     }
     
@@ -16890,6 +16946,12 @@ For clinical review and treatment optimization.`;
         </div>
       `);
       
+      // Increase z-index for cancel confirmation modal to appear above manage subscription modal
+      const modalOverlay = document.querySelector('.modal-overlay');
+      if (modalOverlay) {
+        modalOverlay.style.zIndex = '10001';
+      }
+      
       // Initialize Lucide icons for the modal
       setTimeout(() => {
         if (typeof lucide !== 'undefined' && lucide.createIcons) {
@@ -18032,9 +18094,9 @@ For clinical review and treatment optimization.`;
         <div class="billing-info">
           <div class="subscription-status">
             <h4>Current Subscription</h4>
-            <div class="subscription-tier">Premium Plan</div>
-            <div class="subscription-price">$19.99/month</div>
-            <div class="subscription-next">Next billing: March 25, 2024</div>
+            <div class="subscription-tier" id="subscription-tier">Trial Plan</div>
+            <div class="subscription-price" id="subscription-price">Free for 7 days</div>
+            <div class="subscription-next" id="subscription-next">Trial expires in 7 days</div>
           </div>
           <div class="billing-options">
             <button class="button-professional" onclick="openStripeBillingPortal()">

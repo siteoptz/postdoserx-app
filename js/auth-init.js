@@ -802,6 +802,11 @@ function updateDashboardUIWithRealUser(user) {
     console.log('⚠️ User avatar element not found');
   }
   
+  // Update subscription information based on user tier
+  if (typeof updateSubscriptionDisplay === 'function') {
+    updateSubscriptionDisplay(user);
+  }
+  
   console.log('✅ Dashboard UI update completed');
 }
 
