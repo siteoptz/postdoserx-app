@@ -10997,8 +10997,8 @@
     // Stripe billing integration
     async function openStripeBillingPortal() {
       try {
-        // Get user's authentication token
-        const token = localStorage.getItem('authToken');
+        // Get user's authentication token (check both possible keys)
+        const token = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
         if (!token) {
           alert('Please log in to manage your subscription');
           return;
@@ -11032,7 +11032,7 @@
       }
 
       try {
-        const token = localStorage.getItem('authToken');
+        const token = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
         if (!token) {
           alert('Please log in to cancel your subscription');
           return;
@@ -13542,6 +13542,70 @@
       }
     }
 
+    // Function to check authentication on page load
+    async function checkAuthenticationOnLoad() {
+      console.log('🔍 Checking authentication on page load...');
+      
+      // Check for tokens using both possible keys (fix for auth inconsistency)
+      const authToken = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
+      
+      if (authToken) {
+        console.log('🔐 Found authentication token, verifying...');
+        
+        // Normalize token storage
+        if (!localStorage.getItem('authToken')) {
+          localStorage.setItem('authToken', authToken);
+          console.log('🔧 Normalized auth_token to authToken');
+        }
+        
+        // Restore user state backup if available (for post-upgrade returns)
+        if (!window.appState?.user) {
+          const userBackup = localStorage.getItem('userStateBackup');
+          if (userBackup) {
+            try {
+              window.appState = window.appState || {};
+              window.appState.user = JSON.parse(userBackup);
+              console.log('🔄 Restored user state from backup');
+            } catch (error) {
+              console.error('❌ Failed to restore user state backup:', error);
+              localStorage.removeItem('userStateBackup');
+            }
+          }
+        }
+        
+        // Try to verify token and load user data
+        try {
+          if (window.appAuth && typeof window.appAuth.loadDashboardDataFromAPI === 'function') {
+            const dashboardData = await window.appAuth.loadDashboardDataFromAPI();
+            
+            if (dashboardData) {
+              console.log('✅ Authentication verified, loading user data');
+              updateDashboardWithAPIData(dashboardData);
+              updateAuthState(true);
+              return true;
+            }
+          }
+          
+          // If auth-init functions aren't available, force authentication state
+          console.log('⚡ Auth functions not loaded, setting authenticated state manually');
+          window.appState = window.appState || {};
+          window.appState.isAuthenticated = true;
+          updateAuthState(true);
+          return true;
+          
+        } catch (error) {
+          console.error('❌ Authentication verification failed:', error);
+          // Clear invalid tokens
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('auth_token');
+        }
+      }
+      
+      console.log('❌ No valid authentication found');
+      updateAuthState(false);
+      return false;
+    }
+    
     // Initialize everything on page load
     document.addEventListener('DOMContentLoaded', async function() {
       // Initialize form handlers for modals
@@ -13554,7 +13618,10 @@
       // Load user-specific dashboard data from API instead of localStorage
       console.log('🚀 Initializing dashboard with user-specific data...');
       
-      if (window.appAuth && window.appState.isAuthenticated) {
+      // Check authentication state first
+      const isAuthenticated = await checkAuthenticationOnLoad();
+      
+      if (isAuthenticated && window.appAuth && window.appState?.isAuthenticated) {
         // Load from API for authenticated users
         const dashboardData = await window.appAuth.loadDashboardDataFromAPI();
         
@@ -13565,6 +13632,9 @@
           console.log('⚠️ No API data available, showing blank dashboard');
           showBlankDashboard();
         }
+      } else if (isAuthenticated) {
+        console.log('✅ User authenticated, showing blank dashboard until data loads');
+        showBlankDashboard();
       } else {
         // Fallback to localStorage for non-authenticated users (demo mode)
         console.log('⚠️ User not authenticated, loading demo data from localStorage');
@@ -13706,10 +13776,16 @@
       // Force dark theme on every navigation
       initializeTheme();
       
-      // Check if we have authentication data
-      const hasUser = window.appState?.user || 
-                     localStorage.getItem('authToken') || 
-                     sessionStorage.getItem('authToken');
+      // Check for authentication data using both token keys (fix for auth inconsistency)
+      const authToken = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
+      const sessionToken = sessionStorage.getItem('authToken') || sessionStorage.getItem('auth_token');
+      const hasUser = window.appState?.user || authToken || sessionToken;
+      
+      // Normalize token storage - ensure both keys have the same value
+      if (authToken && !localStorage.getItem('authToken')) {
+        localStorage.setItem('authToken', authToken);
+        console.log('🔧 Normalized auth_token to authToken');
+      }
       
       if (hasUser) {
         // Force user profile to stay visible
@@ -17199,6 +17275,25 @@ For clinical review and treatment optimization.`;
     });
 
     function redirectToUpgrade() {
+      console.log('🔄 Redirecting to upgrade - preserving authentication state');
+      
+      // Ensure authentication token is preserved in both formats
+      const authToken = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
+      if (authToken) {
+        // Store in both formats to ensure compatibility
+        localStorage.setItem('authToken', authToken);
+        localStorage.setItem('auth_token', authToken);
+        
+        // Also preserve user state data if available
+        if (window.appState?.user) {
+          localStorage.setItem('userStateBackup', JSON.stringify(window.appState.user));
+        }
+        
+        console.log('🔐 Authentication state preserved for upgrade flow');
+      } else {
+        console.warn('⚠️ No authentication token found before upgrade redirect');
+      }
+      
       // Redirect to Stripe checkout for premium subscription
       window.location.href = 'https://buy.stripe.com/28E14mbhQ9xj4g5e5Z63K02';
     }
@@ -24931,6 +25026,31 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
       }
     });
 
+    // Handle back button and page visibility changes to maintain authentication
+    function handleBackButtonAuth() {
+      console.log('🔄 Handling navigation/visibility change - checking auth state');
+      
+      // Check for authentication tokens
+      const authToken = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
+      
+      if (authToken) {
+        // Force authentication state if we have tokens
+        window.appState = window.appState || {};
+        window.appState.isAuthenticated = true;
+        updateAuthState(true);
+        console.log('✅ Authentication state restored on navigation');
+      }
+    }
+    
+    // Listen for browser back/forward navigation and page visibility
+    window.addEventListener('pageshow', handleBackButtonAuth);
+    window.addEventListener('focus', handleBackButtonAuth);
+    document.addEventListener('visibilitychange', function() {
+      if (!document.hidden) {
+        handleBackButtonAuth();
+      }
+    });
+    
     // Update auth state on initialization
     document.addEventListener('DOMContentLoaded', function() {
       // For demo mode, always show user profile and hide auth buttons
@@ -24940,6 +25060,9 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
         
         // If we have a user (including demo), show profile UI
         updateAuthState(hasUser || isDemo);
+        
+        // Also run back button auth check
+        handleBackButtonAuth();
       }, 100);
     });
   </script>
