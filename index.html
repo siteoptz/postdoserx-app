@@ -13615,6 +13615,21 @@
       // Update user dropdown with real data
       updateUserDropdownWithRealData();
       
+      // Check if user returned from canceled upgrade
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('upgrade_canceled')) {
+        console.log('🔄 User returned from canceled upgrade - ensuring authentication state');
+        // Clean URL and ensure authentication state
+        window.history.replaceState({}, document.title, window.location.pathname);
+        
+        // Force authentication check
+        const authToken = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
+        if (authToken) {
+          updateAuthState(true);
+          console.log('✅ Authentication state restored after canceled upgrade');
+        }
+      }
+      
       // Load user-specific dashboard data from API instead of localStorage
       console.log('🚀 Initializing dashboard with user-specific data...');
       
@@ -17274,8 +17289,8 @@ For clinical review and treatment optimization.`;
       initializeTheme();
     });
 
-    function redirectToUpgrade() {
-      console.log('🔄 Redirecting to upgrade - preserving authentication state');
+    async function redirectToUpgrade() {
+      console.log('🔄 Starting upgrade flow - creating Stripe checkout session');
       
       // Ensure authentication token is preserved in both formats
       const authToken = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
@@ -17294,8 +17309,38 @@ For clinical review and treatment optimization.`;
         console.warn('⚠️ No authentication token found before upgrade redirect');
       }
       
-      // Redirect to Stripe checkout for premium subscription
-      window.location.href = 'https://buy.stripe.com/28E14mbhQ9xj4g5e5Z63K02';
+      try {
+        // Call our own checkout API instead of using hardcoded Stripe link
+        console.log('📞 Calling checkout session API...');
+        const response = await fetch('/api/stripe/create-checkout-session', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            plan: 'premium'
+          })
+        });
+        
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to create checkout session');
+        }
+        
+        const data = await response.json();
+        
+        if (data.url) {
+          console.log('✅ Checkout session created, redirecting to:', data.url);
+          // This will use our configured success/cancel URLs that properly handle auth
+          window.location.href = data.url;
+        } else {
+          throw new Error('No checkout URL returned');
+        }
+        
+      } catch (error) {
+        console.error('❌ Failed to create checkout session:', error);
+        alert('Failed to start upgrade process. Please try again.');
+      }
     }
 
     // Comprehensive Modal Functions for Symptoms Page Buttons

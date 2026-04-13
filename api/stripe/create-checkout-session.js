@@ -32,7 +32,7 @@ export default async function handler(req, res) {
       });
     }
 
-    const baseUrl = process.env.NEXTAUTH_URL || 'https://postdoserx.com';
+    const baseUrl = process.env.NEXTAUTH_URL || 'https://app.postdoserx.com';
 
     console.log(`🛒 Creating Stripe checkout session for plan: ${plan}`);
 
@@ -43,7 +43,7 @@ export default async function handler(req, res) {
         quantity: 1 
       }],
       success_url: `${baseUrl}/after-checkout.html?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${baseUrl}/?canceled=1`,
+      cancel_url: `${baseUrl}/?upgrade_canceled=1`,
       metadata: { 
         plan, 
         source: 'postdoserx' 
