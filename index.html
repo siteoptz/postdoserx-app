@@ -13134,9 +13134,13 @@
     function updateDashboardWithAPIData(data) {
       console.log('📊 Updating dashboard with API data:', data);
       
-      // Update with user profile data
+      // Always handle profile data - updateDashboardWithProfile handles both existing data and new user cases
       if (data.profile) {
+        console.log('👤 User has profile data:', data.profile);
         updateDashboardWithProfile(data.profile);
+      } else {
+        console.log('👤 User has no profile yet - showing setup prompts');
+        updateDashboardWithProfile({}); // Empty profile object - function handles this case
       }
       
       // Update symptoms data
@@ -13218,35 +13222,74 @@
     
     // Function to update dashboard with user profile data
     function updateDashboardWithProfile(profile) {
-      console.log('updateDashboardWithProfile called with:', profile);
-      
-      // Skip updating user name in header - this should only be updated by Google auth data
-      // The user's personal name comes from Google authentication, not medication profile
-      console.log('Skipping user name update in header - using Google auth name instead');
+      console.log('📝 Updating dashboard with profile data:', profile);
       
       // Update user name in profile section
       const profileNameDisplay = document.getElementById('profile-name-display');
-      if (profileNameDisplay && profile.first_name) {
-        profileNameDisplay.textContent = `${profile.first_name} ${profile.last_name || ''}`.trim();
+      if (profileNameDisplay) {
+        if (profile.first_name || profile.last_name) {
+          profileNameDisplay.textContent = `${profile.first_name || ''} ${profile.last_name || ''}`.trim();
+        } else {
+          profileNameDisplay.textContent = 'Complete your profile to get started';
+        }
       }
       
       // Update medication display in profile dropdown
       const profileMedicationDisplay = document.getElementById('profile-medication-display');
-      if (profileMedicationDisplay && profile.medication) {
-        profileMedicationDisplay.textContent = profile.medication;
+      if (profileMedicationDisplay) {
+        if (profile.medication) {
+          profileMedicationDisplay.textContent = profile.medication;
+          console.log('💊 Updated medication to:', profile.medication);
+        } else {
+          profileMedicationDisplay.textContent = 'No medication set';
+        }
       }
       
       // Update dose display in profile dropdown
       const profileDoseDisplay = document.getElementById('profile-dose-display');
-      if (profileDoseDisplay && profile.dose) {
-        profileDoseDisplay.textContent = `${profile.dose} weekly`;
+      if (profileDoseDisplay) {
+        if (profile.dose) {
+          profileDoseDisplay.textContent = `${profile.dose} weekly`;
+          console.log('📏 Updated dose to:', profile.dose);
+        } else {
+          profileDoseDisplay.textContent = 'No dose set';
+        }
       }
       
       // Update injection day display in profile dropdown
       const profileInjectionDayDisplay = document.getElementById('profile-injection-day-display');
-      if (profileInjectionDayDisplay && profile.injection_day !== null) {
-        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        profileInjectionDayDisplay.textContent = `${days[profile.injection_day]}s`;
+      if (profileInjectionDayDisplay) {
+        if (profile.injection_day !== null && profile.injection_day !== undefined) {
+          const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+          profileInjectionDayDisplay.textContent = `${days[profile.injection_day]}s`;
+          console.log('📅 Updated injection day to:', days[profile.injection_day]);
+        } else {
+          profileInjectionDayDisplay.textContent = 'No injection day set';
+        }
+      }
+      
+      // Update last injection display
+      const profileLastInjection = document.getElementById('profile-last-injection');
+      if (profileLastInjection) {
+        // This would need to come from injection logs, not profile
+        profileLastInjection.textContent = 'No injection logged';
+      }
+      
+      // Update next injection display  
+      const profileNextInjection = document.getElementById('profile-next-injection');
+      if (profileNextInjection) {
+        if (profile.injection_day !== null && profile.injection_day !== undefined) {
+          // Calculate next injection based on injection day
+          const today = new Date();
+          const currentDay = today.getDay();
+          const daysUntilNext = (profile.injection_day - currentDay + 7) % 7 || 7;
+          const nextDate = new Date(today);
+          nextDate.setDate(today.getDate() + daysUntilNext);
+          profileNextInjection.textContent = nextDate.toLocaleDateString();
+          console.log('⏭️ Updated next injection to:', nextDate.toLocaleDateString());
+        } else {
+          profileNextInjection.textContent = 'Complete setup first';
+        }
       }
       
       // Update medication name throughout dashboard
@@ -13544,17 +13587,28 @@
       updateInjectionCycleAnalysis();
       
       // Add click handlers to all navigation links
-      document.querySelectorAll('.nav-link').forEach(link => {
+      const navLinks = document.querySelectorAll('.nav-link');
+      console.log('🧭 Found navigation links:', navLinks.length);
+      
+      navLinks.forEach((link, index) => {
+        const viewId = link.getAttribute('data-view');
+        console.log(`🔗 Nav link ${index}: data-view="${viewId}"`);
+        
         link.addEventListener('click', function(e) {
           e.preventDefault();
-          const viewId = this.getAttribute('data-view');
+          console.log('🖱️ Navigation clicked:', viewId);
+          
           if (viewId) {
+            console.log('📍 Calling showView with:', viewId);
             showView(viewId);
             handleNavClick(); // Close mobile sidebar on navigation
-            console.log('Navigation clicked:', viewId);
+          } else {
+            console.log('❌ No viewId found for navigation link');
           }
         });
       });
+      
+      console.log('✅ Navigation event listeners attached');
       
       // Add outside click listener for user dropdown
       document.addEventListener('click', closeDropdownOnOutsideClick);
@@ -17030,17 +17084,9 @@ For clinical review and treatment optimization.`;
     }
     
     function initializeTheme() {
-      // Check for saved theme preference or default to dark
-      const savedTheme = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      
-      if (savedTheme === 'light' || (!savedTheme && !prefersDark)) {
-        document.body.classList.add('light-theme');
-        // Apply blue to magenta conversions after DOM is fully loaded
-        setTimeout(() => {
-          convertBlueToMagenta();
-        }, 100);
-      }
+      // Always use dark theme - remove any light theme classes
+      document.body.classList.remove('light-theme');
+      console.log('🌙 Dark theme initialized');
     }
     
     // Initialize theme on page load
