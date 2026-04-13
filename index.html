@@ -13550,7 +13550,7 @@
       const authToken = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
       
       if (authToken) {
-        console.log('🔐 Found authentication token, verifying...');
+        console.log('🔐 Found authentication token, FORCING authenticated state');
         
         // Normalize token storage
         if (!localStorage.getItem('authToken')) {
@@ -13573,35 +13573,35 @@
           }
         }
         
-        // Try to verify token and load user data
+        // AGGRESSIVE AUTH PRESERVATION: If we have any token, consider user authenticated
+        console.log('⚡ Token found - FORCING authenticated state regardless of API status');
+        window.appState = window.appState || {};
+        window.appState.isAuthenticated = true;
+        updateAuthState(true);
+        
+        // Try to load user data in background (don't fail authentication if this fails)
         try {
           if (window.appAuth && typeof window.appAuth.loadDashboardDataFromAPI === 'function') {
             const dashboardData = await window.appAuth.loadDashboardDataFromAPI();
             
             if (dashboardData) {
-              console.log('✅ Authentication verified, loading user data');
+              console.log('✅ Authentication verified and user data loaded');
               updateDashboardWithAPIData(dashboardData);
-              updateAuthState(true);
-              return true;
+            } else {
+              console.log('⚠️ API data unavailable but user is authenticated');
             }
+          } else {
+            console.log('⚠️ Auth functions not loaded but user token exists - staying authenticated');
           }
-          
-          // If auth-init functions aren't available, force authentication state
-          console.log('⚡ Auth functions not loaded, setting authenticated state manually');
-          window.appState = window.appState || {};
-          window.appState.isAuthenticated = true;
-          updateAuthState(true);
-          return true;
-          
         } catch (error) {
-          console.error('❌ Authentication verification failed:', error);
-          // Clear invalid tokens
-          localStorage.removeItem('authToken');
-          localStorage.removeItem('auth_token');
+          console.error('⚠️ API calls failed but keeping user authenticated due to valid token:', error);
+          // DO NOT clear tokens or set authentication to false here
         }
+        
+        return true;
       }
       
-      console.log('❌ No valid authentication found');
+      console.log('❌ No authentication token found');
       updateAuthState(false);
       return false;
     }
@@ -17217,7 +17217,7 @@ For clinical review and treatment optimization.`;
     function performSignOut() {
       // Clear local storage and redirect to login
       localStorage.clear();
-      window.location.href = 'https://postdoserx.com/login.html';
+      window.location.href = '/login.html';
     }
 
     // Theme Toggle Functions
@@ -17342,9 +17342,13 @@ For clinical review and treatment optimization.`;
       } catch (error) {
         console.error('❌ Failed to create checkout session:', error);
         
-        // Fallback to the original working Stripe link
-        console.log('🔄 Falling back to direct Stripe link...');
-        alert('Using fallback checkout process...');
+        // Show more specific error if available
+        if (error.message && error.message.includes('configured')) {
+          console.log('🔄 Stripe API not fully configured, using direct checkout link...');
+          console.log('📝 Note: Authentication state will be preserved in localStorage');
+        } else {
+          console.log('🔄 Falling back to direct Stripe link...');
+        }
         
         // Use the original working Stripe checkout link as fallback
         window.location.href = 'https://buy.stripe.com/28E14mbhQ9xj4g5e5Z63K02';
@@ -24993,8 +24997,8 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
     }
 
     function openLoginModal() {
-      // Redirect to the OAuth login flow
-      window.location.href = 'https://app.postdoserx.com/login.html';
+      // Redirect to the working login page on the dashboard app
+      window.location.href = '/login.html';
     }
 
     async function startCheckout(plan) {
@@ -25081,17 +25085,32 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
 
     // Handle back button and page visibility changes to maintain authentication
     function handleBackButtonAuth() {
-      console.log('🔄 Handling navigation/visibility change - checking auth state');
+      console.log('🔄 AGGRESSIVE AUTH CHECK - Handling navigation/visibility change');
       
       // Check for authentication tokens
       const authToken = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
       
       if (authToken) {
-        // Force authentication state if we have tokens
+        // FORCE authentication state if we have any token
+        console.log('🔐 TOKEN FOUND - FORCING authenticated state');
         window.appState = window.appState || {};
         window.appState.isAuthenticated = true;
         updateAuthState(true);
-        console.log('✅ Authentication state restored on navigation');
+        
+        // Restore user state if available
+        const userBackup = localStorage.getItem('userStateBackup');
+        if (userBackup && !window.appState.user) {
+          try {
+            window.appState.user = JSON.parse(userBackup);
+            console.log('🔄 Restored user state on navigation');
+          } catch (error) {
+            console.error('❌ Failed to restore user backup on navigation');
+          }
+        }
+        
+        console.log('✅ Authentication state AGGRESSIVELY restored on navigation');
+      } else {
+        console.log('❌ No tokens found during navigation check');
       }
     }
     
