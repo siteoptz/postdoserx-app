@@ -531,9 +531,35 @@ document.addEventListener('DOMContentLoaded', async function() {
       const isAuthenticated = await initializeDashboardAuth();
       
       if (isAuthenticated) {
+        // CRITICAL: First, try to get user data from URL params (fresh from login)
+        const urlParams = new URLSearchParams(window.location.search);
+        const emailFromURL = urlParams.get('email');
+        const nameFromURL = urlParams.get('name');
+        const tierFromURL = urlParams.get('tier');
+        const userIdFromURL = urlParams.get('userId');
+        
+        console.log('🔍 URL parameters detected:', { 
+          email: emailFromURL, 
+          name: nameFromURL, 
+          tier: tierFromURL,
+          userId: userIdFromURL 
+        });
+        
         // Get user data from dashboard auth system
         const user = getCurrentUser();
-        window.appState.user = user;
+        console.log('🔍 User from getCurrentUser():', user);
+        
+        // Use URL params if available (fresh login), otherwise use stored data
+        const realUser = {
+          id: userIdFromURL || user?.id,
+          email: emailFromURL || user?.email,
+          name: nameFromURL || user?.name,
+          tier: tierFromURL || user?.tier || 'trial'
+        };
+        
+        console.log('🎯 Final real user data:', realUser);
+        
+        window.appState.user = realUser;
         window.appState.isAuthenticated = true;
         
         // CRITICAL: Set the JWT token in the API client for Supabase calls
@@ -544,7 +570,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
         
         // Update dashboard UI with real user information
-        updateDashboardUIWithRealUser(user);
+        updateDashboardUIWithRealUser(realUser);
         
         console.log('✅ Dashboard auth completed, loading real user data from Supabase');
         await initializeApp();
@@ -580,10 +606,14 @@ async function legacyAuthFlow() {
   // Handle tokens from URL (OAuth redirect) to prevent loops
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get('token');
-  const userId = urlParams.get('user_id');
+  const userId = urlParams.get('userId') || urlParams.get('user_id'); 
+  const emailFromURL = urlParams.get('email');
+  const nameFromURL = urlParams.get('name');
+  const tierFromURL = urlParams.get('tier');
   
-  if (token && userId) {
+  if (token && (userId || emailFromURL)) {
     console.log('🔍 FOUND TOKENS IN URL - token:', token.substring(0, 20) + '...', 'userId:', userId);
+    console.log('🔍 FOUND USER DATA IN URL:', { email: emailFromURL, name: nameFromURL, tier: tierFromURL });
     
     try {
       // Store tokens and clean URL
@@ -607,8 +637,18 @@ async function legacyAuthFlow() {
       if (response.ok) {
         const userData = await response.json();
         if (userData.success && userData.user) {
+          // Use URL params for fresh data, fallback to API response
+          const realUser = {
+            id: userId || userData.user.id,
+            email: emailFromURL || userData.user.email,
+            name: nameFromURL || userData.user.name,
+            tier: tierFromURL || userData.user.tier
+          };
+          
+          console.log('✅ Real user data from URL + API:', realUser);
+          
           // Set up authenticated user state with real data
-          window.appState.user = userData.user;
+          window.appState.user = realUser;
           window.appState.profile = userData.profile || {
             medication: null,
             dose_amount: null,
@@ -617,7 +657,10 @@ async function legacyAuthFlow() {
           };
           window.appState.isAuthenticated = true;
           
-          console.log('✅ Token verified, user authenticated:', userData.user.email);
+          // Update UI with real user info immediately
+          updateDashboardUIWithRealUser(realUser);
+          
+          console.log('✅ Token verified, user authenticated:', realUser.email);
           
           // Initialize app
           console.log('🚀 Calling initializeApp...');
@@ -685,7 +728,24 @@ window.addEventListener('dashboardAuthReady', (event) => {
 function updateDashboardUIWithRealUser(user) {
   console.log('🎨 Updating dashboard UI with real user data:', user);
   
-  if (!user) return;
+  if (!user) {
+    console.log('❌ No user data provided to updateDashboardUIWithRealUser');
+    return;
+  }
+  
+  // Ensure we have at least email
+  if (!user.email) {
+    console.log('❌ No email in user data, cannot update UI');
+    return;
+  }
+  
+  console.log('🔍 User data breakdown:', {
+    email: user.email,
+    name: user.name,
+    tier: user.tier,
+    hasEmail: !!user.email,
+    hasName: !!user.name
+  });
   
   // Update user name displays
   const userNameElements = ['user-name', 'dropdown-user-name', 'dashboard-title'];
@@ -696,9 +756,14 @@ function updateDashboardUIWithRealUser(user) {
         // Update welcome message with real name
         const firstName = user.name ? user.name.split(' ')[0] : user.email.split('@')[0];
         element.innerHTML = `Welcome <span id="user-name">${firstName}</span>, here's your personalized <span id="medication-name">Wegovy</span> journey dashboard`;
+        console.log('✅ Updated dashboard title with name:', firstName);
       } else {
-        element.textContent = user.name || user.email.split('@')[0];
+        const displayName = user.name || user.email.split('@')[0];
+        element.textContent = displayName;
+        console.log(`✅ Updated ${id} with name:`, displayName);
       }
+    } else {
+      console.log(`⚠️ Element ${id} not found`);
     }
   });
   
@@ -708,6 +773,9 @@ function updateDashboardUIWithRealUser(user) {
     const element = document.getElementById(id);
     if (element) {
       element.textContent = user.email;
+      console.log(`✅ Updated ${id} with email:`, user.email);
+    } else {
+      console.log(`⚠️ Element ${id} not found`);
     }
   });
   
@@ -718,16 +786,23 @@ function updateDashboardUIWithRealUser(user) {
     if (element) {
       const tierText = user.tier === 'premium' ? 'Premium Account' : 'Trial Account';
       element.textContent = tierText;
+      console.log(`✅ Updated ${id} with tier:`, tierText);
+    } else {
+      console.log(`⚠️ Element ${id} not found`);
     }
   });
   
   // Update user avatar with real initial
   const userAvatar = document.getElementById('user-avatar');
-  if (userAvatar && user.name) {
-    userAvatar.textContent = user.name.charAt(0).toUpperCase();
+  if (userAvatar) {
+    const initial = user.name ? user.name.charAt(0).toUpperCase() : user.email.charAt(0).toUpperCase();
+    userAvatar.textContent = initial;
+    console.log('✅ Updated user avatar with initial:', initial);
+  } else {
+    console.log('⚠️ User avatar element not found');
   }
   
-  console.log('✅ Dashboard UI updated with real user information');
+  console.log('✅ Dashboard UI update completed');
 }
 
 // Export functions for global access
