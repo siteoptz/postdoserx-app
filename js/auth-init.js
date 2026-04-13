@@ -136,24 +136,30 @@ async function loadUserProfile() {
   };
 }
 
-// Save user profile to API instead of localStorage
+// Save user profile to Supabase API instead of localStorage
 async function saveUserProfile(profileData) {
   try {
+    console.log('💾 Saving user profile to Supabase API:', profileData);
+    
     const apiProfileData = {
       medication: profileData.medication,
       dose_amount: profileData.dose,
       injection_day: profileData.injectionDay,
-      preferences: profileData.preferences || {}
+      preferences: profileData.preferences || {},
+      first_name: profileData.firstName || window.appState.user?.name?.split(' ')[0],
+      last_name: profileData.lastName || window.appState.user?.name?.split(' ')[1]
     };
     
     const response = await window.postDoseRXAPI.updateUserProfile(apiProfileData);
-    if (response.success) {
-      window.appState.profile = response.profile;
+    if (response && response.success) {
+      window.appState.profile = response.data?.profile || response.profile;
+      console.log('✅ Profile saved to Supabase successfully');
       return true;
     }
+    console.log('❌ Failed to save profile to Supabase');
     return false;
   } catch (error) {
-    console.error('Error saving profile:', error);
+    console.error('❌ Error saving profile to Supabase:', error);
     return false;
   }
 }
@@ -173,6 +179,82 @@ async function loadSymptomData() {
     return {};
   } catch (error) {
     console.error('Error loading symptoms:', error);
+    return {};
+  }
+}
+
+// Load symptom data from Supabase API (real data)
+async function loadSymptomDataFromAPI() {
+  try {
+    console.log('🔄 Loading symptoms from Supabase API...');
+    const response = await window.postDoseRXAPI.getSymptoms();
+    if (response && response.success) {
+      // Convert API format to the format expected by existing code
+      const symptomsData = {};
+      if (response.symptoms && Array.isArray(response.symptoms)) {
+        response.symptoms.forEach(symptom => {
+          symptomsData[symptom.log_date] = symptom.symptoms;
+        });
+      }
+      console.log('✅ Loaded symptoms from API:', Object.keys(symptomsData).length + ' entries');
+      return symptomsData;
+    }
+    console.log('⚠️ No symptoms found or API call failed, returning empty');
+    return {};
+  } catch (error) {
+    console.error('❌ Error loading symptoms from API:', error);
+    return {};
+  }
+}
+
+// Load progress data from Supabase API (real data)  
+async function loadProgressDataFromAPI() {
+  try {
+    console.log('🔄 Loading progress data from Supabase API...');
+    const response = await window.postDoseRXAPI.getProgress();
+    if (response && response.success) {
+      // Convert API format to existing code format
+      const progressData = {
+        weightLogs: response.data?.logs?.map(log => ({
+          date: log.log_date,
+          weight: log.weight_lbs,
+          notes: log.notes
+        })) || []
+      };
+      console.log('✅ Loaded progress data from API:', progressData.weightLogs.length + ' entries');
+      return progressData;
+    }
+    console.log('⚠️ No progress data found or API call failed, returning empty');
+    return { weightLogs: [] };
+  } catch (error) {
+    console.error('❌ Error loading progress data from API:', error);
+    return { weightLogs: [] };
+  }
+}
+
+// Load meal ratings from Supabase API (real data)
+async function loadMealRatingsFromAPI() {
+  try {
+    console.log('🔄 Loading meal ratings from Supabase API...');
+    const response = await window.postDoseRXAPI.getMealRatings();
+    if (response && response.success) {
+      const ratingsData = {};
+      if (response.ratings && Array.isArray(response.ratings)) {
+        response.ratings.forEach(rating => {
+          ratingsData[rating.meal_id] = {
+            rating: rating.rating,
+            feedback: rating.feedback,
+            date: rating.log_date
+          };
+        });
+      }
+      console.log('✅ Loaded meal ratings from API:', Object.keys(ratingsData).length + ' entries');
+      return ratingsData;
+    }
+    console.log('⚠️ No meal ratings found or API call failed, returning empty');
+    return {};
+  } catch (error) {
+    console.error('❌ Error loading meal ratings from API:', error);
     return {};
   }
 }
@@ -300,8 +382,33 @@ async function initializeApp() {
   window.appState.isLoading = true;
   
   try {
-    // Load user profile and populate forms
-    const profileData = await loadUserProfile();
+    console.log('🔄 Loading real user data from Supabase...');
+    
+    // Load REAL user profile from Supabase
+    const userProfileResponse = await window.postDoseRXAPI.getUserProfile();
+    let profileData = {};
+    
+    if (userProfileResponse && userProfileResponse.success) {
+      // Use real profile data from Supabase
+      window.appState.profile = userProfileResponse.data.profile;
+      window.appState.user = userProfileResponse.data.user;
+      
+      profileData = {
+        medication: userProfileResponse.data.profile?.medication || '',
+        dose: userProfileResponse.data.profile?.dose_amount || '',
+        frequency: 'Weekly', // Default
+        lastInjection: '',
+        nextInjection: '',
+        injectionDay: userProfileResponse.data.profile?.injection_day || '',
+        setupComplete: !!userProfileResponse.data.profile?.medication,
+        preferences: userProfileResponse.data.profile?.preferences || {}
+      };
+      
+      console.log('✅ Loaded real user profile from Supabase:', profileData);
+    } else {
+      console.log('⚠️ No profile data found, using defaults for new user');
+      profileData = await loadUserProfile(); // Fallback
+    }
     
     // Update existing form fields with profile data
     updateFormFieldsWithProfile(profileData);
@@ -311,17 +418,20 @@ async function initializeApp() {
       updateDashboardWithProfile(profileData);
     }
     
-    // Load and cache other data
+    // Load REAL user data from Supabase APIs
+    console.log('🔄 Loading symptoms, progress, and meal ratings from Supabase...');
     const [symptomData, progressData, mealRatings] = await Promise.all([
-      loadSymptomData(),
-      loadProgressData(),
-      loadMealRatings()
+      loadSymptomDataFromAPI(),
+      loadProgressDataFromAPI(),
+      loadMealRatingsFromAPI()
     ]);
     
     // Store in global state for existing code compatibility
     window.appState.symptomData = symptomData;
     window.appState.progressData = progressData;
     window.appState.mealRatings = mealRatings;
+    
+    console.log('✅ All real user data loaded successfully from Supabase');
     
     // Initialize existing UI components that depend on this data
     if (typeof initializeSymptomLogger === 'function') {
@@ -424,15 +534,19 @@ document.addEventListener('DOMContentLoaded', async function() {
         // Get user data from dashboard auth system
         const user = getCurrentUser();
         window.appState.user = user;
-        window.appState.profile = {
-          medication: user.medication || null,
-          dose_amount: user.dose_amount || null,
-          injection_day: user.injection_day || null,
-          preferences: user.preferences || {}
-        };
         window.appState.isAuthenticated = true;
         
-        console.log('✅ Dashboard auth completed, initializing app');
+        // CRITICAL: Set the JWT token in the API client for Supabase calls
+        const token = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
+        if (token && window.postDoseRXAPI) {
+          window.postDoseRXAPI.setToken(token);
+          console.log('✅ JWT token set in API client for Supabase calls');
+        }
+        
+        // Update dashboard UI with real user information
+        updateDashboardUIWithRealUser(user);
+        
+        console.log('✅ Dashboard auth completed, loading real user data from Supabase');
         await initializeApp();
       }
       // If not authenticated, dashboard auth will handle redirect
@@ -567,6 +681,55 @@ window.addEventListener('dashboardAuthReady', (event) => {
   createAPIWrapper();
 });
 
+// Update dashboard UI with real user information
+function updateDashboardUIWithRealUser(user) {
+  console.log('🎨 Updating dashboard UI with real user data:', user);
+  
+  if (!user) return;
+  
+  // Update user name displays
+  const userNameElements = ['user-name', 'dropdown-user-name', 'dashboard-title'];
+  userNameElements.forEach(id => {
+    const element = document.getElementById(id);
+    if (element) {
+      if (id === 'dashboard-title') {
+        // Update welcome message with real name
+        const firstName = user.name ? user.name.split(' ')[0] : user.email.split('@')[0];
+        element.innerHTML = `Welcome <span id="user-name">${firstName}</span>, here's your personalized <span id="medication-name">Wegovy</span> journey dashboard`;
+      } else {
+        element.textContent = user.name || user.email.split('@')[0];
+      }
+    }
+  });
+  
+  // Update user email displays
+  const userEmailElements = ['dropdown-user-email'];
+  userEmailElements.forEach(id => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.textContent = user.email;
+    }
+  });
+  
+  // Update user tier displays
+  const userTierElements = ['user-tier', 'dropdown-user-tier'];
+  userTierElements.forEach(id => {
+    const element = document.getElementById(id);
+    if (element) {
+      const tierText = user.tier === 'premium' ? 'Premium Account' : 'Trial Account';
+      element.textContent = tierText;
+    }
+  });
+  
+  // Update user avatar with real initial
+  const userAvatar = document.getElementById('user-avatar');
+  if (userAvatar && user.name) {
+    userAvatar.textContent = user.name.charAt(0).toUpperCase();
+  }
+  
+  console.log('✅ Dashboard UI updated with real user information');
+}
+
 // Export functions for global access
 window.appAuth = {
   checkAuthentication,
@@ -580,5 +743,6 @@ window.appAuth = {
   saveMealRatings,
   loadMealPlan,
   initializeApp,
-  legacyAuthFlow
+  legacyAuthFlow,
+  updateDashboardUIWithRealUser
 };
