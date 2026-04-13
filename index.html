@@ -11138,10 +11138,22 @@
       // The user's personal name comes from Google authentication, not medication profile
       console.log('Skipping user name update in header - using Google auth name instead');
       
-      // Update user name in profile section
+      // Update user name in profile section using Google auth data
       const profileNameDisplay = document.getElementById('profile-name-display');
-      if (profileNameDisplay && profile.name) {
-        profileNameDisplay.textContent = profile.name;
+      if (profileNameDisplay) {
+        // Priority: Google auth name > profile name > helpful message
+        const googleName = window.appState?.user?.name;
+        const profileName = profile.name;
+        
+        if (googleName) {
+          profileNameDisplay.textContent = googleName;
+          console.log('Updated profile name display with Google auth name:', googleName);
+        } else if (profileName) {
+          profileNameDisplay.textContent = profileName;
+          console.log('Updated profile name display with profile name:', profileName);
+        } else {
+          profileNameDisplay.textContent = 'Welcome to PostDoseRX';
+        }
       }
       
       // Update medication name throughout dashboard
@@ -11162,38 +11174,52 @@
       const profileNextInjection = document.getElementById('profile-next-injection');
       
       // Update medication display
-      if (profileMedicationDisplay && profile.medication) {
-        console.log('Updating profile medication display to:', profile.medication);
-        profileMedicationDisplay.textContent = profile.medication;
-      } else {
-        console.log('Could not update profile medication display. Element found:', !!profileMedicationDisplay, 'Medication:', profile.medication);
+      if (profileMedicationDisplay) {
+        if (profile.medication) {
+          console.log('Updating profile medication display to:', profile.medication);
+          profileMedicationDisplay.textContent = profile.medication;
+        } else {
+          profileMedicationDisplay.textContent = 'Click Edit Profile to add your medication';
+        }
       }
       
       // Update dose display
-      if (profileDoseDisplay && profile.dose && profile.frequency) {
-        profileDoseDisplay.textContent = `${profile.dose} ${profile.frequency}`;
-      } else if (profileDoseDisplay && profile.dose) {
-        profileDoseDisplay.textContent = profile.dose;
+      if (profileDoseDisplay) {
+        if (profile.dose && profile.frequency) {
+          profileDoseDisplay.textContent = `${profile.dose} ${profile.frequency}`;
+        } else if (profile.dose) {
+          profileDoseDisplay.textContent = profile.dose;
+        } else {
+          profileDoseDisplay.textContent = 'Click Edit Profile to add dose';
+        }
       }
       
       // Update injection day
-      if (profileInjectionDayDisplay && profile.injectionDay) {
-        const dayName = profile.injectionDay.charAt(0).toUpperCase() + profile.injectionDay.slice(1);
-        profileInjectionDayDisplay.textContent = dayName + 's';
+      if (profileInjectionDayDisplay) {
+        if (profile.injectionDay) {
+          const dayName = profile.injectionDay.charAt(0).toUpperCase() + profile.injectionDay.slice(1);
+          profileInjectionDayDisplay.textContent = dayName + 's';
+        } else {
+          profileInjectionDayDisplay.textContent = 'Click Edit Profile to set day';
+        }
       }
       
       // Update last injection
-      if (profileLastInjection && profile.lastInjection) {
-        // Parse date as local timezone to avoid timezone offset issues
-        const dateParts = profile.lastInjection.split('-');
-        const lastDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
-        console.log('Updating last injection display:', profile.lastInjection, lastDate);
-        profileLastInjection.textContent = lastDate.toLocaleDateString('en-US', { 
-          weekday: 'long', 
-          year: 'numeric', 
-          month: 'short', 
-          day: 'numeric' 
-        });
+      if (profileLastInjection) {
+        if (profile.lastInjection) {
+          // Parse date as local timezone to avoid timezone offset issues
+          const dateParts = profile.lastInjection.split('-');
+          const lastDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+          console.log('Updating last injection display:', profile.lastInjection, lastDate);
+          profileLastInjection.textContent = lastDate.toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'short', 
+            day: 'numeric' 
+          });
+        } else {
+          profileLastInjection.textContent = 'No injections recorded yet';
+        }
       }
       
       // Update next injection
@@ -11210,8 +11236,7 @@
             day: 'numeric' 
           });
         } else {
-          console.log('No next injection date set');
-          profileNextInjection.textContent = 'Not scheduled';
+          profileNextInjection.textContent = 'Set injection day to calculate';
         }
       }
       
@@ -11244,7 +11269,7 @@
             profileDuration.textContent = `~${weeks} week${weeks !== 1 ? 's' : ''}`;
           }
         } else {
-          profileDuration.textContent = 'Not specified';
+          profileDuration.textContent = 'Start logging to track duration';
         }
       }
       
@@ -13677,6 +13702,9 @@
     // Function to ensure user profile stays visible during navigation
     function ensureUserProfileVisible() {
       console.log('👤 Ensuring user profile remains visible');
+      
+      // Force dark theme on every navigation
+      initializeTheme();
       
       // Check if we have authentication data
       const hasUser = window.appState?.user || 
