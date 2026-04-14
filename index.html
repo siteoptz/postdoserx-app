@@ -8294,7 +8294,7 @@
       <!-- Meals View -->
       <div id="meals" class="view">
         <div class="view-header">
-          <h1 class="view-title">Meal plans optimized for your <span class="highlight" id="meal-plan-injection-day">Sunday</span> injection schedule</h1>
+          <h1 class="view-title">Meal plans optimized for your <span class="highlight" id="meal-plan-injection-day">injection day</span> injection schedule</h1>
           <p class="view-subtitle">Dose-day Synchronized Meals</p>
         </div>
 
@@ -8304,7 +8304,7 @@
             <i data-lucide="syringe"></i>
           </div>
           <div class="alert-content">
-            <h4 id="injection-alert-title">Injection Day Tomorrow (Sunday)</h4>
+            <h4 id="injection-alert-title">Set Your Injection Day</h4>
             <p>Your meal plan has been adjusted for reduced portions and gentle foods to minimize side effects.</p>
           </div>
         </div>
@@ -12986,10 +12986,23 @@
     
     function updateInjectionDayInfo() {
       const savedProfile = localStorage.getItem('medicationProfile');
-      if (!savedProfile) return;
+      if (!savedProfile) {
+        console.log('⚠️ No medication profile found in localStorage');
+        return;
+      }
       
       const profile = JSON.parse(savedProfile);
-      if (!profile.injectionDay) return;
+      console.log('📋 Medication profile found:', profile);
+      
+      if (!profile.injectionDay) {
+        console.log('⚠️ No injection day set in profile - showing default injection message');
+        // If no injection day is set, show a helpful message
+        const injectionAlertTitle = document.getElementById('injection-alert-title');
+        if (injectionAlertTitle) {
+          injectionAlertTitle.textContent = 'Set Your Injection Day';
+        }
+        return;
+      }
       
       const injectionDay = profile.injectionDay;
       const injectionDayCapitalized = injectionDay.charAt(0).toUpperCase() + injectionDay.slice(1);
@@ -13069,6 +13082,7 @@
           setTimeout(() => {
             updateMealPlanWithProfile();
             updateWeeklyDates();
+            updateInjectionDayInfo();
           }, 100);
         }
         
@@ -13762,6 +13776,9 @@
       
       // Update weekly dates to current week
       updateWeeklyDates();
+      
+      // Update injection day info on page load
+      updateInjectionDayInfo();
       
       // Check if user returned from canceled upgrade
       const urlParams = new URLSearchParams(window.location.search);
