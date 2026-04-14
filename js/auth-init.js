@@ -585,6 +585,11 @@ document.addEventListener('DOMContentLoaded', async function() {
         
         console.log('✅ Dashboard auth completed, loading real user data from Supabase');
         await initializeApp();
+      } else {
+        // User is not authenticated on app domain - redirect to login
+        console.log('🚪 User not authenticated on app domain, redirecting to login');
+        window.location.href = '/login.html';
+        return;
       }
       // If not authenticated, dashboard auth will handle redirect
     } else {
