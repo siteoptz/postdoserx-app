@@ -86,6 +86,10 @@
         console.log('=== LOGIN PAGE LOADED ===');
         console.log('Current URL:', window.location.href);
         
+        // Check for returning user
+        const returningUserEmail = localStorage.getItem('returning_user_email');
+        console.log('Returning user email:', returningUserEmail);
+        
         // Get URL parameters
         const urlParams = new URLSearchParams(window.location.search);
         const stripeSuccess = urlParams.get('stripe_success');
@@ -102,6 +106,13 @@
             localStorage.setItem('stripe_session_id', sessionId);
             document.getElementById('message').textContent = 
                 'Thank you for your purchase. Please authenticate with Google to access your premium PostDoseRX account.';
+        } else if (returningUserEmail) {
+            console.log('Returning user detected:', returningUserEmail);
+            // Returning user flow
+            document.querySelector('.success-icon').textContent = '👋';
+            document.querySelector('h1').textContent = 'Welcome Back!';
+            document.getElementById('message').textContent = 
+                `Hi! Please sign in with Google to continue to your personalized PostDoseRX dashboard.`;
         } else {
             console.log('Regular login flow (not from Stripe)');
             // Regular login (not from Stripe)
@@ -193,7 +204,8 @@
                     email: userInfo.email,
                     name: userInfo.name,
                     provider: 'google',
-                    stripe_session_id: sessionId
+                    stripe_session_id: sessionId,
+                    returning_user: returningUserEmail === userInfo.email
                 };
                 
                 console.log('Sending request to login API with body:', requestBody);
@@ -218,6 +230,15 @@
                     
                     // Clear stored session ID
                     localStorage.removeItem('stripe_session_id');
+                    
+                    // Clear returning user flag since they're now authenticated
+                    localStorage.removeItem('returning_user_email');
+                    
+                    // For returning users, ensure user email is set for dashboard
+                    if (requestBody.returning_user) {
+                        console.log('Restoring returning user data for:', userInfo.email);
+                        localStorage.setItem('user_email', userInfo.email);
+                    }
                     
                     // Redirect to dashboard with token
                     window.location.href = result.redirectUrl;

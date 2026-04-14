@@ -17380,8 +17380,29 @@ For clinical review and treatment optimization.`;
     }
 
     function performSignOut() {
-      // Clear local storage and redirect to login
-      localStorage.clear();
+      console.log('🚪 Performing sign out - preserving user data for return');
+      
+      // Preserve user profile data for returning user
+      const userEmail = localStorage.getItem('user_email') || window.appState?.user?.email;
+      const medicationProfile = localStorage.getItem('medicationProfile');
+      const userProfile = localStorage.getItem('userProfile');
+      const symptoms = localStorage.getItem('symptoms');
+      const progressData = localStorage.getItem('progressData');
+      const mealRatings = localStorage.getItem('mealRatings');
+      
+      // Clear authentication tokens but preserve user data
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('jwt_token');
+      localStorage.removeItem('stripe_session_id');
+      localStorage.removeItem('userStateBackup');
+      
+      // Mark as returning user for login.html
+      if (userEmail) {
+        localStorage.setItem('returning_user_email', userEmail);
+      }
+      
+      console.log('✅ User data preserved for returning user:', userEmail);
       window.location.href = '/login.html';
     }
 
