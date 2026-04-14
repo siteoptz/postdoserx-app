@@ -541,8 +541,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     const authToken = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
     
     if (!authToken) {
-      console.log('🚪 No authentication token found, redirecting to login.html');
-      window.location.href = '/login.html';
+      console.log('🚪 No authentication token found, redirecting to marketing site login');
+      window.location.href = 'https://postdoserx.com/login.html';
       return;
     }
     

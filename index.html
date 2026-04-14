@@ -18,7 +18,7 @@
   <!-- API Client -->
   <script src="js/api.js"></script>
   <!-- Dashboard Authentication System - Load from marketing site API -->
-  <script src="https://postdoserx.com/dashboard-auth.js"></script>
+  <!-- Removed external dashboard-auth.js to use simplified authentication -->
   <!-- Authentication and Initialization -->
   <script src="js/auth-init.js"></script>
   <style>
@@ -17403,7 +17403,7 @@ For clinical review and treatment optimization.`;
       }
       
       console.log('✅ User data preserved for returning user:', userEmail);
-      window.location.href = '/login.html';
+      window.location.href = 'https://postdoserx.com/login.html';
     }
 
     // Theme Toggle Functions
@@ -25189,8 +25189,8 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
     }
 
     function openLoginModal() {
-      // Redirect to the working login page on the dashboard app
-      window.location.href = '/login.html';
+      // Redirect to the marketing site login page
+      window.location.href = 'https://postdoserx.com/login.html';
     }
 
     async function startCheckout(plan) {
