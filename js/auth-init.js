@@ -534,69 +534,49 @@ document.addEventListener('DOMContentLoaded', async function() {
   console.log('🏠 Domain check - hostname:', window.location.hostname, 'isAppDomain:', isAppDomain);
   
   if (isAppDomain) {
-    // Use dashboard authentication system for app.postdoserx.com
-    console.log('🔐 Using dashboard authentication system...');
+    // Use simple token-based authentication for app.postdoserx.com
+    console.log('🔐 Checking authentication for app.postdoserx.com...');
     
-    // Wait for dashboardAuthReady event or initialize directly
-    if (typeof initializeDashboardAuth === 'function') {
-      const isAuthenticated = await initializeDashboardAuth();
-      
-      if (isAuthenticated) {
-        // CRITICAL: First, try to get user data from URL params (fresh from login)
-        const urlParams = new URLSearchParams(window.location.search);
-        const emailFromURL = urlParams.get('email');
-        const nameFromURL = urlParams.get('name');
-        const tierFromURL = urlParams.get('tier');
-        const userIdFromURL = urlParams.get('userId');
-        
-        console.log('🔍 URL parameters detected:', { 
-          email: emailFromURL, 
-          name: nameFromURL, 
-          tier: tierFromURL,
-          userId: userIdFromURL 
-        });
-        
-        // Get user data from dashboard auth system
-        const user = getCurrentUser();
-        console.log('🔍 User from getCurrentUser():', user);
-        
-        // Use URL params if available (fresh login), otherwise use stored data
-        const realUser = {
-          id: userIdFromURL || user?.id,
-          email: emailFromURL || user?.email,
-          name: nameFromURL || user?.name,
-          tier: tierFromURL || user?.tier || 'trial'
-        };
-        
-        console.log('🎯 Final real user data:', realUser);
-        
-        window.appState.user = realUser;
-        window.appState.isAuthenticated = true;
-        
-        // CRITICAL: Set the JWT token in the API client for Supabase calls
-        const token = localStorage.getItem('auth_token') || sessionStorage.getItem('auth_token');
-        if (token && window.postDoseRXAPI) {
-          window.postDoseRXAPI.setToken(token);
-          console.log('✅ JWT token set in API client for Supabase calls');
-        }
-        
-        // Update dashboard UI with real user information
-        updateDashboardUIWithRealUser(realUser);
-        
-        console.log('✅ Dashboard auth completed, loading real user data from Supabase');
-        await initializeApp();
-      } else {
-        // User is not authenticated on app domain - redirect to login
-        console.log('🚪 User not authenticated on app domain, redirecting to login');
-        window.location.href = '/login';
-        return;
-      }
-      // If not authenticated, dashboard auth will handle redirect
-    } else {
-      // Fallback to legacy auth if dashboard auth not available
-      console.log('⚠️ Dashboard auth not available, using legacy auth');
-      await legacyAuthFlow();
+    // Simple token check - redirect if no token
+    const authToken = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
+    
+    if (!authToken) {
+      console.log('🚪 No authentication token found, redirecting to login.html');
+      window.location.href = '/login.html';
+      return;
     }
+    
+    console.log('✅ Authentication token found, initializing authenticated user');
+    
+    // Get user data from URL params (fresh from login) or local storage
+    const urlParams = new URLSearchParams(window.location.search);
+    const emailFromURL = urlParams.get('email');
+    const nameFromURL = urlParams.get('name');
+    const tierFromURL = urlParams.get('tier');
+    const userIdFromURL = urlParams.get('userId');
+    
+    // Also check localStorage for user data
+    const userEmail = emailFromURL || localStorage.getItem('user_email');
+    const userName = nameFromURL || localStorage.getItem('user_name') || 'User';
+    const userTier = tierFromURL || localStorage.getItem('user_tier') || 'trial';
+    
+    console.log('🎯 User data for authenticated session:', { 
+      email: userEmail, 
+      name: userName, 
+      tier: userTier 
+    });
+    
+    // Set authenticated user state
+    window.appState.user = {
+      id: userIdFromURL || 'authenticated-user',
+      email: userEmail,
+      name: userName,
+      tier: userTier
+    };
+    window.appState.isAuthenticated = true;
+    
+    console.log('✅ Authenticated user initialized, loading dashboard');
+    await initializeApp();
   } else {
     // On marketing site - allow demo access for preview
     console.log('🏠 On marketing site - showing demo preview');
