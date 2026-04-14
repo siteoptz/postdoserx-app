@@ -12914,6 +12914,41 @@
       return null;
     }
     
+    function updateWeeklyDates() {
+      const today = new Date();
+      const currentDay = today.getDay(); // 0 = Sunday, 1 = Monday, etc.
+      
+      // Calculate Monday of this week (start of week)
+      const monday = new Date(today);
+      monday.setDate(today.getDate() - currentDay + 1); // +1 because we want Monday as start
+      
+      // Update all weekly meal dates
+      const dayDateElements = document.querySelectorAll('.weekly-meal-grid .day-date');
+      
+      dayDateElements.forEach((element, index) => {
+        const dayDate = new Date(monday);
+        dayDate.setDate(monday.getDate() + index);
+        
+        const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+          'July', 'August', 'September', 'October', 'November', 'December'];
+        
+        const formattedDate = `${monthNames[dayDate.getMonth()]} ${dayDate.getDate()}, ${dayDate.getFullYear()}`;
+        element.textContent = formattedDate;
+      });
+      
+      // Update weekly overview dates (shorter format)
+      const weeklyOverviewDates = document.querySelectorAll('.weekly-overview .day-date');
+      weeklyOverviewDates.forEach((element, index) => {
+        const dayDate = new Date(monday);
+        dayDate.setDate(monday.getDate() + index);
+        
+        const shortFormat = `${dayDate.getMonth() + 1}/${dayDate.getDate()}`;
+        element.textContent = shortFormat;
+      });
+      
+      console.log(`📅 Updated weekly dates starting from Monday: ${monday.toDateString()}`);
+    }
+    
     function updateMealPlanWithProfile() {
       const savedProfile = localStorage.getItem('medicationProfile');
       if (!savedProfile) return;
@@ -12975,15 +13010,14 @@
       const targetDay = dayMap[injectionDay.toLowerCase()];
       
       let daysUntilInjection = (targetDay - currentDay + 7) % 7;
-      if (daysUntilInjection === 0) daysUntilInjection = 7; // If today is injection day, next is in 7 days
       
       // Update injection alert
       const injectionAlertTitle = document.getElementById('injection-alert-title');
       if (injectionAlertTitle) {
-        if (daysUntilInjection === 1) {
-          injectionAlertTitle.textContent = `Injection Day Tomorrow (${injectionDayCapitalized})`;
-        } else if (daysUntilInjection === 0) {
+        if (daysUntilInjection === 0) {
           injectionAlertTitle.textContent = `Injection Day Today (${injectionDayCapitalized})`;
+        } else if (daysUntilInjection === 1) {
+          injectionAlertTitle.textContent = `Injection Day Tomorrow (${injectionDayCapitalized})`;
         } else {
           injectionAlertTitle.textContent = `Next Injection Day: ${injectionDayCapitalized} (${daysUntilInjection} days)`;
         }
@@ -13027,6 +13061,14 @@
         if (viewId === 'grocery') {
           setTimeout(() => {
             initializeGrocerySection();
+          }, 100);
+        }
+        
+        // Update meal plan and dates when navigating to meals view
+        if (viewId === 'meals') {
+          setTimeout(() => {
+            updateMealPlanWithProfile();
+            updateWeeklyDates();
           }, 100);
         }
         
@@ -13717,6 +13759,9 @@
       
       // Update user dropdown with real data
       updateUserDropdownWithRealData();
+      
+      // Update weekly dates to current week
+      updateWeeklyDates();
       
       // Check if user returned from canceled upgrade
       const urlParams = new URLSearchParams(window.location.search);
