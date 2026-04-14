@@ -373,6 +373,9 @@ async function initializeApp() {
       name: nameFromURL || userData?.name || 'PostDoseRX User',
       tier: tierFromURL || userData?.tier || 'trial'
     };
+    
+    // Store email in localStorage for subscription management
+    localStorage.setItem('user_email', emailFromURL);
     console.log('🔗 Using user data from URL:', userData);
   }
   

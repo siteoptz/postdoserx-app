@@ -38,7 +38,17 @@ export default async function handler(req, res) {
       });
     }
 
+    // Since environment variables are not configured yet, let's be more flexible
+    // For now, use the hardcoded fallback or allow the frontend to work directly
+    if (!process.env.STRIPE_SECRET_KEY) {
+      console.error('❌ STRIPE_SECRET_KEY not configured');
+      return res.status(500).json({ 
+        error: 'Stripe not configured - using fallback checkout' 
+      });
+    }
+
     // Price ID mapping for PostDoseRX plans
+    // TODO: Configure these in environment variables
     const priceIdMap = {
       trial: process.env.STRIPE_POSTDOSE_TRIAL_PRICE_ID,
       premium: process.env.STRIPE_POSTDOSE_PREMIUM_PRICE_ID || 'price_1OaKA1JNKLJfZdYsLNz29mNl', // Fallback for PostDoseRX premium
@@ -47,8 +57,9 @@ export default async function handler(req, res) {
     const resolvedPriceId = priceId || priceIdMap[plan];
     
     if (!resolvedPriceId) {
+      console.error(`❌ No price ID found for plan: ${plan}`);
       return res.status(400).json({ 
-        error: 'Invalid plan or price not configured' 
+        error: `Price not configured for plan: ${plan}` 
       });
     }
     

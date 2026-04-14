@@ -10997,66 +10997,117 @@
     // Stripe billing integration
     async function openStripeBillingPortal() {
       try {
-        // Get user's authentication token (check both possible keys)
-        const token = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
-        if (!token) {
-          alert('Please log in to manage your subscription');
+        const userEmail = window.appState?.user?.email || localStorage.getItem('user_email');
+        
+        if (!userEmail) {
+          alert('Unable to find your email address. Please refresh the page and try again.');
           return;
         }
 
-        // Call API to create billing portal session
-        const response = await fetch('/api/billing/portal', {
+        console.log('📱 Opening billing portal for:', userEmail);
+        
+        // Call marketing site API to create billing portal session
+        const response = await fetch('https://postdoserx.com/api/create-portal-session', {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
-          }
+          },
+          body: JSON.stringify({
+            email: userEmail
+          })
         });
 
+        if (!response.ok) {
+          console.error('❌ Portal API response not OK:', response.status, response.statusText);
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to create portal session');
+        }
+
         const data = await response.json();
+        
         if (data.success && data.url) {
-          // Redirect to Stripe billing portal
+          console.log('✅ Redirecting to billing portal:', data.url);
+          // Redirect to Stripe billing portal - it will return to app.postdoserx.com
           window.location.href = data.url;
         } else {
-          alert('Unable to access billing portal. Please try again.');
+          throw new Error(data.error || 'No portal URL returned');
         }
+        
       } catch (error) {
-        console.error('Billing portal error:', error);
-        alert('Error opening billing portal. Please contact support.');
+        console.error('❌ Billing portal error:', error);
+        
+        if (error.message.includes('No Stripe customer found')) {
+          alert('No subscription found. Please upgrade to Premium to manage billing.');
+        } else {
+          alert('Error opening billing portal. Please contact support for assistance.');
+        }
       }
     }
 
     async function cancelSubscription() {
-      if (!confirm('Are you sure you want to cancel your subscription? You will lose access to premium features at the end of your current billing period.')) {
+      const userEmail = window.appState?.user?.email || localStorage.getItem('user_email');
+      
+      if (!userEmail) {
+        alert('Unable to find your email address. Please refresh the page and try again.');
+        return;
+      }
+
+      if (!confirm('Are you sure you want to cancel your subscription? You will keep access until the end of your current billing period, but no future charges will occur.')) {
         return;
       }
 
       try {
-        const token = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
-        if (!token) {
-          alert('Please log in to cancel your subscription');
-          return;
-        }
-
-        const response = await fetch('/api/billing/cancel', {
+        console.log('📞 Calling PostDoseRX cancellation API for:', userEmail);
+        
+        const response = await fetch('https://postdoserx.com/api/cancel-subscription', {
           method: 'POST',
           headers: {
-            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json'
-          }
+          },
+          body: JSON.stringify({
+            email: userEmail,
+            reason: 'customer_requested'
+          })
         });
 
-        const data = await response.json();
-        if (data.success) {
-          alert('Your subscription has been cancelled. You will continue to have access to premium features until the end of your current billing period.');
-          // Refresh user data to update tier if needed
-          location.reload();
-        } else {
-          alert(data.message || 'Unable to cancel subscription. Please contact support.');
+        if (!response.ok) {
+          console.error('❌ Cancel API response not OK:', response.status, response.statusText);
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to cancel subscription');
         }
+
+        const data = await response.json();
+        
+        if (data.success) {
+          // Show detailed cancellation message from the API
+          alert(data.message || 'Your subscription has been successfully cancelled. You will keep access until the end of your billing period.');
+          
+          console.log('✅ Subscription cancelled:', data.summary);
+          
+          // Close any open modals
+          closeModal();
+          
+          // Refresh subscription display to show cancellation status
+          await updateSubscriptionDisplay(window.appState?.user);
+          
+          // Don't reload the page - user should keep access until billing period ends
+          
+        } else {
+          throw new Error(data.error || 'Cancellation failed');
+        }
+        
       } catch (error) {
-        console.error('Cancel subscription error:', error);
-        alert('Error cancelling subscription. Please contact support.');
+        console.error('❌ Cancel subscription error:', error);
+        
+        if (error.message.includes('No Stripe customer found')) {
+          alert('No subscription found to cancel. If you believe this is an error, please contact support.');
+        } else if (error.message.includes('No active subscriptions')) {
+          alert('No active subscription found to cancel. You may have already cancelled or your subscription may have expired.');
+        } else if (error.message.includes('already canceled')) {
+          alert(error.message); // This will show the detailed message about continued access
+        } else {
+          alert('Unable to process cancellation request. Please contact support for assistance.');
+        }
       }
     }
 
@@ -13352,36 +13403,88 @@
     }
     
     // Function to update subscription information based on user tier
-    function updateSubscriptionDisplay(user) {
+    async function updateSubscriptionDisplay(user) {
       console.log('🔄 Updating subscription display for user:', user);
       
       const tierElement = document.getElementById('subscription-tier');
       const priceElement = document.getElementById('subscription-price');
       const nextElement = document.getElementById('subscription-next');
       
-      if (user && user.tier) {
-        if (user.tier === 'trial') {
-          if (tierElement) tierElement.textContent = 'Trial Plan';
-          if (priceElement) priceElement.textContent = 'Free for 7 days';
-          if (nextElement) nextElement.textContent = 'Trial expires in 7 days';
-        } else if (user.tier === 'premium') {
-          if (tierElement) tierElement.textContent = 'Premium Plan';
-          if (priceElement) priceElement.textContent = '$19.99/month';
-          // Calculate next billing date (30 days from now)
-          const nextBilling = new Date();
-          nextBilling.setDate(nextBilling.getDate() + 30);
-          const formattedDate = nextBilling.toLocaleDateString('en-US', { 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric' 
-          });
-          if (nextElement) nextElement.textContent = `Next billing: ${formattedDate}`;
-        }
-      } else {
-        // Default to trial if no user data
+      // Get user email for subscription lookup
+      const userEmail = window.appState?.user?.email || localStorage.getItem('user_email') || user?.email;
+      
+      if (!userEmail) {
+        console.log('⚠️ No user email found for subscription lookup, using default display');
+        // Default display for users without email
         if (tierElement) tierElement.textContent = 'Trial Plan';
         if (priceElement) priceElement.textContent = 'Free for 7 days';
-        if (nextElement) nextElement.textContent = 'Trial expires in 7 days';
+        if (nextElement) nextElement.textContent = 'Sign up to start your 7-day trial';
+        return;
+      }
+      
+      try {
+        console.log('📡 Fetching real subscription data for:', userEmail);
+        
+        // Fetch real subscription data from marketing site API
+        const response = await fetch('https://postdoserx.com/api/get-subscription-status', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: userEmail
+          })
+        });
+        
+        if (!response.ok) {
+          throw new Error(`Failed to get subscription status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        console.log('✅ Received subscription data:', data);
+        
+        if (data.hasSubscription && data.subscriptionData) {
+          const sub = data.subscriptionData;
+          
+          // Update tier display based on actual subscription
+          const tierDisplayMap = {
+            'trial': 'Trial Plan',
+            'premium': 'Premium Plan',
+            'canceled': 'Canceled Plan',
+            'expired': 'Expired Plan',
+            'error': 'Plan Status Unknown'
+          };
+          
+          if (tierElement) {
+            tierElement.textContent = tierDisplayMap[sub.tier] || 'Unknown Plan';
+          }
+          
+          if (priceElement) {
+            priceElement.textContent = sub.displayPrice;
+          }
+          
+          if (nextElement) {
+            nextElement.textContent = sub.nextBillingText;
+          }
+          
+          // Store subscription data for other functions
+          window.appState = window.appState || {};
+          window.appState.subscription = sub;
+          
+        } else {
+          // No subscription found - show trial signup option
+          if (tierElement) tierElement.textContent = 'No Subscription';
+          if (priceElement) priceElement.textContent = 'Start your 7-day trial';
+          if (nextElement) nextElement.textContent = 'Click "Upgrade" to begin';
+        }
+        
+      } catch (error) {
+        console.error('❌ Failed to fetch subscription data:', error);
+        
+        // Fallback to default display on error
+        if (tierElement) tierElement.textContent = 'Trial Plan';
+        if (priceElement) priceElement.textContent = 'Free for 7 days';
+        if (nextElement) nextElement.textContent = 'Unable to verify subscription status';
       }
     }
     
@@ -17290,68 +17393,74 @@ For clinical review and treatment optimization.`;
     });
 
     async function redirectToUpgrade() {
-      console.log('🔄 Starting upgrade flow - creating Stripe checkout session');
+      console.log('🔄 Starting upgrade flow - using PostDoseRX marketing site upgrade API');
       
-      // Ensure authentication token is preserved in both formats
+      // Get user email from authentication state  
+      const userEmail = window.appState?.user?.email || localStorage.getItem('user_email');
+      
+      if (!userEmail) {
+        console.error('❌ No user email found for upgrade');
+        alert('Unable to start upgrade - user email not found. Please refresh the page and try again.');
+        return;
+      }
+      
+      // Preserve authentication state before upgrade
       const authToken = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
       if (authToken) {
-        // Store in both formats to ensure compatibility
         localStorage.setItem('authToken', authToken);
         localStorage.setItem('auth_token', authToken);
         
-        // Also preserve user state data if available
         if (window.appState?.user) {
           localStorage.setItem('userStateBackup', JSON.stringify(window.appState.user));
         }
         
         console.log('🔐 Authentication state preserved for upgrade flow');
-      } else {
-        console.warn('⚠️ No authentication token found before upgrade redirect');
       }
       
       try {
-        // Call our own checkout API instead of using hardcoded Stripe link
-        console.log('📞 Calling checkout session API...');
-        const response = await fetch('/api/stripe/create-checkout-session', {
+        // Call the proper marketing site upgrade API
+        console.log('📞 Calling PostDoseRX upgrade API for:', userEmail);
+        const response = await fetch('https://postdoserx.com/api/create-upgrade-session', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            plan: 'premium'
+            email: userEmail,
+            upgrade_type: 'trial_to_premium'
           })
         });
         
         if (!response.ok) {
-          console.error('❌ Checkout API response not OK:', response.status, response.statusText);
+          console.error('❌ Upgrade API response not OK:', response.status, response.statusText);
           const errorData = await response.json();
-          console.error('❌ Error data from API:', errorData);
-          throw new Error(errorData.error || `Failed to create checkout session (${response.status})`);
+          console.error('❌ Error data from upgrade API:', errorData);
+          throw new Error(errorData.error || `Failed to create upgrade session (${response.status})`);
         }
         
         const data = await response.json();
         
-        if (data.url) {
-          console.log('✅ Checkout session created, redirecting to:', data.url);
-          // This will use our configured success/cancel URLs that properly handle auth
+        if (data.success && data.url) {
+          console.log('✅ Upgrade session created, redirecting to:', data.url);
+          // This redirects to the marketing site's success URL that will redirect back to app.postdoserx.com
           window.location.href = data.url;
         } else {
-          throw new Error('No checkout URL returned');
+          throw new Error(data.error || 'No upgrade URL returned');
         }
         
       } catch (error) {
-        console.error('❌ Failed to create checkout session:', error);
+        console.error('❌ Failed to create upgrade session:', error);
         
-        // Show more specific error if available
-        if (error.message && error.message.includes('configured')) {
-          console.log('🔄 Stripe API not fully configured, using direct checkout link...');
-          console.log('📝 Note: Authentication state will be preserved in localStorage');
+        // Provide helpful error message
+        if (error.message.includes('already have an active Premium')) {
+          alert('You already have an active Premium subscription. No upgrade needed!');
+        } else if (error.message.includes('No Stripe customer found')) {
+          alert('Unable to find your subscription. Please contact support for assistance.');
         } else {
-          console.log('🔄 Falling back to direct Stripe link...');
+          console.log('🔄 Upgrade API failed, falling back to direct Stripe link...');
+          // Use fallback Stripe link as last resort
+          window.location.href = 'https://buy.stripe.com/28E14mbhQ9xj4g5e5Z63K02';
         }
-        
-        // Use the original working Stripe checkout link as fallback
-        window.location.href = 'https://buy.stripe.com/28E14mbhQ9xj4g5e5Z63K02';
       }
     }
 
