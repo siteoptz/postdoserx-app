@@ -9,54 +9,24 @@ window.appState = {
   isAuthenticated: false
 };
 
-// Authentication functions
+// Authentication functions - OFFLINE MODE (no API calls)
 async function checkAuthentication() {
   try {
-    // Check for existing token first
-    const storedToken = localStorage.getItem('auth_token');
-    const storedUserId = localStorage.getItem('user_id');
+    // Check for existing tokens using both possible keys
+    const storedToken = localStorage.getItem('auth_token') || localStorage.getItem('authToken');
     
-    if (!storedToken || !storedUserId) {
-      console.log('🔍 No authentication token found, requiring login');
+    if (!storedToken) {
+      console.log('🔍 No authentication token found');
       return false;
     }
     
-    // Verify token with API
-    const response = await fetch('https://app.postdoserx.com/api/auth/me', {
-      headers: {
-        'Authorization': `Bearer ${storedToken}`
-      }
-    });
+    console.log('🔐 OFFLINE AUTH: Token found, user is authenticated');
     
-    if (!response.ok) {
-      console.log('🔍 Invalid token, clearing and requiring login');
-      localStorage.removeItem('auth_token');
-      localStorage.removeItem('user_id');
-      return false;
-    }
+    // NO API VERIFICATION - if token exists, user is authenticated
+    return true;
     
-    const userData = await response.json();
-    
-    if (userData.success && userData.user) {
-      // Set up authenticated user state
-      window.appState.user = userData.user;
-      window.appState.profile = userData.profile || {
-        medication: null,
-        dose_amount: null,
-        injection_day: null,
-        preferences: {}
-      };
-      window.appState.isAuthenticated = true;
-      
-      console.log('✅ User authenticated:', userData.user.email);
-      return true;
-    }
-    
-    return false;
   } catch (error) {
-    console.error('Authentication check failed:', error);
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('user_id');
+    console.error('❌ Error checking authentication:', error);
     return false;
   }
 }
@@ -373,67 +343,104 @@ async function loadMealPlan(week = null) {
   }
 }
 
-// Initialize the app with API data
+// Initialize the app WITHOUT API dependencies
 async function initializeApp() {
-  if (!window.appState.isAuthenticated) {
-    return;
+  console.log('🚀 OFFLINE MODE: Initializing app without API calls');
+  
+  // Get user data from URL parameters (from Google auth) or localStorage backup
+  const urlParams = new URLSearchParams(window.location.search);
+  const emailFromURL = urlParams.get('email');
+  const nameFromURL = urlParams.get('name');
+  const tierFromURL = urlParams.get('tier');
+  
+  // Try to get user data from backup or URL
+  let userData = null;
+  const userBackup = localStorage.getItem('userStateBackup');
+  
+  if (userBackup) {
+    try {
+      userData = JSON.parse(userBackup);
+      console.log('📦 Restored user data from backup:', userData);
+    } catch (error) {
+      console.error('❌ Failed to parse user backup');
+    }
   }
   
-  window.appState.isLoading = true;
+  // Use URL parameters if available (priority over backup)
+  if (emailFromURL) {
+    userData = {
+      email: emailFromURL,
+      name: nameFromURL || userData?.name || 'PostDoseRX User',
+      tier: tierFromURL || userData?.tier || 'trial'
+    };
+    console.log('🔗 Using user data from URL:', userData);
+  }
   
+  // Final fallback if no data available
+  if (!userData) {
+    userData = {
+      email: 'user@postdoserx.com',
+      name: 'PostDoseRX User',
+      tier: 'trial'
+    };
+    console.log('🔄 Using fallback user data');
+  }
+  
+  // Set application state - NO API CALLS REQUIRED
+  window.appState.user = userData;
+  window.appState.isAuthenticated = true;
+  window.appState.isLoading = false;
+  
+  console.log('✅ User authentication state set (OFFLINE MODE)');
+  
+  // Load profile data from localStorage (no API calls)
+  const storedProfile = localStorage.getItem('medicationProfile');
+  let profileData = {};
+  
+  if (storedProfile) {
+    try {
+      profileData = JSON.parse(storedProfile);
+      console.log('📦 Loaded profile from localStorage');
+    } catch (error) {
+      console.error('❌ Failed to parse stored profile');
+    }
+  }
+  
+  // Set defaults for missing profile data
+  profileData = {
+    medication: profileData.medication || '',
+    dose: profileData.dose || '',
+    frequency: profileData.frequency || 'Weekly',
+    lastInjection: profileData.lastInjection || '',
+    nextInjection: profileData.nextInjection || '',
+    injectionDay: profileData.injectionDay || '',
+    setupComplete: !!profileData.medication,
+    preferences: profileData.preferences || {}
+  };
+  
+  window.appState.profile = profileData;
+  console.log('✅ Profile data set (OFFLINE MODE)');
+  
+  // Update dashboard with profile data (if function exists)
+  if (typeof updateDashboardWithProfile === 'function') {
+    updateDashboardWithProfile(profileData);
+  }
+  
+  // Load data from localStorage instead of APIs
+  console.log('💾 Loading data from localStorage (OFFLINE MODE)');
+  
+  const symptomData = JSON.parse(localStorage.getItem('symptomData') || '[]');
+  const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');  
+  const mealRatings = JSON.parse(localStorage.getItem('mealRatings') || '[]');
+  
+  window.appState.symptomData = symptomData;
+  window.appState.progressData = progressData; 
+  window.appState.mealRatings = mealRatings;
+  
+  console.log('✅ All user data loaded from localStorage (OFFLINE MODE)');
+  
+  // Initialize UI components (skip if functions don't exist)
   try {
-    console.log('🔄 Loading real user data from Supabase...');
-    
-    // Load REAL user profile from Supabase
-    const userProfileResponse = await window.postDoseRXAPI.getUserProfile();
-    let profileData = {};
-    
-    if (userProfileResponse && userProfileResponse.success) {
-      // Use real profile data from Supabase
-      window.appState.profile = userProfileResponse.data.profile;
-      window.appState.user = userProfileResponse.data.user;
-      
-      profileData = {
-        medication: userProfileResponse.data.profile?.medication || '',
-        dose: userProfileResponse.data.profile?.dose_amount || '',
-        frequency: 'Weekly', // Default
-        lastInjection: '',
-        nextInjection: '',
-        injectionDay: userProfileResponse.data.profile?.injection_day || '',
-        setupComplete: !!userProfileResponse.data.profile?.medication,
-        preferences: userProfileResponse.data.profile?.preferences || {}
-      };
-      
-      console.log('✅ Loaded real user profile from Supabase:', profileData);
-    } else {
-      console.log('⚠️ No profile data found, using defaults for new user');
-      profileData = await loadUserProfile(); // Fallback
-    }
-    
-    // Update existing form fields with profile data
-    updateFormFieldsWithProfile(profileData);
-    
-    // Update dashboard with profile data
-    if (typeof updateDashboardWithProfile === 'function') {
-      updateDashboardWithProfile(profileData);
-    }
-    
-    // Load REAL user data from Supabase APIs
-    console.log('🔄 Loading symptoms, progress, and meal ratings from Supabase...');
-    const [symptomData, progressData, mealRatings] = await Promise.all([
-      loadSymptomDataFromAPI(),
-      loadProgressDataFromAPI(),
-      loadMealRatingsFromAPI()
-    ]);
-    
-    // Store in global state for existing code compatibility
-    window.appState.symptomData = symptomData;
-    window.appState.progressData = progressData;
-    window.appState.mealRatings = mealRatings;
-    
-    console.log('✅ All real user data loaded successfully from Supabase');
-    
-    // Initialize existing UI components that depend on this data
     if (typeof initializeSymptomLogger === 'function') {
       initializeSymptomLogger();
     }
@@ -447,10 +454,11 @@ async function initializeApp() {
     }
     
   } catch (error) {
-    console.error('Error initializing app:', error);
-  } finally {
-    window.appState.isLoading = false;
+    console.error('❌ Error initializing UI components:', error);
+    // Don't fail the entire app if UI components have issues
   }
+  
+  console.log('🎉 App initialization complete (OFFLINE MODE) - no API dependencies');
 }
 
 // Helper function to update form fields
