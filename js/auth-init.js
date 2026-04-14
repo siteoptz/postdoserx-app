@@ -588,7 +588,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       } else {
         // User is not authenticated on app domain - redirect to login
         console.log('🚪 User not authenticated on app domain, redirecting to login');
-        window.location.href = '/login.html';
+        window.location.href = '/login';
         return;
       }
       // If not authenticated, dashboard auth will handle redirect
