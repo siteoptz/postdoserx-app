@@ -351,6 +351,7 @@ async function initializeAuthenticatedDashboard() {
   
   if (!authToken) {
     console.error('❌ No auth token available for dashboard initialization');
+    console.log('🚨 REDIRECT_LOGIN_REASON=NO_TOKEN_DASHBOARD_INIT');
     const currentAppUrl = encodeURIComponent(window.location.href);
     window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
     return;
@@ -365,32 +366,46 @@ async function initializeAuthenticatedDashboard() {
         'Content-Type': 'application/json'
       }
     });
-    
-    if (!userResponse.ok) {
-      throw new Error(`User API failed: ${userResponse.status}`);
+
+    // Only invalid/expired JWT should log the user out. Other failures (5xx, routing)
+    // must not create a login.html loop after a successful Google → ?token= handoff.
+    if (userResponse.status === 401) {
+      console.warn('❌ Session rejected by API (401) — clearing token and sending to login');
+      console.log('🚨 REDIRECT_LOGIN_REASON=API_401_REJECTED');
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('user_id');
+      const currentAppUrl = encodeURIComponent(window.location.href);
+      window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
+      return;
     }
-    
-    const userData = await userResponse.json();
-    
-    if (userData.success) {
-      // Merge API data with existing app state
-      window.appState.user = { ...window.appState.user, ...userData.user };
-      window.appState.profile = userData.profile || {};
-      window.appState.isAuthenticated = true;
-      window.appState.isLoading = false;
-      
-      console.log('✅ User profile loaded from API and merged with app state');
-      
-      // Update dashboard with real user data
-      if (typeof updateDashboardWithProfile === 'function') {
-        updateDashboardWithProfile(userData.profile || {});
-      }
-      
-      // Update UI with real user info
-      updateDashboardUIWithRealUser(window.appState.user);
-      
+
+    if (!userResponse.ok) {
+      console.warn(
+        `⚠️ /api/users/me returned ${userResponse.status}; keeping session and continuing with local state`
+      );
     } else {
-      throw new Error('API returned unsuccessful response');
+      const userData = await userResponse.json();
+
+      if (userData.success) {
+        // Merge API data with existing app state
+        window.appState.user = { ...window.appState.user, ...userData.user };
+        window.appState.profile = userData.profile || {};
+        window.appState.isAuthenticated = true;
+        window.appState.isLoading = false;
+
+        console.log('✅ User profile loaded from API and merged with app state');
+
+        // Update dashboard with real user data
+        if (typeof updateDashboardWithProfile === 'function') {
+          updateDashboardWithProfile(userData.profile || {});
+        }
+
+        // Update UI with real user info
+        updateDashboardUIWithRealUser(window.appState.user);
+      } else {
+        console.warn('⚠️ /api/users/me JSON indicated failure; continuing with local session');
+      }
     }
     
     // Load real user data from APIs
@@ -422,17 +437,8 @@ async function initializeAuthenticatedDashboard() {
     }
     
     console.log('🎉 Personalized dashboard initialization complete');
-    
   } catch (error) {
-    console.error('❌ Failed to load user data from API:', error);
-    
-    // Clear invalid tokens and redirect to login
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('auth_token');
-    localStorage.removeItem('user_id');
-    
-    const currentAppUrl = encodeURIComponent(window.location.href);
-    window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
+    console.error('❌ Dashboard init error (session preserved):', error);
   }
 }
 
@@ -600,6 +606,30 @@ function createCompatibilityLayer() {
 }
 
 // Parse hash parameters from URL (handles #token=...&email=... format)
+
+
+function clearLegacyCrossUserDataIfNeeded(currentUserId) {
+  if (!currentUserId) return;
+
+  const lastUserId = localStorage.getItem('last_authenticated_user_id');
+  if (lastUserId && lastUserId !== currentUserId) {
+    // Remove legacy non-user-scoped dashboard caches that can leak prior user's data.
+    [
+      'symptomData',
+      'symptomLogs',
+      'weightData',
+      'mealFeedback',
+      'mealRatings',
+      'recipeRatings',
+      'medicationProfile',
+      'progressData',
+      'weightLogs'
+    ].forEach((key) => localStorage.removeItem(key));
+  }
+
+  localStorage.setItem('last_authenticated_user_id', currentUserId);
+}
+
 function parseHashParameters() {
   const hash = window.location.hash;
   if (!hash || hash.length <= 1) {
@@ -639,6 +669,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     const tokenFromQuery = searchParams.get('token');
     if (tokenFromQuery) {
       console.log('🔑 Found auth token in URL query (?token=), storing...');
+      console.log('✅ TOKEN_CAPTURED_FROM_QUERY');
       localStorage.setItem('authToken', tokenFromQuery);
       localStorage.setItem('auth_token', tokenFromQuery);
       const uid = searchParams.get('user_id') || searchParams.get('userId');
@@ -680,12 +711,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     if (!authToken) {
       console.log('🚪 No authentication token found, redirecting to marketing site login');
+      console.log('🚨 REDIRECT_LOGIN_REASON=NO_TOKEN_APP_DOMAIN');
       const currentAppUrl = encodeURIComponent(window.location.href);
       window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
       return;
     }
     
     console.log('✅ Authentication token found, initializing authenticated user');
+    console.log('✅ TOKEN_VERIFIED_PROCEEDING_TO_DASHBOARD');
     
     // Get user data from URL params (fresh from login) or local storage
     const urlParams = new URLSearchParams(window.location.search);
@@ -713,6 +746,8 @@ document.addEventListener('DOMContentLoaded', async function() {
       name: userName,
       tier: userTier
     };
+
+    clearLegacyCrossUserDataIfNeeded(window.appState.user.id);
     window.appState.isAuthenticated = true;
     
     console.log('✅ Authenticated user initialized, loading dashboard');
@@ -722,6 +757,7 @@ document.addEventListener('DOMContentLoaded', async function() {
   } else {
     // Not authenticated - redirect to login (PRD §4.1)
     console.log('❌ No authentication token found, redirecting to login');
+    console.log('🚨 REDIRECT_LOGIN_REASON=LEGACY_NO_TOKEN');
     const currentAppUrl = encodeURIComponent(window.location.href);
     window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
     return;
@@ -739,8 +775,7 @@ async function legacyAuthFlow() {
   const tierFromURL = urlParams.get('tier');
   
   if (token && (userId || emailFromURL)) {
-    console.log('🔍 FOUND TOKENS IN URL - token:', token.substring(0, 20) + '...', 'userId:', userId);
-    console.log('🔍 FOUND USER DATA IN URL:', { email: emailFromURL, name: nameFromURL, tier: tierFromURL });
+    console.log('🔍 OAuth redirect: credentials present in URL (values not logged)');
     
     try {
       // Store tokens and clean URL
@@ -821,6 +856,7 @@ async function legacyAuthFlow() {
     await initializeApp();
   } else {
     // Redirect to login for app domain
+    console.log('🚨 REDIRECT_LOGIN_REASON=LEGACY_NOT_AUTH');
     window.location.href = 'https://postdoserx.com/login.html';
   }
 }

@@ -224,9 +224,17 @@
                 
                 const result = await loginResponse.json();
                 console.log('Login API response body:', result);
+
+                if (result.requiresSignup && result.redirectUrl) {
+                    console.log('No CRM contact — sending user to choose a plan:', result.redirectUrl);
+                    console.log('🚨 REDIRECT_SIGNUP_REASON=GHL_NO_CONTACT');
+                    window.location.href = result.redirectUrl;
+                    return;
+                }
                 
                 if (result.success) {
                     console.log('Login successful! Redirecting to:', result.redirectUrl);
+                    console.log('✅ OAUTH_SUCCESS_REDIRECT_TO_APP');
                     
                     // Clear stored session ID
                     localStorage.removeItem('stripe_session_id');
