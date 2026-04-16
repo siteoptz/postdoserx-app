@@ -525,6 +525,28 @@ function createCompatibilityLayer() {
   };
 }
 
+// Parse hash parameters from URL (handles #token=...&email=... format)
+function parseHashParameters() {
+  const hash = window.location.hash;
+  if (!hash || hash.length <= 1) {
+    return null;
+  }
+  
+  console.log('🔍 Parsing hash parameters:', hash);
+  
+  // Remove the # and parse as URLSearchParams
+  const hashContent = hash.substring(1);
+  const params = new URLSearchParams(hashContent);
+  
+  const result = {};
+  for (const [key, value] of params) {
+    result[key] = value;
+  }
+  
+  console.log('📦 Parsed hash parameters:', result);
+  return Object.keys(result).length > 0 ? result : null;
+}
+
 // Initialize authentication on page load
 document.addEventListener('DOMContentLoaded', async function() {
   createCompatibilityLayer();
@@ -534,6 +556,32 @@ document.addEventListener('DOMContentLoaded', async function() {
   console.log('🏠 Domain check - hostname:', window.location.hostname, 'isAppDomain:', isAppDomain);
   
   if (isAppDomain) {
+    // CRITICAL: Process hash parameters BEFORE checking authentication
+    // This prevents redirect loop when coming from postdoserx.com/login.html
+    console.log('🔍 Checking for hash parameters before auth check...');
+    
+    // Parse hash parameters (from postdoserx.com/login.html redirect)
+    const hashParams = parseHashParameters();
+    if (hashParams && hashParams.token) {
+      console.log('🔑 Found auth data in hash, storing tokens...');
+      
+      // Store auth data from hash
+      localStorage.setItem('authToken', hashParams.token);
+      localStorage.setItem('auth_token', hashParams.token);
+      
+      if (hashParams.email) localStorage.setItem('user_email', hashParams.email);
+      if (hashParams.name) localStorage.setItem('user_name', hashParams.name);
+      if (hashParams.tier) localStorage.setItem('user_tier', hashParams.tier);
+      if (hashParams.userId) localStorage.setItem('user_id', hashParams.userId);
+      
+      // Clean the hash from URL
+      if (window.location.hash) {
+        window.history.replaceState(null, null, window.location.pathname + window.location.search);
+      }
+      
+      console.log('✅ Hash auth data processed, proceeding with initialization...');
+    }
+    
     // Use simple token-based authentication for app.postdoserx.com
     console.log('🔐 Checking authentication for app.postdoserx.com...');
     
