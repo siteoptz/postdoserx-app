@@ -343,125 +343,214 @@ async function loadMealPlan(week = null) {
   }
 }
 
-// Initialize the app WITHOUT API dependencies
+// Initialize the app with proper authentication and API-based data loading
 async function initializeApp() {
-  console.log('🚀 OFFLINE MODE: Initializing app without API calls');
+  console.log('🚀 Initializing authenticated app with user-specific data');
   
-  // Get user data from URL parameters (from Google auth) or localStorage backup
+  // Get JWT token from URL or localStorage
   const urlParams = new URLSearchParams(window.location.search);
-  const emailFromURL = urlParams.get('email');
-  const nameFromURL = urlParams.get('name');
-  const tierFromURL = urlParams.get('tier');
+  const tokenFromURL = urlParams.get('token');
+  const userIdFromURL = urlParams.get('user_id');
   
-  // Try to get user data from backup or URL
-  let userData = null;
-  const userBackup = localStorage.getItem('userStateBackup');
+  let authToken = tokenFromURL || localStorage.getItem('authToken') || localStorage.getItem('auth_token');
   
-  if (userBackup) {
-    try {
-      userData = JSON.parse(userBackup);
-      console.log('📦 Restored user data from backup:', userData);
-    } catch (error) {
-      console.error('❌ Failed to parse user backup');
-    }
-  }
-  
-  // Use URL parameters if available (priority over backup)
-  if (emailFromURL) {
-    userData = {
-      email: emailFromURL,
-      name: nameFromURL || userData?.name || 'PostDoseRX User',
-      tier: tierFromURL || userData?.tier || 'trial'
-    };
+  if (tokenFromURL) {
+    // Store token from URL and clean URL
+    localStorage.setItem('authToken', tokenFromURL);
+    localStorage.setItem('auth_token', tokenFromURL);
     
-    // Store email in localStorage for subscription management
-    localStorage.setItem('user_email', emailFromURL);
-    console.log('🔗 Using user data from URL:', userData);
-  }
-  
-  // Final fallback if no data available
-  if (!userData) {
-    userData = {
-      email: 'user@postdoserx.com',
-      name: 'PostDoseRX User',
-      tier: 'trial'
-    };
-    console.log('🔄 Using fallback user data');
-  }
-  
-  // Set application state - NO API CALLS REQUIRED
-  window.appState.user = userData;
-  window.appState.isAuthenticated = true;
-  window.appState.isLoading = false;
-  
-  console.log('✅ User authentication state set (OFFLINE MODE)');
-  
-  // Load profile data from localStorage (no API calls)
-  const storedProfile = localStorage.getItem('medicationProfile');
-  let profileData = {};
-  
-  if (storedProfile) {
-    try {
-      profileData = JSON.parse(storedProfile);
-      console.log('📦 Loaded profile from localStorage');
-    } catch (error) {
-      console.error('❌ Failed to parse stored profile');
+    if (userIdFromURL) {
+      localStorage.setItem('user_id', userIdFromURL);
     }
+    
+    // Clean URL parameters
+    const url = new URL(window.location);
+    url.search = '';
+    window.history.replaceState({}, document.title, url.toString());
+    
+    console.log('✅ Token stored from URL and URL cleaned');
   }
   
-  // Set defaults for missing profile data
-  profileData = {
-    medication: profileData.medication || '',
-    dose: profileData.dose || '',
-    frequency: profileData.frequency || 'Weekly',
-    lastInjection: profileData.lastInjection || '',
-    nextInjection: profileData.nextInjection || '',
-    injectionDay: profileData.injectionDay || '',
-    setupComplete: !!profileData.medication,
-    preferences: profileData.preferences || {}
-  };
-  
-  window.appState.profile = profileData;
-  console.log('✅ Profile data set (OFFLINE MODE)');
-  
-  // Update dashboard with profile data (if function exists)
-  if (typeof updateDashboardWithProfile === 'function') {
-    updateDashboardWithProfile(profileData);
+  if (!authToken) {
+    console.error('❌ No auth token available for initialization');
+    return;
   }
   
-  // Load data from localStorage instead of APIs
-  console.log('💾 Loading data from localStorage (OFFLINE MODE)');
-  
-  const symptomData = JSON.parse(localStorage.getItem('symptomData') || '[]');
-  const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');  
-  const mealRatings = JSON.parse(localStorage.getItem('mealRatings') || '[]');
-  
-  window.appState.symptomData = symptomData;
-  window.appState.progressData = progressData; 
-  window.appState.mealRatings = mealRatings;
-  
-  console.log('✅ All user data loaded from localStorage (OFFLINE MODE)');
-  
-  // Initialize UI components (skip if functions don't exist)
   try {
-    if (typeof initializeSymptomLogger === 'function') {
-      initializeSymptomLogger();
+    // Load user data from API using the real auth token
+    console.log('📡 Loading user profile from API...');
+    const userResponse = await fetch('/api/users/me', {
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (!userResponse.ok) {
+      throw new Error(`User API failed: ${userResponse.status}`);
     }
     
-    if (typeof updateSymptomIntelligence === 'function') {
-      updateSymptomIntelligence();
+    const userData = await userResponse.json();
+    
+    if (userData.success) {
+      window.appState.user = userData.user;
+      window.appState.profile = userData.profile || {};
+      window.appState.isAuthenticated = true;
+      window.appState.isLoading = false;
+      
+      console.log('✅ User data loaded from API:', userData.user);
+      
+      // Update dashboard with real user data
+      if (typeof updateDashboardWithProfile === 'function') {
+        updateDashboardWithProfile(userData.profile || {});
+      }
+      
+      // Update UI with real user info
+      if (typeof updateDashboardUIWithRealUser === 'function') {
+        updateDashboardUIWithRealUser(userData.user);
+      }
+      
+    } else {
+      throw new Error('API returned unsuccessful response');
     }
     
-    if (typeof updateSymptomTimeline === 'function') {
-      updateSymptomTimeline();
+    // Load real user data from APIs
+    console.log('📊 Loading user-specific data from APIs...');
+    
+    await Promise.all([
+      loadUserDataFromAPI('symptoms'),
+      loadUserDataFromAPI('progress'), 
+      loadUserDataFromAPI('ratings'),
+      loadUserDataFromAPI('mealPlan')
+    ]);
+    
+    // Initialize UI components with real data
+    try {
+      if (typeof initializeSymptomLogger === 'function') {
+        initializeSymptomLogger();
+      }
+      
+      if (typeof updateSymptomIntelligence === 'function') {
+        updateSymptomIntelligence();
+      }
+      
+      if (typeof updateSymptomTimeline === 'function') {
+        updateSymptomTimeline();
+      }
+      
+    } catch (error) {
+      console.error('❌ Error initializing UI components:', error);
+    }
+    
+    console.log('🎉 Personalized dashboard initialization complete');
+    
+  } catch (error) {
+    console.error('❌ Failed to load user data from API:', error);
+    
+    // Clear invalid tokens and redirect to login
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('user_id');
+    
+    const currentAppUrl = encodeURIComponent(window.location.href);
+    window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
+  }
+}
+
+// Load user-specific data from APIs
+async function loadUserDataFromAPI(dataType) {
+  const authToken = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
+  
+  if (!authToken) {
+    console.warn(`No auth token for loading ${dataType}`);
+    return;
+  }
+  
+  try {
+    let endpoint;
+    switch (dataType) {
+      case 'symptoms':
+        endpoint = '/api/symptoms';
+        break;
+      case 'progress':
+        endpoint = '/api/progress';
+        break;
+      case 'ratings':
+        endpoint = '/api/ratings';
+        break;
+      case 'mealPlan':
+        endpoint = '/api/meals/plan';
+        break;
+      default:
+        console.warn(`Unknown data type: ${dataType}`);
+        return;
+    }
+    
+    const response = await fetch(endpoint, {
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      console.log(`✅ Loaded ${dataType} from API:`, data);
+      
+      // Store in app state
+      switch (dataType) {
+        case 'symptoms':
+          window.appState.symptomData = data.symptoms || [];
+          break;
+        case 'progress':
+          window.appState.progressData = data.data || {};
+          break;
+        case 'ratings':
+          window.appState.mealRatings = data.ratings || [];
+          break;
+        case 'mealPlan':
+          window.appState.mealPlan = data.data || {};
+          break;
+      }
+    } else {
+      console.warn(`Failed to load ${dataType}: ${response.status}`);
     }
     
   } catch (error) {
-    console.error('❌ Error initializing UI components:', error);
-    // Don't fail the entire app if UI components have issues
+    console.error(`Error loading ${dataType} from API:`, error);
   }
-  
-  console.log('🎉 App initialization complete (OFFLINE MODE) - no API dependencies');
+}
+
+// Helper function to update dashboard UI with real user data (PRD §5.6)
+function updateDashboardUIWithRealUser(user) {
+  try {
+    // Update user name in dashboard header
+    const userNameElements = document.querySelectorAll('#user-name, .user-name');
+    userNameElements.forEach(element => {
+      if (element) {
+        element.textContent = user.name || user.email.split('@')[0];
+      }
+    });
+    
+    // Update dashboard title with real user name
+    const dashboardTitle = document.getElementById('dashboard-title');
+    if (dashboardTitle && user.name) {
+      const medicationName = window.appState.profile?.medication || 'GLP-1';
+      dashboardTitle.innerHTML = `Welcome <span id="user-name">${user.name}</span>, here's your personalized <span id="medication-name">${medicationName}</span> journey dashboard`;
+    }
+    
+    // Update tier-specific elements
+    if (user.tier === 'premium') {
+      const premiumElements = document.querySelectorAll('.premium-feature');
+      premiumElements.forEach(element => {
+        element.classList.remove('disabled');
+      });
+    }
+    
+    console.log('✅ Dashboard UI updated with real user data');
+  } catch (error) {
+    console.error('❌ Error updating dashboard UI:', error);
+  }
 }
 
 // Helper function to update form fields
@@ -627,22 +716,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     console.log('✅ Authenticated user initialized, loading dashboard');
     await initializeApp();
   } else {
-    // On marketing site - allow demo access for preview
-    console.log('🏠 On marketing site - showing demo preview');
-    window.appState.user = {
-      id: 'demo-user',
-      email: 'user@example.com', 
-      name: 'Demo User',
-      tier: 'trial'
-    };
-    window.appState.profile = {
-      medication: null,
-      dose_amount: null,
-      injection_day: null,
-      preferences: {}
-    };
-    window.appState.isAuthenticated = false;
-    await initializeApp();
+    // Not authenticated - redirect to login (PRD §4.1)
+    console.log('❌ No authentication token found, redirecting to login');
+    const currentAppUrl = encodeURIComponent(window.location.href);
+    window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
+    return;
   }
 });
 
