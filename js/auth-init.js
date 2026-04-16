@@ -343,36 +343,16 @@ async function loadMealPlan(week = null) {
   }
 }
 
-// Initialize the app with proper authentication and API-based data loading
-async function initializeApp() {
-  console.log('🚀 Initializing authenticated app with user-specific data');
+// Initialize authenticated dashboard with user-specific data (PRD §5.6)
+async function initializeAuthenticatedDashboard() {
+  console.log('🚀 Initializing authenticated dashboard with user-specific data');
   
-  // Get JWT token from URL or localStorage
-  const urlParams = new URLSearchParams(window.location.search);
-  const tokenFromURL = urlParams.get('token');
-  const userIdFromURL = urlParams.get('user_id');
-  
-  let authToken = tokenFromURL || localStorage.getItem('authToken') || localStorage.getItem('auth_token');
-  
-  if (tokenFromURL) {
-    // Store token from URL and clean URL
-    localStorage.setItem('authToken', tokenFromURL);
-    localStorage.setItem('auth_token', tokenFromURL);
-    
-    if (userIdFromURL) {
-      localStorage.setItem('user_id', userIdFromURL);
-    }
-    
-    // Clean URL parameters
-    const url = new URL(window.location);
-    url.search = '';
-    window.history.replaceState({}, document.title, url.toString());
-    
-    console.log('✅ Token stored from URL and URL cleaned');
-  }
+  const authToken = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
   
   if (!authToken) {
-    console.error('❌ No auth token available for initialization');
+    console.error('❌ No auth token available for dashboard initialization');
+    const currentAppUrl = encodeURIComponent(window.location.href);
+    window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
     return;
   }
   
@@ -393,12 +373,13 @@ async function initializeApp() {
     const userData = await userResponse.json();
     
     if (userData.success) {
-      window.appState.user = userData.user;
+      // Merge API data with existing app state
+      window.appState.user = { ...window.appState.user, ...userData.user };
       window.appState.profile = userData.profile || {};
       window.appState.isAuthenticated = true;
       window.appState.isLoading = false;
       
-      console.log('✅ User data loaded from API:', userData.user);
+      console.log('✅ User profile loaded from API and merged with app state');
       
       // Update dashboard with real user data
       if (typeof updateDashboardWithProfile === 'function') {
@@ -406,9 +387,7 @@ async function initializeApp() {
       }
       
       // Update UI with real user info
-      if (typeof updateDashboardUIWithRealUser === 'function') {
-        updateDashboardUIWithRealUser(userData.user);
-      }
+      updateDashboardUIWithRealUser(window.appState.user);
       
     } else {
       throw new Error('API returned unsuccessful response');
@@ -455,6 +434,12 @@ async function initializeApp() {
     const currentAppUrl = encodeURIComponent(window.location.href);
     window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
   }
+}
+
+// Legacy initialize function (kept for compatibility, now calls authenticated dashboard)
+async function initializeApp() {
+  console.log('🔄 Legacy initializeApp called - delegating to authenticated dashboard initialization');
+  await initializeAuthenticatedDashboard();
 }
 
 // Load user-specific data from APIs
@@ -645,29 +630,45 @@ document.addEventListener('DOMContentLoaded', async function() {
   console.log('🏠 Domain check - hostname:', window.location.hostname, 'isAppDomain:', isAppDomain);
   
   if (isAppDomain) {
-    // CRITICAL: Process hash parameters BEFORE checking authentication
-    // This prevents redirect loop when coming from postdoserx.com/login.html
-    console.log('🔍 Checking for hash parameters before auth check...');
-    
-    // Parse hash parameters (from postdoserx.com/login.html redirect)
+    // CRITICAL: Process OAuth return tokens BEFORE checking authentication.
+    // Login API returns ?token=...&user_id=... (query). Older flows used #token=... (hash).
+    // If we skip this, localStorage is empty on first landing → redirect to login → infinite loop.
+    console.log('🔍 Checking for token in URL (query + hash) before auth check...');
+
+    const searchParams = new URLSearchParams(window.location.search);
+    const tokenFromQuery = searchParams.get('token');
+    if (tokenFromQuery) {
+      console.log('🔑 Found auth token in URL query (?token=), storing...');
+      localStorage.setItem('authToken', tokenFromQuery);
+      localStorage.setItem('auth_token', tokenFromQuery);
+      const uid = searchParams.get('user_id') || searchParams.get('userId');
+      if (uid) localStorage.setItem('user_id', uid);
+      if (searchParams.get('email')) localStorage.setItem('user_email', searchParams.get('email'));
+      if (searchParams.get('name')) localStorage.setItem('user_name', searchParams.get('name'));
+      if (searchParams.get('tier')) localStorage.setItem('user_tier', searchParams.get('tier'));
+      const clean = new URL(window.location.href);
+      clean.search = '';
+      window.history.replaceState({}, document.title, clean.pathname + clean.hash);
+      console.log('✅ Query auth data stored and URL cleaned');
+    }
+
+    // Parse hash parameters (legacy redirect: #token=...)
     const hashParams = parseHashParameters();
     if (hashParams && hashParams.token) {
       console.log('🔑 Found auth data in hash, storing tokens...');
-      
-      // Store auth data from hash
+
       localStorage.setItem('authToken', hashParams.token);
       localStorage.setItem('auth_token', hashParams.token);
-      
+
       if (hashParams.email) localStorage.setItem('user_email', hashParams.email);
       if (hashParams.name) localStorage.setItem('user_name', hashParams.name);
       if (hashParams.tier) localStorage.setItem('user_tier', hashParams.tier);
       if (hashParams.userId) localStorage.setItem('user_id', hashParams.userId);
-      
-      // Clean the hash from URL
+
       if (window.location.hash) {
         window.history.replaceState(null, null, window.location.pathname + window.location.search);
       }
-      
+
       console.log('✅ Hash auth data processed, proceeding with initialization...');
     }
     
@@ -691,19 +692,20 @@ document.addEventListener('DOMContentLoaded', async function() {
     const emailFromURL = urlParams.get('email');
     const nameFromURL = urlParams.get('name');
     const tierFromURL = urlParams.get('tier');
-    const userIdFromURL = urlParams.get('userId');
-    
-    // Also check localStorage for user data
+    const userIdFromURL =
+      urlParams.get('userId') || urlParams.get('user_id') || localStorage.getItem('user_id');
+
+    // Also check localStorage for user data (query may already be cleaned after ?token= capture)
     const userEmail = emailFromURL || localStorage.getItem('user_email');
     const userName = nameFromURL || localStorage.getItem('user_name') || 'User';
     const userTier = tierFromURL || localStorage.getItem('user_tier') || 'trial';
-    
-    console.log('🎯 User data for authenticated session:', { 
-      email: userEmail, 
-      name: userName, 
-      tier: userTier 
+
+    console.log('🎯 User data for authenticated session:', {
+      email: userEmail,
+      name: userName,
+      tier: userTier
     });
-    
+
     // Set authenticated user state
     window.appState.user = {
       id: userIdFromURL || 'authenticated-user',
@@ -714,7 +716,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     window.appState.isAuthenticated = true;
     
     console.log('✅ Authenticated user initialized, loading dashboard');
-    await initializeApp();
+    
+    // Load user profile and dashboard data using the authenticated API approach
+    await initializeAuthenticatedDashboard();
   } else {
     // Not authenticated - redirect to login (PRD §4.1)
     console.log('❌ No authentication token found, redirecting to login');
