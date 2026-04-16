@@ -590,7 +590,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     if (!authToken) {
       console.log('🚪 No authentication token found, redirecting to marketing site login');
-      window.location.href = 'https://postdoserx.com/login.html';
+      const currentAppUrl = encodeURIComponent(window.location.href);
+      window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
       return;
     }
     

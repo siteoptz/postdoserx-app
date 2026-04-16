@@ -1,0 +1,63 @@
+{
+  "timestamp": "2026-04-16T00:41:12.806Z",
+  "total_lanes": 5,
+  "total_issues": 3,
+  "overall_status": "warn",
+  "lanes": [
+    {
+      "lane": "correctness",
+      "name": "Correctness/Bugs",
+      "issues": [],
+      "summary": "0 issues found",
+      "status": "pass"
+    },
+    {
+      "lane": "architecture",
+      "name": "Architecture/Design",
+      "issues": [],
+      "summary": "0 issues found",
+      "status": "pass"
+    },
+    {
+      "lane": "style",
+      "name": "Style/Rules",
+      "issues": [
+        {
+          "type": "file-size",
+          "severity": "medium",
+          "message": "Large file may benefit from refactoring",
+          "file": "./js/auth-init.js"
+        },
+        {
+          "type": "file-size",
+          "severity": "medium",
+          "message": "Large file may benefit from refactoring",
+          "file": "./agent/orchestrate.js"
+        },
+        {
+          "type": "file-size",
+          "severity": "medium",
+          "message": "Large file may benefit from refactoring",
+          "file": "./agent/plan.js"
+        }
+      ],
+      "summary": "3 issues found",
+      "status": "warn"
+    },
+    {
+      "lane": "performance",
+      "name": "Performance/Reliability",
+      "issues": [],
+      "summary": "0 issues found",
+      "status": "pass"
+    },
+    {
+      "lane": "regression",
+      "name": "Regression/History/Context",
+      "issues": [],
+      "summary": "0 issues found",
+      "status": "pass"
+    }
+  ],
+  "summary": "Code review completed: 3 total issues across 5 lanes"
+}

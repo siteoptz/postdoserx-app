@@ -1,0 +1,150 @@
+name: Agent Stack Security
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+  schedule:
+    # Run daily at 6 AM UTC
+    - cron: '0 6 * * *'
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Needed for change detection
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Parse suppressions
+      run: npm run agent:suppressions:parse:strict
+      continue-on-error: false
+
+    - name: Validate suppressions
+      run: npm run agent:suppressions:validate
+      continue-on-error: false
+
+    - name: Run security scan
+      run: npm run agent:security:ci
+      continue-on-error: true  # Stage 1: warn-only
+      # TODO: Change to 'continue-on-error: false' in Stage 2
+
+    - name: Upload security report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: security-report
+        path: docs/agent-stack/security-report.json
+        retention-days: 30
+
+    - name: Comment PR with security summary
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const path = 'docs/agent-stack/security-report.json';
+          
+          if (!fs.existsSync(path)) {
+            return;
+          }
+          
+          const report = JSON.parse(fs.readFileSync(path, 'utf8'));
+          
+          const body = `## 🔐 Security Scan Results
+          
+          **Status:** ${report.overall_status.toUpperCase()}
+          **Issues:** ${report.total_issues} total (${report.critical_issues} critical, ${report.high_issues} high)
+          
+          ${report.total_issues > 0 ? '⚠️ Issues found - see details in security report artifact' : '✅ No security issues detected'}
+          
+          *Scan timestamp: ${report.timestamp}*
+          `;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: body
+          });
+
+  # Additional security checks can be added here:
+  # - SAST scanning (CodeQL, Semgrep)
+  # - Container scanning (if using containers)
+  # - Infrastructure as Code scanning (if applicable)
+  
+  suppression-audit:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js  
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Audit suppressions
+      run: |
+        npm run agent:suppressions:validate
+        node -e "
+          const fs = require('fs');
+          const report = JSON.parse(fs.readFileSync('docs/agent-stack/suppressions.json', 'utf8'));
+          const now = new Date();
+          
+          const expiredSuppressions = report.suppressions.filter(s => 
+            new Date(s.expiry) < now
+          );
+          
+          if (expiredSuppressions.length > 0) {
+            console.log('⚠️ Expired suppressions found:');
+            expiredSuppressions.forEach(s => 
+              console.log(\`  - \${s.id}: \${s.rule_id} (expired \${s.expiry})\`)
+            );
+            process.exit(1);
+          } else {
+            console.log('✅ All suppressions are current');
+          }
+        "
+
+    - name: Create issue for expired suppressions
+      if: failure()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const title = '🔐 Security suppressions need review';
+          const body = `Automated audit found expired security suppressions that need review.
+          
+          Please run \`npm run agent:suppressions:validate\` locally to see details.
+          
+          Either:
+          - Renew suppressions with updated expiry dates and justification
+          - Remove suppressions for issues that are now fixed
+          - Update suppression status to 'resolved'
+          `;
+          
+          github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: title,
+            body: body,
+            labels: ['security', 'automated']
+          });

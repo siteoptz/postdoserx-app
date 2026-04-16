@@ -1,0 +1,148 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://postdoserx.com/schemas/suppression.json",
+  "title": "Suppression Entry",
+  "description": "Schema for agent stack suppression entries",
+  "type": "object",
+  "required": [
+    "id",
+    "type", 
+    "status",
+    "severity",
+    "rule_id",
+    "scope",
+    "introduced_on",
+    "expiry",
+    "owner",
+    "rationale",
+    "issue_link",
+    "last_reviewed"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^(SEC|REV|UI)-[0-9]{3}$",
+      "description": "Unique identifier (SEC-001, REV-001, UI-001)"
+    },
+    "type": {
+      "type": "string", 
+      "enum": ["security", "review", "ui"],
+      "description": "Type of suppression"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "resolved", "expired"],
+      "description": "Current status"
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low"],
+      "description": "Issue severity level"
+    },
+    "rule_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Rule or check identifier"
+    },
+    "scope": {
+      "type": "string", 
+      "minLength": 1,
+      "description": "File, function, or component affected"
+    },
+    "introduced_on": {
+      "type": "string",
+      "format": "date",
+      "description": "Date suppression was added (YYYY-MM-DD)"
+    },
+    "expiry": {
+      "type": "string",
+      "format": "date", 
+      "description": "Date suppression expires (YYYY-MM-DD)"
+    },
+    "owner": {
+      "type": "string",
+      "pattern": "^@[a-zA-Z0-9_-]+$",
+      "description": "GitHub username (@username)"
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 10,
+      "description": "Detailed justification for suppression"
+    },
+    "issue_link": {
+      "type": "string",
+      "format": "uri",
+      "description": "Link to tracking issue"
+    },
+    "last_reviewed": {
+      "type": "string", 
+      "format": "date",
+      "description": "Last review date (YYYY-MM-DD)"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "type": { "const": "security" } }
+      },
+      "then": {
+        "required": ["tool"],
+        "properties": {
+          "tool": {
+            "type": "string",
+            "description": "Security tool that generated finding"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "review" } }
+      },
+      "then": {
+        "required": ["lane"],
+        "properties": {
+          "lane": {
+            "type": "string", 
+            "enum": ["correctness", "architecture", "style", "performance", "regression"],
+            "description": "Review lane that identified issue"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "type": { "const": "ui" } }
+      },
+      "then": {
+        "required": ["category", "impacted_flows"],
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": ["accessibility", "usability", "design", "performance"], 
+            "description": "UI issue category"
+          },
+          "impacted_flows": {
+            "type": "string",
+            "description": "User flows affected by the issue"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "severity": { "const": "critical" } }
+      },
+      "then": {
+        "required": ["approver"],
+        "properties": {
+          "approver": {
+            "type": "string",
+            "pattern": "^@[a-zA-Z0-9_-]+$",
+            "description": "Approver for critical suppressions"
+          }
+        }
+      }
+    }
+  ]
+}

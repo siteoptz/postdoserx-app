@@ -1,0 +1,226 @@
+name: Agent Stack Quality
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  code-review:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run parallel code review
+      run: npm run agent:review:ci
+      continue-on-error: true  # Stage 1: warn-only
+      # TODO: Change to 'continue-on-error: false' in Stage 2
+
+    - name: Upload review report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: code-review-report
+        path: docs/agent-stack/review-report.json
+        retention-days: 30
+
+  ui-review:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Run UI/accessibility review
+      run: npm run agent:ui-review
+      continue-on-error: true  # Stage 1: warn-only
+      # TODO: Change to 'continue-on-error: false' for critical a11y issues in Stage 4
+
+    - name: Upload UI report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: ui-review-report
+        path: docs/agent-stack/ui-report.json
+        retention-days: 30
+
+  process-gate:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Check for protected path changes
+      run: |
+        # Check if protected paths were modified
+        PROTECTED_PATHS="/api/ /login.html /after-checkout.html /success.html"
+        CHANGED_FILES=$(git diff --name-only origin/main..HEAD)
+        
+        PROTECTED_CHANGED=""
+        for file in $CHANGED_FILES; do
+          for path in $PROTECTED_PATHS; do
+            if [[ "$file" == *"$path"* ]]; then
+              PROTECTED_CHANGED="$PROTECTED_CHANGED $file"
+            fi
+          done
+        done
+        
+        if [ ! -z "$PROTECTED_CHANGED" ]; then
+          echo "Protected paths changed: $PROTECTED_CHANGED"
+          echo "PROTECTED_CHANGES=true" >> $GITHUB_ENV
+          echo "CHANGED_PROTECTED_FILES=$PROTECTED_CHANGED" >> $GITHUB_ENV
+        else
+          echo "No protected paths changed"
+          echo "PROTECTED_CHANGES=false" >> $GITHUB_ENV
+        fi
+
+    - name: Check for required artifacts
+      if: env.PROTECTED_CHANGES == 'true'
+      run: |
+        echo "Protected paths were changed, checking for required process artifacts..."
+        
+        # Check for plan document
+        PLANS_DIR="docs/agent-stack/plans"
+        REVIEWS_DIR="docs/agent-stack/self-reviews"
+        
+        MISSING_ARTIFACTS=""
+        
+        if [ ! -d "$PLANS_DIR" ] || [ -z "$(ls -A $PLANS_DIR 2>/dev/null)" ]; then
+          MISSING_ARTIFACTS="$MISSING_ARTIFACTS plan"
+        fi
+        
+        if [ ! -d "$REVIEWS_DIR" ] || [ -z "$(ls -A $REVIEWS_DIR 2>/dev/null)" ]; then
+          MISSING_ARTIFACTS="$MISSING_ARTIFACTS self-review"
+        fi
+        
+        if [ ! -z "$MISSING_ARTIFACTS" ]; then
+          echo "::warning::Missing process artifacts for protected path changes: $MISSING_ARTIFACTS"
+          echo "::notice::Required for protected paths: plan (npm run agent:plan), self-review (npm run agent:self-review)"
+          # Stage 1: warn-only
+          # TODO: Change to exit 1 in Stage 5 to enforce process gates
+        else
+          echo "✅ Required process artifacts found"
+        fi
+
+  aggregated-quality:
+    runs-on: ubuntu-latest
+    needs: [code-review, ui-review]
+    if: always() && github.event_name == 'pull_request'
+    
+    steps:
+    - name: Download all reports
+      uses: actions/download-artifact@v4
+      with:
+        path: reports
+
+    - name: Generate aggregated summary
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const path = require('path');
+          
+          let summary = '## 📊 Quality Review Summary\n\n';
+          let totalIssues = 0;
+          let hasErrors = false;
+          
+          // Code Review Report
+          const reviewPath = 'reports/code-review-report/review-report.json';
+          if (fs.existsSync(reviewPath)) {
+            const review = JSON.parse(fs.readFileSync(reviewPath, 'utf8'));
+            summary += `### 🔍 Code Review\n`;
+            summary += `**Status:** ${review.overall_status.toUpperCase()}\n`;
+            summary += `**Issues:** ${review.total_issues} across ${review.total_lanes} lanes\n\n`;
+            
+            for (const lane of review.lanes) {
+              summary += `- ${lane.name}: ${lane.status.toUpperCase()} (${lane.issues.length} issues)\n`;
+            }
+            summary += '\n';
+            
+            totalIssues += review.total_issues;
+            if (review.overall_status === 'error') hasErrors = true;
+          }
+          
+          // UI Review Report  
+          const uiPath = 'reports/ui-review-report/ui-report.json';
+          if (fs.existsSync(uiPath)) {
+            const ui = JSON.parse(fs.readFileSync(uiPath, 'utf8'));
+            summary += `### 🎨 UI/Accessibility Review\n`;
+            summary += `**Status:** ${ui.overall_status.toUpperCase()}\n`;
+            summary += `**Issues:** ${ui.total_issues} across ${ui.files_scanned} files\n`;
+            summary += `**Accessibility Issues:** ${ui.accessibility_issues}\n\n`;
+            
+            for (const [category, count] of Object.entries(ui.by_category)) {
+              if (count > 0) {
+                summary += `- ${category}: ${count}\n`;
+              }
+            }
+            summary += '\n';
+            
+            totalIssues += ui.total_issues;
+            if (ui.overall_status === 'error') hasErrors = true;
+          }
+          
+          // Overall Assessment
+          summary += `### 📈 Overall Assessment\n`;
+          summary += `**Total Issues:** ${totalIssues}\n`;
+          summary += `**Status:** ${hasErrors ? '❌ ERRORS' : totalIssues > 0 ? '⚠️ ISSUES FOUND' : '✅ CLEAN'}\n\n`;
+          
+          if (totalIssues > 0) {
+            summary += `*Review detailed reports in the workflow artifacts for specific issues.*\n`;
+          }
+          
+          summary += `\n*Quality scan completed at ${new Date().toISOString()}*`;
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: summary
+          });
+
+  memory-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Check agent memory bootstrap
+      run: npm run agent:memory:check

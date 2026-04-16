@@ -1,0 +1,52 @@
+{
+  "timestamp": "2026-04-16T00:41:14.068Z",
+  "total_issues": 4,
+  "critical_issues": 1,
+  "high_issues": 1,
+  "overall_status": "critical",
+  "scans": {
+    "secrets": {
+      "type": "secret-scan",
+      "issues": [
+        {
+          "type": "secret",
+          "rule": "generic-secret",
+          "severity": "high",
+          "message": "Potential secret detected: generic-secret",
+          "file": "./js/auth-init.js",
+          "line": 659,
+          "evidence": "token:', token.substring(0, 20) + '..."
+        },
+        {
+          "type": "secret",
+          "rule": "generic-secret",
+          "severity": "critical",
+          "message": "Secret in HTML script: generic-secret",
+          "file": "index.html",
+          "evidence": "token:', error);\n          // ..."
+        }
+      ]
+    },
+    "dependencies": {
+      "type": "dependency-scan",
+      "issues": [
+        {
+          "type": "vulnerability",
+          "rule": "known-vulnerability",
+          "severity": "low",
+          "message": "Known vulnerability in @supabase/supabase-js@^2.38.4",
+          "file": "package.json",
+          "details": "Potential XSS in browser client (example)",
+          "cve": "CVE-2024-EXAMPLE"
+        },
+        {
+          "type": "warning",
+          "severity": "low",
+          "message": "npm audit unavailable or failed",
+          "file": "package.json"
+        }
+      ]
+    }
+  },
+  "summary": "Security scan: 4 issues (1 critical, 1 high)"
+}

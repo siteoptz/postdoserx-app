@@ -8,7 +8,19 @@
     "dev": "vercel dev",
     "build": "echo 'Static site - no build needed'",
     "deploy": "vercel --prod",
-    "db:setup": "echo 'Run the SQL schema in your Supabase dashboard'"
+    "db:setup": "echo 'Run the SQL schema in your Supabase dashboard'",
+    "agent:memory:check": "node scripts/agent-memory.js",
+    "agent:plan": "node scripts/agent-plan.js",
+    "agent:self-review": "node scripts/agent-self-review.js",
+    "agent:review": "node scripts/agent-review.js",
+    "agent:review:ci": "node scripts/agent-review.js --ci",
+    "agent:security": "node scripts/agent-security.js",
+    "agent:security:ci": "node scripts/agent-security.js --ci",
+    "agent:ui-review": "node scripts/agent-ui-review.js",
+    "agent:orchestrate": "node scripts/agent-orchestrate.js",
+    "agent:suppressions:parse": "node scripts/suppressions.js --strict=false",
+    "agent:suppressions:parse:strict": "node scripts/suppressions.js --strict=true",
+    "agent:suppressions:validate": "npm run agent:suppressions:parse:strict && node scripts/validate-suppressions.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.38.4",
@@ -16,7 +28,9 @@
     "stripe": "^22.0.0"
   },
   "devDependencies": {
-    "@vercel/node": "^3.0.12"
+    "@vercel/node": "^3.0.12",
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1"
   },
   "engines": {
     "node": ">=18.0.0"
