@@ -7881,7 +7881,7 @@
       <div class="user-profile" id="user-profile" onclick="toggleUserDropdown()">
         <div class="user-avatar" id="user-avatar">D</div>
         <div class="user-info">
-          <div class="user-name" id="user-name">Demo User</div>
+          <div class="user-name" id="user-name">Loading user...</div>
           <div class="user-tier" id="user-tier">Trial</div>
         </div>
         <span class="dropdown-arrow">▼</span>
@@ -7893,8 +7893,8 @@
           <button class="mobile-close-btn" onclick="toggleUserDropdown()" aria-label="Close user dropdown">
             <i data-lucide="x"></i>
           </button>
-          <div class="dropdown-user-name" id="dropdown-user-name">Demo User</div>
-          <div class="dropdown-user-email" id="dropdown-user-email">demo@postdoserx.com</div>
+          <div class="dropdown-user-name" id="dropdown-user-name">Loading user...</div>
+          <div class="dropdown-user-email" id="dropdown-user-email">Authenticated session required</div>
           <div class="dropdown-user-tier" id="dropdown-user-tier">Trial Account</div>
         </div>
         
@@ -8074,7 +8074,7 @@
               
               <div class="form-field">
                 <label for="dose-input">Current Dose</label>
-                <input type="text" id="dose-input" placeholder="e.g. 0.5 mg" onchange="saveMedicationProfile()">
+                <input type="text" id="dose-input" placeholder="e.g. 0.5 mg" aria-label="Medication dose" onchange="saveMedicationProfile()">
               </div>
               
               <div class="form-field">
@@ -8091,12 +8091,12 @@
             <div class="form-row">
               <div class="form-field">
                 <label for="last-injection">Last Injection Date</label>
-                <input type="date" id="last-injection" onchange="saveMedicationProfile()">
+                <input type="date" id="last-injection" aria-label="Last injection date" onchange="saveMedicationProfile()">
               </div>
               
               <div class="form-field">
                 <label for="next-injection">Next Injection Date</label>
-                <input type="date" id="next-injection" onchange="saveMedicationProfile()">
+                <input type="date" id="next-injection" aria-label="Next injection date" onchange="saveMedicationProfile()">
               </div>
               
               <div class="form-field">
@@ -9837,7 +9837,7 @@
                 <div class="ai-suggestion">AI suggests: Log before meals</div>
               </div>
               <div class="rating-slider">
-                <input type="range" min="0" max="5" value="0" id="nausea-level" oninput="updateSymptomValue('nausea', this.value)">
+                <input type="range" min="0" max="5" value="0" id="nausea-level" aria-label="Nausea level" oninput="updateSymptomValue('nausea', this.value)">
                 <div class="slider-labels">
                   <span>None</span>
                   <span>Mild</span>
@@ -9854,7 +9854,7 @@
                 <div class="pattern-note">Usually improves by Day 5</div>
               </div>
               <div class="rating-slider">
-                <input type="range" min="0" max="5" value="0" id="fatigue-level" oninput="updateSymptomValue('fatigue', this.value)">
+                <input type="range" min="0" max="5" value="0" id="fatigue-level" aria-label="Fatigue level" oninput="updateSymptomValue('fatigue', this.value)">
                 <div class="slider-labels">
                   <span>Exhausted</span>
                   <span>Low</span>
@@ -9871,7 +9871,7 @@
                 <div class="correlation-note">Linked to meal timing</div>
               </div>
               <div class="rating-slider">
-                <input type="range" min="0" max="5" value="0" id="appetite-level" oninput="updateSymptomValue('appetite', this.value)">
+                <input type="range" min="0" max="5" value="0" id="appetite-level" aria-label="Appetite level" oninput="updateSymptomValue('appetite', this.value)">
                 <div class="slider-labels">
                   <span>None</span>
                   <span>Poor</span>
@@ -9888,7 +9888,7 @@
                 <div class="importance-note">Key predictor for nausea</div>
               </div>
               <div class="rating-slider">
-                <input type="range" min="0" max="5" value="0" id="sleep-level" oninput="updateSymptomValue('sleep', this.value)">
+                <input type="range" min="0" max="5" value="0" id="sleep-level" aria-label="Sleep quality level" oninput="updateSymptomValue('sleep', this.value)">
                 <div class="slider-labels">
                   <span>Poor</span>
                   <span>Fair</span>
@@ -11733,7 +11733,7 @@
       
       actionsList.innerHTML = actions.map(action => `
         <div class="action-item">
-          <input type="checkbox" id="${action.id}" ${action.checked ? 'checked' : ''}>
+          <input type="checkbox" id="${action.id}" ${action.checked ? 'checked' : ''} aria-label="${String(action.text).replace(/"/g, '&quot;')}">
           <label for="${action.id}">${action.text}</label>
         </div>
       `).join('');
@@ -13597,12 +13597,12 @@
     
     // Function to update user dropdown with real data
     function updateUserDropdownWithRealData() {
-      const userTier = localStorage.getItem('userTier') || 'trial';
+      const userTier = (window.appState?.user?.tier || localStorage.getItem('user_tier') || 'trial').toLowerCase();
       
       // Get real user data from Google authentication (stored in window.appState)
       const realUser = window.appState?.user || {};
-      const userName = realUser.name || realUser.email || 'User';
-      const userEmail = realUser.email || 'user@example.com';
+      const userName = realUser.name || realUser.email || 'Authenticated User';
+      const userEmail = realUser.email || 'No email loaded';
       
       console.log('Updating dropdown with real user data:', { userName, userEmail, userTier });
       
@@ -13646,10 +13646,12 @@
       const progressElement = document.getElementById('dropdown-progress-stats');
       if (!progressElement) return;
       
-      // Get real data from localStorage
-      const weightData = JSON.parse(localStorage.getItem('weightData') || '[]');
-      const mealFeedback = JSON.parse(localStorage.getItem('mealFeedback') || '{}');
-      const symptomData = JSON.parse(localStorage.getItem('symptomData') || '{}');
+      // Use API-populated app state when available; avoid cross-user localStorage leakage.
+      const weightData = Array.isArray(window.appState?.progressData?.weightLogs)
+        ? window.appState.progressData.weightLogs
+        : [];
+      const mealFeedback = window.appState?.mealFeedback || {};
+      const symptomData = window.appState?.symptomData || {};
       
       const weightCount = weightData.length;
       const mealCount = Object.keys(mealFeedback).length;
@@ -13667,7 +13669,7 @@
       const mealsElement = document.getElementById('dropdown-rated-meals');
       if (!mealsElement) return;
       
-      const mealFeedback = JSON.parse(localStorage.getItem('mealFeedback') || '{}');
+      const mealFeedback = window.appState?.mealFeedback || {};
       const ratedMeals = Object.keys(mealFeedback);
       
       if (ratedMeals.length === 0) {
@@ -13753,7 +13755,7 @@
             console.log('⚠️ Auth functions not loaded but user token exists - staying authenticated');
           }
         } catch (error) {
-          console.error('⚠️ API calls failed but keeping user authenticated due to valid token:', error);
+          console.error('⚠️ API calls failed but keeping user authenticated (session preserved):', error);
           // DO NOT clear tokens or set authentication to false here
         }
         
@@ -18462,11 +18464,11 @@ For clinical review and treatment optimization.`;
         <form id="profile-form">
           <div class="form-group">
             <label for="profile-name">Your Name</label>
-            <input type="text" id="profile-name" placeholder="Enter your name" />
+            <input type="text" id="profile-name" placeholder="Enter your name" aria-label="Your name" />
           </div>
           <div class="form-group">
             <label for="profile-email">Email</label>
-            <input type="email" id="profile-email" placeholder="Enter your email" readonly />
+            <input type="email" id="profile-email" placeholder="Enter your email" aria-label="Email address" readonly />
           </div>
           <div class="form-group">
             <label for="profile-medication">Medication</label>
@@ -18509,7 +18511,7 @@ For clinical review and treatment optimization.`;
           </div>
           <div class="form-group">
             <label for="profile-dose">Current Dose</label>
-            <input type="text" id="profile-dose" placeholder="e.g., 0.5mg, 1mg" />
+            <input type="text" id="profile-dose" placeholder="e.g., 0.5mg, 1mg" aria-label="Medication dose" />
           </div>
           <div class="form-group">
             <label for="profile-injection-day">Injection Day</label>
@@ -18525,7 +18527,7 @@ For clinical review and treatment optimization.`;
           </div>
           <div class="form-group">
             <label for="profile-next-injection">Next Injection Date</label>
-            <input type="date" id="profile-next-injection-input" />
+            <input type="date" id="profile-next-injection-input" aria-label="Next injection date" />
           </div>
           <div class="modal-actions">
             <button type="button" class="button-professional--outline" onclick="closeUserModal('profile-modal')">Cancel</button>
@@ -18687,11 +18689,11 @@ For clinical review and treatment optimization.`;
         <form id="weight-log-form">
           <div class="form-group">
             <label for="current-weight">Current Weight (lbs)</label>
-            <input type="number" id="current-weight" step="0.1" min="0" max="1000" placeholder="Enter your weight" required />
+            <input type="number" id="current-weight" step="0.1" min="0" max="1000" placeholder="Enter your weight" aria-label="Current weight" required />
           </div>
           <div class="form-group">
             <label for="weight-date">Date</label>
-            <input type="date" id="weight-date" required />
+            <input type="date" id="weight-date" aria-label="Weight log date" required />
           </div>
           <div class="form-group">
             <label for="weight-notes">Notes (Optional)</label>
@@ -18718,11 +18720,11 @@ For clinical review and treatment optimization.`;
         <form id="goal-form">
           <div class="form-group">
             <label for="goal-weight">Target Weight (lbs)</label>
-            <input type="number" id="goal-weight" step="0.1" min="0" max="1000" placeholder="Enter your goal weight" required />
+            <input type="number" id="goal-weight" step="0.1" min="0" max="1000" placeholder="Enter your goal weight" aria-label="Goal weight" required />
           </div>
           <div class="form-group">
             <label for="goal-timeline">Target Date (Optional)</label>
-            <input type="date" id="goal-timeline" />
+            <input type="date" id="goal-timeline" aria-label="Goal target date" />
           </div>
           <div class="form-group">
             <label for="goal-motivation">Motivation (Optional)</label>

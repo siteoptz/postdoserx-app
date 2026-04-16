@@ -3,11 +3,13 @@ import { SignJWT } from 'jose';
 import { createClient } from '@supabase/supabase-js';
 import {
   searchGHLContact,
+  searchGHLContactDetailed,
+  isGHLConfigured,
   createPostdoserxGHLContact,
   updateGHLContactPlanTags,
   extractPostdoserxPlanFromTags,
 } from '../../lib/postdoserx/ghl.js';
-import { consumePendingPlan } from '../../lib/postdoserx/pending-plan-store.js';
+import { consumePendingPlan, peekPendingPlan } from '../../lib/postdoserx/pending-plan-store.js';
 
 // Environment variables
 const SUPABASE_URL = process.env.SUPABASE_URL;
@@ -45,20 +47,53 @@ export default async function handler(req, res) {
     console.log(`🔐 Login attempt for ${email} with session: ${stripe_session_id || 'none'}`);
 
     try {
-      // Check for pending Stripe plan from checkout
-      const pendingPlan = consumePendingPlan(email);
-      let planFromStripe = pendingPlan?.plan || null;
-      
-      console.log(`📦 Pending plan for ${email}:`, pendingPlan);
-
-      // Check if user exists in database
-      let { data: existingUser, error: fetchError } = await supabase
+      // Check if user exists in database (before consuming pending checkout)
+      let { data: existingUser } = await supabase
         .from('users')
         .select('*')
         .eq('email', email)
         .single();
 
       let user = existingUser;
+
+      const pendingPeek = peekPendingPlan(email);
+      const hasCheckoutContext = !!(stripe_session_id || pendingPeek);
+
+      // New Google users must exist in GHL unless they came from checkout / have a pending plan
+      if (isGHLConfigured()) {
+        const ghlDetail = await searchGHLContactDetailed(email);
+        if (
+          !ghlDetail.skipped &&
+          !ghlDetail.failed &&
+          !ghlDetail.contact &&
+          !hasCheckoutContext &&
+          !existingUser
+        ) {
+          const signupUrl =
+            process.env.SIGNUP_PAGE_URL || 'https://postdoserx.com/#signup';
+          console.log(
+            `🧭 No GHL contact for ${email}; redirecting to signup: ${signupUrl}`
+          );
+          return res.status(200).json({
+            success: false,
+            requiresSignup: true,
+            code: 'GHL_CONTACT_REQUIRED',
+            message:
+              'Choose a plan to create your PostDoseRX account before using the dashboard.',
+            redirectUrl: signupUrl,
+          });
+        }
+        if (ghlDetail.failed) {
+          console.warn(
+            '⚠️ GHL lookup failed; allowing login without signup gate'
+          );
+        }
+      }
+
+      const pendingPlan = consumePendingPlan(email);
+      let planFromStripe = pendingPlan?.plan || null;
+
+      console.log(`📦 Pending plan for ${email}:`, pendingPlan);
 
       // Handle GHL contact creation/update
       try {

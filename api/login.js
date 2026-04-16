@@ -217,6 +217,12 @@ export default function handler(req, res) {
                 
                 const result = await loginResponse.json();
                 console.log('Login API response body:', result);
+
+                if (result.requiresSignup && result.redirectUrl) {
+                    console.log('No CRM contact — sending user to choose a plan:', result.redirectUrl);
+                    window.location.href = result.redirectUrl;
+                    return;
+                }
                 
                 if (result.success) {
                     console.log('Login successful! Redirecting to:', result.redirectUrl);

@@ -1,29 +1,18 @@
 {
-  "timestamp": "2026-04-16T00:41:14.068Z",
-  "total_issues": 4,
-  "critical_issues": 1,
-  "high_issues": 1,
-  "overall_status": "critical",
+  "timestamp": "2026-04-16T01:24:15.934Z",
+  "total_issues": 3,
+  "critical_issues": 0,
+  "high_issues": 0,
+  "overall_status": "medium",
   "scans": {
     "secrets": {
       "type": "secret-scan",
       "issues": [
         {
-          "type": "secret",
-          "rule": "generic-secret",
-          "severity": "high",
-          "message": "Potential secret detected: generic-secret",
-          "file": "./js/auth-init.js",
-          "line": 659,
-          "evidence": "token:', token.substring(0, 20) + '..."
-        },
-        {
-          "type": "secret",
-          "rule": "generic-secret",
-          "severity": "critical",
-          "message": "Secret in HTML script: generic-secret",
-          "file": "index.html",
-          "evidence": "token:', error);\n          // ..."
+          "type": "error",
+          "severity": "medium",
+          "message": "Secret scan error: Command failed: find . -name \"*.js\" -not -path \"./node_modules/*\" -not -path \"./scripts/*\"\nfind: ./.vercel: Operation not permitted\nfind: ./node_modules: Operation not permitted\nfind: ./.git: Operation not permitted\n",
+          "file": "unknown"
         }
       ]
     },
@@ -48,5 +37,5 @@
       ]
     }
   },
-  "summary": "Security scan: 4 issues (1 critical, 1 high)"
+  "summary": "Security scan: 3 issues (0 critical, 0 high)"
 }

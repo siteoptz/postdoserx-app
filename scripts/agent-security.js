@@ -65,8 +65,10 @@ async function scanSecrets() {
     for (const file of htmlFiles) {
       if (!fs.existsSync(file)) continue;
       
-      const content = fs.readFileSync(file, 'utf8');
-      
+      let content = fs.readFileSync(file, 'utf8');
+      // Strip <style> blocks so CSS tokens/hex do not false-positive as inline "script" secrets
+      content = content.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '');
+
       // Check for inline script secrets
       const scriptMatches = content.match(/<script[^>]*>([\s\S]*?)<\/script>/gi);
       if (scriptMatches) {

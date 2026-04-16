@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-04-16T00:41:16.497Z",
+  "timestamp": "2026-04-16T01:24:15.981Z",
   "files_scanned": 4,
-  "total_issues": 1102,
-  "accessibility_issues": 16,
-  "high_severity": 16,
-  "overall_status": "high",
+  "total_issues": 1086,
+  "accessibility_issues": 0,
+  "high_severity": 0,
+  "overall_status": "medium",
   "by_category": {
-    "accessibility": 16,
+    "accessibility": 0,
     "usability": 3,
     "design": 1071,
     "performance": 12
@@ -15,134 +15,6 @@
     {
       "file": "index.html",
       "issues": [
-        {
-          "type": "accessibility",
-          "rule": "missing-labels",
-          "severity": "high",
-          "message": "Form input missing accessible label",
-          "line": 8077,
-          "element": "<input type=\"text\" id=\"dose-input\" placeholder=\"e.g. 0.5 mg\" onchange=\"saveMedicationProfile()\">"
-        },
-        {
-          "type": "accessibility",
-          "rule": "missing-labels",
-          "severity": "high",
-          "message": "Form input missing accessible label",
-          "line": 8094,
-          "element": "<input type=\"date\" id=\"last-injection\" onchange=\"saveMedicationProfile()\">"
-        },
-        {
-          "type": "accessibility",
-          "rule": "missing-labels",
-          "severity": "high",
-          "message": "Form input missing accessible label",
-          "line": 8099,
-          "element": "<input type=\"date\" id=\"next-injection\" onchange=\"saveMedicationProfile()\">"
-        },
-        {
-          "type": "accessibility",
-          "rule": "missing-labels",
-          "severity": "high",
-          "message": "Form input missing accessible label",
-          "line": 9840,
-          "element": "<input type=\"range\" min=\"0\" max=\"5\" value=\"0\" id=\"nausea-level\" oninput=\"updateSymptomValue('nausea'..."
-        },
-        {
-          "type": "accessibility",
-          "rule": "missing-labels",
-          "severity": "high",
-          "message": "Form input missing accessible label",
-          "line": 9857,
-          "element": "<input type=\"range\" min=\"0\" max=\"5\" value=\"0\" id=\"fatigue-level\" oninput=\"updateSymptomValue('fatigu..."
-        },
-        {
-          "type": "accessibility",
-          "rule": "missing-labels",
-          "severity": "high",
-          "message": "Form input missing accessible label",
-          "line": 9874,
-          "element": "<input type=\"range\" min=\"0\" max=\"5\" value=\"0\" id=\"appetite-level\" oninput=\"updateSymptomValue('appet..."
-        },
-        {
-          "type": "accessibility",
-          "rule": "missing-labels",
-          "severity": "high",
-          "message": "Form input missing accessible label",
-          "line": 9891,
-          "element": "<input type=\"range\" min=\"0\" max=\"5\" value=\"0\" id=\"sleep-level\" oninput=\"updateSymptomValue('sleep', ..."
-        },
-        {
-          "type": "accessibility",
-          "rule": "missing-labels",
-          "severity": "high",
-          "message": "Form input missing accessible label",
-          "line": 11736,
-          "element": "<input type=\"checkbox\" id=\"${action.id}\" ${action.checked ? 'checked' : ''}>"
-        },
-        {
-          "type": "accessibility",
-          "rule": "missing-labels",
-          "severity": "high",
-          "message": "Form input missing accessible label",
-          "line": 18465,
-          "element": "<input type=\"text\" id=\"profile-name\" placeholder=\"Enter your name\" />"
-        },
-        {
-          "type": "accessibility",
-          "rule": "missing-labels",
-          "severity": "high",
-          "message": "Form input missing accessible label",
-          "line": 18469,
-          "element": "<input type=\"email\" id=\"profile-email\" placeholder=\"Enter your email\" readonly />"
-        },
-        {
-          "type": "accessibility",
-          "rule": "missing-labels",
-          "severity": "high",
-          "message": "Form input missing accessible label",
-          "line": 18512,
-          "element": "<input type=\"text\" id=\"profile-dose\" placeholder=\"e.g., 0.5mg, 1mg\" />"
-        },
-        {
-          "type": "accessibility",
-          "rule": "missing-labels",
-          "severity": "high",
-          "message": "Form input missing accessible label",
-          "line": 18528,
-          "element": "<input type=\"date\" id=\"profile-next-injection-input\" />"
-        },
-        {
-          "type": "accessibility",
-          "rule": "missing-labels",
-          "severity": "high",
-          "message": "Form input missing accessible label",
-          "line": 18690,
-          "element": "<input type=\"number\" id=\"current-weight\" step=\"0.1\" min=\"0\" max=\"1000\" placeholder=\"Enter your weigh..."
-        },
-        {
-          "type": "accessibility",
-          "rule": "missing-labels",
-          "severity": "high",
-          "message": "Form input missing accessible label",
-          "line": 18694,
-          "element": "<input type=\"date\" id=\"weight-date\" required />"
-        },
-        {
-          "type": "accessibility",
-          "rule": "missing-labels",
-          "severity": "high",
-          "message": "Form input missing accessible label",
-          "line": 18721,
-          "element": "<input type=\"number\" id=\"goal-weight\" step=\"0.1\" min=\"0\" max=\"1000\" placeholder=\"Enter your goal wei..."
-        },
-        {
-          "type": "accessibility",
-          "rule": "missing-labels",
-          "severity": "high",
-          "message": "Form input missing accessible label",
-          "line": 18725,
-          "element": "<input type=\"date\" id=\"goal-timeline\" />"
-        },
         {
           "type": "usability",
           "rule": "form-no-validation",
@@ -8798,7 +8670,7 @@
           "rule": "inline-styles",
           "severity": "medium",
           "message": "Inline styles reduce maintainability",
-          "line": 291,
+          "line": 296,
           "element": "style=\"color: #10b981; font-weight: 500;\""
         },
         {
@@ -8849,5 +8721,5 @@
       ]
     }
   ],
-  "summary": "UI review: 1102 issues across 4 files"
+  "summary": "UI review: 1086 issues across 4 files"
 }
