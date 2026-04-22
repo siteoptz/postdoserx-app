@@ -408,8 +408,18 @@ async function initializeAuthenticatedDashboard() {
           updateDashboardWithProfile(userData.profile || {});
         }
 
+        // Update localStorage with fresh API data
+        if (userData.user.email) localStorage.setItem('user_email', userData.user.email);
+        if (userData.user.name) localStorage.setItem('user_name', userData.user.name);
+        if (userData.user.tier) localStorage.setItem('user_tier', userData.user.tier);
+        
         // Update UI with real user info
         updateDashboardUIWithRealUser(window.appState.user);
+        
+        // Also call the dropdown update function as a backup
+        if (typeof window.updateUserDropdownWithRealData === 'function') {
+          window.updateUserDropdownWithRealData();
+        }
       } else {
         console.warn('⚠️ /api/users/me JSON indicated failure; continuing with local session');
       }
@@ -838,6 +848,18 @@ document.addEventListener('DOMContentLoaded', async function() {
       } catch (e) {
         console.warn('⚠️ Failed to refresh user dropdown UI:', e);
       }
+    }
+
+    // Also try to populate user data from localStorage immediately if available
+    const userData = {
+      email: localStorage.getItem('user_email'),
+      name: localStorage.getItem('user_name'),
+      tier: localStorage.getItem('user_tier')
+    };
+    
+    if (userData.email) {
+      console.log('📋 Using localStorage user data to update UI immediately:', userData);
+      updateDashboardUIWithRealUser(userData);
     }
 
     clearLegacyCrossUserDataIfNeeded(window.appState.user.id);
