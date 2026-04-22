@@ -8168,32 +8168,32 @@
             <div class="stat-icon"><i data-lucide="activity"></i></div>
             <div class="stat-content">
               <h4>Symptom Score</h4>
-              <div class="stat-value">3.2/10</div>
-              <div class="stat-trend improving">↓ 15% this week</div>
+              <div class="stat-value" id="symptom-score-value">--/10</div>
+              <div class="stat-trend" id="symptom-score-trend">No data logged</div>
             </div>
           </div>
           <div class="stat-card">
             <div class="stat-icon"><i data-lucide="utensils"></i></div>
             <div class="stat-content">
               <h4>Meal Ratings</h4>
-              <div class="stat-value">4.3/5</div>
-              <div class="stat-trend">24 meals rated</div>
+              <div class="stat-value" id="meal-ratings-value">--/5</div>
+              <div class="stat-trend" id="meal-ratings-trend">No meals rated</div>
             </div>
           </div>
           <div class="stat-card">
             <div class="stat-icon"><i data-lucide="weight"></i></div>
             <div class="stat-content">
               <h4>Weight Progress</h4>
-              <div class="stat-value">-8.5 lbs</div>
-              <div class="stat-trend improving">↓ 2.1 lbs this week</div>
+              <div class="stat-value" id="weight-progress-value">-- lbs</div>
+              <div class="stat-trend" id="weight-progress-trend">No weight logged</div>
             </div>
           </div>
           <div class="stat-card">
             <div class="stat-icon"><i data-lucide="target"></i></div>
             <div class="stat-content">
               <h4>Goal Progress</h4>
-              <div class="stat-value">34%</div>
-              <div class="stat-trend">8.5 of 25 lbs</div>
+              <div class="stat-value" id="goal-progress-value">--%</div>
+              <div class="stat-trend" id="goal-progress-trend">No goal set</div>
             </div>
           </div>
         </div>
@@ -9927,34 +9927,15 @@
         <div class="content-card ai-insights">
           <div class="card-header">
             <h3>Personalized Insights</h3>
-            <span class="insight-badge">Based on your 23-day history</span>
+            <span class="insight-badge" id="insights-badge">Start tracking to unlock insights</span>
           </div>
           
-          <div class="insights-container">
-            <div class="insight-item priority-high">
-              <div class="insight-icon"><i data-lucide="alert-triangle"></i></div>
+          <div class="insights-container" id="ai-insights-container">
+            <div class="insight-item empty-state">
+              <div class="insight-icon"><i data-lucide="brain"></i></div>
               <div class="insight-content">
-                <h4>Optimal Injection Timing</h4>
-                <p>Your symptoms are 34% lower when you inject on Sunday evenings vs Sunday mornings. Consider switching to evening injections.</p>
-                <button class="button-professional" onclick="scheduleInjectionChange()">Update Schedule</button>
-              </div>
-            </div>
-            
-            <div class="insight-item priority-medium">
-              <div class="insight-icon"><i data-lucide="utensils"></i></div>
-              <div class="insight-content">
-                <h4>Meal Timing Strategy</h4>
-                <p>Small, frequent meals reduce nausea by 45% on Days 2-4. We've updated your meal plan to reflect this.</p>
-                <button class="button-professional" onclick="showMealTimingStrategy()">View Strategy</button>
-              </div>
-            </div>
-            
-            <div class="insight-item priority-low">
-              <div class="insight-icon"><i data-lucide="moon"></i></div>
-              <div class="insight-content">
-                <h4>Sleep Impact Analysis</h4>
-                <p>Your sleep quality directly correlates with next-day energy levels. Aim for 7+ hours the night before injection.</p>
-                <button class="button-professional" onclick="setSleepReminder()">Set Sleep Reminder</button>
+                <h4>AI Insights Coming Soon</h4>
+                <p>Start logging your symptoms, weight, and meals to unlock personalized insights and recommendations based on your unique data patterns.</p>
               </div>
             </div>
           </div>
@@ -15578,7 +15559,79 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
     // This will be called from the main DOMContentLoaded above
     setTimeout(() => {
       initializeProgressData();
+      updateDashboardMetrics(); // Update dashboard with real user data
     }, 100);
+    
+    // Function to update dashboard metrics with real user data
+    function updateDashboardMetrics() {
+      console.log('🔄 Updating dashboard metrics with real user data');
+      
+      const authToken = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
+      if (!authToken) {
+        console.log('❌ No auth token - keeping placeholder values');
+        return;
+      }
+      
+      // Update symptom score
+      const symptomData = JSON.parse(localStorage.getItem('symptomData') || '{}');
+      const symptomLogs = Object.values(symptomData.dailyLogs || {});
+      
+      if (symptomLogs.length > 0) {
+        const recent = symptomLogs.slice(-7); // Last 7 days
+        let avgNausea = 0, avgFatigue = 0, count = 0;
+        
+        recent.forEach(log => {
+          if (log.nausea) { avgNausea += log.nausea.value; count++; }
+          if (log.fatigue) { avgFatigue += log.fatigue.value; count++; }
+        });
+        
+        if (count > 0) {
+          const avgSymptom = ((avgNausea + avgFatigue) / count).toFixed(1);
+          document.getElementById('symptom-score-value').textContent = `${avgSymptom}/10`;
+          document.getElementById('symptom-score-trend').textContent = `${recent.length} days logged`;
+        }
+      }
+      
+      // Update weight progress
+      const progressData = JSON.parse(localStorage.getItem('progressData') || '{}');
+      const weightLogs = progressData.weightLogs || [];
+      
+      if (weightLogs.length > 0) {
+        const latest = weightLogs[weightLogs.length - 1];
+        const first = weightLogs[0];
+        const totalLoss = first.weight - latest.weight;
+        
+        document.getElementById('weight-progress-value').textContent = totalLoss > 0 ? `-${totalLoss.toFixed(1)} lbs` : `${Math.abs(totalLoss).toFixed(1)} lbs`;
+        document.getElementById('weight-progress-trend').textContent = `${weightLogs.length} entries logged`;
+      }
+      
+      // Update meal ratings
+      const mealRatings = JSON.parse(localStorage.getItem('recipeRatings') || '{}');
+      const mealCount = Object.keys(mealRatings).length;
+      
+      if (mealCount > 0) {
+        const ratings = Object.values(mealRatings).map(r => r.rating).filter(r => r);
+        if (ratings.length > 0) {
+          const avgRating = (ratings.reduce((sum, r) => sum + r, 0) / ratings.length).toFixed(1);
+          document.getElementById('meal-ratings-value').textContent = `${avgRating}/5`;
+          document.getElementById('meal-ratings-trend').textContent = `${mealCount} meals rated`;
+        }
+      }
+      
+      // Update goal progress  
+      if (weightLogs.length > 0 && progressData.goalWeight) {
+        const latest = weightLogs[weightLogs.length - 1];
+        const first = weightLogs[0];
+        const totalLoss = first.weight - latest.weight;
+        const goalLoss = first.weight - progressData.goalWeight;
+        const progress = Math.round((totalLoss / goalLoss) * 100);
+        
+        document.getElementById('goal-progress-value').textContent = `${progress}%`;
+        document.getElementById('goal-progress-trend').textContent = `${totalLoss.toFixed(1)} of ${goalLoss.toFixed(1)} lbs`;
+      }
+      
+      console.log('✅ Dashboard metrics updated with real data');
+    }
 
     // Comprehensive Analytics Functions
     function exportComprehensiveReport() {
@@ -17822,26 +17875,20 @@ For clinical review and treatment optimization.`;
           modalTitle = '🤖 AI-Powered Recommendations';
           modalContent = `
             <div class="ai-recommendations">
-              <h4>3 Personalized Recommendations Ready</h4>
-              <div class="ai-confidence">Based on 23 days of your unique data</div>
+              <h4>Recommendations Coming Soon</h4>
+              <div class="ai-confidence">Start tracking your data to unlock AI recommendations</div>
               
-              <div class="recommendation-card priority-high">
-                <div class="rec-header">
-                  <div class="rec-priority high">HIGH PRIORITY</div>
-                  <div class="confidence-score">92% confidence</div>
+              <div class="recommendation-card empty-state">
+                <div class="empty-content">
+                  <div class="empty-icon"><i data-lucide="brain"></i></div>
+                  <h5>AI Learning in Progress</h5>
+                  <p>Our AI needs more of your data to generate personalized recommendations. Keep logging your symptoms, weight, and meals to unlock insights.</p>
+                  <div class="data-requirements">
+                    <span class="requirement">• At least 7 days of symptom data</span>
+                    <span class="requirement">• Multiple weight log entries</span>
+                    <span class="requirement">• 5+ meal ratings</span>
+                  </div>
                 </div>
-                <h5>Injection Timing Optimization</h5>
-                <p>Switch to evening injections for 34% symptom reduction</p>
-                <div class="rec-evidence">
-                  <strong>Evidence:</strong> Your morning injections show 2.3x higher next-day nausea<br>
-                  <strong>Sample size:</strong> 8 morning vs 4 evening injections analyzed
-                </div>
-                <div class="rec-benefits">
-                  <span class="benefit">• Reduced peak nausea by 40%</span>
-                  <span class="benefit">• Better sleep quality</span>
-                  <span class="benefit">• Improved next-day energy</span>
-                </div>
-                <button class="button-professional" onclick="scheduleInjectionChange()">Update Schedule</button>
               </div>
               
               <div class="recommendation-card priority-medium">
@@ -18633,21 +18680,21 @@ For clinical review and treatment optimization.`;
         <p class="modal-subtitle">Comprehensive health and wellness tracking</p>
       </div>
       <div class="modal-body">
-        <div class="progress-summary">
+        <div class="progress-summary" id="progress-summary">
           <div class="progress-metric">
             <h4>Weight Loss Progress</h4>
-            <div class="metric-value">-8.5 lbs</div>
-            <div class="metric-detail">2.1 lbs lost this week</div>
+            <div class="metric-value" id="modal-weight-value">-- lbs</div>
+            <div class="metric-detail" id="modal-weight-detail">No weight data</div>
           </div>
           <div class="progress-metric">
             <h4>Symptom Management</h4>
-            <div class="metric-value">3.2/10</div>
-            <div class="metric-detail">15% improvement this week</div>
+            <div class="metric-value" id="modal-symptom-value">--/10</div>
+            <div class="metric-detail" id="modal-symptom-detail">No symptom data</div>
           </div>
           <div class="progress-metric">
             <h4>Meal Satisfaction</h4>
-            <div class="metric-value">4.3/5</div>
-            <div class="metric-detail">24 meals rated this week</div>
+            <div class="metric-value" id="modal-meal-value">--/5</div>
+            <div class="metric-detail" id="modal-meal-detail">No meal ratings</div>
           </div>
         </div>
         <div class="progress-chart-container">
