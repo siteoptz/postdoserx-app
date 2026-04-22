@@ -13785,6 +13785,58 @@
     
     // Initialize everything on page load
     document.addEventListener('DOMContentLoaded', async function() {
+      // AUTH_BOOTSTRAP_FIX_2026_04_22: Check if auth-init.js has already handled authentication
+      if (window.__authInitHandled) {
+        console.log('✅ Auth-init.js has handled authentication, skipping inline auth logic');
+        // Skip authentication checks - auth-init.js is the single source of truth
+      } else if (window.__authBootstrapInProgress) {
+        console.log('⏳ Auth bootstrap in progress, deferring authentication checks to auth-init.js');
+        // Skip authentication checks - bootstrap is still running
+      } else {
+        console.log('🔄 Auth-init.js not detected, running fallback authentication logic');
+        
+        // Load user-specific dashboard data from API instead of localStorage
+        console.log('🚀 Initializing dashboard with user-specific data...');
+        
+        // Check authentication state first
+        const isAuthenticated = await checkAuthenticationOnLoad();
+        
+        if (isAuthenticated && window.appAuth && window.appState?.isAuthenticated) {
+          // Load from API for authenticated users
+          const dashboardData = await window.appAuth.loadDashboardDataFromAPI();
+          
+          if (dashboardData) {
+            console.log('✅ Using API data for dashboard');
+            updateDashboardWithAPIData(dashboardData);
+          } else {
+            console.error('❌ API data loading failed for authenticated user');
+            console.log('🚨 REDIRECT_LOGIN_REASON=API_LOAD_FAILED (fallback auth)');
+            // Only redirect if auth-init.js hasn't taken control
+            if (!window.__authInitHandled && !window.__authBootstrapInProgress) {
+              localStorage.removeItem('authToken');
+              localStorage.removeItem('auth_token');
+              const currentAppUrl = encodeURIComponent(window.location.href);
+              window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
+              return;
+            }
+          }
+        } else if (isAuthenticated) {
+          console.log('✅ User authenticated, showing blank dashboard until data loads');
+          showBlankDashboard();
+        } else {
+          // Only redirect if auth-init.js hasn't taken control
+          if (!window.__authInitHandled && !window.__authBootstrapInProgress) {
+            console.log('❌ User not authenticated, redirecting to login');
+            console.log('🚨 REDIRECT_LOGIN_REASON=NO_AUTH_INDEX_HTML (fallback auth)');
+            const currentAppUrl = encodeURIComponent(window.location.href);
+            window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
+            return; // Stop execution
+          } else {
+            console.log('⏳ Deferring unauthenticated redirect to auth-init.js');
+          }
+        }
+      }
+      
       // Initialize form handlers for modals
       initializeWeightLogForm();
       initializeGoalForm();
@@ -13811,41 +13863,6 @@
           updateAuthState(true);
           console.log('✅ Authentication state restored after canceled upgrade');
         }
-      }
-      
-      // Load user-specific dashboard data from API instead of localStorage
-      console.log('🚀 Initializing dashboard with user-specific data...');
-      
-      // Check authentication state first
-      const isAuthenticated = await checkAuthenticationOnLoad();
-      
-      if (isAuthenticated && window.appAuth && window.appState?.isAuthenticated) {
-        // Load from API for authenticated users
-        const dashboardData = await window.appAuth.loadDashboardDataFromAPI();
-        
-        if (dashboardData) {
-          console.log('✅ Using API data for dashboard');
-          updateDashboardWithAPIData(dashboardData);
-        } else {
-          console.error('❌ API data loading failed for authenticated user');
-          console.log('🚨 REDIRECT_LOGIN_REASON=API_LOAD_FAILED');
-          // If API completely fails for authenticated user, redirect to login to retry
-          localStorage.removeItem('authToken');
-          localStorage.removeItem('auth_token');
-          const currentAppUrl = encodeURIComponent(window.location.href);
-          window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
-          return;
-        }
-      } else if (isAuthenticated) {
-        console.log('✅ User authenticated, showing blank dashboard until data loads');
-        showBlankDashboard();
-      } else {
-        // Unauthenticated users should be redirected to login
-        console.log('❌ User not authenticated, redirecting to login');
-        console.log('🚨 REDIRECT_LOGIN_REASON=NO_AUTH_INDEX_HTML');
-        const currentAppUrl = encodeURIComponent(window.location.href);
-        window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
-        return; // Stop execution
       }
       
       // Additional initialization that applies to all users
