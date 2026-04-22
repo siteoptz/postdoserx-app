@@ -353,7 +353,7 @@ async function initializeAuthenticatedDashboard() {
     console.error('❌ No auth token available for dashboard initialization');
     console.log('🚨 REDIRECT_LOGIN_REASON=NO_TOKEN_DASHBOARD_INIT');
     const currentAppUrl = encodeURIComponent(window.location.href);
-    window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
+    window.location.href = `https://app.postdoserx.com/login?redirect=${currentAppUrl}`;
     return;
   }
   
@@ -376,7 +376,7 @@ async function initializeAuthenticatedDashboard() {
       localStorage.removeItem('auth_token');
       localStorage.removeItem('user_id');
       const currentAppUrl = encodeURIComponent(window.location.href);
-      window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
+      window.location.href = `https://app.postdoserx.com/login?redirect=${currentAppUrl}`;
       return;
     }
 
@@ -660,12 +660,29 @@ document.addEventListener('DOMContentLoaded', async function() {
   console.log('🏠 Domain check - hostname:', window.location.hostname, 'isAppDomain:', isAppDomain);
   
   if (isAppDomain) {
+    // CRITICAL: Check for tokens BEFORE any redirect logic to prevent bounce
+    const searchParams = new URLSearchParams(window.location.search);
+    const hashParams = parseHashParameters();
+    const hasToken = searchParams.get('token') || (hashParams && hashParams.token);
+    
+    if (hasToken) {
+      console.log('🔒 BOOTSTRAP: Token detected, setting bootstrap flag to prevent redirects');
+      window.__authBootstrapInProgress = true;
+      
+      // Add safety timeout to clear bootstrap flag
+      setTimeout(() => {
+        if (window.__authBootstrapInProgress) {
+          console.warn('⏰ Bootstrap timeout reached, clearing flag as safety measure');
+          window.__authBootstrapInProgress = false;
+        }
+      }, 10000); // 10 second timeout
+    }
+    
     // CRITICAL: Process OAuth return tokens BEFORE checking authentication.
     // Login API returns ?token=...&user_id=... (query). Older flows used #token=... (hash).
     // If we skip this, localStorage is empty on first landing → redirect to login → infinite loop.
     console.log('🔍 Checking for token in URL (query + hash) before auth check...');
 
-    const searchParams = new URLSearchParams(window.location.search);
     const tokenFromQuery = searchParams.get('token');
     if (tokenFromQuery) {
       console.log('🔑 Found auth token in URL query (?token=), storing...');
@@ -684,7 +701,6 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
 
     // Parse hash parameters (legacy redirect: #token=...)
-    const hashParams = parseHashParameters();
     if (hashParams && hashParams.token) {
       console.log('🔑 Found auth data in hash, storing tokens...');
 
@@ -703,18 +719,62 @@ document.addEventListener('DOMContentLoaded', async function() {
       console.log('✅ Hash auth data processed, proceeding with initialization...');
     }
     
-    // Use simple token-based authentication for app.postdoserx.com
-    console.log('🔐 Checking authentication for app.postdoserx.com...');
-    
-    // Simple token check - redirect if no token
-    const authToken = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
-    
-    if (!authToken) {
-      console.log('🚪 No authentication token found, redirecting to marketing site login');
-      console.log('🚨 REDIRECT_LOGIN_REASON=NO_TOKEN_APP_DOMAIN');
-      const currentAppUrl = encodeURIComponent(window.location.href);
-      window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
-      return;
+    // Initialize dashboard authentication if available
+    if (typeof window.initializeDashboardAuth === 'function') {
+      console.log('🔐 Using dashboard-auth system for authentication');
+      try {
+        const isAuthenticated = await window.initializeDashboardAuth();
+        console.log('✅ Dashboard auth result:', isAuthenticated);
+        
+        // Clear bootstrap flag after dashboard auth completes
+        if (hasToken) {
+          console.log('✅ BOOTSTRAP: Dashboard auth complete, clearing bootstrap flag');
+          window.__authBootstrapInProgress = false;
+        }
+        
+        if (isAuthenticated) {
+          console.log('✅ Dashboard authentication successful, proceeding to app');
+          // Continue to app initialization below
+        } else {
+          console.log('❌ Dashboard authentication failed');
+          if (!window.__authBootstrapInProgress) {
+            const currentAppUrl = encodeURIComponent(window.location.href);
+            window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
+          }
+          return;
+        }
+      } catch (error) {
+        console.error('❌ Dashboard auth error:', error);
+        // Fall back to simple token check below
+      }
+    } else {
+      console.log('⚠️ Dashboard-auth not available, using simple token check');
+      
+      // Clear bootstrap flag after token processing is complete
+      if (hasToken) {
+        console.log('✅ BOOTSTRAP: Token processing complete, clearing bootstrap flag');
+        window.__authBootstrapInProgress = false;
+      }
+      
+      // Use simple token-based authentication for app.postdoserx.com
+      console.log('🔐 Checking authentication for app.postdoserx.com...');
+      
+      // Simple token check - redirect if no token
+      const authToken = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
+      
+      if (!authToken) {
+        // CRITICAL: Don't redirect if we're still in bootstrap mode
+        if (window.__authBootstrapInProgress) {
+          console.log('🚨 BLOCKED redirect during bootstrap - token processing in progress');
+          return;
+        }
+        
+        console.log('🚪 No authentication token found, redirecting to marketing site login');
+        console.log('🚨 REDIRECT_LOGIN_REASON=NO_TOKEN_APP_DOMAIN');
+        const currentAppUrl = encodeURIComponent(window.location.href);
+        window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
+        return;
+      }
     }
     
     console.log('✅ Authentication token found, initializing authenticated user');
@@ -759,7 +819,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     console.log('❌ No authentication token found, redirecting to login');
     console.log('🚨 REDIRECT_LOGIN_REASON=LEGACY_NO_TOKEN');
     const currentAppUrl = encodeURIComponent(window.location.href);
-    window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
+    window.location.href = `https://app.postdoserx.com/login?redirect=${currentAppUrl}`;
     return;
   }
 });
@@ -857,7 +917,7 @@ async function legacyAuthFlow() {
   } else {
     // Redirect to login for app domain
     console.log('🚨 REDIRECT_LOGIN_REASON=LEGACY_NOT_AUTH');
-    window.location.href = 'https://postdoserx.com/login.html';
+    window.location.href = 'https://app.postdoserx.com/login';
   }
 }
 
@@ -991,38 +1051,63 @@ window.appAuth = {
   loadDashboardDataFromAPI
 };
 
-// Load user-specific dashboard data from Supabase API
+// Load user-specific dashboard data from API
 async function loadDashboardDataFromAPI() {
   console.log('🗄️ Loading dashboard data from API...');
   
-  const token = localStorage.getItem('auth_token');
-  if (!token) {
+  const authToken = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
+  if (!authToken) {
     console.log('❌ No auth token found, cannot load dashboard data');
     return null;
   }
 
   try {
-    const response = await fetch('https://postdoserx.com/api/dashboard/data', {
-      method: 'GET',
+    // First verify user authentication with /api/users/me
+    const userResponse = await fetch('/api/users/me', {
       headers: {
-        'Authorization': `Bearer ${token}`,
+        'Authorization': `Bearer ${authToken}`,
         'Content-Type': 'application/json'
       }
     });
 
-    if (!response.ok) {
-      throw new Error(`API request failed: ${response.status}`);
+    if (!userResponse.ok) {
+      if (userResponse.status === 401) {
+        console.log('❌ Token rejected by API (401)');
+        return null;
+      }
+      throw new Error(`User API failed: ${userResponse.status}`);
     }
 
-    const result = await response.json();
-    
-    if (result.success) {
-      console.log('✅ Dashboard data loaded from API:', result.data);
-      return result.data;
-    } else {
-      console.error('❌ API returned error:', result.error);
+    const userData = await userResponse.json();
+    if (!userData.success) {
+      console.log('❌ User API returned failure');
       return null;
     }
+
+    // Load user-specific data from multiple endpoints
+    const [symptomsRes, progressRes, ratingsRes] = await Promise.all([
+      fetch('/api/symptoms', {
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      }).catch(() => null),
+      fetch('/api/progress', {
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      }).catch(() => null),
+      fetch('/api/ratings', {
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      }).catch(() => null)
+    ]);
+
+    const dashboardData = {
+      user: userData.user,
+      profile: userData.profile,
+      symptoms: symptomsRes?.ok ? await symptomsRes.json() : { symptoms: [] },
+      progress: progressRes?.ok ? await progressRes.json() : { data: { logs: [] } },
+      ratings: ratingsRes?.ok ? await ratingsRes.json() : { ratings: [] }
+    };
+
+    console.log('✅ Dashboard data loaded from API:', dashboardData);
+    return dashboardData;
+
   } catch (error) {
     console.error('❌ Failed to load dashboard data from API:', error);
     return null;

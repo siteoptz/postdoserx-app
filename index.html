@@ -18,7 +18,7 @@
   <!-- API Client -->
   <script src="js/api.js"></script>
   <!-- Dashboard Authentication System - Load from marketing site API -->
-  <!-- Removed external dashboard-auth.js to use simplified authentication -->
+  <script src="https://postdoserx.com/dashboard-auth.js"></script>
   <!-- Authentication and Initialization -->
   <script src="js/auth-init.js"></script>
   <style>
@@ -13266,28 +13266,44 @@
     function updateDashboardWithAPIData(data) {
       console.log('📊 Updating dashboard with API data:', data);
       
+      // Update user information in UI
+      if (data.user) {
+        console.log('👤 Updating UI with user data:', data.user);
+        if (typeof updateDashboardUIWithRealUser === 'function') {
+          updateDashboardUIWithRealUser(data.user);
+        }
+        // Update app state
+        window.appState = window.appState || {};
+        window.appState.user = data.user;
+        window.appState.isAuthenticated = true;
+      }
+      
       // Always handle profile data - updateDashboardWithProfile handles both existing data and new user cases
       if (data.profile) {
         console.log('👤 User has profile data:', data.profile);
         updateDashboardWithProfile(data.profile);
+        window.appState.profile = data.profile;
       } else {
         console.log('👤 User has no profile yet - showing setup prompts');
         updateDashboardWithProfile({}); // Empty profile object - function handles this case
       }
       
       // Update symptoms data
-      if (data.symptoms) {
-        updateSymptomDisplays(data.symptoms);
-      }
-      
-      // Update meal ratings
-      if (data.mealPlan) {
-        updateMealPlanDisplays(data.mealPlan);
+      if (data.symptoms && data.symptoms.symptoms) {
+        console.log('📊 Updating symptoms with:', data.symptoms.symptoms.length, 'entries');
+        updateSymptomDisplays(data.symptoms.symptoms);
       }
       
       // Update progress tracking
-      if (data.progress) {
-        updateProgressDisplays(data.progress);
+      if (data.progress && data.progress.data) {
+        console.log('📈 Updating progress with:', data.progress.data);
+        updateProgressDisplays(data.progress.data);
+      }
+      
+      // Update meal ratings
+      if (data.ratings && data.ratings.ratings) {
+        console.log('🍽️ Updating meal ratings with:', data.ratings.ratings.length, 'entries');
+        updateMealRatingDisplays(data.ratings.ratings);
       }
       
       // Update dashboard stats
@@ -13811,23 +13827,25 @@
           console.log('✅ Using API data for dashboard');
           updateDashboardWithAPIData(dashboardData);
         } else {
-          console.log('⚠️ No API data available, showing blank dashboard');
-          showBlankDashboard();
+          console.error('❌ API data loading failed for authenticated user');
+          console.log('🚨 REDIRECT_LOGIN_REASON=API_LOAD_FAILED');
+          // If API completely fails for authenticated user, redirect to login to retry
+          localStorage.removeItem('authToken');
+          localStorage.removeItem('auth_token');
+          const currentAppUrl = encodeURIComponent(window.location.href);
+          window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
+          return;
         }
       } else if (isAuthenticated) {
         console.log('✅ User authenticated, showing blank dashboard until data loads');
         showBlankDashboard();
       } else {
-        // Fallback to localStorage for non-authenticated users (demo mode)
-        console.log('⚠️ User not authenticated, loading demo data from localStorage');
-        const savedProfile = localStorage.getItem('medicationProfile');
-        if (savedProfile) {
-          const profileData = JSON.parse(savedProfile);
-          updateDashboardWithProfile(profileData);
-          populateFormFields(profileData);
-        } else {
-          showBlankDashboard();
-        }
+        // Unauthenticated users should be redirected to login
+        console.log('❌ User not authenticated, redirecting to login');
+        console.log('🚨 REDIRECT_LOGIN_REASON=NO_AUTH_INDEX_HTML');
+        const currentAppUrl = encodeURIComponent(window.location.href);
+        window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
+        return; // Stop execution
       }
       
       // Additional initialization that applies to all users
@@ -25191,7 +25209,7 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
     }
 
     function openLoginModal() {
-      // Redirect to the marketing site login page
+      // Marketing login (Google + /api/auth/login). NOT app /api/login — that is Stripe/post-payment only.
       window.location.href = 'https://postdoserx.com/login.html';
     }
 
