@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PostDoseRX - Sign In</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .container {
+            background: white;
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        .logo {
+            color: #667eea;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+        }
+        h1 {
+            color: #1f2937;
+            margin-bottom: 1rem;
+        }
+        p {
+            color: #6b7280;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        #google-signin {
+            margin: 20px 0;
+        }
+        .error {
+            color: #dc2626;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">PostDoseRX</div>
+        <h1>Welcome Back</h1>
+        <p id="message">Sign in to access your personalized GLP-1 journey dashboard.</p>
+        
+        <div id="google-signin">
+            <!-- Google Sign-In button will be inserted here -->
+        </div>
+        
+        <div id="error-message" class="error" style="display: none;"></div>
+        
+        <p style="font-size: 0.9rem; color: #9ca3af; margin-top: 2rem;">
+            Don't have an account? <a href="/#signup" style="color: #667eea;">Choose a plan to get started</a>
+        </p>
+    </div>
+
+    <script>
+        console.log('=== MARKETING LOGIN PAGE LOADED ===');
+        
+        // Get redirect parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectUrl = urlParams.get('redirect') || 'https://app.postdoserx.com';
+        
+        console.log('Redirect URL after login:', redirectUrl);
+        
+        // Initialize Google Sign-In
+        initGoogleSignIn();
+
+        async function initGoogleSignIn() {
+            console.log('=== INITIALIZING GOOGLE SIGN-IN ===');
+            try {
+                // Get Google Client ID from app config
+                const configResponse = await fetch('https://app.postdoserx.com/api/config');
+                const config = await configResponse.json();
+                
+                if (!config.googleClientId) {
+                    throw new Error('Google Client ID not configured');
+                }
+
+                // Load Google Sign-In script
+                const script = document.createElement('script');
+                script.src = 'https://accounts.google.com/gsi/client';
+                script.onload = () => {
+                    console.log('Google API loaded, initializing...');
+                    
+                    window.google.accounts.id.initialize({
+                        client_id: config.googleClientId,
+                        callback: handleCredentialResponse
+                    });
+
+                    window.google.accounts.id.renderButton(
+                        document.getElementById('google-signin'),
+                        {
+                            theme: 'outline',
+                            size: 'large',
+                            text: 'continue_with',
+                            width: 300
+                        }
+                    );
+                };
+                script.onerror = (error) => {
+                    console.error('Failed to load Google API script:', error);
+                    showError('Failed to load Google Sign-In. Please try again later.');
+                };
+                document.head.appendChild(script);
+            } catch (error) {
+                console.error('Failed to initialize Google Sign-In:', error);
+                showError('Failed to load Google Sign-In. Please try again later.');
+            }
+        }
+
+        async function handleCredentialResponse(response) {
+            console.log('=== OAUTH CALLBACK STARTED ===');
+            
+            try {
+                // Decode JWT to get user info
+                const userInfo = JSON.parse(atob(response.credential.split('.')[1]));
+                
+                console.log('User email:', userInfo.email);
+                
+                const requestBody = {
+                    email: userInfo.email,
+                    name: userInfo.name,
+                    provider: 'google'
+                };
+                
+                console.log('Sending request to login API...');
+                
+                // Call the authoritative login API
+                const loginResponse = await fetch('https://app.postdoserx.com/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestBody)
+                });
+
+                const result = await loginResponse.json();
+                console.log('Login API response:', result);
+
+                // CRITICAL: Handle requiresSignup properly
+                if (result.requiresSignup && result.redirectUrl) {
+                    console.log('🧭 No GHL contact — redirecting to signup:', result.redirectUrl);
+                    // Use replace() to avoid back-button loops
+                    window.location.replace(result.redirectUrl);
+                    return;
+                }
+                
+                // Handle successful authentication
+                if (result.success && result.redirectUrl) {
+                    console.log('✅ Login successful! Redirecting to:', result.redirectUrl);
+                    window.location.href = result.redirectUrl;
+                    return;
+                }
+
+                // Handle API errors
+                if (result.code === 'GHL_LOOKUP_FAILED' || loginResponse.status === 503) {
+                    showError(result.error || 'We could not verify your account. Please try again in a few minutes.');
+                    return;
+                }
+                
+                if (result.code === 'GHL_NOT_CONFIGURED') {
+                    showError(result.error || 'Login is temporarily unavailable. Please contact support.');
+                    return;
+                }
+
+                // Generic error
+                console.error('Login failed:', result.error);
+                showError(result.error || 'Authentication failed. Please try again.');
+                
+            } catch (error) {
+                console.error('=== OAUTH CALLBACK FAILED ===', error);
+                showError('Authentication failed. Please try again.');
+            }
+        }
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

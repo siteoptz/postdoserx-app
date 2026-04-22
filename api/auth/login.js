@@ -47,6 +47,20 @@ export default async function handler(req, res) {
     console.log(`🔐 Login attempt for ${email} with session: ${stripe_session_id || 'none'}`);
 
     try {
+      // Optional: refuse all logins if GHL env is missing (set on Vercel prod to avoid silent no-gate)
+      if (
+        process.env.ENFORCE_GHL_CREDENTIALS === 'true' &&
+        !isGHLConfigured()
+      ) {
+        console.error('🛑 ENFORCE_GHL_CREDENTIALS: GHL API key / location not set');
+        return res.status(500).json({
+          success: false,
+          code: 'GHL_NOT_CONFIGURED',
+          error:
+            'Login is temporarily unavailable. Please try again later or contact support.',
+        });
+      }
+
       // Check if user exists in database (before consuming pending checkout)
       let { data: existingUser } = await supabase
         .from('users')
@@ -59,6 +73,11 @@ export default async function handler(req, res) {
       const pendingPeek = peekPendingPlan(email);
       const hasCheckoutContext = !!(stripe_session_id || pendingPeek);
 
+      // GHL gate (first-time vs returning):
+      // - Intended journey: postdoserx.com (marketing) → Sign Up → choose plan → success/auth
+      //   → GHL contact + Supabase user → app.postdoserx.com dashboard.
+      // - Returning users: same Google sign-in on login.html; Supabase row still exists
+      //   (existingUser), so we issue a JWT without sending them back to plan selection.
       // New Google users must exist in GHL unless they came from checkout / have a pending plan
       if (isGHLConfigured()) {
         const ghlDetail = await searchGHLContactDetailed(email);
@@ -69,6 +88,10 @@ export default async function handler(req, res) {
           !hasCheckoutContext &&
           !existingUser
         ) {
+          // Send them to the marketing funnel entry (plan selection), not the app.
+          // Default: homepage #signup where your two plans live. If that URL bounces to
+          // login.html in a loop, fix the marketing page script OR set SIGNUP_PAGE_URL to
+          // a route that does not auto-redirect (e.g. /pricing).
           const signupUrl =
             process.env.SIGNUP_PAGE_URL || 'https://postdoserx.com/#signup';
           console.log(
@@ -83,10 +106,33 @@ export default async function handler(req, res) {
             redirectUrl: signupUrl,
           });
         }
-        if (ghlDetail.failed) {
-          console.warn(
-            '⚠️ GHL lookup failed; allowing login without signup gate'
-          );
+        // CRM API error: do NOT issue a JWT for first-time users — that was bypassing the
+        // signup gate and landing them on a generic dashboard. Escape hatch: set
+        // GHL_ALLOW_LOGIN_WHEN_CRM_UNAVAILABLE=true (emergency only).
+        if (ghlDetail.failed && !ghlDetail.skipped) {
+          const allowBypass =
+            process.env.GHL_ALLOW_LOGIN_WHEN_CRM_UNAVAILABLE === 'true';
+          if (!allowBypass) {
+            if (!existingUser && !hasCheckoutContext) {
+              console.error(
+                `🛑 GHL lookup failed for new user ${email}; refusing JWT (fail-closed)`
+              );
+              return res.status(503).json({
+                success: false,
+                code: 'GHL_LOOKUP_FAILED',
+                error:
+                  'We could not verify your account. Please try again in a few minutes.',
+                retryable: true,
+              });
+            }
+            console.warn(
+              '⚠️ GHL lookup failed; existing DB user — allowing login (returning user)'
+            );
+          } else {
+            console.warn(
+              '⚠️ GHL lookup failed; bypass allowed (GHL_ALLOW_LOGIN_WHEN_CRM_UNAVAILABLE=true)'
+            );
+          }
         }
       }
 
