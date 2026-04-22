@@ -15515,30 +15515,56 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
       const authToken = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
       const isDemo = window.appState?.user?.id === 'demo-user';
       if (authToken && !isDemo) {
+        console.log('🧹 Authenticated user: Ensuring clean progress data (no demo content)');
         const existingData = localStorage.getItem('progressData');
         if (!existingData) {
-          localStorage.setItem('progressData', JSON.stringify({ weightLogs: [], goalWeight: null, goalSetDate: null }));
+          // No data exists - create clean structure
+          localStorage.setItem('progressData', JSON.stringify({ 
+            weightLogs: [], 
+            goalWeight: null, 
+            goalSetDate: null 
+          }));
+        } else {
+          // Check if existing data contains demo values and clear if so
+          try {
+            const data = JSON.parse(existingData);
+            const hasDemoData = data.weightLogs && data.weightLogs.some(log => 
+              log.weight === 195.0 || log.weight === 193.2 || log.weight === 191.8 || log.weight === 189.5 || log.weight === 186.7
+            );
+            if (hasDemoData) {
+              console.log('🗑️ Clearing demo data for authenticated user');
+              localStorage.setItem('progressData', JSON.stringify({ 
+                weightLogs: [], 
+                goalWeight: null, 
+                goalSetDate: null 
+              }));
+            }
+          } catch (e) {
+            console.warn('Error checking progress data, resetting:', e);
+            localStorage.setItem('progressData', JSON.stringify({ 
+              weightLogs: [], 
+              goalWeight: null, 
+              goalSetDate: null 
+            }));
+          }
         }
         updateProgressDisplay();
         updateProgressChart('week');
         return;
       }
 
-      // Set some default demo data if none exists (demo mode / unauthenticated local preview only)
+      // Only authenticated users who are NOT demo users should get here
+      // This code should never run for real users - something is wrong if it does
+      console.warn('⚠️ WARNING: Real authenticated user hit demo data section - this should not happen');
       const existingData = localStorage.getItem('progressData');
       if (!existingData) {
-        const demoData = {
-          weightLogs: [
-            { date: '2024-02-15', weight: 195.0, timestamp: Date.now() - (30 * 24 * 60 * 60 * 1000) },
-            { date: '2024-02-22', weight: 193.2, timestamp: Date.now() - (23 * 24 * 60 * 60 * 1000) },
-            { date: '2024-03-01', weight: 191.8, timestamp: Date.now() - (16 * 24 * 60 * 60 * 1000) },
-            { date: '2024-03-08', weight: 189.5, timestamp: Date.now() - (9 * 24 * 60 * 60 * 1000) },
-            { date: '2024-03-15', weight: 186.7, timestamp: Date.now() - (2 * 24 * 60 * 60 * 1000) }
-          ],
-          goalWeight: 180.0,
-          goalSetDate: '2024-02-15'
-        };
-        localStorage.setItem('progressData', JSON.stringify(demoData));
+        // Force clean data structure instead of demo data
+        console.log('🛑 BLOCKING demo data for authenticated user - using clean data');
+        localStorage.setItem('progressData', JSON.stringify({ 
+          weightLogs: [], 
+          goalWeight: null, 
+          goalSetDate: null 
+        }));
       }
       
       // Update the display with current data

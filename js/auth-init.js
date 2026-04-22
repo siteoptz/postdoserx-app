@@ -629,19 +629,34 @@ function clearLegacyCrossUserDataIfNeeded(currentUserId) {
   if (!currentUserId) return;
 
   const lastUserId = localStorage.getItem('last_authenticated_user_id');
-  if (lastUserId && lastUserId !== currentUserId) {
-    // Remove legacy non-user-scoped dashboard caches that can leak prior user's data.
+  // Always clear demo/legacy data for authenticated users to ensure clean slate
+  const authToken = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
+  
+  if (authToken && (lastUserId !== currentUserId || !lastUserId)) {
+    console.log('🧹 Clearing all legacy/demo data for clean user session:', currentUserId);
+    
+    // Remove all non-user-scoped dashboard data that could contain demo or cross-user data
     [
       'symptomData',
-      'symptomLogs',
+      'symptomLogs', 
       'weightData',
       'mealFeedback',
       'mealRatings',
       'recipeRatings',
       'medicationProfile',
       'progressData',
-      'weightLogs'
-    ].forEach((key) => localStorage.removeItem(key));
+      'weightLogs',
+      'userPreferences',
+      'mealPlan',
+      'groceryCart',
+      'userGoal'
+    ].forEach((key) => {
+      const existingData = localStorage.getItem(key);
+      if (existingData) {
+        console.log(`🗑️ Removing ${key} for clean user session`);
+        localStorage.removeItem(key);
+      }
+    });
   }
 
   localStorage.setItem('last_authenticated_user_id', currentUserId);
