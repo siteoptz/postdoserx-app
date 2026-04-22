@@ -667,6 +667,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     if (hasToken) {
       console.log('🔒 BOOTSTRAP: Token detected, setting bootstrap flag to prevent redirects');
+      console.log('AUTH_BOOTSTRAP_FIX_2026_04_22: Bootstrap protection active');
       window.__authBootstrapInProgress = true;
       
       // Add safety timeout to clear bootstrap flag
