@@ -13617,8 +13617,16 @@
       
       // Get real user data from Google authentication (stored in window.appState)
       const realUser = window.appState?.user || {};
-      const userName = realUser.name || realUser.email || 'Authenticated User';
-      const userEmail = realUser.email || 'No email loaded';
+      const userName =
+        realUser.name ||
+        localStorage.getItem('user_name') ||
+        realUser.email ||
+        localStorage.getItem('user_email') ||
+        'Authenticated User';
+      const userEmail =
+        realUser.email ||
+        localStorage.getItem('user_email') ||
+        'No email loaded';
       
       console.log('Updating dropdown with real user data:', { userName, userEmail, userTier });
       
@@ -13656,6 +13664,9 @@
         tier: userTier
       });
     }
+
+    // Expose for cross-script coordination (auth-init.js runs after initial HTML render)
+    window.updateUserDropdownWithRealData = updateUserDropdownWithRealData;
     
     // Function to update Progress & Stats dropdown section
     function updateProgressStatsDropdown() {
@@ -15499,7 +15510,21 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
 
     // Initialize progress data on page load
     function initializeProgressData() {
-      // Set some default demo data if none exists
+      // Never seed demo progress data for real authenticated sessions.
+      // This was causing every new user to see fake charts/logs until real API data arrived.
+      const authToken = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
+      const isDemo = window.appState?.user?.id === 'demo-user';
+      if (authToken && !isDemo) {
+        const existingData = localStorage.getItem('progressData');
+        if (!existingData) {
+          localStorage.setItem('progressData', JSON.stringify({ weightLogs: [], goalWeight: null, goalSetDate: null }));
+        }
+        updateProgressDisplay();
+        updateProgressChart('week');
+        return;
+      }
+
+      // Set some default demo data if none exists (demo mode / unauthenticated local preview only)
       const existingData = localStorage.getItem('progressData');
       if (!existingData) {
         const demoData = {

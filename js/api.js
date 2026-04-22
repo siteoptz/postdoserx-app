@@ -4,7 +4,20 @@
 class PostDoseRXAPI {
   constructor() {
     this.baseURL = '/api';
-    this.token = localStorage.getItem('authToken');
+    this.refreshTokenFromStorage();
+  }
+
+  /**
+   * Keep in-memory token aligned with localStorage.
+   * Important: `api.js` is loaded before `auth-init.js` stores tokens from URL hash,
+   * so the global `window.postDoseRXAPI` instance would otherwise stay token-less forever.
+   */
+  refreshTokenFromStorage() {
+    this.token =
+      localStorage.getItem('authToken') ||
+      localStorage.getItem('auth_token') ||
+      null;
+    return this.token;
   }
 
   // Set authentication token
@@ -12,13 +25,20 @@ class PostDoseRXAPI {
     this.token = token;
     if (token) {
       localStorage.setItem('authToken', token);
+      localStorage.setItem('auth_token', token);
     } else {
       localStorage.removeItem('authToken');
+      localStorage.removeItem('auth_token');
     }
   }
 
   // Get authentication headers
   getAuthHeaders() {
+    // Always re-read storage so late-arriving tokens are picked up without requiring reload.
+    if (!this.token) {
+      this.refreshTokenFromStorage();
+    }
+
     const headers = {
       'Content-Type': 'application/json',
     };

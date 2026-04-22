@@ -348,6 +348,13 @@ async function initializeAuthenticatedDashboard() {
   console.log('🚀 Initializing authenticated dashboard with user-specific data');
   
   const authToken = localStorage.getItem('authToken') || localStorage.getItem('auth_token');
+  if (window.postDoseRXAPI) {
+    if (typeof window.postDoseRXAPI.setToken === 'function' && authToken) {
+      window.postDoseRXAPI.setToken(authToken);
+    } else if (typeof window.postDoseRXAPI.refreshTokenFromStorage === 'function') {
+      window.postDoseRXAPI.refreshTokenFromStorage();
+    }
+  }
   
   if (!authToken) {
     console.error('❌ No auth token available for dashboard initialization');
@@ -690,6 +697,11 @@ document.addEventListener('DOMContentLoaded', async function() {
       console.log('✅ TOKEN_CAPTURED_FROM_QUERY');
       localStorage.setItem('authToken', tokenFromQuery);
       localStorage.setItem('auth_token', tokenFromQuery);
+      if (window.postDoseRXAPI && typeof window.postDoseRXAPI.setToken === 'function') {
+        window.postDoseRXAPI.setToken(tokenFromQuery);
+      } else if (window.postDoseRXAPI && typeof window.postDoseRXAPI.refreshTokenFromStorage === 'function') {
+        window.postDoseRXAPI.refreshTokenFromStorage();
+      }
       const uid = searchParams.get('user_id') || searchParams.get('userId');
       if (uid) localStorage.setItem('user_id', uid);
       if (searchParams.get('email')) localStorage.setItem('user_email', searchParams.get('email'));
@@ -707,6 +719,11 @@ document.addEventListener('DOMContentLoaded', async function() {
 
       localStorage.setItem('authToken', hashParams.token);
       localStorage.setItem('auth_token', hashParams.token);
+      if (window.postDoseRXAPI && typeof window.postDoseRXAPI.setToken === 'function') {
+        window.postDoseRXAPI.setToken(hashParams.token);
+      } else if (window.postDoseRXAPI && typeof window.postDoseRXAPI.refreshTokenFromStorage === 'function') {
+        window.postDoseRXAPI.refreshTokenFromStorage();
+      }
 
       if (hashParams.email) localStorage.setItem('user_email', hashParams.email);
       if (hashParams.name) localStorage.setItem('user_name', hashParams.name);
@@ -733,6 +750,9 @@ document.addEventListener('DOMContentLoaded', async function() {
           window.__authBootstrapInProgress = false;
         }
         
+        // Signal that auth-init.js has handled authentication decision
+        window.__authInitHandled = true;
+        
         if (isAuthenticated) {
           console.log('✅ Dashboard authentication successful, proceeding to app');
           // Continue to app initialization below
@@ -756,6 +776,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         console.log('✅ BOOTSTRAP: Token processing complete, clearing bootstrap flag');
         window.__authBootstrapInProgress = false;
       }
+      
+      // Signal that auth-init.js has handled authentication decision
+      window.__authInitHandled = true;
       
       // Use simple token-based authentication for app.postdoserx.com
       console.log('🔐 Checking authentication for app.postdoserx.com...');
@@ -807,6 +830,15 @@ document.addEventListener('DOMContentLoaded', async function() {
       name: userName,
       tier: userTier
     };
+
+    // Keep UI in sync immediately (index.html may have rendered placeholders before auth-init ran)
+    if (typeof window.updateUserDropdownWithRealData === 'function') {
+      try {
+        window.updateUserDropdownWithRealData();
+      } catch (e) {
+        console.warn('⚠️ Failed to refresh user dropdown UI:', e);
+      }
+    }
 
     clearLegacyCrossUserDataIfNeeded(window.appState.user.id);
     window.appState.isAuthenticated = true;
