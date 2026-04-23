@@ -2,6 +2,9 @@
 /* Inspired by sophisticated enterprise design patterns */
 /* Avoids AI clichés: no purple gradients, rounded corners, or busy patterns */
 
+/* PHASE 1: Import brand tokens (no visual changes yet) */
+@import url('./styles/brand-tokens.css');
+
 /* TYPOGRAPHY SYSTEM */
 :root {
   /* Font Stack - Technical precision */

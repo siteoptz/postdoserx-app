@@ -1,0 +1,678 @@
+/* PostDoseRX Brand Tokens
+ * Derived from marketing site styles (/assets/styles.css)
+ * This file provides shared brand tokens that can be used across themes
+ * Phase 1: Foundation tokens without affecting existing app behavior
+ */
+
+:root {
+  /* === PRIMARY BRAND COLORS === */
+  /* Source: Marketing site --primary-color */
+  --brand-primary: #4F46E5;
+  --brand-primary-dark: #3730A3;
+  --brand-primary-light: #6366F1;
+  
+  /* Secondary color from marketing */
+  --brand-secondary: #10B981;
+  --brand-secondary-dark: #059669;
+  --brand-secondary-light: #34D399;
+
+  /* === NEUTRAL PALETTE === */
+  /* Marketing site neutral colors */
+  --brand-background-light: #F8FAFC;
+  --brand-text-dark: #1F2937;
+  --brand-text-gray: #6B7280;
+  --brand-text-light: #9CA3AF;
+  --brand-border-light: #E5E7EB;
+  --brand-white: #FFFFFF;
+  --brand-black: #000000;
+
+  /* Extended neutral scale for app needs */
+  --brand-gray-50: #F9FAFB;
+  --brand-gray-100: #F3F4F6;
+  --brand-gray-200: #E5E7EB;
+  --brand-gray-300: #D1D5DB;
+  --brand-gray-400: #9CA3AF;
+  --brand-gray-500: #6B7280;
+  --brand-gray-600: #4B5563;
+  --brand-gray-700: #374151;
+  --brand-gray-800: #1F2937;
+  --brand-gray-900: #111827;
+
+  /* === SEMANTIC COLORS === */
+  /* Success (using brand secondary) */
+  --brand-success: var(--brand-secondary);
+  --brand-success-light: #D1FAE5;
+  --brand-success-dark: #047857;
+
+  /* Warning */
+  --brand-warning: #F59E0B;
+  --brand-warning-light: #FEF3C7;
+  --brand-warning-dark: #D97706;
+
+  /* Error */
+  --brand-error: #EF4444;
+  --brand-error-light: #FEE2E2;
+  --brand-error-dark: #DC2626;
+
+  /* Info */
+  --brand-info: #3B82F6;
+  --brand-info-light: #DBEAFE;
+  --brand-info-dark: #1D4ED8;
+
+  /* === TYPOGRAPHY === */
+  /* Marketing site uses Inter - maintain consistency */
+  --brand-font-sans: 'Inter', 'InterVariable', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --brand-font-mono: 'JetBrains Mono', 'SF Mono', 'Monaco', 'Consolas', 'Liberation Mono', monospace;
+  --brand-font-display: var(--brand-font-sans);
+
+  /* Typography scale (16px base) */
+  --brand-text-xs: 0.75rem;    /* 12px */
+  --brand-text-sm: 0.875rem;   /* 14px */
+  --brand-text-base: 1rem;     /* 16px */
+  --brand-text-lg: 1.125rem;   /* 18px */
+  --brand-text-xl: 1.25rem;    /* 20px */
+  --brand-text-2xl: 1.5rem;    /* 24px */
+  --brand-text-3xl: 1.875rem;  /* 30px */
+  --brand-text-4xl: 2.25rem;   /* 36px */
+
+  /* Font weights */
+  --brand-font-light: 300;
+  --brand-font-normal: 400;
+  --brand-font-medium: 500;
+  --brand-font-semibold: 600;
+  --brand-font-bold: 700;
+  --brand-font-black: 900;
+
+  /* Line heights */
+  --brand-leading-tight: 1.2;
+  --brand-leading-normal: 1.5;
+  --brand-leading-relaxed: 1.75;
+
+  /* === SPACING SCALE === */
+  /* 4px base grid system */
+  --brand-space-0: 0;
+  --brand-space-1: 0.25rem;    /* 4px */
+  --brand-space-2: 0.5rem;     /* 8px */
+  --brand-space-3: 0.75rem;    /* 12px */
+  --brand-space-4: 1rem;       /* 16px */
+  --brand-space-5: 1.25rem;    /* 20px */
+  --brand-space-6: 1.5rem;     /* 24px */
+  --brand-space-8: 2rem;       /* 32px */
+  --brand-space-10: 2.5rem;    /* 40px */
+  --brand-space-12: 3rem;      /* 48px */
+  --brand-space-16: 4rem;      /* 64px */
+  --brand-space-20: 5rem;      /* 80px */
+  --brand-space-24: 6rem;      /* 96px */
+
+  /* === BORDER RADIUS === */
+  --brand-radius-none: 0;
+  --brand-radius-sm: 0.25rem;   /* 4px */
+  --brand-radius-md: 0.375rem;  /* 6px */
+  --brand-radius-lg: 0.5rem;    /* 8px */
+  --brand-radius-xl: 0.75rem;   /* 12px */
+  --brand-radius-2xl: 1rem;     /* 16px */
+  --brand-radius-full: 9999px;
+
+  /* === SHADOWS === */
+  --brand-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --brand-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --brand-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --brand-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+  /* === FOCUS STYLES === */
+  --brand-focus-ring: 0 0 0 3px rgba(79, 70, 229, 0.1);
+  --brand-focus-ring-offset: 0 0 0 2px var(--brand-white), 0 0 0 4px var(--brand-primary);
+
+  /* === GRADIENTS === */
+  /* Marketing site gradient */
+  --brand-gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --brand-gradient-secondary: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-dark) 100%);
+
+  /* === Z-INDEX SCALE === */
+  --brand-z-dropdown: 1000;
+  --brand-z-sticky: 1020;
+  --brand-z-fixed: 1030;
+  --brand-z-modal-backdrop: 1040;
+  --brand-z-modal: 1050;
+  --brand-z-popover: 1060;
+  --brand-z-tooltip: 1070;
+  --brand-z-toast: 1080;
+}
+
+/* === THEME SYSTEM === */
+/* 
+ * Phase 1: Theme foundation with rollback safety
+ * Default: legacy (preserves existing app appearance)
+ * Future: postdoserx (aligned with marketing site)
+ */
+
+/* Legacy Theme (DEFAULT - preserves existing app look) */
+html[data-theme="legacy"] {
+  /* Keep existing app behavior - no overrides in Phase 1 */
+}
+
+/* PostDoseRX Theme (marketing site alignment - Phase 2) */
+html[data-theme="postdoserx"] {
+  /* === FOUNDATION COMPONENT OVERRIDES === */
+  /* Phase 2: Migrate buttons, inputs, cards, links to use brand tokens */
+
+  /* === BUTTONS === */
+  /* Primary button - aligns with marketing site .btn-primary */
+  .button-professional {
+    background: var(--brand-primary) !important;
+    color: var(--brand-white) !important;
+    border: 1px solid var(--brand-primary) !important;
+    border-radius: var(--brand-radius-lg) !important;
+    padding: var(--brand-space-3) var(--brand-space-6) !important;
+    font-weight: var(--brand-font-semibold) !important;
+    font-size: var(--brand-text-sm) !important;
+    font-family: var(--brand-font-sans) !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    box-shadow: var(--brand-shadow-sm) !important;
+  }
+
+  .button-professional:hover {
+    background: var(--brand-primary-dark) !important;
+    border-color: var(--brand-primary-dark) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: var(--brand-shadow-md) !important;
+  }
+
+  .button-professional:focus-visible {
+    outline: none !important;
+    box-shadow: var(--brand-focus-ring) !important;
+  }
+
+  .button-professional:active {
+    transform: translateY(0) !important;
+    box-shadow: var(--brand-shadow-sm) !important;
+  }
+
+  .button-professional:disabled {
+    background: var(--brand-gray-400) !important;
+    border-color: var(--brand-gray-400) !important;
+    color: var(--brand-gray-600) !important;
+    cursor: not-allowed !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  /* Secondary/outline button - aligns with marketing site .btn-outline */
+  .button-professional--outline {
+    background: transparent !important;
+    color: var(--brand-primary) !important;
+    border: 2px solid var(--brand-primary) !important;
+    border-radius: var(--brand-radius-lg) !important;
+    padding: var(--brand-space-3) var(--brand-space-6) !important;
+    font-weight: var(--brand-font-semibold) !important;
+    font-size: var(--brand-text-sm) !important;
+    font-family: var(--brand-font-sans) !important;
+  }
+
+  .button-professional--outline:hover {
+    background: var(--brand-primary) !important;
+    color: var(--brand-white) !important;
+    transform: translateY(-1px) !important;
+  }
+
+  /* Success/secondary button */
+  .button-professional--accent {
+    background: var(--brand-secondary) !important;
+    color: var(--brand-white) !important;
+    border: 1px solid var(--brand-secondary) !important;
+  }
+
+  .button-professional--accent:hover {
+    background: var(--brand-secondary-dark) !important;
+    border-color: var(--brand-secondary-dark) !important;
+  }
+
+  /* === FORM INPUTS === */
+  /* Input fields - aligns with marketing site .form-input */
+  .form-group input,
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="search"],
+  select,
+  textarea {
+    width: 100%;
+    padding: var(--brand-space-3) var(--brand-space-4);
+    background-color: var(--brand-white);
+    border: 2px solid var(--brand-border-light);
+    border-radius: var(--brand-radius-lg);
+    font-size: var(--brand-text-base);
+    font-family: var(--brand-font-sans);
+    color: var(--brand-text-dark);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .form-group input:focus,
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--brand-primary);
+    box-shadow: var(--brand-focus-ring);
+  }
+
+  .form-group input::placeholder,
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--brand-text-gray);
+  }
+
+  .form-group input:disabled,
+  input:disabled,
+  select:disabled,
+  textarea:disabled {
+    background-color: var(--brand-gray-50);
+    border-color: var(--brand-gray-300);
+    color: var(--brand-gray-500);
+    cursor: not-allowed;
+  }
+
+  /* Error state */
+  .form-group input.error,
+  input.error {
+    border-color: var(--brand-error);
+    box-shadow: 0 0 0 3px var(--brand-error-light);
+  }
+
+  /* Success state */
+  .form-group input.success,
+  input.success {
+    border-color: var(--brand-success);
+    box-shadow: 0 0 0 3px var(--brand-success-light);
+  }
+
+  /* Form labels */
+  .form-group label,
+  label {
+    display: block;
+    margin-bottom: var(--brand-space-2);
+    font-weight: var(--brand-font-medium);
+    color: var(--brand-text-dark);
+    font-family: var(--brand-font-sans);
+  }
+
+  /* === CARDS === */
+  /* Card components - aligns with marketing site .card */
+  .card-professional {
+    background-color: var(--brand-white);
+    border: 1px solid var(--brand-border-light);
+    border-radius: var(--brand-radius-xl);
+    padding: var(--brand-space-6);
+    box-shadow: var(--brand-shadow-sm);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .card-professional:hover {
+    background-color: var(--brand-white);
+    border-color: var(--brand-gray-300);
+    box-shadow: var(--brand-shadow-md);
+    transform: translateY(-2px);
+  }
+
+  /* === LINKS === */
+  /* Text links - aligns with marketing site */
+  a {
+    color: var(--brand-primary);
+    text-decoration: none;
+    font-weight: var(--brand-font-medium);
+    transition: color 0.2s ease;
+  }
+
+  a:hover {
+    color: var(--brand-primary-dark);
+    text-decoration: underline;
+  }
+
+  a:focus-visible {
+    outline: 2px solid var(--brand-primary);
+    outline-offset: 2px;
+    border-radius: var(--brand-radius-sm);
+  }
+
+  a:active {
+    color: var(--brand-primary-dark);
+  }
+
+  /* Navigation links */
+  .nav-links a,
+  nav a {
+    color: var(--brand-text-dark);
+    text-decoration: none;
+    font-weight: var(--brand-font-medium);
+    transition: color 0.2s ease;
+  }
+
+  .nav-links a:hover,
+  nav a:hover {
+    color: var(--brand-primary);
+  }
+
+  /* === SCREEN-SPECIFIC STYLES (Phase 3) === */
+  /* Dashboard Overview Group: Home, Progress, Comprehensive Progress views */
+
+  /* === MAIN CONTENT LAYOUT === */
+  .main-content {
+    background-color: var(--brand-background-light);
+    padding: var(--brand-space-8);
+  }
+
+  /* View containers */
+  .view {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* View headers */
+  .view-header {
+    margin-bottom: var(--brand-space-8);
+    text-align: center;
+  }
+
+  .view-title {
+    font-size: var(--brand-text-4xl);
+    font-weight: var(--brand-font-bold);
+    color: var(--brand-text-dark);
+    font-family: var(--brand-font-sans);
+    line-height: var(--brand-leading-tight);
+    margin-bottom: var(--brand-space-4);
+  }
+
+  /* === CONTENT CARDS === */
+  /* Enhanced content cards for dashboard views */
+  .content-card {
+    background-color: var(--brand-white);
+    border: 1px solid var(--brand-border-light);
+    border-radius: var(--brand-radius-xl);
+    padding: var(--brand-space-8);
+    margin-bottom: var(--brand-space-6);
+    box-shadow: var(--brand-shadow-sm);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .content-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--brand-shadow-md);
+    border-color: var(--brand-gray-300);
+  }
+
+  /* Card headers */
+  .card-header,
+  .content-card h3,
+  .content-card h4 {
+    font-family: var(--brand-font-sans);
+    color: var(--brand-text-dark);
+    margin-bottom: var(--brand-space-4);
+  }
+
+  .card-header h3,
+  .content-card h3 {
+    font-size: var(--brand-text-xl);
+    font-weight: var(--brand-font-semibold);
+    margin-bottom: var(--brand-space-2);
+  }
+
+  .card-header h4,
+  .content-card h4 {
+    font-size: var(--brand-text-lg);
+    font-weight: var(--brand-font-medium);
+  }
+
+  /* Setup notes and descriptions */
+  .setup-note,
+  .card-description {
+    color: var(--brand-text-gray);
+    font-size: var(--brand-text-sm);
+    font-family: var(--brand-font-sans);
+  }
+
+  /* === FORM STYLES WITHIN CARDS === */
+  .medication-form,
+  .profile-form {
+    margin-top: var(--brand-space-6);
+  }
+
+  .form-row {
+    display: flex;
+    gap: var(--brand-space-4);
+    margin-bottom: var(--brand-space-4);
+    flex-wrap: wrap;
+  }
+
+  .form-field {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .form-field label {
+    display: block;
+    margin-bottom: var(--brand-space-2);
+    font-weight: var(--brand-font-medium);
+    color: var(--brand-text-dark);
+    font-family: var(--brand-font-sans);
+    font-size: var(--brand-text-sm);
+  }
+
+  /* === PROFILE GRID === */
+  .profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--brand-space-4);
+    margin-top: var(--brand-space-4);
+  }
+
+  .profile-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--brand-space-3);
+    background-color: var(--brand-gray-50);
+    border-radius: var(--brand-radius-lg);
+    border: 1px solid var(--brand-border-light);
+  }
+
+  .profile-item label {
+    font-weight: var(--brand-font-medium);
+    color: var(--brand-text-gray);
+    font-family: var(--brand-font-sans);
+  }
+
+  .profile-item span {
+    font-weight: var(--brand-font-medium);
+    color: var(--brand-text-dark);
+    font-family: var(--brand-font-sans);
+  }
+
+  /* === PREMIUM FEATURES === */
+  .premium-feature {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .premium-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--brand-space-6);
+  }
+
+  .premium-title-section h3 {
+    color: var(--brand-text-dark);
+    font-size: var(--brand-text-xl);
+    font-weight: var(--brand-font-semibold);
+  }
+
+  /* === ACTIVITY AND INSIGHTS === */
+  .activity-item,
+  .insight-item {
+    padding: var(--brand-space-4);
+    border: 1px solid var(--brand-border-light);
+    border-radius: var(--brand-radius-lg);
+    margin-bottom: var(--brand-space-3);
+    background-color: var(--brand-gray-50);
+    transition: background-color 0.2s ease;
+  }
+
+  .activity-item:hover,
+  .insight-item:hover {
+    background-color: var(--brand-white);
+    border-color: var(--brand-gray-300);
+  }
+
+  .activity-item h4,
+  .insight-item h4 {
+    color: var(--brand-text-dark);
+    font-size: var(--brand-text-base);
+    font-weight: var(--brand-font-medium);
+    margin-bottom: var(--brand-space-2);
+  }
+
+  .activity-item p,
+  .insight-item p {
+    color: var(--brand-text-gray);
+    font-size: var(--brand-text-sm);
+    line-height: var(--brand-leading-normal);
+  }
+
+  /* === PROGRESS CHARTS AND ANALYTICS === */
+  .chart-container,
+  .analytics-container {
+    background-color: var(--brand-white);
+    border: 1px solid var(--brand-border-light);
+    border-radius: var(--brand-radius-xl);
+    padding: var(--brand-space-6);
+    margin-bottom: var(--brand-space-6);
+  }
+
+  .chart-header {
+    margin-bottom: var(--brand-space-4);
+  }
+
+  .chart-title {
+    font-size: var(--brand-text-lg);
+    font-weight: var(--brand-font-semibold);
+    color: var(--brand-text-dark);
+    margin-bottom: var(--brand-space-2);
+  }
+
+  .chart-description {
+    font-size: var(--brand-text-sm);
+    color: var(--brand-text-gray);
+    line-height: var(--brand-leading-normal);
+  }
+
+  /* === RESPONSIVE ADJUSTMENTS === */
+  @media (max-width: 768px) {
+    .main-content {
+      padding: var(--brand-space-4);
+    }
+
+    .view-title {
+      font-size: var(--brand-text-2xl);
+      text-align: left;
+    }
+
+    .content-card {
+      padding: var(--brand-space-4);
+      margin-bottom: var(--brand-space-4);
+    }
+
+    .form-row {
+      flex-direction: column;
+    }
+
+    .form-field {
+      min-width: auto;
+    }
+
+    .profile-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .premium-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--brand-space-2);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .main-content {
+      padding: var(--brand-space-2);
+    }
+
+    .view-title {
+      font-size: var(--brand-text-xl);
+    }
+
+    .content-card {
+      padding: var(--brand-space-3);
+    }
+  }
+}
+
+/* Theme Toggle Utility (for admin/emergency use) */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 8px 16px;
+  background: var(--brand-primary);
+  color: var(--brand-white);
+  border: none;
+  border-radius: var(--brand-radius-md);
+  cursor: pointer;
+  font-size: var(--brand-text-sm);
+  z-index: var(--brand-z-toast);
+  display: none; /* Hidden by default - enable for emergency testing */
+}
+
+/* 
+ * EMERGENCY THEME TOGGLE (Phase 4)
+ * Add to browser console for emergency rollback:
+ * 
+ * // Instant legacy fallback
+ * document.documentElement.dataset.theme = 'legacy'
+ * 
+ * // Return to PostDoseRX
+ * document.documentElement.dataset.theme = 'postdoserx'
+ * 
+ * // Add visible toggle button (for admin)
+ * const toggle = document.createElement('button')
+ * toggle.textContent = 'Toggle Theme'
+ * toggle.style.cssText = 'position:fixed;top:20px;right:20px;z-index:9999;padding:8px 16px;background:#4F46E5;color:white;border:none;border-radius:8px;cursor:pointer'
+ * toggle.onclick = () => {
+ *   const current = document.documentElement.dataset.theme
+ *   document.documentElement.dataset.theme = current === 'legacy' ? 'postdoserx' : 'legacy'
+ *   toggle.textContent = `Theme: ${document.documentElement.dataset.theme}`
+ * }
+ * toggle.textContent = `Theme: ${document.documentElement.dataset.theme}`
+ * document.body.appendChild(toggle)
+ */
+
+/*
+ * PHASE 4: PostDoseRX theme now DEFAULT for marketing alignment
+ * Legacy theme preserved for emergency rollback
+ * 
+ * EMERGENCY ROLLBACK (Phase 4):
+ * FASTEST: Change data-theme="postdoserx" to data-theme="legacy" in index.html line 2
+ * COMPLETE: Remove @import from design-system.css + delete this file
+ * 
+ * THEME SWITCHING:
+ * - Emergency legacy: document.documentElement.dataset.theme = 'legacy'
+ * - Back to PostDoseRX: document.documentElement.dataset.theme = 'postdoserx' 
+ * - Programmatic: document.documentElement.setAttribute('data-theme', 'legacy/postdoserx')
+ * 
+ * PHASE 4 STATUS: PostDoseRX theme active by default
+ * - Foundation components (buttons, inputs, cards, links) aligned
+ * - Dashboard Overview screens (Home, Progress, Comprehensive Progress) aligned
+ * - Legacy fallback preserved for critical issues
+ */
