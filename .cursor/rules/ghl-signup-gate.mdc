@@ -1,0 +1,38 @@
+---
+description: Never bypass GHL signup gate or CRM fail-closed behavior in auth/login
+alwaysApply: true
+---
+
+# GHL / CRM signup gate (non-negotiable)
+
+## Intended user journeys (postdoserx.com + app.postdoserx.com)
+
+1. **First-time (must pick a plan first)**  
+   Marketing site → user chooses **Sign Up** → selects one of **two plans** → **success** step (auth + Stripe/GHL as you wired it) → contact exists in **GHL** and user in **Supabase** → **app.postdoserx.com** shows the **personalized** dashboard.
+
+2. **Returning (after Sign Out)**  
+   User is sent to **login.html** on the marketing site (`performSignOut` in `index.html`). They use the **same Google authentication** → `POST /api/auth/login` sees an **existing** Supabase `users` row (`existingUser`) → **JWT is issued** without `requiresSignup`; GHL is still used downstream for plan/tags, but the “must have chosen a plan first” gate does **not** apply because they are not a net-new account in our DB.
+
+## API rules
+
+- **New account** (no Supabase row), **no GHL contact**, **no** Stripe session / pending-plan context → **`requiresSignup: true`** and `redirectUrl` to the marketing funnel (default **`https://postdoserx.com/#signup`**). **Never** return a JWT or app redirect here.
+- If **`https://postdoserx.com/#signup`** causes a redirect loop (homepage JS sends users to `login.html` before the hash runs), fix **marketing** or set **`SIGNUP_PAGE_URL`** to a stable URL (e.g. `/pricing`).
+- **CRM lookup failure** for a **new** user → **503** `GHL_LOOKUP_FAILED`, no JWT (unless `GHL_ALLOW_LOGIN_WHEN_CRM_UNAVAILABLE=true`).
+
+## Do not change without product approval
+
+- Do **not** remove or “temporarily disable” the GHL gate in `api/auth/login.js`.
+- Do **not** replace fail-closed CRM errors with “allow login” to fix a bug — that sends users to the **generic demo dashboard**.
+- Do **not** delete or weaken `GHL_CONTACT_REQUIRED` / `requiresSignup` handling.
+
+## Escape hatches (env only)
+
+- `GHL_ALLOW_LOGIN_WHEN_CRM_UNAVAILABLE=true` — **emergency only**.
+- `ENFORCE_GHL_CREDENTIALS=true` — fail if GHL env vars are missing.
+- `SIGNUP_PAGE_URL` — override default marketing signup/plan URL.
+
+## Files to respect
+
+- `api/auth/login.js` — authoritative gate + JWT issuance
+- `lib/postdoserx/ghl.js` — CRM lookup
+- `api/login.js`, `after-checkout.html` — client handling of `requiresSignup`, `503`, and error codes

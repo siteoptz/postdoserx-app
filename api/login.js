@@ -220,7 +220,8 @@ export default function handler(req, res) {
 
                 if (result.requiresSignup && result.redirectUrl) {
                     console.log('No CRM contact — sending user to choose a plan:', result.redirectUrl);
-                    window.location.href = result.redirectUrl;
+                    // replace() avoids back-button loops between login ↔ app without a token
+                    window.location.replace(result.redirectUrl);
                     return;
                 }
                 
@@ -232,10 +233,22 @@ export default function handler(req, res) {
                     
                     // Redirect to dashboard with token
                     window.location.href = result.redirectUrl;
-                } else {
-                    console.error('Login API returned error:', result.error);
-                    throw new Error(result.error || 'Login failed');
+                    return;
                 }
+
+                if (result.code === 'GHL_LOOKUP_FAILED' || loginResponse.status === 503) {
+                    document.getElementById('message').innerHTML =
+                        '<p style="color:#dc2626;">' + (result.error || 'We could not verify your account. Please try again in a few minutes.') + '</p>';
+                    return;
+                }
+                if (result.code === 'GHL_NOT_CONFIGURED') {
+                    document.getElementById('message').innerHTML =
+                        '<p style="color:#dc2626;">' + (result.error || 'Login is temporarily unavailable.') + '</p>';
+                    return;
+                }
+
+                console.error('Login API returned error:', result.error);
+                throw new Error(result.error || 'Login failed');
             } catch (error) {
                 console.error('=== OAUTH CALLBACK FAILED ===');
                 console.error('Error details:', error);

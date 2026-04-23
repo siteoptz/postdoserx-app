@@ -1,0 +1,29 @@
+---
+description: Never send unauthenticated users to app /api/login; marketing login lives on postdoserx.com
+alwaysApply: true
+---
+
+# Marketing login vs app `/api/login` (critical)
+
+## Two different pages — do not confuse them
+
+| URL | What it is | When to use |
+|-----|------------|-------------|
+| **`https://postdoserx.com/login.html`** | Marketing-site Google sign-in that calls **`POST https://app.postdoserx.com/api/auth/login`**. Entry for normal login and return from app when there is no session. | **Always** for “user needs to sign in” / “redirect unauthenticated user off the app” / Sign Out destination / `openLoginModal`. Append **`?redirect=<encoded app URL>`** when sending the user back to the app after login. |
+| **`https://app.postdoserx.com/api/login`** (handler: `api/login.js`) | **Stripe / post-payment** HTML: “Payment Successful! Please authenticate with Google…”. Embedded flow for checkout, **not** the main marketing login. | **Only** for flows that originate from paid checkout / success pages that intentionally load this route. **Never** use as the default “please log in” redirect from `index.html` or `js/auth-init.js`. |
+
+## Forbidden
+
+- Do **not** replace `postdoserx.com/login.html` with `app.postdoserx.com/api/login` “to unify” or “fix” OAuth. That sends users to the **wrong UX** (payment-success copy) and breaks the intended funnel (marketing → plan → GHL → app).
+- When **`/api/auth/login`** returns **`requiresSignup: true`**, the client **must** navigate to **`redirectUrl`** from the JSON (e.g. **`https://postdoserx.com/#signup`**). Do not override with `redirect` query params pointing at the app.
+
+## Correct redirect targets in this repo
+
+- No token on **app.postdoserx.com**: `https://postdoserx.com/login.html?redirect=<current app URL>`
+- Sign out: `https://postdoserx.com/login.html` (optionally preserve `returning_user_email` in localStorage as today)
+
+## Files that must stay aligned
+
+- `js/auth-init.js` — unauthenticated redirects
+- `index.html` — `performSignOut`, `openLoginModal`, unauthenticated branches
+- `api/login.js` — remains **only** the Stripe/success-page serverless page; not the global login entry

@@ -282,7 +282,7 @@
                 console.log('Login result:', result);
 
                 if (result.requiresSignup && result.redirectUrl) {
-                    window.location.href = result.redirectUrl;
+                    window.location.replace(result.redirectUrl);
                     return;
                 }
                 
@@ -299,10 +299,22 @@
                     setTimeout(() => {
                         window.location.href = result.redirectUrl;
                     }, 2000);
-                    
-                } else {
-                    throw new Error(result.error || 'Authentication failed');
+                    return;
                 }
+
+                if (result.code === 'GHL_LOOKUP_FAILED' || loginResponse.status === 503) {
+                    document.getElementById('message').textContent =
+                        result.error || 'We could not verify your account. Please try again in a few minutes.';
+                    document.getElementById('google-signin').innerHTML = '';
+                    return;
+                }
+                if (result.code === 'GHL_NOT_CONFIGURED') {
+                    document.getElementById('message').textContent =
+                        result.error || 'Login is temporarily unavailable.';
+                    return;
+                }
+
+                throw new Error(result.error || 'Authentication failed');
                 
             } catch (error) {
                 console.error('Authentication failed:', error);

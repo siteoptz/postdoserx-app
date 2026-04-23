@@ -1,0 +1,28 @@
+---
+description: Deploy every change to Vercel via CLI before finishing work
+alwaysApply: true
+---
+
+# Vercel CLI deploy (mandatory)
+
+This app is hosted on Vercel. **Local edits are not live until deployed.**
+
+## After every meaningful change
+
+When you modify anything that affects the running site (HTML, JS, CSS, `api/`, `vercel.json`, env-dependent behavior, etc.):
+
+1. Run a deploy from the project root **before** you consider the task done or tell the user to test on `app.postdoserx.com`.
+2. Use the npm script: `npm run deploy` (runs `vercel --prod` per `package.json`) **unless** the user asked for a preview-only deploy.
+3. For a **preview** URL instead of production: `vercel` (no `--prod`).
+4. If deploy fails, fix the error and redeploy; do not stop at "changes saved locally."
+
+## Completion checklist
+
+Do not mark work complete without:
+
+- [ ] `vercel` or `npm run deploy` exited successfully (note the deployment URL in your reply if preview).
+
+## Notes
+
+- Deploys need network access; request it when running CLI in a sandbox.
+- Do not assume Git push alone updates Vercel unless the project is configured for automatic Git deployments and you verified that pipeline.

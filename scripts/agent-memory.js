@@ -30,6 +30,21 @@ async function checkMemoryBootstrap() {
   }
 
   console.log('✓ Memory bootstrap file present and complete');
+
+  // Required "contract" snippets so auth/redirect rules cannot be accidentally deleted from memory
+  const requiredSnippets = [
+    { label: 'Marketing login URL', needle: 'postdoserx.com/login.html' },
+    { label: 'Stripe-only api/login warning', needle: 'api/login.js' },
+    { label: 'Memory anchor', needle: 'MEMORY_ANCHOR_REDIRECTS' },
+    { label: 'GHL / requiresSignup', needle: 'requiresSignup' },
+  ];
+  for (const { label, needle } of requiredSnippets) {
+    if (!content.includes(needle)) {
+      console.error(`ERROR: Memory bootstrap missing required text (${label}): "${needle}"`);
+      process.exit(1);
+    }
+  }
+  console.log('✓ Auth/redirect contract snippets present in memory-bootstrap.md');
   
   // Check if memory is fresh (updated recently)
   const stats = fs.statSync(memoryPath);
