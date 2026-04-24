@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="postdoserx">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PostDoseRX Phase 3 - Group A Dashboard Overview</title>
+  
+  <!-- Design System CSS -->
+  <link rel="stylesheet" href="design-system.css?v=7">
+  
+  <!-- Typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
+  <!-- Chart.js for analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- VERCEL PREVIEW ENVIRONMENT CHECK -->
+  <script>
+    // Only allow access in Vercel preview environment
+    const isVercelPreview = window.location.hostname.includes('vercel.app') || 
+                           window.location.hostname.includes('localhost') ||
+                           window.location.hostname.includes('127.0.0.1');
+    
+    if (!isVercelPreview) {
+      // Redirect to main app on production
+      window.location.href = '/';
+    }
+    
+    // Set preview mode flag
+    window.PREVIEW_MODE = true;
+    console.log('🎨 THEME PREVIEW MODE: No authentication required');
+  </script>
+  
+  <style>
+    :root {
+      /* PostDoseRX Marketing Site Color Palette */
+      --primary-color: #4F46E5;        /* Purple/Indigo - Primary buttons, links - MARKETING ALIGNED */
+      --primary-dark: #3730A3;         /* Darker purple for hover states - MARKETING ALIGNED */
+      --secondary-color: #10B981;      /* Emerald green - Secondary buttons, success */
+      --secondary-dark: #059669;       /* Darker green for hover states */
+      --background-light: #F8FAFC;     /* Very light gray background */
+      --text-dark: #1F2937;            /* Dark gray text */
+      --text-gray: #6B7280;            /* Medium gray secondary text */
+      --border-light: #E5E7EB;         /* Light gray borders */
+      --white: #FFFFFF;                /* Pure white */
+      
+      /* Marketing Site Gradient */
+      --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      
+      /* Additional Marketing Site Colors */
+      --success-color: #10B981;        /* Green for success states */
+      --error-color: #EF4444;          /* Red for error states */
+      --warning-color: #F59E0B;        /* Amber for warning states */
+      --info-color: #3B82F6;           /* Blue for info states */
+      
+      /* Mapped to app variables for compatibility */
+      --color-background: var(--background-light);
+      --color-surface: var(--white);
+      --color-surface-elevated: var(--white);
+      --accent-blue: var(--primary-color);
+      --accent-emerald: var(--secondary-color);
+
+      /* Layout and spacing */
+      --container-max-width: 1200px;
+      --container-padding: 2rem;
+      --border-radius: 12px;
+      --border-radius-large: 16px;
+      --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.1);
+      --shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.15);
+
+      /* Typography scale */
+      --font-size-xs: 0.75rem;     /* 12px */
+      --font-size-sm: 0.875rem;    /* 14px */
+      --font-size-base: 1rem;      /* 16px */
+      --font-size-lg: 1.125rem;    /* 18px */
+      --font-size-xl: 1.25rem;     /* 20px */
+      --font-size-2xl: 1.5rem;     /* 24px */
+      --font-size-3xl: 1.875rem;   /* 30px */
+      --font-size-4xl: 2.25rem;    /* 36px */
+      
+      --line-height-tight: 1.25;
+      --line-height-base: 1.5;
+      --line-height-relaxed: 1.75;
+      
+      --font-weight-normal: 400;
+      --font-weight-medium: 500;
+      --font-weight-semibold: 600;
+      --font-weight-bold: 700;
+    }
+    
+    /* Verification Classes - Exact RGB computed values */
+    .btn-primary {
+      background: var(--primary-color) !important;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-secondary {
+      background: rgb(16, 185, 129) !important;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-outline {
+      background: transparent !important;
+      color: var(--primary-color);
+      border: 2px solid var(--primary-color) !important;
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    body {
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: rgb(248, 250, 252);
+      color: rgb(31, 41, 55);
+      line-height: 1.5;
+    }
+
+    .preview-header {
+      background: var(--gradient);
+      color: white;
+      padding: 2rem 1rem;
+      text-align: center;
+      font-weight: var(--font-weight-semibold);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    .preview-header h1 {
+      margin: 0 0 0.5rem 0;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+    
+    .preview-header p {
+      margin: 0;
+      opacity: 0.9;
+      font-size: 1.1rem;
+    }
+
+    .preview-notice {
+      background: var(--error-light);
+      border: 1px solid var(--error-color);
+      color: var(--error-color);
+      padding: 0.75rem 1rem;
+      margin: 1rem;
+      border-radius: 8px;
+      font-size: var(--font-size-sm);
+    }
+
+    .container {
+      max-width: var(--container-max-width);
+      margin: 0 auto;
+      padding: var(--container-padding);
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 80px;
+      right: 20px;
+      z-index: 1000;
+      background: var(--accent-blue);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-size: var(--font-size-sm);
+      box-shadow: var(--shadow-elevated);
+    }
+
+    .theme-toggle:hover {
+      background: #1D4ED8;
+    }
+
+    .preview-section {
+      margin-bottom: 3rem;
+      padding: 2rem;
+      background: var(--white);
+      border-radius: var(--border-radius-large);
+      border: 1px solid var(--border-light);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+
+    .preview-section h2 {
+      color: var(--text-dark);
+      margin-bottom: 1.5rem;
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    .component-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Mock dashboard content for preview */
+    .dashboard-card {
+      background: rgb(255, 255, 255);
+      border: 1px solid rgb(229, 231, 235);
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      padding: 1.5rem;
+    }
+
+    .card-title {
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-semibold);
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+    }
+
+    .metric {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-label {
+      color: var(--text-gray);
+      font-size: var(--font-size-sm);
+    }
+
+    .metric-value {
+      color: var(--text-dark);
+      font-weight: var(--font-weight-medium);
+    }
+
+    /* Mock navigation */
+    .nav-bar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border-light);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      padding: 1rem 0;
+    }
+
+    .nav-content {
+      max-width: var(--container-max-width);
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo { 
+      font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: #1F2937;
+      text-decoration: none;
+      display: inline-block;
+      padding: 0.5rem;
+    }
+    .logo span {
+      color: #1F2937;
+    }
+    .logo .brand-rx { 
+      color: var(--primary-color);
+      font-weight: 700;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+    }
+
+    .nav-link {
+      color: var(--text-dark);
+      text-decoration: none;
+      font-size: var(--font-size-base);
+      font-weight: 500;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: var(--primary-color);
+      background: rgba(79, 70, 229, 0.1);
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: none;
+      }
+      
+      .component-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      
+      .container {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Phase 2 Preview Header -->
+  <div class="preview-header">
+    <h1>PostDoseRX Phase 3 - Group A Dashboard Overview</h1>
+    <p>Home, Progress & Comprehensive Progress Views (Behind Theme Flag)</p>
+  </div>
+  
+  <div class="preview-notice">
+    <strong>Preview Environment:</strong> This page shows the new PostDoseRX theme styling without authentication. Production app will require normal Google login.
+  </div>
+
+  <!-- Theme Toggle Button -->
+  <button class="theme-toggle" onclick="toggleTheme()">
+    Toggle Theme: <span id="current-theme">PostDoseRX</span>
+  </button>
+
+  <!-- Mock Navigation -->
+  <nav class="nav-bar">
+    <div class="nav-content">
+      <a href="#" class="logo">
+        <span>PostDose<span class="brand-rx">RX</span></span>
+      </a>
+      <div class="nav-links">
+        <a href="#" class="nav-link active">Dashboard</a>
+        <a href="#" class="nav-link">Progress</a>
+        <a href="#" class="nav-link">Symptoms</a>
+        <a href="#" class="nav-link">Meals</a>
+        <a href="#" class="nav-link">Profile</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- Foundation Components Section -->
+    <div class="preview-section">
+      <h2>Foundation Components (Phase 2)</h2>
+      <div class="component-grid">
+        <!-- Buttons -->
+        <div class="dashboard-card">
+          <div class="card-title">Real App Button Classes</div>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <button class="button-professional">Primary Button (.button-professional)</button>
+            <button class="button-professional--outline">Outline Button (.button-professional--outline)</button>
+            <button class="button-professional--accent">Accent Button (.button-professional--accent)</button>
+            <button class="btn-primary">Verification Button (.btn-primary)</button>
+            <button class="btn-secondary">Secondary Button (.btn-secondary)</button>
+          </div>
+        </div>
+
+        <!-- Form Inputs -->
+        <div class="card-professional">
+          <div class="card-title">Form Inputs (.card-professional)</div>
+          <div class="form-row">
+            <div class="form-field">
+              <label>Standard Input</label>
+              <input type="text" placeholder="Text input styled with brand tokens">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label>Email Input</label>
+              <input type="email" placeholder="Email input with focus states">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label>Select Dropdown</label>
+              <select>
+                <option>Select an option</option>
+                <option>Option 1</option>
+                <option>Option 2</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label>Textarea</label>
+              <textarea placeholder="Textarea with brand styling" rows="3"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Color Palette Showcase -->
+        <div class="dashboard-card">
+          <div class="card-title">Marketing Site Color Palette</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.875rem;">
+            <div style="background: var(--primary-color); color: white; padding: 0.5rem; border-radius: 4px; text-align: center;">Primary #4F46E5</div>
+            <div style="background: var(--primary-dark); color: white; padding: 0.5rem; border-radius: 4px; text-align: center;">Primary Dark #3730A3</div>
+            <div style="background: var(--secondary-color); color: white; padding: 0.5rem; border-radius: 4px; text-align: center;">Secondary #10B981</div>
+            <div style="background: var(--secondary-dark); color: white; padding: 0.5rem; border-radius: 4px; text-align: center;">Secondary Dark #059669</div>
+            <div style="background: var(--error-color); color: white; padding: 0.5rem; border-radius: 4px; text-align: center;">Error #EF4444</div>
+            <div style="background: var(--warning-color); color: white; padding: 0.5rem; border-radius: 4px; text-align: center;">Warning #F59E0B</div>
+            <div style="background: var(--info-color); color: white; padding: 0.5rem; border-radius: 4px; text-align: center;">Info #3B82F6</div>
+            <div style="background: var(--gradient); color: white; padding: 0.5rem; border-radius: 4px; text-align: center;">Gradient Hero</div>
+          </div>
+        </div>
+
+        <!-- Links -->
+        <div class="card-professional">
+          <div class="card-title">Link Styles</div>
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <a href="#" style="text-decoration: none;">Primary Brand Link (PostDoseRX theme)</a>
+            <div class="nav-links">
+              <a href="#" class="nav-link">Navigation Link</a>
+              <a href="#" class="nav-link">Another Nav Link</a>
+            </div>
+            <p>Regular text with <a href="#">inline link styling</a> using brand colors.</p>
+            <p>Navigation and content links inherit theme-appropriate colors and hover states.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Group A: Dashboard Overview Screens (Phase 3) -->
+    <div class="preview-section">
+      <h2>GROUP A: Dashboard Overview Screens</h2>
+      
+      <!-- Home View Preview -->
+      <div class="view">
+        <div class="view-header">
+          <h1 class="view-title">Home View - Welcome Dashboard</h1>
+          <p class="view-subtitle">Main user entry point with medication setup</p>
+        </div>
+        
+        <div class="content-card">
+          <div class="card-header">
+            <h3>Medication Profile Setup</h3>
+            <span class="setup-note">This information helps us personalize your experience</span>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-field">
+              <label for="medication-demo">Medication</label>
+              <select id="medication-demo">
+                <option value="Wegovy">Wegovy (Semaglutide)</option>
+                <option value="Ozempic">Ozempic (Semaglutide)</option>
+                <option value="Mounjaro">Mounjaro (Tirzepatide)</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="dosage-demo">Current Dosage</label>
+              <select id="dosage-demo">
+                <option value="0.25mg">0.25 mg</option>
+                <option value="0.5mg">0.5 mg</option>
+                <option value="1.0mg">1.0 mg</option>
+              </select>
+            </div>
+          </div>
+          
+          <div style="margin-top: 1rem;">
+            <button class="button-professional">Save Profile</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress View Preview -->
+      <div class="view" style="margin-top: 3rem;">
+        <div class="view-header">
+          <h1 class="view-title">Progress Analytics</h1>
+          <p class="view-subtitle">Track your weight, goals, and overall progress</p>
+        </div>
+        
+        <div class="progress-overview">
+          <div class="progress-card weight-card">
+            <div class="card-icon"><i data-lucide="weight"></i></div>
+            <div class="card-content">
+              <div class="progress-value">-12 lbs</div>
+              <div class="progress-label">Total Weight Lost</div>
+              <div class="progress-trend">↓ 2.1 lbs this week</div>
+            </div>
+          </div>
+          
+          <div class="progress-card goal-card">
+            <div class="card-icon"><i data-lucide="target"></i></div>
+            <div class="card-content">
+              <div class="progress-value">68%</div>
+              <div class="progress-label">Goal Progress</div>
+              <div class="progress-trend">5.8 lbs to goal</div>
+            </div>
+          </div>
+          
+          <div class="progress-card streak-card">
+            <div class="card-icon"><i data-lucide="zap"></i></div>
+            <div class="card-content">
+              <div class="progress-value">28</div>
+              <div class="progress-label">Logging Streak</div>
+              <div class="progress-trend">days in a row</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comprehensive Progress View Preview -->
+      <div class="view" style="margin-top: 3rem;">
+        <div class="view-header">
+          <h1 class="view-title">Advanced analytics, trends, and personalized insights <span class="pro-badge">PREMIUM</span></h1>
+          <p class="view-subtitle">Comprehensive Progress</p>
+        </div>
+        
+        <div class="comprehensive-analytics">
+          <div class="content-card premium-feature">
+            <div class="premium-header">
+              <div class="premium-title-section">
+                <h3>Advanced Weight Trend Analysis</h3>
+              </div>
+              <div class="premium-value">
+                <span class="savings-badge">Tracking your weight patterns</span>
+              </div>
+            </div>
+            
+            <div style="height: 200px; background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); opacity: 0.1; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--text-gray);">
+              Advanced Chart Area
+            </div>
+          </div>
+
+          <div class="content-card premium-feature">
+            <div class="premium-header">
+              <div class="premium-title-section">
+                <h3>Injection Cycle Analysis</h3>
+              </div>
+              <div class="premium-value">
+                <span class="savings-badge">Pattern recognition</span>
+              </div>
+            </div>
+            
+            <div class="metric">
+              <span class="metric-label">Adherence Rate:</span>
+              <span class="metric-value" style="color: var(--secondary-color);">96.2%</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Optimal Timing:</span>
+              <span class="metric-value">Saturdays 9 AM</span>
+            </div>
+            <div class="metric">
+              <span class="metric-label">Side Effects:</span>
+              <span class="metric-value">Mild, decreasing</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Marketing Site Reference -->
+    <div class="preview-section">
+      <h2>Marketing Site Design Reference</h2>
+      <div class="component-grid">
+        <!-- Hero Section Style -->
+        <div class="dashboard-card">
+          <div class="card-title">Hero Section Gradient</div>
+          <div style="background: var(--gradient); color: white; padding: 2rem; border-radius: 12px; text-align: center;">
+            <h3 style="margin: 0 0 1rem 0; font-size: 1.5rem; font-weight: 700;">Transform Your GLP-1 Journey</h3>
+            <p style="margin: 0; opacity: 0.9;">Experience the same visual language as postdoserx.com</p>
+          </div>
+        </div>
+        
+        <!-- Feature Card Style -->
+        <div class="dashboard-card">
+          <div class="card-title">Marketing Feature Style</div>
+          <div style="text-align: center;">
+            <div style="background: var(--primary-color); color: white; width: 60px; height: 60px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;"><i data-lucide="target" style="width: 24px; height: 24px;"></i></div>
+            <h4 style="margin: 0 0 0.5rem 0; color: var(--text-dark);">Precision Tracking</h4>
+            <p style="margin: 0; color: var(--text-gray); font-size: 0.875rem;">Monitor your progress with marketing-aligned components</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Theme Toggle Demo -->
+    <div class="preview-section">
+      <h2>Phase 3 Theme Implementation</h2>
+      <div class="card-professional">
+        <div class="card-title">Group A Migration Status</div>
+        <div class="metric">
+          <span class="metric-label">Current Theme:</span>
+          <span class="metric-value" id="theme-status">PostDoseRX (data-theme="postdoserx")</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Default in Production:</span>
+          <span class="metric-value">Legacy (data-theme="legacy")</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Foundation Components:</span>
+          <span class="metric-value">Phase 2 Complete ✅</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Dashboard Screens:</span>
+          <span class="metric-value">Home, Progress, Comprehensive ✅</span>
+        </div>
+        <div class="metric">
+          <span class="metric-label">Brand Alignment:</span>
+          <span class="metric-value">Primary #4F46E5, Roboto font ✅</span>
+        </div>
+        <div style="margin-top: 1rem;">
+          <button class="button-professional" onclick="demonstrateToggle()">
+            Click to Toggle Between Themes
+          </button>
+        </div>
+        <div style="margin-top: 0.5rem; font-size: 0.875rem; color: var(--text-gray);">
+          <em>Toggle shows legacy (original) vs PostDoseRX (Group A) styling</em>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Emergency Rollback Instructions -->
+    <div class="preview-section">
+      <h2>Emergency Rollback (Phase 3)</h2>
+      <div class="card-professional">
+        <div class="card-title">Instant Legacy Fallback</div>
+        <div style="background: #FEF3C7; border: 1px solid #F59E0B; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+          <strong style="color: #92400E;">Browser Console Commands:</strong>
+        </div>
+        <div style="background: #F3F4F6; padding: 1rem; border-radius: 8px; font-family: monospace; margin-bottom: 0.5rem;">
+          document.documentElement.dataset.theme = 'legacy'
+        </div>
+        <div style="font-size: 0.875rem; color: var(--text-gray); margin-bottom: 1rem;">
+          ↑ Instant rollback to original app appearance
+        </div>
+        <div style="background: #F3F4F6; padding: 1rem; border-radius: 8px; font-family: monospace; margin-bottom: 0.5rem;">
+          document.documentElement.dataset.theme = 'postdoserx'
+        </div>
+        <div style="font-size: 0.875rem; color: var(--text-gray);">
+          ↑ Return to Phase 2 PostDoseRX theme
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+    
+    // Theme toggle functionality
+    function toggleTheme() {
+      const html = document.documentElement;
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'postdoserx' ? 'legacy' : 'postdoserx';
+      
+      html.setAttribute('data-theme', newTheme);
+      document.getElementById('current-theme').textContent = 
+        newTheme === 'postdoserx' ? 'PostDoseRX' : 'Legacy';
+      updateThemeStatus();
+    }
+    
+    // Demonstrate theme toggle for Phase 2
+    function demonstrateToggle() {
+      toggleTheme();
+      
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const status = currentTheme === 'postdoserx' ? 
+        'PostDoseRX (data-theme="postdoserx")' : 
+        'Legacy (data-theme="legacy")';
+        
+      // Flash notification
+      const notification = document.createElement('div');
+      notification.textContent = `Switched to ${currentTheme} theme`;
+      notification.style.cssText = 'position:fixed;top:20px;right:20px;background:#10B981;color:white;padding:8px 16px;border-radius:8px;z-index:9999;';
+      document.body.appendChild(notification);
+      setTimeout(() => document.body.removeChild(notification), 2000);
+    }
+    
+    // Update theme status display
+    function updateThemeStatus() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const status = currentTheme === 'postdoserx' ? 
+        'PostDoseRX (data-theme="postdoserx")' : 
+        'Legacy (data-theme="legacy")';
+      
+      const statusEl = document.getElementById('theme-status');
+      if (statusEl) statusEl.textContent = status;
+    }
+    
+    // Mock user data for preview
+    window.currentUser = {
+      name: 'Preview User',
+      email: 'preview@test.com',
+      isAuthenticated: false // Not actually authenticated
+    };
+    
+    console.log('🎨 Theme Preview loaded successfully');
+    console.log('Environment:', window.location.hostname);
+    console.log('Preview Mode:', window.PREVIEW_MODE);
+  </script>
+</body>
+</html>

@@ -72,18 +72,18 @@
 :root {
   /* Deep Professional Palette */
   --midnight: #0D0D0D;
-  --charcoal: #1A1A1A;
-  --slate-dark: #2A2A2A;
+  --charcoal: var(--charcoal);
+  --slate-dark: var(--slate-dark);
   --slate: #3A3A3A;
   --ash: #4A4A4A;
   --steel: #6A6A6A;
   --silver: #9A9A9A;
   --platinum: #CACACA;
   --pearl: #F0F0F0;
-  --white: #ffffff;
+  --white: var(--white);
   
   /* Sophisticated accent colors */
-  --accent-blue: #2563EB;
+  --accent-blue: var(--accent-blue);
   --accent-emerald: #059669;
   --accent-amber: #D97706;
   --accent-rose: #DC2626;
@@ -440,9 +440,9 @@ body::before {
 }
 
 .button-professional {
-  background: linear-gradient(135deg, #2563EB, #1A1A1A) !important;
-  color: #ffffff !important;
-  border: 1px solid #2563EB !important;
+  background: linear-gradient(135deg, var(--accent-blue), var(--charcoal)) !important;
+  color: var(--white) !important;
+  border: 1px solid var(--accent-blue) !important;
   border-radius: var(--radius-small) !important;
   padding: var(--space-3) var(--space-6) !important;
   font-weight: var(--font-semibold) !important;
@@ -461,21 +461,21 @@ input.button-professional,
 .comprehensive-actions .button-professional,
 .comprehensive-actions button.button-professional,
 body.comprehensive-progress-active .comprehensive-actions .button-professional {
-  background: linear-gradient(135deg, #2563EB, #1A1A1A) !important;
-  color: #ffffff !important;
-  border: 1px solid #2563EB !important;
+  background: linear-gradient(135deg, var(--accent-blue), var(--charcoal)) !important;
+  color: var(--white) !important;
+  border: 1px solid var(--accent-blue) !important;
 }
 
 .button-professional:hover {
-  background: linear-gradient(135deg, #2563EB, #2A2A2A) !important;
-  border-color: #2563EB !important;
+  background: linear-gradient(135deg, var(--accent-blue), var(--slate-dark)) !important;
+  border-color: var(--accent-blue) !important;
   box-shadow: var(--glow-high) !important;
   transform: translateY(-1px);
 }
 
 .button-professional:active {
-  background: linear-gradient(135deg, #2563EB, #2A2A2A) !important;
-  border-color: #2563EB !important;
+  background: linear-gradient(135deg, var(--accent-blue), var(--slate-dark)) !important;
+  border-color: var(--accent-blue) !important;
   transform: translateY(0);
 }
 
@@ -486,9 +486,9 @@ body.comprehensive-progress-active .comprehensive-actions .button-professional {
 }
 
 .button-professional--outline:hover {
-  background: linear-gradient(135deg, #2563EB, #1A1A1A) !important;
-  border-color: #2563EB !important;
-  color: #ffffff !important;
+  background: linear-gradient(135deg, var(--accent-blue), var(--charcoal)) !important;
+  border-color: var(--accent-blue) !important;
+  color: var(--white) !important;
   box-shadow: var(--glow-high) !important;
   transform: translateY(-1px);
 }
@@ -501,8 +501,8 @@ input.button-professional--outline,
 .comprehensive-actions button.button-professional--outline,
 body.comprehensive-progress-active .comprehensive-actions .button-professional--outline {
   background: transparent !important;
-  color: #2563EB !important;
-  border: 1px solid #2563EB !important;
+  color: var(--accent-blue) !important;
+  border: 1px solid var(--accent-blue) !important;
 }
 
 .btn.button-professional--outline:hover,
@@ -511,14 +511,14 @@ input.button-professional--outline:hover,
 .comprehensive-actions .button-professional--outline:hover,
 .comprehensive-actions button.button-professional--outline:hover,
 body.comprehensive-progress-active .comprehensive-actions .button-professional--outline:hover {
-  background: linear-gradient(135deg, #2563EB, #1A1A1A) !important;
-  color: #ffffff !important;
+  background: linear-gradient(135deg, var(--accent-blue), var(--charcoal)) !important;
+  color: var(--white) !important;
 }
 
 .button-professional--accent {
-  background: linear-gradient(135deg, #2563EB, #1A1A1A) !important;
-  border-color: #2563EB !important;
-  color: #ffffff !important;
+  background: linear-gradient(135deg, var(--accent-blue), var(--charcoal)) !important;
+  border-color: var(--accent-blue) !important;
+  color: var(--white) !important;
 }
 
 /* Override any inline styles for accent buttons */
@@ -528,14 +528,14 @@ input.button-professional--accent,
 .comprehensive-actions .button-professional--accent,
 .comprehensive-actions button.button-professional--accent,
 body.comprehensive-progress-active .comprehensive-actions .button-professional--accent {
-  background: linear-gradient(135deg, #2563EB, #1A1A1A) !important;
-  border-color: #2563EB !important;
-  color: #ffffff !important;
+  background: linear-gradient(135deg, var(--accent-blue), var(--charcoal)) !important;
+  border-color: var(--accent-blue) !important;
+  color: var(--white) !important;
 }
 
 .button-professional--accent:hover {
-  background: linear-gradient(135deg, #2563EB, #2A2A2A) !important;
-  border-color: #2563EB !important;
+  background: linear-gradient(135deg, var(--accent-blue), var(--slate-dark)) !important;
+  border-color: var(--accent-blue) !important;
   box-shadow: var(--glow-high) !important;
   transform: translateY(-1px);
 }

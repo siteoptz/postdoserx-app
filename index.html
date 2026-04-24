@@ -1993,13 +1993,13 @@
       font-weight: 600;
     }
     .trend-indicator.positive {
-      color: #4ade80;
+      color: var(--brand-success);
     }
     .trend-indicator.neutral {
-      color: #fbbf24;
+      color: var(--brand-warning);
     }
     .trend-indicator.negative {
-      color: #f87171;
+      color: var(--brand-error);
     }
     .pattern-note, .insight-note, .action-note {
       font-size: 0.875rem;
@@ -2359,7 +2359,7 @@
       font-weight: 600;
     }
     .advanced-analytics .star-rating .star {
-      color: #fbbf24;
+      color: var(--brand-warning);
     }
     .advanced-analytics .rating-labels span {
       color: rgba(255, 255, 255, 0.7);
@@ -2548,11 +2548,11 @@
       box-shadow: var(--elevation-medium);
     }
     .insight-item.priority-high {
-      border-left-color: #ef4444;
+      border-left-color: var(--brand-error);
       background: linear-gradient(145deg, var(--slate-dark), var(--slate));
     }
     .insight-item.priority-medium {
-      border-left-color: #f59e0b;
+      border-left-color: var(--brand-warning);
       background: linear-gradient(145deg, var(--slate-dark), var(--slate));
     }
     .insight-item.priority-low {
@@ -2708,10 +2708,10 @@
       transition: height 0.3s ease;
     }
     .symptom-bar.nausea-bar {
-      background: #ef4444;
+      background: var(--brand-error);
     }
     .symptom-bar.fatigue-bar {
-      background: #f59e0b;
+      background: var(--brand-warning);
     }
     .symptom-bar.predicted {
       opacity: 0.6;
@@ -2751,10 +2751,10 @@
       border-radius: 4px;
     }
     .legend-color.nausea-color {
-      background: #ef4444;
+      background: var(--brand-error);
     }
     .legend-color.fatigue-color {
-      background: #f59e0b;
+      background: var(--brand-warning);
     }
     .legend-color.predicted-color {
       background: transparent;
@@ -3026,22 +3026,22 @@
       cursor: pointer;
       transition: transform 0.2s ease, color 0.2s ease, opacity 0.2s ease;
       opacity: 0.2;
-      color: #d1d5db;
+      color: var(--brand-gray-300);
       user-select: none;
     }
     .star:hover, .star.active {
       transform: scale(1.1);
       opacity: 1;
-      color: #fbbf24;
+      color: var(--brand-warning);
     }
     .star.selected {
       opacity: 1;
-      color: #fbbf24;
+      color: var(--brand-warning);
       transform: scale(1.05);
     }
     .star.empty {
       opacity: 0.2;
-      color: #d1d5db;
+      color: var(--brand-gray-300);
     }
     .rating-labels {
       display: flex;
@@ -3103,24 +3103,24 @@
       border-color: #10b981;
     }
     .impact-btn.neutral {
-      border-color: #f59e0b;
+      border-color: var(--brand-warning);
       background: rgba(245, 158, 11, 0.1);
     }
     .impact-btn.neutral:hover,
     .impact-btn.neutral.selected,
     .impact-btn.neutral.active {
-      background: #f59e0b;
-      border-color: #f59e0b;
+      background: var(--brand-warning);
+      border-color: var(--brand-warning);
     }
     .impact-btn.negative {
-      border-color: #ef4444;
+      border-color: var(--brand-error);
       background: rgba(239, 68, 68, 0.1);
     }
     .impact-btn.negative:hover,
     .impact-btn.negative.selected,
     .impact-btn.negative.active {
-      background: #ef4444;
-      border-color: #ef4444;
+      background: var(--brand-error);
+      border-color: var(--brand-error);
     }
     .impact-icon {
       font-size: 1.5rem;
@@ -3262,7 +3262,7 @@
       background: linear-gradient(145deg, var(--slate-dark), var(--slate));
     }
     .recipe-card.medium-confidence {
-      border-color: #f59e0b;
+      border-color: var(--brand-warning);
       background: linear-gradient(145deg, var(--slate-dark), var(--slate));
     }
     .recipe-card.new-suggestion {
@@ -3583,11 +3583,11 @@
       background: linear-gradient(145deg, var(--slate-dark), var(--slate));
     }
     .history-item.medium-rating {
-      border-left-color: #f59e0b;
+      border-left-color: var(--brand-warning);
       background: linear-gradient(145deg, var(--slate-dark), var(--slate));
     }
     .history-item.low-rating {
-      border-left-color: #ef4444;
+      border-left-color: var(--brand-error);
       background: linear-gradient(145deg, var(--slate-dark), var(--slate));
     }
     .meal-info h4 {
@@ -4050,7 +4050,7 @@
       box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
     .chart-btn.period-3months.active {
-      background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #f59e0b 100%);
+      background: linear-gradient(135deg, var(--brand-warning) 0%, #d97706 50%, var(--brand-warning) 100%);
       border-color: #d97706;
       box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
     }
@@ -4305,7 +4305,7 @@
     .confidence-level.building,
     .confidence-level.low {
       background: rgba(239, 68, 68, 0.1);
-      color: #ef4444;
+      color: var(--brand-error);
     }
 
     .data-breakdown {
@@ -5486,9 +5486,9 @@
     
     .modal-content .tag.quick,
     .modal-content .meal-tag.quick {
-      background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+      background: linear-gradient(135deg, var(--brand-warning), #d97706) !important;
       color: white !important;
-      border: 1px solid #fbbf24;
+      border: 1px solid var(--brand-warning);
     }
     
     /* Modal cart summary styling */
@@ -7792,7 +7792,7 @@
   body.light-theme select {
     background: #ffffff !important;
     color: #1a1a1a !important;
-    border: 1px solid #d1d5db !important;
+    border: 1px solid var(--brand-gray-300) !important;
     font-weight: 500 !important;
   }
   
@@ -12482,12 +12482,12 @@
               Injection Cycle Meal Plan
             </h4>
             <div style="display: grid; gap: 1rem;">
-              <div style="background: rgba(239, 68, 68, 0.1); padding: 1rem; border-radius: 6px; border-left: 4px solid #ef4444;">
-                <div style="font-weight: 600; color: #ef4444; margin-bottom: 0.25rem;">Injection Day</div>
+              <div style="background: rgba(239, 68, 68, 0.1); padding: 1rem; border-radius: 6px; border-left: 4px solid var(--brand-error);">
+                <div style="font-weight: 600; color: var(--brand-error); margin-bottom: 0.25rem;">Injection Day</div>
                 <div style="color: var(--text-secondary); font-size: 0.9rem;">Light breakfast before injection, avoid large meals 4-6 hours after</div>
               </div>
-              <div style="background: rgba(245, 158, 11, 0.1); padding: 1rem; border-radius: 6px; border-left: 4px solid #f59e0b;">
-                <div style="font-weight: 600; color: #f59e0b; margin-bottom: 0.25rem;">Days 1-2 Post-Injection</div>
+              <div style="background: rgba(245, 158, 11, 0.1); padding: 1rem; border-radius: 6px; border-left: 4px solid var(--brand-warning);">
+                <div style="font-weight: 600; color: var(--brand-warning); margin-bottom: 0.25rem;">Days 1-2 Post-Injection</div>
                 <div style="color: var(--text-secondary); font-size: 0.9rem;">Small meals every 2-3 hours, focus on gentle foods</div>
               </div>
               <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 6px; border-left: 4px solid #10b981;">
@@ -12640,9 +12640,9 @@
       const getSymptomColor = (value) => {
         if (value === 0) return '#10b981'; // green
         if (value <= 3) return '#3b82f6'; // blue
-        if (value <= 6) return '#f59e0b'; // yellow
+        if (value <= 6) return 'var(--brand-warning)'; // yellow
         if (value <= 8) return '#f97316'; // orange
-        return '#ef4444'; // red
+        return 'var(--brand-error)'; // red
       };
 
       const title = 'Symptom Log Recorded Successfully';
@@ -12728,9 +12728,9 @@
       const getSymptomColor = (value) => {
         if (value === 0) return '#10b981';
         if (value <= 3) return '#3b82f6';
-        if (value <= 6) return '#f59e0b';
+        if (value <= 6) return 'var(--brand-warning)';
         if (value <= 8) return '#f97316';
-        return '#ef4444';
+        return 'var(--brand-error)';
       };
 
       const formatDate = (dateStr) => {
@@ -15092,7 +15092,7 @@
         position: fixed;
         top: 20px;
         right: 20px;
-        background: ${type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6'};
+        background: ${type === 'success' ? '#10b981' : type === 'error' ? 'var(--brand-error)' : '#3b82f6'};
         color: white;
         padding: 1rem 1.5rem;
         border-radius: var(--radius-small);
@@ -16908,9 +16908,9 @@ For clinical review and treatment optimization.`;
             tag.style.color = 'white';
             tag.style.border = '1px solid #a855f7';
           } else if (text.toLowerCase() === 'quick' || text.toLowerCase().includes('quick')) {
-            tag.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
+            tag.style.background = 'linear-gradient(135deg, var(--brand-warning), #d97706)';
             tag.style.color = 'white';
-            tag.style.border = '1px solid #fbbf24';
+            tag.style.border = '1px solid var(--brand-warning)';
           }
         });
       }, 100); // Small delay to ensure DOM is ready
@@ -17406,7 +17406,7 @@ For clinical review and treatment optimization.`;
       
       // Set content based on user tier
       const modalTitle = isPremium ? 'Cancel Premium Subscription' : 'Cancel Trial Account';
-      const warningColor = isPremium ? '#ff6b6b' : '#f59e0b';
+      const warningColor = isPremium ? '#ff6b6b' : 'var(--brand-warning)';
       const headerText = isPremium ? 'Are you sure you want to cancel your premium subscription?' : 'Are you sure you want to delete your trial account?';
       
       const contentSection = isPremium ? `
@@ -17474,7 +17474,7 @@ For clinical review and treatment optimization.`;
         </div>` : `
         <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: 12px; padding: 1.5rem; margin: 1.5rem 0;">
           <p style="color: var(--text-primary); margin: 0; font-weight: 500; display: flex; align-items: center; gap: 0.5rem;">
-            <i data-lucide="alert-circle" style="stroke: #ef4444; width: 18px; height: 18px; flex-shrink: 0;"></i>
+            <i data-lucide="alert-circle" style="stroke: var(--brand-error); width: 18px; height: 18px; flex-shrink: 0;"></i>
             <span>This action cannot be undone. All your data will be permanently deleted and cannot be recovered.</span>
           </p>
         </div>`;
@@ -18025,7 +18025,7 @@ For clinical review and treatment optimization.`;
             <p style="margin: 0.5rem 0; color: white;">• Plain oatmeal with banana • Greek yogurt (plain) • Baked chicken breast • White rice • Clear broths • Toast (white bread)</p>
           </div>
           
-          <h4 style="color: #f59e0b; margin-bottom: 1rem;">Common Trigger Foods to Avoid:</h4>
+          <h4 style="color: var(--brand-warning); margin-bottom: 1rem;">Common Trigger Foods to Avoid:</h4>
           <div style="background: rgba(245, 158, 11, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
             <p style="margin: 0; color: white;"><strong>High Risk (60%+ report symptoms):</strong></p>
             <p style="margin: 0.5rem 0; color: white;">• Fried/greasy foods • Spicy dishes • High-fat dairy • Raw vegetables • Carbonated drinks • Processed meats</p>
@@ -18044,7 +18044,7 @@ For clinical review and treatment optimization.`;
             <p style="margin: 0.5rem 0; color: white;"><strong>Quinoa with Vegetables:</strong> 4/5 stars - Good option</p>
           </div>
           
-          <h4 style="color: #ef4444; margin-bottom: 1rem;">Foods to Limit:</h4>
+          <h4 style="color: var(--brand-error); margin-bottom: 1rem;">Foods to Limit:</h4>
           <div style="background: rgba(239, 68, 68, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
             <p style="margin: 0; color: white;">Based on community data from similar users:</p>
             <p style="margin: 0.5rem 0; color: white;">• Dairy-heavy meals during peak symptom days • Large portions within 48 hours of injection</p>
@@ -18072,7 +18072,7 @@ For clinical review and treatment optimization.`;
       
       if (daysSince <= 2) {
         content += `
-          <h4 style="color: #ef4444; margin-bottom: 1rem;">Peak Symptom Window</h4>
+          <h4 style="color: var(--brand-error); margin-bottom: 1rem;">Peak Symptom Window</h4>
           <div style="background: rgba(239, 68, 68, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
             <p style="margin: 0; color: white;"><strong>Strategy:</strong> 6 small meals, avoid fats</p>
             <p style="margin: 0.5rem 0; color: white;">• Eat every 2-3 hours • Plain foods only • Clear fluids</p>
@@ -18086,7 +18086,7 @@ For clinical review and treatment optimization.`;
         `;
       } else if (daysSince <= 4) {
         content += `
-          <h4 style="color: #f59e0b; margin-bottom: 1rem;">Moderate Symptoms</h4>
+          <h4 style="color: var(--brand-warning); margin-bottom: 1rem;">Moderate Symptoms</h4>
           <div style="background: rgba(245, 158, 11, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
             <p style="margin: 0; color: white;"><strong>Safe to try:</strong> Regular meals with caution</p>
             <p style="margin: 0.5rem 0; color: white;">• Monitor portions • Light proteins preferred</p>
@@ -18162,7 +18162,7 @@ For clinical review and treatment optimization.`;
             <p style="margin: 0.5rem 0; color: white;">• Evening meals are better tolerated</p>
           </div>
           
-          <h4 style="color: #f59e0b; margin-bottom: 1rem;">Recommendations:</h4>
+          <h4 style="color: var(--brand-warning); margin-bottom: 1rem;">Recommendations:</h4>
           <div style="background: rgba(245, 158, 11, 0.1); padding: 1.5rem; border-radius: 8px;">
             <p style="margin: 0; color: white;">• Focus on Greek/Mediterranean cuisine</p>
             <p style="margin: 0.5rem 0; color: white;">• Schedule larger meals for days 5-7</p>
@@ -18195,7 +18195,7 @@ For clinical review and treatment optimization.`;
         content += '<div style="text-align: left; margin-bottom: 2rem;"><h4 style="color: var(--magenta);">Last 5 Meals:</h4>';
         recent.reverse().forEach((meal, index) => {
           const comfort = meal.stomachComfort;
-          const color = comfort >= 4 ? '#10b981' : comfort >= 3 ? '#f59e0b' : '#ef4444';
+          const color = comfort >= 4 ? '#10b981' : comfort >= 3 ? 'var(--brand-warning)' : 'var(--brand-error)';
           content += `<div style="display: flex; justify-content: space-between; padding: 0.5rem; background: rgba(255, 255, 255, 0.05); margin-bottom: 0.5rem; border-radius: 6px;">
             <span>${meal.mealName || `Meal ${recent.length - index}`}</span>
             <span style="color: ${color}; font-weight: 600;">${comfort}/5</span>
@@ -18206,9 +18206,9 @@ For clinical review and treatment optimization.`;
         if (avgRecent >= 4) {
           content += '<p style="color: var(--status-success); font-weight: 600;">Excellent progress! Your meal tolerance is very good.</p>';
         } else if (avgRecent >= 3) {
-          content += '<p style="color: #f59e0b; font-weight: 600;">Good progress! Keep monitoring your responses.</p>';
+          content += '<p style="color: var(--brand-warning); font-weight: 600;">Good progress! Keep monitoring your responses.</p>';
         } else {
-          content += '<p style="color: #ef4444; font-weight: 600;">Focus on gentler foods to improve tolerance.</p>';
+          content += '<p style="color: var(--brand-error); font-weight: 600;">Focus on gentler foods to improve tolerance.</p>';
         }
       }
       
@@ -19217,7 +19217,7 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
       
       stars.forEach((star, index) => {
         if (index < rating) {
-          star.style.color = '#fbbf24';
+          star.style.color = 'var(--brand-warning)';
         } else {
           star.style.color = 'rgba(255, 255, 255, 0.3)';
         }
@@ -20689,12 +20689,12 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
           <h3 style="color: ${phaseColor}; margin-bottom: 1rem; font-weight: 600;">${prediction}</h3>
           
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0;">
-            <div style="background: rgba(239, 68, 68, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #ef4444;">
-              <div style="font-size: 1.5rem; font-weight: 600; color: #ef4444; margin-bottom: 0.25rem;">${nauseaLevel}%</div>
+            <div style="background: rgba(239, 68, 68, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--brand-error);">
+              <div style="font-size: 1.5rem; font-weight: 600; color: var(--brand-error); margin-bottom: 0.25rem;">${nauseaLevel}%</div>
               <div style="color: var(--text-secondary); font-size: 0.9rem;">Predicted Nausea</div>
             </div>
-            <div style="background: rgba(245, 158, 11, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #f59e0b;">
-              <div style="font-size: 1.5rem; font-weight: 600; color: #f59e0b; margin-bottom: 0.25rem;">${fatigueLevel}%</div>
+            <div style="background: rgba(245, 158, 11, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid var(--brand-warning);">
+              <div style="font-size: 1.5rem; font-weight: 600; color: var(--brand-warning); margin-bottom: 0.25rem;">${fatigueLevel}%</div>
               <div style="color: var(--text-secondary); font-size: 0.9rem;">Predicted Fatigue</div>
             </div>
           </div>
@@ -20746,12 +20746,12 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
           
           <div style="background: var(--color-surface); padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; text-align: left;">
             <div style="display: grid; gap: 1rem;">
-              <div style="background: rgba(239, 68, 68, 0.1); padding: 1rem; border-radius: 6px; border-left: 4px solid #ef4444;">
-                <div style="font-weight: 600; color: #ef4444; margin-bottom: 0.25rem;">Injection Day</div>
+              <div style="background: rgba(239, 68, 68, 0.1); padding: 1rem; border-radius: 6px; border-left: 4px solid var(--brand-error);">
+                <div style="font-weight: 600; color: var(--brand-error); margin-bottom: 0.25rem;">Injection Day</div>
                 <div style="color: var(--text-secondary); font-size: 0.9rem;">Light breakfast before injection, avoid large meals 4-6 hours after</div>
               </div>
-              <div style="background: rgba(245, 158, 11, 0.1); padding: 1rem; border-radius: 6px; border-left: 4px solid #f59e0b;">
-                <div style="font-weight: 600; color: #f59e0b; margin-bottom: 0.25rem;">Days 1-2 Post-Injection</div>
+              <div style="background: rgba(245, 158, 11, 0.1); padding: 1rem; border-radius: 6px; border-left: 4px solid var(--brand-warning);">
+                <div style="font-weight: 600; color: var(--brand-warning); margin-bottom: 0.25rem;">Days 1-2 Post-Injection</div>
                 <div style="color: var(--text-secondary); font-size: 0.9rem;">Small meals every 2-3 hours, focus on gentle foods</div>
               </div>
               <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 6px; border-left: 4px solid #10b981;">
@@ -22040,7 +22040,7 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
           <div class="current-weight">${currentWeight} lbs</div>
           <div class="goal-weight">Target: ${targetWeight} lbs</div>
           ${targetDate ? `
-            <div class="target-date" style="font-size: 0.9rem; color: ${onTrack ? '#10b981' : '#f59e0b'}; margin-top: 0.25rem;">
+            <div class="target-date" style="font-size: 0.9rem; color: ${onTrack ? '#10b981' : 'var(--brand-warning)'}; margin-top: 0.25rem;">
               <span class="icon-professional icon-professional--target"></span> ${dateStatus}
             </div>
           ` : ''}
@@ -22062,7 +22062,7 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
         ` : ''}
         
         <div class="progress-bar" style="margin: 1rem 0;">
-          <div class="progress-fill" style="width: ${progress}%; background: ${progress >= 75 ? '#10b981' : progress >= 50 ? '#3b82f6' : '#f59e0b'};"></div>
+          <div class="progress-fill" style="width: ${progress}%; background: ${progress >= 75 ? '#10b981' : progress >= 50 ? '#3b82f6' : 'var(--brand-warning)'};"></div>
         </div>
         
         <div class="goal-stats">
@@ -22073,13 +22073,13 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
             <div class="stat-label">${goalAchieved ? 'Goal achieved!' : 'lbs to goal'}</div>
           </div>
           <div class="stat">
-            <div class="stat-value" style="color: ${goalAchieved ? '#10b981' : onTrack ? '#10b981' : '#f59e0b'};">
+            <div class="stat-value" style="color: ${goalAchieved ? '#10b981' : onTrack ? '#10b981' : 'var(--brand-warning)'};">
               ${goalAchieved ? '<span class="icon-professional icon-professional--success"></span>' : (weeksToGoal > 0 && weeksToGoal < 100 ? weeksToGoal : targetDate ? Math.ceil(daysToTarget/7) : '--')}
             </div>
             <div class="stat-label">${goalAchieved ? 'Complete' : (targetDate ? 'weeks to target' : 'weeks estimated')}</div>
           </div>
           <div class="stat">
-            <div class="stat-value" style="color: ${goalAchieved ? '#10b981' : neededRate <= 2 ? '#10b981' : neededRate <= 3 ? '#f59e0b' : '#ef4444'};">
+            <div class="stat-value" style="color: ${goalAchieved ? '#10b981' : neededRate <= 2 ? '#10b981' : neededRate <= 3 ? 'var(--brand-warning)' : 'var(--brand-error)'};">
               ${goalAchieved ? '<span class="icon-professional icon-professional--trophy"></span>' : (neededRate > 0 ? neededRate.toFixed(1) : '<span class="icon-professional icon-professional--success"></span>')}
             </div>
             <div class="stat-label">${goalAchieved ? 'Success!' : (neededRate > 0 ? 'lbs/week needed' : 'On track')}</div>
@@ -23207,8 +23207,8 @@ Tracking my GLP-1 journey with smart analytics! #PostDoseRX #WeightLossJourney #
       
       const colorMap = {
         success: '#10b981',
-        error: '#ef4444',
-        warning: '#f59e0b', 
+        error: 'var(--brand-error)',
+        warning: 'var(--brand-warning)', 
         info: '#3b82f6'
       };
       

@@ -360,7 +360,7 @@ async function initializeAuthenticatedDashboard() {
     console.error('❌ No auth token available for dashboard initialization');
     console.log('🚨 REDIRECT_LOGIN_REASON=NO_TOKEN_DASHBOARD_INIT');
     const currentAppUrl = encodeURIComponent(window.location.href);
-    window.location.href = `https://app.postdoserx.com/login?redirect=${currentAppUrl}`;
+    window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
     return;
   }
   
@@ -383,7 +383,7 @@ async function initializeAuthenticatedDashboard() {
       localStorage.removeItem('auth_token');
       localStorage.removeItem('user_id');
       const currentAppUrl = encodeURIComponent(window.location.href);
-      window.location.href = `https://app.postdoserx.com/login?redirect=${currentAppUrl}`;
+      window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
       return;
     }
 
@@ -889,7 +889,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     console.log('❌ No authentication token found, redirecting to login');
     console.log('🚨 REDIRECT_LOGIN_REASON=LEGACY_NO_TOKEN');
     const currentAppUrl = encodeURIComponent(window.location.href);
-    window.location.href = `https://app.postdoserx.com/login?redirect=${currentAppUrl}`;
+    window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
     return;
   }
 });
@@ -987,7 +987,8 @@ async function legacyAuthFlow() {
   } else {
     // Redirect to login for app domain
     console.log('🚨 REDIRECT_LOGIN_REASON=LEGACY_NOT_AUTH');
-    window.location.href = 'https://app.postdoserx.com/login';
+    const currentAppUrl = encodeURIComponent(window.location.href);
+    window.location.href = `https://postdoserx.com/login.html?redirect=${currentAppUrl}`;
   }
 }
 

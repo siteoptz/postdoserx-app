@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PostDoseRX - Payment Received</title>
     <link href="https://fonts.googleapis.com/css2?family=InterVariable:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/brand-tokens.css">
     <style>
         body {
             font-family: 'InterVariable', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -13,12 +14,12 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            background: linear-gradient(135deg, #0D0D0D 0%, #1A1A1A 100%);
-            color: #ffffff;
+            background: var(--brand-black);
+            color: var(--brand-white);
         }
         .container {
-            background: #1A1A1A;
-            border: 1px solid #2A2A2A;
+            background: var(--brand-gray-800);
+            border: 1px solid var(--brand-gray-600);
             padding: 3rem;
             border-radius: 16px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.3);
@@ -33,13 +34,13 @@
             display: block;
         }
         h1 {
-            color: #ffffff;
+            color: var(--brand-white);
             margin-bottom: 1rem;
             font-size: 2rem;
             font-weight: 700;
         }
         p {
-            color: #9A9A9A;
+            color: var(--brand-text-light);
             margin-bottom: 2rem;
             line-height: 1.6;
         }
@@ -49,7 +50,7 @@
             justify-content: center;
         }
         .btn {
-            background: #2563EB;
+            background: var(--brand-info);
             color: white;
             padding: 12px 24px;
             border: none;
@@ -62,25 +63,25 @@
             transition: background-color 0.2s ease;
         }
         .btn:hover {
-            background: #1d4ed8;
+            background: var(--brand-info-dark);
         }
         .reference {
             font-size: 0.8rem;
-            color: #6A6A6A;
+            color: var(--brand-gray-500);
             margin-top: 2rem;
             word-break: break-all;
         }
         .link {
-            color: #2563EB;
+            color: var(--brand-info);
             text-decoration: none;
         }
         .link:hover {
             text-decoration: underline;
         }
         .error {
-            color: #DC2626;
-            background: rgba(220, 38, 38, 0.1);
-            border: 1px solid rgba(220, 38, 38, 0.3);
+            color: var(--brand-error);
+            background: var(--brand-error-light);
+            border: 1px solid var(--brand-error);
             padding: 1rem;
             border-radius: 8px;
             margin-bottom: 2rem;
@@ -89,8 +90,8 @@
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid #2A2A2A;
-            border-top: 3px solid #2563EB;
+            border: 3px solid var(--brand-gray-600);
+            border-top: 3px solid var(--brand-info);
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin-left: 8px;
@@ -116,7 +117,7 @@
             </div>
         </div>
         
-        <p style="font-size: 0.9rem; color: #6A6A6A;">
+        <p style="font-size: 0.9rem; color: var(--brand-gray-500);">
             If you're not redirected automatically, you can 
             <a href="https://app.postdoserx.com" class="link">click here to continue</a>
         </p>
@@ -293,7 +294,7 @@
                     document.getElementById('title').textContent = 'Welcome to PostDoseRX!';
                     document.getElementById('message').textContent = 'Your account is ready. Redirecting to your dashboard...';
                     document.getElementById('google-signin').innerHTML = 
-                        '<div style="color: #10b981; font-weight: 500;">✓ Authentication successful!</div>';
+                        '<div style="color: var(--brand-success); font-weight: 500;">✓ Authentication successful!</div>';
                     
                     // Redirect after a short delay
                     setTimeout(() => {

@@ -6,7 +6,7 @@
 
 :root {
   /* === PRIMARY BRAND COLORS === */
-  /* Source: Marketing site --primary-color */
+  /* Source: Marketing site --primary-color (ALIGNED FOR VISUAL PARITY) */
   --brand-primary: #4F46E5;
   --brand-primary-dark: #3730A3;
   --brand-primary-light: #6366F1;
@@ -60,8 +60,8 @@
   --brand-info-dark: #1D4ED8;
 
   /* === TYPOGRAPHY === */
-  /* Marketing site uses Inter - maintain consistency */
-  --brand-font-sans: 'Inter', 'InterVariable', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  /* Marketing site font updated to Roboto per Phase 1 feedback */
+  --brand-font-sans: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --brand-font-mono: 'JetBrains Mono', 'SF Mono', 'Monaco', 'Consolas', 'Liberation Mono', monospace;
   --brand-font-display: var(--brand-font-sans);
 
@@ -569,6 +569,131 @@ html[data-theme="postdoserx"] {
     line-height: var(--brand-leading-normal);
   }
 
+  /* === GROUP A: DASHBOARD OVERVIEW SCREENS (Phase 3) === */
+  
+  /* Progress View - Progress Cards */
+  .progress-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--brand-space-6);
+    margin-bottom: var(--brand-space-8);
+  }
+
+  .progress-card {
+    background-color: var(--brand-white);
+    border: 1px solid var(--brand-border-light);
+    border-radius: var(--brand-radius-xl);
+    padding: var(--brand-space-6);
+    display: flex;
+    align-items: center;
+    gap: var(--brand-space-4);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: var(--brand-shadow-sm);
+  }
+
+  .progress-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--brand-shadow-md);
+    border-color: var(--brand-gray-300);
+  }
+
+  .progress-card .card-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-dark));
+    border-radius: var(--brand-radius-lg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--brand-white);
+    flex-shrink: 0;
+  }
+
+  .progress-card .card-content {
+    flex: 1;
+  }
+
+  .progress-value {
+    font-size: var(--brand-text-2xl);
+    font-weight: var(--brand-font-bold);
+    color: var(--brand-text-dark);
+    font-family: var(--brand-font-sans);
+    line-height: var(--brand-leading-tight);
+    margin-bottom: var(--brand-space-1);
+  }
+
+  .progress-label {
+    font-size: var(--brand-text-sm);
+    font-weight: var(--brand-font-medium);
+    color: var(--brand-text-gray);
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    margin-bottom: var(--brand-space-2);
+  }
+
+  .progress-trend {
+    font-size: var(--brand-text-sm);
+    color: var(--brand-secondary);
+    font-weight: var(--brand-font-medium);
+  }
+
+
+  /* Comprehensive Progress View */
+  .comprehensive-analytics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--brand-space-6);
+  }
+
+  .premium-feature {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .premium-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: var(--brand-space-6);
+  }
+
+  .premium-title-section h3 {
+    color: var(--brand-text-dark);
+    font-size: var(--brand-text-xl);
+    font-weight: var(--brand-font-semibold);
+    font-family: var(--brand-font-sans);
+    margin: 0;
+  }
+
+  .pro-badge {
+    background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-dark));
+    color: var(--brand-white);
+    padding: var(--brand-space-1) var(--brand-space-3);
+    border-radius: var(--brand-radius-md);
+    font-size: var(--brand-text-xs);
+    font-weight: var(--brand-font-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .savings-badge {
+    background: var(--brand-success-light);
+    color: var(--brand-success-dark);
+    padding: var(--brand-space-1) var(--brand-space-3);
+    border-radius: var(--brand-radius-md);
+    font-size: var(--brand-text-xs);
+    font-weight: var(--brand-font-semibold);
+  }
+
+  /* View subtitles */
+  .view-subtitle {
+    font-size: var(--brand-text-lg);
+    color: var(--brand-text-gray);
+    font-family: var(--brand-font-sans);
+    margin: 0;
+    line-height: var(--brand-leading-normal);
+  }
+
   /* === RESPONSIVE ADJUSTMENTS === */
   @media (max-width: 768px) {
     .main-content {
@@ -616,6 +741,40 @@ html[data-theme="postdoserx"] {
     .content-card {
       padding: var(--brand-space-3);
     }
+  }
+
+  /* === PHASE 4: DASHBOARD SHELL CLEANUP === */
+  /* Scope: Sidebar + header + card surfaces only using approved tokens */
+  
+  /* Shell backgrounds - use approved brand tokens only */
+  body {
+    background: var(--brand-background-light) !important;
+    background-image: none !important;
+  }
+
+  .sidebar {
+    background: var(--brand-white) !important;
+    border-right: 1px solid var(--brand-border-light) !important;
+  }
+
+  .header {
+    background: var(--brand-white) !important;
+    border-bottom: 1px solid var(--brand-border-light) !important;
+  }
+
+  /* Card surfaces - use approved brand tokens only */
+  .content-card {
+    background: var(--brand-white) !important;
+    border: 1px solid var(--brand-border-light) !important;
+    color: var(--brand-text-dark) !important;
+  }
+
+  /* Dropdown fixes for shell */
+  .user-dropdown,
+  .dropdown-menu {
+    background: var(--brand-white) !important;
+    border: 1px solid var(--brand-border-light) !important;
+    color: var(--brand-text-dark) !important;
   }
 }
 
