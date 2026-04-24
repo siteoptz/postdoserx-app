@@ -744,41 +744,104 @@ html[data-theme="postdoserx"] {
   }
 
   /* === PHASE 4: DASHBOARD SHELL CLEANUP === */
-  /* Scope: Sidebar + header + card surfaces only using approved tokens */
-  
-  /* === PHASE 4: LIGHT THEME SHELL OVERRIDES === */
-  /* CRITICAL: Scope all light surface rules to postdoserx theme to prevent dark theme leakage */
-  
-  /* Shell backgrounds - use approved brand tokens only */
+  /* Scope: force light shell and components for postdoserx theme */
+
+  /* Shell backgrounds */
+  html[data-theme="postdoserx"],
   html[data-theme="postdoserx"] body {
     background: var(--brand-background-light) !important;
     background-image: none !important;
     color: var(--brand-text-dark) !important;
   }
 
-  html[data-theme="postdoserx"] .sidebar {
-    background: var(--brand-white) !important;
-    border-right: 1px solid var(--brand-border-light) !important;
+  html[data-theme="postdoserx"] body::before {
+    background: none !important;
   }
 
-  html[data-theme="postdoserx"] .header {
-    background: var(--brand-white) !important;
-    border-bottom: 1px solid var(--brand-border-light) !important;
+  html[data-theme="postdoserx"] .main-content {
+    background: var(--brand-background-light) !important;
   }
 
-  /* Card surfaces - use approved brand tokens only */
-  html[data-theme="postdoserx"] .content-card {
-    background: var(--brand-white) !important;
-    border: 1px solid var(--brand-border-light) !important;
-    color: var(--brand-text-dark) !important;
-  }
-
-  /* Dropdown fixes for shell */
+  html[data-theme="postdoserx"] .sidebar,
+  html[data-theme="postdoserx"] .header,
   html[data-theme="postdoserx"] .user-dropdown,
   html[data-theme="postdoserx"] .dropdown-menu {
     background: var(--brand-white) !important;
-    border: 1px solid var(--brand-border-light) !important;
+    background-image: none !important;
+    border-color: var(--brand-border-light) !important;
     color: var(--brand-text-dark) !important;
+  }
+
+  /* Navigation should remain light in postdoserx */
+  html[data-theme="postdoserx"] .nav-title {
+    color: var(--brand-text-gray) !important;
+    border-bottom-color: var(--brand-border-light) !important;
+    text-shadow: none !important;
+  }
+
+  html[data-theme="postdoserx"] .nav-link {
+    color: var(--brand-text-dark) !important;
+    border-left-color: transparent !important;
+  }
+
+  html[data-theme="postdoserx"] .nav-link:hover {
+    background: var(--brand-gray-50) !important;
+    color: var(--brand-primary) !important;
+    box-shadow: none !important;
+  }
+
+  html[data-theme="postdoserx"] .nav-link.active {
+    background: var(--brand-primary) !important;
+    border-left-color: var(--brand-primary-dark) !important;
+    color: var(--brand-white) !important;
+  }
+
+  /* Card + panel surfaces */
+  html[data-theme="postdoserx"] .content-card,
+  html[data-theme="postdoserx"] .card-professional,
+  html[data-theme="postdoserx"] .profile-card,
+  html[data-theme="postdoserx"] .insights-card,
+  html[data-theme="postdoserx"] .actions-card,
+  html[data-theme="postdoserx"] .activity-card,
+  html[data-theme="postdoserx"] .meal-insights,
+  html[data-theme="postdoserx"] .quick-actions,
+  html[data-theme="postdoserx"] .category-card,
+  html[data-theme="postdoserx"] .chart-container,
+  html[data-theme="postdoserx"] .analytics-container,
+  html[data-theme="postdoserx"] .activity-item,
+  html[data-theme="postdoserx"] .insight-item,
+  html[data-theme="postdoserx"] .profile-item {
+    background: var(--brand-white) !important;
+    background-color: var(--brand-white) !important;
+    background-image: none !important;
+    border-color: var(--brand-border-light) !important;
+    color: var(--brand-text-dark) !important;
+    box-shadow: var(--brand-shadow-sm) !important;
+  }
+
+  html[data-theme="postdoserx"] .content-card::before {
+    background: var(--brand-primary) !important;
+    opacity: 1 !important;
+  }
+
+  /* Form controls */
+  html[data-theme="postdoserx"] input,
+  html[data-theme="postdoserx"] select,
+  html[data-theme="postdoserx"] textarea {
+    background: var(--brand-white) !important;
+    color: var(--brand-text-dark) !important;
+    border-color: var(--brand-border-light) !important;
+  }
+
+  /* Text visibility on light surfaces */
+  html[data-theme="postdoserx"] .user-name,
+  html[data-theme="postdoserx"] .dropdown-user-name,
+  html[data-theme="postdoserx"] .dropdown-item,
+  html[data-theme="postdoserx"] .view-subtitle,
+  html[data-theme="postdoserx"] p,
+  html[data-theme="postdoserx"] label,
+  html[data-theme="postdoserx"] span {
+    color: var(--brand-text-dark);
   }
 }
 
