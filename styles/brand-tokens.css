@@ -746,32 +746,36 @@ html[data-theme="postdoserx"] {
   /* === PHASE 4: DASHBOARD SHELL CLEANUP === */
   /* Scope: Sidebar + header + card surfaces only using approved tokens */
   
+  /* === PHASE 4: LIGHT THEME SHELL OVERRIDES === */
+  /* CRITICAL: Scope all light surface rules to postdoserx theme to prevent dark theme leakage */
+  
   /* Shell backgrounds - use approved brand tokens only */
-  body {
+  html[data-theme="postdoserx"] body {
     background: var(--brand-background-light) !important;
     background-image: none !important;
+    color: var(--brand-text-dark) !important;
   }
 
-  .sidebar {
+  html[data-theme="postdoserx"] .sidebar {
     background: var(--brand-white) !important;
     border-right: 1px solid var(--brand-border-light) !important;
   }
 
-  .header {
+  html[data-theme="postdoserx"] .header {
     background: var(--brand-white) !important;
     border-bottom: 1px solid var(--brand-border-light) !important;
   }
 
   /* Card surfaces - use approved brand tokens only */
-  .content-card {
+  html[data-theme="postdoserx"] .content-card {
     background: var(--brand-white) !important;
     border: 1px solid var(--brand-border-light) !important;
     color: var(--brand-text-dark) !important;
   }
 
   /* Dropdown fixes for shell */
-  .user-dropdown,
-  .dropdown-menu {
+  html[data-theme="postdoserx"] .user-dropdown,
+  html[data-theme="postdoserx"] .dropdown-menu {
     background: var(--brand-white) !important;
     border: 1px solid var(--brand-border-light) !important;
     color: var(--brand-text-dark) !important;
