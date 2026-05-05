@@ -1,0 +1,579 @@
+<!-- Recipe Card Modal Component -->
+<div id="recipe-card-modal" class="modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="recipe-title" aria-describedby="recipe-description">
+  <div class="modal-overlay" onclick="closeRecipeModal()" aria-hidden="true"></div>
+  <div class="modal-content recipe-card-content">
+    
+    <!-- Header Section with Gradient Background -->
+    <div class="recipe-header">
+      <button class="modal-close" onclick="closeRecipeModal()" aria-label="Close recipe modal">
+        <span aria-hidden="true">×</span>
+      </button>
+      <h1 class="recipe-title" id="recipe-title">Fluffy Protein Pancakes</h1>
+      
+      <div class="recipe-tags">
+        <span class="recipe-tag" id="recipe-category">RECOVERY</span>
+        <span class="recipe-tag" id="recipe-difficulty">Easy</span>
+        <span class="recipe-tag" id="recipe-servings">2 servings</span>
+      </div>
+      
+      <p class="recipe-description" id="recipe-description">
+        High-protein pancakes that support energy and recovery
+      </p>
+    </div>
+
+    <!-- Time Information -->
+    <div class="recipe-times">
+      <div class="time-card">
+        <div class="time-icon clock"></div>
+        <div class="time-label">Prep Time</div>
+        <div class="time-value" id="prep-time">10 minutes</div>
+      </div>
+      <div class="time-card">
+        <div class="time-icon flame"></div>
+        <div class="time-label">Cook Time</div>
+        <div class="time-value" id="cook-time">15 minutes</div>
+      </div>
+    </div>
+
+    <!-- Ingredients Section -->
+    <div class="ingredients-section">
+      <h3 class="ingredients-title" id="ingredients-heading">
+        <span class="ingredients-icon" aria-hidden="true"></span>
+        Ingredients
+      </h3>
+      <ul class="ingredients-list" id="ingredients-list" role="list" aria-labelledby="ingredients-heading">
+        <li>1 scoop vanilla protein powder</li>
+        <li>2 eggs</li>
+        <li>1/4 cup oat flour</li>
+        <li>1/4 cup cottage cheese</li>
+        <li>1/2 banana, mashed</li>
+        <li>1/2 tsp vanilla extract</li>
+        <li>1/4 tsp baking powder</li>
+      </ul>
+    </div>
+
+    <!-- Instructions Section (Optional) -->
+    <div class="instructions-section" id="instructions-section" style="display:none;">
+      <h3 class="instructions-title" id="instructions-heading">Instructions</h3>
+      <ol class="instructions-list" id="instructions-list" role="list" aria-labelledby="instructions-heading">
+        <!-- Instructions will be populated by JavaScript -->
+      </ol>
+    </div>
+
+    <!-- Next Meal Info -->
+    <div class="next-meal" id="next-meal">
+      <span class="next-meal-time" id="next-meal-time">6:00 PM</span> - 
+      <span class="next-meal-name" id="next-meal-name">Gentle White Fish with Jasmine</span>
+    </div>
+
+  </div>
+</div>
+
+<style>
+/* Recipe Card Modal Styles */
+.recipe-card-content {
+  position: relative;
+  background: var(--white, #FFFFFF);
+  border-radius: 20px;
+  max-width: 420px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  padding: 0;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Header Section with Gradient */
+.recipe-header {
+  background: linear-gradient(135deg, var(--brand-primary, #C6158D) 0%, var(--brand-purple, #4F46E5) 100%);
+  color: white;
+  padding: 24px 24px 32px 24px;
+  border-radius: 20px 20px 0 0;
+  position: relative;
+}
+
+.recipe-header .modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s ease;
+}
+
+.recipe-header .modal-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.recipe-title {
+  font-family: var(--brand-font-display, 'DM Serif Display', Georgia, serif);
+  font-size: 28px;
+  font-weight: 400;
+  margin: 0 0 16px 0;
+  line-height: 1.2;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.recipe-tag {
+  background: rgba(255, 255, 255, 0.25);
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.recipe-description {
+  font-size: 16px;
+  line-height: 1.4;
+  margin: 0;
+  opacity: 0.95;
+}
+
+/* Time Cards Section */
+.recipe-times {
+  display: flex;
+  gap: 16px;
+  padding: 24px;
+  background: var(--brand-gray-50, #F9FAFB);
+}
+
+.time-card {
+  flex: 1;
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.time-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 8px auto;
+}
+
+.time-icon::before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.time-icon.clock::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%236B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12 6v6l4 2m6-4a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z' /%3E%3C/svg%3E");
+}
+
+.time-icon.flame::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23EF4444'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z' /%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12 18a3.75 3.75 0 0 0 .495-7.468 5.99 5.99 0 0 0-1.925 3.547 5.975 5.975 0 0 1-2.133-1.001A3.75 3.75 0 0 0 12 18Z' /%3E%3C/svg%3E");
+}
+
+.time-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--brand-gray-600, #6B7280);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.time-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--brand-text-dark, #1E2A44);
+}
+
+/* Ingredients Section */
+.ingredients-section {
+  padding: 24px;
+}
+
+.ingredients-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--brand-text-dark, #1E2A44);
+  margin: 0 0 16px 0;
+}
+
+.ingredients-icon {
+  font-size: 18px;
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ingredients-icon::before {
+  content: '';
+  width: 18px;
+  height: 18px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23C6158D'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M8.25 18.75a1.5 1.5 0 0 1-3 0V7.5a1.5 1.5 0 0 1 3 0v11.25Z' /%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 12a1.5 1.5 0 0 1-3 0V6.75a1.5 1.5 0 0 1 3 0V12Z' /%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12 21.75a1.5 1.5 0 0 1-3 0V3a1.5 1.5 0 0 1 3 0v18.75Z' /%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.ingredients-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ingredients-list li {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--brand-border-light, #E3DDD1);
+  position: relative;
+  padding-left: 16px;
+  font-size: 15px;
+  color: var(--brand-text-dark, #1E2A44);
+}
+
+.ingredients-list li:last-child {
+  border-bottom: none;
+}
+
+.ingredients-list li:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--brand-primary, #C6158D);
+  font-weight: bold;
+}
+
+/* Instructions Section */
+.instructions-section {
+  padding: 0 24px 24px 24px;
+}
+
+.instructions-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--brand-text-dark, #1E2A44);
+  margin: 0 0 16px 0;
+}
+
+.instructions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  counter-reset: step-counter;
+}
+
+.instructions-list li {
+  padding: 12px 0;
+  border-bottom: 1px solid var(--brand-border-light, #E3DDD1);
+  position: relative;
+  padding-left: 40px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--brand-text-dark, #1E2A44);
+  counter-increment: step-counter;
+}
+
+.instructions-list li:last-child {
+  border-bottom: none;
+}
+
+.instructions-list li:before {
+  content: counter(step-counter);
+  position: absolute;
+  left: 0;
+  top: 12px;
+  width: 24px;
+  height: 24px;
+  background: var(--brand-primary, #C6158D);
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Next Meal Section */
+.next-meal {
+  background: var(--brand-gray-100, #F3F4F6);
+  padding: 16px 24px;
+  border-radius: 0 0 20px 20px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--brand-gray-700, #374151);
+}
+
+.next-meal-time {
+  font-weight: 600;
+  color: var(--brand-text-dark, #1E2A44);
+}
+
+.next-meal-name {
+  font-weight: 500;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .recipe-card-content {
+    width: 95%;
+    max-height: 95vh;
+    border-radius: 16px;
+  }
+  
+  .recipe-header {
+    padding: 20px 20px 28px 20px;
+    border-radius: 16px 16px 0 0;
+  }
+  
+  .recipe-title {
+    font-size: 24px;
+  }
+  
+  .recipe-times {
+    padding: 20px;
+  }
+  
+  .time-card {
+    padding: 14px;
+  }
+  
+  .ingredients-section {
+    padding: 20px;
+  }
+  
+  .instructions-section {
+    padding: 0 20px 20px 20px;
+  }
+  
+  .next-meal {
+    padding: 14px 20px;
+    border-radius: 0 0 16px 16px;
+  }
+}
+</style>
+
+<script>
+// Recipe Modal JavaScript Functions
+let lastFocusedElement = null;
+
+function openRecipeModal(recipeData = {}) {
+  // Store the currently focused element
+  lastFocusedElement = document.activeElement;
+  // Default recipe data (Fluffy Protein Pancakes)
+  const defaultRecipe = {
+    title: "Fluffy Protein Pancakes",
+    category: "RECOVERY",
+    difficulty: "Easy",
+    servings: "2 servings",
+    description: "High-protein pancakes that support energy and recovery",
+    prepTime: "10 minutes",
+    cookTime: "15 minutes",
+    ingredients: [
+      "1 scoop vanilla protein powder",
+      "2 eggs",
+      "1/4 cup oat flour", 
+      "1/4 cup cottage cheese",
+      "1/2 banana, mashed",
+      "1/2 tsp vanilla extract",
+      "1/4 tsp baking powder"
+    ],
+    instructions: [],
+    nextMeal: {
+      time: "6:00 PM",
+      name: "Gentle White Fish with Jasmine"
+    }
+  };
+
+  // Merge provided data with defaults
+  const recipe = { ...defaultRecipe, ...recipeData };
+
+  // Populate modal content
+  document.getElementById('recipe-title').textContent = recipe.title;
+  document.getElementById('recipe-category').textContent = recipe.category;
+  document.getElementById('recipe-difficulty').textContent = recipe.difficulty;
+  document.getElementById('recipe-servings').textContent = recipe.servings;
+  document.getElementById('recipe-description').textContent = recipe.description;
+  document.getElementById('prep-time').textContent = recipe.prepTime;
+  document.getElementById('cook-time').textContent = recipe.cookTime;
+
+  // Populate ingredients
+  const ingredientsList = document.getElementById('ingredients-list');
+  ingredientsList.innerHTML = '';
+  recipe.ingredients.forEach(ingredient => {
+    const li = document.createElement('li');
+    li.textContent = ingredient;
+    ingredientsList.appendChild(li);
+  });
+
+  // Populate instructions (if provided)
+  const instructionsSection = document.getElementById('instructions-section');
+  const instructionsList = document.getElementById('instructions-list');
+  
+  if (recipe.instructions && recipe.instructions.length > 0) {
+    instructionsList.innerHTML = '';
+    recipe.instructions.forEach(instruction => {
+      const li = document.createElement('li');
+      li.textContent = instruction;
+      instructionsList.appendChild(li);
+    });
+    instructionsSection.style.display = 'block';
+  } else {
+    instructionsSection.style.display = 'none';
+  }
+
+  // Populate next meal (if provided)
+  const nextMealElement = document.getElementById('next-meal');
+  if (recipe.nextMeal) {
+    document.getElementById('next-meal-time').textContent = recipe.nextMeal.time;
+    document.getElementById('next-meal-name').textContent = recipe.nextMeal.name;
+    nextMealElement.style.display = 'block';
+  } else {
+    nextMealElement.style.display = 'none';
+  }
+
+  // Show modal
+  const modal = document.getElementById('recipe-card-modal');
+  modal.style.display = 'flex';
+  
+  // Focus the close button for keyboard navigation
+  setTimeout(() => {
+    const closeButton = modal.querySelector('.modal-close');
+    closeButton.focus();
+  }, 100);
+  
+  // Prevent body scrolling
+  document.body.style.overflow = 'hidden';
+  
+  // Trap focus within modal
+  trapFocus(modal);
+}
+
+function closeRecipeModal() {
+  document.getElementById('recipe-card-modal').style.display = 'none';
+  
+  // Restore body scrolling
+  document.body.style.overflow = 'auto';
+  
+  // Return focus to the element that opened the modal
+  if (lastFocusedElement) {
+    lastFocusedElement.focus();
+  }
+}
+
+// Close modal when clicking outside
+document.addEventListener('click', function(e) {
+  const modal = document.getElementById('recipe-card-modal');
+  if (e.target === modal || e.target.classList.contains('modal-overlay')) {
+    closeRecipeModal();
+  }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('recipe-card-modal');
+    if (modal.style.display === 'flex') {
+      closeRecipeModal();
+    }
+  }
+});
+
+// Focus trap utility function
+function trapFocus(element) {
+  const focusableElements = element.querySelectorAll(
+    'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+  );
+  const firstFocusableElement = focusableElements[0];
+  const lastFocusableElement = focusableElements[focusableElements.length - 1];
+
+  element.addEventListener('keydown', function(e) {
+    if (e.key === 'Tab') {
+      if (e.shiftKey) {
+        if (document.activeElement === firstFocusableElement) {
+          lastFocusableElement.focus();
+          e.preventDefault();
+        }
+      } else {
+        if (document.activeElement === lastFocusableElement) {
+          firstFocusableElement.focus();
+          e.preventDefault();
+        }
+      }
+    }
+  });
+}
+
+// Example usage function for testing
+function showSampleRecipe() {
+  openRecipeModal({
+    title: "Fluffy Protein Pancakes",
+    category: "RECOVERY",
+    difficulty: "Easy", 
+    servings: "2 servings",
+    description: "High-protein pancakes that support energy and recovery",
+    prepTime: "10 minutes",
+    cookTime: "15 minutes",
+    ingredients: [
+      "1 scoop vanilla protein powder",
+      "2 eggs", 
+      "1/4 cup oat flour",
+      "1/4 cup cottage cheese",
+      "1/2 banana, mashed",
+      "1/2 tsp vanilla extract",
+      "1/4 tsp baking powder"
+    ],
+    instructions: [
+      "In a bowl, mash the banana until smooth",
+      "Add eggs and cottage cheese, whisk together",
+      "Mix in protein powder and oat flour until combined",
+      "Add vanilla extract and baking powder, stir well",
+      "Heat a non-stick pan over medium-low heat",
+      "Pour 1/4 cup batter per pancake",
+      "Cook for 2-3 minutes until bubbles form",
+      "Flip and cook another 1-2 minutes until golden"
+    ],
+    nextMeal: {
+      time: "6:00 PM",
+      name: "Gentle White Fish with Jasmine"
+    }
+  });
+}
+</script>

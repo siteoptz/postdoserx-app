@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="postdoserx">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modal Design Showcase - PostDoseRX</title>
+    <link rel="stylesheet" href="styles/brand-tokens.css">
+    <style>
+        body {
+            font-family: var(--brand-font-sans, 'Montserrat', sans-serif);
+            background: var(--brand-background-light, #F6F3EE);
+            color: var(--brand-text-dark, #1E2A44);
+            margin: 0;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        
+        .demo-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .demo-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .demo-title {
+            font-family: var(--brand-font-display, 'DM Serif Display', Georgia, serif);
+            font-size: 36px;
+            color: var(--brand-text-dark, #1E2A44);
+            margin-bottom: 16px;
+        }
+        
+        .demo-subtitle {
+            font-size: 18px;
+            color: var(--brand-text-gray, #5E667A);
+            margin: 0;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+        
+        .demo-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .card-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--brand-text-dark, #1E2A44);
+            margin-bottom: 16px;
+        }
+        
+        .card-description {
+            font-size: 16px;
+            color: var(--brand-text-gray, #5E667A);
+            margin-bottom: 24px;
+            line-height: 1.5;
+        }
+        
+        .demo-button {
+            background: linear-gradient(135deg, var(--brand-primary, #C6158D) 0%, var(--brand-purple, #4F46E5) 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+        
+        .demo-button:active {
+            transform: translateY(0);
+        }
+        
+        .features-section {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+        
+        .features-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--brand-text-dark, #1E2A44);
+            margin-bottom: 24px;
+            text-align: center;
+        }
+        
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .features-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 16px;
+            line-height: 1.5;
+            color: var(--brand-text-gray, #5E667A);
+        }
+        
+        .feature-check {
+            color: var(--brand-success, #10B981);
+            font-size: 20px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1 class="demo-title">Modal Design System</h1>
+            <p class="demo-subtitle">Consistent, modern popup designs for all PostDoseRX components</p>
+        </div>
+        
+        <div class="demo-grid">
+            <div class="demo-card">
+                <h3 class="card-title">Recipe Card Modal</h3>
+                <p class="card-description">
+                    Beautiful recipe cards with gradient headers, time displays, and ingredient lists. Perfect for meal planning and nutrition guidance.
+                </p>
+                <button class="demo-button" onclick="showSampleRecipe()">
+                    View Recipe Card
+                </button>
+            </div>
+            
+            <div class="demo-card">
+                <h3 class="card-title">Signup Modal</h3>
+                <p class="card-description">
+                    Streamlined signup flow with modern gradient design, consistent with the recipe card aesthetic. Enhanced user experience.
+                </p>
+                <button class="demo-button" onclick="openSignupModal('Premium', 'price_1SrSZbAYjb6yVLnRHNOJVKy2')">
+                    View Signup Modal
+                </button>
+            </div>
+        </div>
+        
+        <div class="features-section">
+            <h2 class="features-title">Design System Features</h2>
+            <ul class="features-list">
+                <li>
+                    <span class="feature-check">✓</span>
+                    <span>Consistent gradient headers across all modals</span>
+                </li>
+                <li>
+                    <span class="feature-check">✓</span>
+                    <span>Smooth animations and transitions</span>
+                </li>
+                <li>
+                    <span class="feature-check">✓</span>
+                    <span>Mobile-first responsive design</span>
+                </li>
+                <li>
+                    <span class="feature-check">✓</span>
+                    <span>Accessibility features (keyboard navigation, focus management)</span>
+                </li>
+                <li>
+                    <span class="feature-check">✓</span>
+                    <span>Brand-consistent color palette</span>
+                </li>
+                <li>
+                    <span class="feature-check">✓</span>
+                    <span>Reusable component architecture</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Include Updated Recipe Card Modal Component -->
+    <div id="recipe-modal-container"></div>
+    <script>
+        // Load updated recipe modal component with professional icons
+        fetch('./components/recipe-card-modal.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('recipe-modal-container').innerHTML = html;
+                
+                // Execute any scripts in the loaded HTML
+                const scripts = document.getElementById('recipe-modal-container').querySelectorAll('script');
+                scripts.forEach(script => {
+                    const newScript = document.createElement('script');
+                    newScript.textContent = script.textContent;
+                    document.body.appendChild(newScript);
+                });
+            })
+            .catch(err => console.log('Could not load recipe modal:', err));
+    </script>
+
+    <!-- Include Signup Modal Component -->
+    <div id="signup-modal-container"></div>
+    <script>
+        // Load signup modal component
+        fetch('../signup-modal.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('signup-modal-container').innerHTML = html;
+                
+                // Execute any scripts in the loaded HTML
+                const scripts = document.getElementById('signup-modal-container').querySelectorAll('script');
+                scripts.forEach(script => {
+                    const newScript = document.createElement('script');
+                    newScript.textContent = script.textContent;
+                    document.body.appendChild(newScript);
+                });
+            });
+    </script>
+</body>
+</html>

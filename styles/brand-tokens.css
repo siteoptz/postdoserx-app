@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Montserrat:wght@400;500;600;700;800&display=swap');
+
 /* PostDoseRX Brand Tokens
  * Derived from marketing site styles (/assets/styles.css)
  * This file provides shared brand tokens that can be used across themes
@@ -7,9 +9,14 @@
 :root {
   /* === PRIMARY BRAND COLORS === */
   /* Source: Marketing site --primary-color (ALIGNED FOR VISUAL PARITY) */
-  --brand-primary: #4F46E5;
-  --brand-primary-dark: #3730A3;
-  --brand-primary-light: #6366F1;
+  --brand-primary: #C6158D;
+  --brand-primary-dark: #A01273;
+  --brand-primary-light: #D946AA;
+  --brand-magenta: #C6158D;
+  --brand-magenta-dark: #A01273;
+  --brand-purple: #4F46E5;
+  --brand-purple-dark: #3730A3;
+  --brand-purple-light: #6366F1;
   
   /* Secondary color from marketing */
   --brand-secondary: #10B981;
@@ -18,12 +25,12 @@
 
   /* === NEUTRAL PALETTE === */
   /* Marketing site neutral colors */
-  --brand-background-light: #F8FAFC;
-  --brand-text-dark: #1F2937;
-  --brand-text-gray: #6B7280;
-  --brand-text-light: #9CA3AF;
-  --brand-border-light: #E5E7EB;
-  --brand-white: #FFFFFF;
+  --brand-background-light: #F6F3EE;
+  --brand-text-dark: #1E2A44;
+  --brand-text-gray: #5E667A;
+  --brand-text-light: #8A90A1;
+  --brand-border-light: #E3DDD1;
+  --brand-white: #FCFBF9;
   --brand-black: #000000;
 
   /* Extended neutral scale for app needs */
@@ -60,10 +67,10 @@
   --brand-info-dark: #1D4ED8;
 
   /* === TYPOGRAPHY === */
-  /* Marketing site font updated to Roboto per Phase 1 feedback */
-  --brand-font-sans: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  /* Marketing-style typography */
+  --brand-font-sans: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --brand-font-mono: 'JetBrains Mono', 'SF Mono', 'Monaco', 'Consolas', 'Liberation Mono', monospace;
-  --brand-font-display: var(--brand-font-sans);
+  --brand-font-display: 'DM Serif Display', 'Source Serif 4', Georgia, serif;
 
   /* Typography scale (16px base) */
   --brand-text-xs: 0.75rem;    /* 12px */
@@ -120,13 +127,15 @@
   --brand-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 
   /* === FOCUS STYLES === */
-  --brand-focus-ring: 0 0 0 3px rgba(79, 70, 229, 0.1);
+  --brand-focus-ring: 0 0 0 3px rgba(198, 21, 141, 0.16);
   --brand-focus-ring-offset: 0 0 0 2px var(--brand-white), 0 0 0 4px var(--brand-primary);
 
   /* === GRADIENTS === */
   /* Marketing site gradient */
   --brand-gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --brand-gradient-secondary: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-dark) 100%);
+  --brand-gradient-brand: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-light) 52%, var(--brand-purple) 100%);
+  --brand-gradient-brand-dark: linear-gradient(135deg, var(--brand-primary-dark) 0%, #B01380 52%, var(--brand-purple-dark) 100%);
+  --brand-gradient-secondary: linear-gradient(135deg, var(--brand-purple) 0%, var(--brand-purple-dark) 100%);
 
   /* === Z-INDEX SCALE === */
   --brand-z-dropdown: 1000;
@@ -153,6 +162,25 @@ html[data-theme="legacy"] {
 
 /* PostDoseRX Theme (marketing site alignment - Phase 2) */
 html[data-theme="postdoserx"] {
+  /* Global remap: enforce brand language across every screen */
+  --font-sans: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-display: 'DM Serif Display', 'Source Serif 4', Georgia, serif;
+  --color-background: var(--brand-background-light);
+  --color-surface: var(--brand-white);
+  --color-surface-elevated: #F7F3EE;
+  --color-surface-overlay: rgba(198, 21, 141, 0.05);
+  --color-text-primary: var(--brand-text-dark);
+  --color-text-secondary: var(--brand-text-gray);
+  --color-text-tertiary: var(--brand-text-light);
+  --color-border-subtle: #ECE4DA;
+  --color-border-default: var(--brand-border-light);
+  --color-border-strong: #D9CEBE;
+  --accent-blue: var(--brand-primary);
+  --charcoal: #FCFBF9;
+  --slate-dark: #F7F3EE;
+  --slate: #E9DFD2;
+  --white: var(--brand-white);
+
   /* === FOUNDATION COMPONENT OVERRIDES === */
   /* Phase 2: Migrate buttons, inputs, cards, links to use brand tokens */
 
@@ -841,7 +869,551 @@ html[data-theme="postdoserx"] {
   html[data-theme="postdoserx"] p,
   html[data-theme="postdoserx"] label,
   html[data-theme="postdoserx"] span {
-    color: var(--brand-text-dark);
+    color: var(--brand-text-dark) !important;
+  }
+
+  /* Reset dark-era gradient text and white-on-white conflicts */
+  html[data-theme="postdoserx"] h1,
+  html[data-theme="postdoserx"] h2,
+  html[data-theme="postdoserx"] h3,
+  html[data-theme="postdoserx"] h4,
+  html[data-theme="postdoserx"] h5,
+  html[data-theme="postdoserx"] h6,
+  html[data-theme="postdoserx"] .view-title,
+  html[data-theme="postdoserx"] .card-title,
+  html[data-theme="postdoserx"] .section-title {
+    color: var(--brand-text-dark) !important;
+    background: none !important;
+    -webkit-text-fill-color: initial !important;
+    background-clip: border-box !important;
+    -webkit-background-clip: border-box !important;
+    text-shadow: none !important;
+  }
+
+  /* Keep icons visible on light surfaces */
+  html[data-theme="postdoserx"] .nav-icon,
+  html[data-theme="postdoserx"] .dropdown-icon,
+  html[data-theme="postdoserx"] .icon-professional {
+    color: var(--brand-white) !important;
+    background: var(--brand-primary) !important;
+    box-shadow: none !important;
+  }
+
+  html[data-theme="postdoserx"] [data-lucide] {
+    color: currentColor !important;
+    stroke: currentColor !important;
+  }
+
+  /* Direct mapping to marketing palette on key app chrome */
+  html[data-theme="postdoserx"] .logo,
+  html[data-theme="postdoserx"] .brand-rx {
+    color: var(--brand-primary) !important;
+  }
+
+  html[data-theme="postdoserx"] .sidebar-header {
+    background: var(--brand-white) !important;
+    border-bottom: 1px solid var(--brand-border-light) !important;
+    color: var(--brand-text-dark) !important;
+  }
+
+  html[data-theme="postdoserx"] .button-professional {
+    background: var(--brand-gradient-brand) !important;
+    border-color: var(--brand-primary) !important;
+    color: var(--brand-white) !important;
+  }
+
+  html[data-theme="postdoserx"] .button-professional:hover {
+    background: var(--brand-gradient-brand-dark) !important;
+    border-color: var(--brand-magenta-dark) !important;
+  }
+
+  html[data-theme="postdoserx"] .button-professional--outline {
+    background: var(--brand-white) !important;
+    color: var(--brand-primary) !important;
+    border-color: var(--brand-primary) !important;
+  }
+
+  html[data-theme="postdoserx"] .button-professional--outline:hover {
+    background: var(--brand-gradient-brand) !important;
+    color: var(--brand-white) !important;
+  }
+
+  html[data-theme="postdoserx"] .button-professional--accent {
+    background: var(--brand-secondary) !important;
+    border-color: var(--brand-secondary) !important;
+    color: var(--brand-white) !important;
+  }
+
+  html[data-theme="postdoserx"] .button-professional--accent:hover {
+    background: var(--brand-secondary-dark) !important;
+    border-color: var(--brand-secondary-dark) !important;
+  }
+
+  /* Accent cleanup with canonical purple+magenta+green palette */
+  html[data-theme="postdoserx"] .nav-title {
+    color: var(--brand-text-gray) !important;
+    border-bottom-color: var(--brand-border-light) !important;
+    text-shadow: none !important;
+  }
+
+  html[data-theme="postdoserx"] .nav-link.active::before,
+  html[data-theme="postdoserx"] .nav-link:hover::before {
+    background: var(--brand-magenta) !important;
+    box-shadow: none !important;
+  }
+
+  html[data-theme="postdoserx"] .pro-badge,
+  html[data-theme="postdoserx"] .pro-badge-gold,
+  html[data-theme="postdoserx"] .premium-badge,
+  html[data-theme="postdoserx"] .completion-badge,
+  html[data-theme="postdoserx"] .accuracy-badge {
+    background: var(--brand-gradient-secondary) !important;
+    color: var(--brand-white) !important;
+    border-color: var(--brand-magenta-dark) !important;
+    box-shadow: none !important;
+  }
+
+  html[data-theme="postdoserx"] .savings-badge {
+    background: var(--brand-secondary-light) !important;
+    color: var(--brand-secondary-dark) !important;
+    border: 1px solid var(--brand-secondary) !important;
+  }
+
+  html[data-theme="postdoserx"] .lock-icon,
+  html[data-theme="postdoserx"] .injection-icon,
+  html[data-theme="postdoserx"] .injection-indicator {
+    background: var(--brand-gradient-brand) !important;
+    color: var(--brand-white) !important;
+    box-shadow: none !important;
+  }
+
+  html[data-theme="postdoserx"] .section-title::after,
+  html[data-theme="postdoserx"] .content-card::before,
+  html[data-theme="postdoserx"] .progress-fill,
+  html[data-theme="postdoserx"] .progress-bar-fill {
+    background: var(--brand-primary) !important;
+  }
+
+  html[data-theme="postdoserx"] .nav-link.active {
+    background: #F7EAF4 !important;
+    color: var(--brand-magenta) !important;
+    border-left-color: var(--brand-magenta-dark) !important;
+  }
+
+  /* Screenshot palette for meal/tag chips */
+  html[data-theme="postdoserx"] .meal-tag,
+  html[data-theme="postdoserx"] .tag,
+  html[data-theme="postdoserx"] .recipe-tag {
+    background: #F1EFEC !important;
+    color: var(--brand-text-gray) !important;
+    border: 1px solid #ECE7E1 !important;
+  }
+
+  html[data-theme="postdoserx"] .meal-tag.gentle,
+  html[data-theme="postdoserx"] .tag.gentle {
+    background: #E3F2F0 !important;
+    color: #2C7A73 !important;
+    border-color: #CFE7E3 !important;
+  }
+
+  html[data-theme="postdoserx"] .meal-tag.protein,
+  html[data-theme="postdoserx"] .tag.protein,
+  html[data-theme="postdoserx"] .tag.glp1 {
+    background: #F6EAF3 !important;
+    color: var(--brand-magenta-dark) !important;
+    border-color: #EED8E7 !important;
+  }
+
+  html[data-theme="postdoserx"] .meal-tag.comfort,
+  html[data-theme="postdoserx"] .tag.comfort,
+  html[data-theme="postdoserx"] .tag.quick {
+    background: #E9DBB5 !important;
+    color: #7A6A3A !important;
+    border-color: #DFCDA0 !important;
+  }
+
+  html[data-theme="postdoserx"] .meal-tag.light,
+  html[data-theme="postdoserx"] .tag.light,
+  html[data-theme="postdoserx"] .tag.hydrating {
+    background: #DDE7F3 !important;
+    color: #5D718C !important;
+    border-color: #CCD9E8 !important;
+  }
+
+  /* Warm depth + hierarchy for meal and grocery experiences */
+  html[data-theme="postdoserx"] .view-title,
+  html[data-theme="postdoserx"] .section-title,
+  html[data-theme="postdoserx"] .content-card h3 {
+    font-family: var(--brand-font-display) !important;
+    letter-spacing: 0.01em !important;
+    font-weight: 400 !important;
+  }
+
+  html[data-theme="postdoserx"] .view-subtitle,
+  html[data-theme="postdoserx"] p,
+  html[data-theme="postdoserx"] .meal-description,
+  html[data-theme="postdoserx"] .ingredient-details {
+    font-family: var(--brand-font-sans) !important;
+    color: var(--brand-text-gray) !important;
+  }
+
+  html[data-theme="postdoserx"] .content-card,
+  html[data-theme="postdoserx"] .day-card,
+  html[data-theme="postdoserx"] .ingredient-item,
+  html[data-theme="postdoserx"] .nutrition-item {
+    background: var(--brand-white) !important;
+    border: 1px solid var(--brand-border-light) !important;
+    box-shadow: 0 10px 26px rgba(30, 42, 68, 0.08), 0 2px 6px rgba(30, 42, 68, 0.05) !important;
+  }
+
+  html[data-theme="postdoserx"] .meal-slot {
+    background: #F7F3EE !important;
+    border: 1px solid #ECE4DA !important;
+    border-radius: var(--brand-radius-lg) !important;
+  }
+
+  html[data-theme="postdoserx"] .modal-content .modal-header,
+  html[data-theme="postdoserx"] .recipe-modal .modal-header {
+    background: var(--brand-gradient-brand) !important;
+    color: var(--brand-white) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.18) !important;
+  }
+
+  html[data-theme="postdoserx"] .nutrition-item {
+    border-radius: var(--brand-radius-xl) !important;
+  }
+
+  html[data-theme="postdoserx"] .nutrition-item:nth-child(1) { background: #DCEEEE !important; color: #216A67 !important; }
+  html[data-theme="postdoserx"] .nutrition-item:nth-child(2) { background: #F7EAF3 !important; color: var(--brand-magenta-dark) !important; }
+  html[data-theme="postdoserx"] .nutrition-item:nth-child(3) { background: #E9DBB5 !important; color: #7A6A3A !important; }
+  html[data-theme="postdoserx"] .nutrition-item:nth-child(4) { background: #DDE7F3 !important; color: #5D718C !important; }
+
+  /* AI Personalization screen: match warm marketing-style depth */
+  html[data-theme="postdoserx"] #ai-personalization .view-title {
+    font-family: var(--brand-font-display) !important;
+    font-size: clamp(2rem, 3.2vw, 2.8rem) !important;
+    font-weight: 400 !important;
+    color: var(--brand-text-dark) !important;
+    letter-spacing: 0.01em !important;
+  }
+
+  html[data-theme="postdoserx"] #ai-personalization .view-subtitle {
+    font-family: var(--brand-font-sans) !important;
+    font-size: 1rem !important;
+    color: var(--brand-text-gray) !important;
+  }
+
+  html[data-theme="postdoserx"] #ai-personalization .content-card,
+  html[data-theme="postdoserx"] #ai-personalization .insights-card,
+  html[data-theme="postdoserx"] #ai-personalization .rating-intelligence,
+  html[data-theme="postdoserx"] #ai-personalization .ai-recommendations,
+  html[data-theme="postdoserx"] #ai-personalization .progress-card,
+  html[data-theme="postdoserx"] #ai-personalization .prediction-item {
+    background: #FCF9F5 !important;
+    border: 1px solid #E9DFD2 !important;
+    border-radius: 14px !important;
+    box-shadow: 0 16px 34px rgba(30, 42, 68, 0.09), 0 4px 10px rgba(30, 42, 68, 0.06) !important;
+    color: var(--brand-text-dark) !important;
+  }
+
+  html[data-theme="postdoserx"] #ai-personalization .content-card::before {
+    height: 4px !important;
+    border-radius: 14px 14px 0 0 !important;
+    background: var(--brand-gradient-brand) !important;
+  }
+
+  html[data-theme="postdoserx"] #ai-personalization .metric-value,
+  html[data-theme="postdoserx"] #ai-personalization .prediction-value {
+    font-family: var(--brand-font-display) !important;
+    color: var(--brand-text-dark) !important;
+    font-weight: 400 !important;
+  }
+
+  html[data-theme="postdoserx"] #ai-personalization .button-professional {
+    background: var(--brand-gradient-brand) !important;
+    border-color: var(--brand-magenta-dark) !important;
+    color: var(--brand-white) !important;
+    box-shadow: 0 8px 20px rgba(198, 21, 141, 0.28) !important;
+  }
+
+  html[data-theme="postdoserx"] #ai-personalization .button-professional:hover {
+    background: var(--brand-gradient-brand-dark) !important;
+    transform: translateY(-1px) !important;
+  }
+
+  html[data-theme="postdoserx"] #ai-personalization .accuracy-badge,
+  html[data-theme="postdoserx"] #ai-personalization .completion-badge,
+  html[data-theme="postdoserx"] #ai-personalization .recommendation-badge {
+    background: #F6EAF3 !important;
+    color: var(--brand-magenta-dark) !important;
+    border: 1px solid #EED8E7 !important;
+    font-weight: 700 !important;
+  }
+
+  /* App-wide depth and typography: not tied to a single view */
+  html[data-theme="postdoserx"] .enhanced-intelligence,
+  html[data-theme="postdoserx"] .rating-intelligence,
+  html[data-theme="postdoserx"] .intelligence-card-enhanced,
+  html[data-theme="postdoserx"] .intelligence-header,
+  html[data-theme="postdoserx"] .insight-bar,
+  html[data-theme="postdoserx"] .recommendation-item,
+  html[data-theme="postdoserx"] .history-item,
+  html[data-theme="postdoserx"] .recipe-card,
+  html[data-theme="postdoserx"] .progress-card,
+  html[data-theme="postdoserx"] .prediction-item,
+  html[data-theme="postdoserx"] .chart-container,
+  html[data-theme="postdoserx"] .analytics-container,
+  html[data-theme="postdoserx"] .modal-content .ingredient-item {
+    background: #FCF9F5 !important;
+    border-color: #E9DFD2 !important;
+    color: var(--brand-text-dark) !important;
+    box-shadow: 0 12px 28px rgba(30, 42, 68, 0.08), 0 3px 8px rgba(30, 42, 68, 0.05) !important;
+  }
+
+  html[data-theme="postdoserx"] .view-title,
+  html[data-theme="postdoserx"] .section-title,
+  html[data-theme="postdoserx"] .content-card h3,
+  html[data-theme="postdoserx"] .metric-value {
+    font-family: var(--brand-font-display) !important;
+    color: var(--brand-text-dark) !important;
+  }
+
+  html[data-theme="postdoserx"] .view-subtitle,
+  html[data-theme="postdoserx"] .metric-label,
+  html[data-theme="postdoserx"] .insight-text,
+  html[data-theme="postdoserx"] .intelligence-subtitle,
+  html[data-theme="postdoserx"] .total-ratings,
+  html[data-theme="postdoserx"] .prediction-confidence,
+  html[data-theme="postdoserx"] .meal-info h4,
+  html[data-theme="postdoserx"] .meal-date,
+  html[data-theme="postdoserx"] .recommendation-title,
+  html[data-theme="postdoserx"] .recommendation-desc {
+    font-family: var(--brand-font-sans) !important;
+    color: var(--brand-text-dark) !important;
+  }
+
+  html[data-theme="postdoserx"] .card-icon,
+  html[data-theme="postdoserx"] .stat-icon {
+    background: var(--brand-gradient-brand) !important;
+    color: var(--brand-white) !important;
+    box-shadow: 0 8px 18px rgba(198, 21, 141, 0.25) !important;
+  }
+
+  html[data-theme="postdoserx"] .card-icon i,
+  html[data-theme="postdoserx"] .stat-icon i {
+    stroke: var(--brand-white) !important;
+    color: var(--brand-white) !important;
+  }
+
+  /* Global modal/popup design system (target references 4/5/6) */
+  html[data-theme="postdoserx"] .modal-overlay {
+    background: rgba(24, 30, 46, 0.42) !important;
+    backdrop-filter: blur(3px) !important;
+  }
+
+  html[data-theme="postdoserx"] .modal-content {
+    background: #FCFBF9 !important;
+    border: 1px solid #E9DFD2 !important;
+    border-radius: 22px !important;
+    box-shadow: 0 24px 46px rgba(23, 30, 47, 0.20), 0 8px 20px rgba(23, 30, 47, 0.12) !important;
+    overflow: hidden !important;
+  }
+
+  html[data-theme="postdoserx"] .modal-header {
+    background: #FCFBF9 !important;
+    color: var(--brand-text-dark) !important;
+    border-bottom: 1px solid #EFE7DB !important;
+    padding: 1.1rem 1.25rem !important;
+  }
+
+  html[data-theme="postdoserx"] .modal-title {
+    font-family: var(--brand-font-display) !important;
+    font-size: clamp(1.5rem, 2.6vw, 2rem) !important;
+    font-weight: 400 !important;
+    color: var(--brand-text-dark) !important;
+    margin: 0 !important;
+  }
+
+  html[data-theme="postdoserx"] .modal-subtitle {
+    font-family: var(--brand-font-sans) !important;
+    color: var(--brand-text-gray) !important;
+    font-size: 1rem !important;
+    margin-top: 0.45rem !important;
+  }
+
+  html[data-theme="postdoserx"] .modal-body {
+    background: #FCFBF9 !important;
+    color: var(--brand-text-dark) !important;
+  }
+
+  /* Force readability inside popup content (kills white-on-white text) */
+  html[data-theme="postdoserx"] .modal-body *,
+  html[data-theme="postdoserx"] .modal-content p,
+  html[data-theme="postdoserx"] .modal-content li,
+  html[data-theme="postdoserx"] .modal-content span,
+  html[data-theme="postdoserx"] .modal-content div,
+  html[data-theme="postdoserx"] .modal-content .instruction-text,
+  html[data-theme="postdoserx"] .modal-content .instruction-content,
+  html[data-theme="postdoserx"] .modal-content .ingredient-name,
+  html[data-theme="postdoserx"] .modal-content .ingredient-amount {
+    color: #1E2A44 !important;
+    text-shadow: none !important;
+  }
+
+  html[data-theme="postdoserx"] .modal-close,
+  html[data-theme="postdoserx"] .close-btn {
+    background: var(--brand-gradient-brand) !important;
+    color: var(--brand-white) !important;
+    border: 0 !important;
+    width: 42px !important;
+    height: 42px !important;
+    border-radius: 10px !important;
+    box-shadow: 0 10px 20px rgba(198, 21, 141, 0.34) !important;
+  }
+
+  html[data-theme="postdoserx"] .modal-close:hover,
+  html[data-theme="postdoserx"] .close-btn:hover {
+    background: var(--brand-gradient-brand-dark) !important;
+    transform: translateY(-1px) !important;
+  }
+
+  html[data-theme="postdoserx"] .modal-content .instruction-item,
+  html[data-theme="postdoserx"] .modal-content .ingredient-item,
+  html[data-theme="postdoserx"] .modal-section,
+  html[data-theme="postdoserx"] .modal-actions > * {
+    background: #F7F3EE !important;
+    border: 1px solid #ECE4DA !important;
+    border-radius: 12px !important;
+    color: var(--brand-text-dark) !important;
+  }
+
+  html[data-theme="postdoserx"] .modal-content .instruction-item,
+  html[data-theme="postdoserx"] .modal-content .instruction-item * {
+    color: var(--brand-text-dark) !important;
+  }
+
+  html[data-theme="postdoserx"] .modal-content .instruction-item::before {
+    background: var(--brand-gradient-brand) !important;
+    color: var(--brand-white) !important;
+    box-shadow: 0 6px 14px rgba(198, 21, 141, 0.28) !important;
+  }
+
+  html[data-theme="postdoserx"] .nutrition-grid {
+    gap: 0.9rem !important;
+  }
+
+  html[data-theme="postdoserx"] .nutrition-item {
+    border-radius: 14px !important;
+    border: 0 !important;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.52) !important;
+  }
+
+  html[data-theme="postdoserx"] .modal-content .button-professional,
+  html[data-theme="postdoserx"] .modal-ok-btn {
+    background: var(--brand-gradient-brand) !important;
+    color: var(--brand-white) !important;
+    border: 0 !important;
+    border-radius: 12px !important;
+    box-shadow: 0 10px 20px rgba(198, 21, 141, 0.30) !important;
+  }
+
+  html[data-theme="postdoserx"] .modal-content .button-professional:hover,
+  html[data-theme="postdoserx"] .modal-ok-btn:hover {
+    background: var(--brand-gradient-brand-dark) !important;
+  }
+
+  html[data-theme="postdoserx"] .modal-content .button-professional--outline,
+  html[data-theme="postdoserx"] .modal-cancel-btn {
+    background: #7A8EA9 !important;
+    color: #FFFFFF !important;
+    border: 0 !important;
+    border-radius: 12px !important;
+  }
+
+  /* Rating stars: use warm gold instead of gray */
+  html[data-theme="postdoserx"] .star,
+  html[data-theme="postdoserx"] .star.empty,
+  html[data-theme="postdoserx"] .rating-display .stars {
+    color: #D6B45E !important;
+    text-shadow: 0 1px 2px rgba(148, 121, 59, 0.20) !important;
+  }
+
+  html[data-theme="postdoserx"] .star:hover,
+  html[data-theme="postdoserx"] .star.active,
+  html[data-theme="postdoserx"] .star.selected {
+    color: #B78B2C !important;
+  }
+
+  /* Sidebar/navigation style to match approved references */
+  html[data-theme="postdoserx"] .nav-title {
+    color: #9B8B5A !important;
+    border-bottom: 0 !important;
+    letter-spacing: 0.12em !important;
+    font-weight: 700 !important;
+  }
+
+  html[data-theme="postdoserx"] .nav-link {
+    color: #5D718C !important;
+    background: transparent !important;
+    border-left: 0 !important;
+    transform: none !important;
+  }
+
+  html[data-theme="postdoserx"] .nav-link:hover {
+    background: #F8F4EE !important;
+    color: #1E2A44 !important;
+    box-shadow: none !important;
+  }
+
+  html[data-theme="postdoserx"] .nav-link.active {
+    background: #F8F4EE !important;
+    color: #1E2A44 !important;
+    border-left: 4px solid #1E2A44 !important;
+  }
+
+  html[data-theme="postdoserx"] .nav-link.active::before,
+  html[data-theme="postdoserx"] .nav-link:hover::before {
+    background: transparent !important;
+  }
+
+  html[data-theme="postdoserx"] .nav-link.premium-feature {
+    background: #FCF9F5 !important;
+    border: 1px solid #DCCB96 !important;
+    border-radius: 14px !important;
+    margin: 0.4rem 0 !important;
+    color: #5D718C !important;
+  }
+
+  html[data-theme="postdoserx"] .pro-badge,
+  html[data-theme="postdoserx"] .pro-badge-gold {
+    background: #B59C58 !important;
+    color: #FFFFFF !important;
+    border: 0 !important;
+    box-shadow: 0 4px 10px rgba(181, 156, 88, 0.25) !important;
+    border-radius: 9px !important;
+  }
+
+  /* Premium upgrade card: high-contrast, visually appealing conversion panel */
+  html[data-theme="postdoserx"] .premium-upgrade-card {
+    background: radial-gradient(120% 120% at 0% 0%, #1E2E66 0%, #1A2452 44%, #111937 100%) !important;
+    border: 1px solid rgba(129, 142, 255, 0.35) !important;
+    box-shadow: 0 26px 48px rgba(17, 25, 55, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+    color: #EEF1FF !important;
+  }
+
+  html[data-theme="postdoserx"] .premium-upgrade-card h3,
+  html[data-theme="postdoserx"] .premium-upgrade-card h4,
+  html[data-theme="postdoserx"] .premium-upgrade-card p,
+  html[data-theme="postdoserx"] .premium-upgrade-card span,
+  html[data-theme="postdoserx"] .premium-upgrade-card li {
+    color: #EEF1FF !important;
+  }
+
+  html[data-theme="postdoserx"] .premium-upgrade-card .savings-badge,
+  html[data-theme="postdoserx"] .premium-upgrade-card .premium-badge {
+    background: linear-gradient(135deg, #7561FF 0%, #4F46E5 100%) !important;
+    color: #FFFFFF !important;
+    border: 1px solid rgba(255, 255, 255, 0.22) !important;
   }
 }
 

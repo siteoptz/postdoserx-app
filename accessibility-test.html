@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="postdoserx">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accessibility Test - Modal Components</title>
+    <link rel="stylesheet" href="styles/brand-tokens.css">
+    <style>
+        body {
+            font-family: var(--brand-font-sans, 'Montserrat', sans-serif);
+            background: var(--brand-background-light, #F6F3EE);
+            color: var(--brand-text-dark, #1E2A44);
+            margin: 0;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+        
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .test-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .test-title {
+            font-family: var(--brand-font-display, 'DM Serif Display', Georgia, serif);
+            font-size: 36px;
+            color: var(--brand-text-dark, #1E2A44);
+            margin-bottom: 16px;
+        }
+        
+        .test-subtitle {
+            font-size: 18px;
+            color: var(--brand-text-gray, #5E667A);
+            margin: 0;
+        }
+        
+        .test-section {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            margin-bottom: 32px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--brand-text-dark, #1E2A44);
+            margin-bottom: 16px;
+        }
+        
+        .test-button {
+            background: linear-gradient(135deg, var(--brand-primary, #C6158D) 0%, var(--brand-purple, #4F46E5) 100%);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin: 8px 16px 8px 0;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        }
+        
+        .test-button:focus {
+            outline: 3px solid var(--brand-secondary, #10B981);
+            outline-offset: 2px;
+        }
+        
+        .test-button:disabled {
+            background: var(--brand-gray-400, #9CA3AF);
+            cursor: not-allowed;
+            transform: none;
+            opacity: 0.6;
+        }
+        
+        .test-button:disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .accessibility-checklist {
+            list-style: none;
+            padding: 0;
+            margin: 16px 0;
+        }
+        
+        .accessibility-checklist li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--brand-border-light, #E3DDD1);
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        
+        .accessibility-checklist li:last-child {
+            border-bottom: none;
+        }
+        
+        .check-icon {
+            color: var(--brand-success, #10B981);
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        
+        .keyboard-instructions {
+            background: var(--brand-gray-50, #F9FAFB);
+            border: 1px solid var(--brand-border-light, #E3DDD1);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        
+        .keyboard-instructions h4 {
+            margin: 0 0 12px 0;
+            color: var(--brand-text-dark, #1E2A44);
+        }
+        
+        .key {
+            background: var(--brand-gray-200, #E5E7EB);
+            border: 1px solid var(--brand-gray-300, #D1D5DB);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-family: monospace;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(27, 42, 74, 0.7);
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            position: relative;
+            z-index: 1001;
+        }
+
+        /* Recipe Card Modal Styles */
+        .recipe-card-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 420px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            padding: 0;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .recipe-header {
+            background: linear-gradient(135deg, var(--brand-primary, #C6158D) 0%, var(--brand-purple, #4F46E5) 100%);
+            color: white;
+            padding: 24px 24px 32px 24px;
+            border-radius: 20px 20px 0 0;
+            position: relative;
+        }
+
+        .recipe-header .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s ease;
+        }
+
+        .recipe-header .modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .recipe-title {
+            font-family: var(--brand-font-display, 'DM Serif Display', Georgia, serif);
+            font-size: 28px;
+            font-weight: 400;
+            margin: 0 0 16px 0;
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .recipe-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .recipe-tag {
+            background: rgba(255, 255, 255, 0.25);
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .recipe-description {
+            font-size: 16px;
+            line-height: 1.4;
+            margin: 0;
+            opacity: 0.95;
+        }
+
+        .recipe-times {
+            display: flex;
+            gap: 16px;
+            padding: 24px;
+            background: var(--brand-gray-50, #F9FAFB);
+        }
+
+        .time-card {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .time-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px auto;
+        }
+
+        .time-icon::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .time-icon.clock::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%236B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12 6v6l4 2m6-4a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z' /%3E%3C/svg%3E");
+        }
+
+        .time-icon.flame::before {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23EF4444'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z' /%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12 18a3.75 3.75 0 0 0 .495-7.468 5.99 5.99 0 0 0-1.925 3.547 5.975 5.975 0 0 1-2.133-1.001A3.75 3.75 0 0 0 12 18Z' /%3E%3C/svg%3E");
+        }
+
+        .time-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--brand-gray-600, #6B7280);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .time-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--brand-text-dark, #1E2A44);
+        }
+
+        .ingredients-section {
+            padding: 24px;
+        }
+
+        .ingredients-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--brand-text-dark, #1E2A44);
+            margin: 0 0 16px 0;
+        }
+
+        .ingredients-icon {
+            font-size: 18px;
+            width: 20px;
+            height: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .ingredients-icon::before {
+            content: '';
+            width: 18px;
+            height: 18px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23C6158D'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M8.25 18.75a1.5 1.5 0 0 1-3 0V7.5a1.5 1.5 0 0 1 3 0v11.25Z' /%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 12a1.5 1.5 0 0 1-3 0V6.75a1.5 1.5 0 0 1 3 0V12Z' /%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12 21.75a1.5 1.5 0 0 1-3 0V3a1.5 1.5 0 0 1 3 0v18.75Z' /%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .ingredients-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .ingredients-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--brand-border-light, #E3DDD1);
+            position: relative;
+            padding-left: 16px;
+            font-size: 15px;
+            color: var(--brand-text-dark, #1E2A44);
+        }
+
+        .ingredients-list li:last-child {
+            border-bottom: none;
+        }
+
+        .ingredients-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--brand-primary, #C6158D);
+            font-weight: bold;
+        }
+
+        .next-meal {
+            background: var(--brand-gray-100, #F3F4F6);
+            padding: 16px 24px;
+            border-radius: 0 0 20px 20px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--brand-gray-700, #374151);
+        }
+
+        .next-meal-time {
+            font-weight: 600;
+            color: var(--brand-text-dark, #1E2A44);
+        }
+
+        .next-meal-name {
+            font-weight: 500;
+        }
+
+        /* Signup Modal Styles */
+        .signup-modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 0;
+            max-width: 420px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        .signup-modal-content .modal-header {
+            background: linear-gradient(135deg, var(--brand-primary, #C6158D) 0%, var(--brand-purple, #4F46E5) 100%);
+            color: white;
+            padding: 24px 24px 32px 24px;
+            border-radius: 20px 20px 0 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .signup-title {
+            font-family: var(--brand-font-display, 'DM Serif Display', Georgia, serif);
+            font-size: 28px;
+            color: white;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .signup-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .signup-modal-content .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            font-size: 24px;
+            color: white;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: background 0.2s ease;
+        }
+
+        .signup-modal-content .modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .signup-form {
+            padding: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--brand-text-dark, #1E2A44);
+            margin-bottom: 6px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--brand-border-light, #E3DDD1);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            color: var(--brand-text-dark, #1E2A44);
+            background: white;
+            transition: border-color .15s, box-shadow .15s;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--brand-primary, #C6158D);
+            box-shadow: 0 0 0 3px rgba(198, 22, 141, .1);
+        }
+
+        .form-submit {
+            width: 100%;
+            background: linear-gradient(135deg, var(--brand-primary, #C6158D) 0%, var(--brand-purple, #4F46E5) 100%);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            margin-bottom: 12px;
+        }
+
+        .form-submit:hover {
+            transform: translateY(-1px);
+        }
+
+        .form-submit:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .signup-disclaimer {
+            font-size: 12px;
+            color: var(--brand-gray-600, #6B7280);
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .oauth-section {
+            margin-top: 20px;
+            padding: 0 24px 24px 24px;
+        }
+
+        .auth-divider {
+            margin: 20px 0;
+            text-align: center;
+            color: var(--brand-gray-600, #6B7280);
+            font-size: 12px;
+            position: relative;
+        }
+
+        .auth-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--brand-border-light, #E3DDD1);
+        }
+
+        .auth-divider span {
+            background: white;
+            padding: 0 16px;
+        }
+
+        .error-message {
+            font-size: 12px;
+            color: #dc3545;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .form-input.error {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, .1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 480px) {
+            .recipe-card-content, .signup-modal-content {
+                width: 95%;
+                border-radius: 16px;
+            }
+            
+            .recipe-header, .signup-modal-content .modal-header {
+                padding: 20px 20px 28px 20px;
+                border-radius: 16px 16px 0 0;
+            }
+            
+            .recipe-title, .signup-title {
+                font-size: 24px;
+            }
+            
+            .recipe-times, .ingredients-section, .signup-form {
+                padding: 20px;
+            }
+            
+            .oauth-section {
+                padding: 0 20px 20px 20px;
+            }
+            
+            .next-meal {
+                padding: 14px 20px;
+                border-radius: 0 0 16px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1 class="test-title">Accessibility Testing</h1>
+            <p class="test-subtitle">Comprehensive accessibility validation for modal components</p>
+        </div>
+        
+        <div class="test-section">
+            <h2 class="section-title">Modal Testing</h2>
+            <p>Test both modals to ensure they meet accessibility standards:</p>
+            
+            <button class="test-button" onclick="showSampleRecipe()">
+                Test Recipe Modal
+            </button>
+            
+            <button class="test-button" onclick="openSignupModal('Premium Test Plan', 'price_test')">
+                Test Signup Modal
+            </button>
+            
+            <div class="keyboard-instructions">
+                <h4>Keyboard Navigation Test</h4>
+                <p><strong>Try these keyboard interactions:</strong></p>
+                <ul>
+                    <li><span class="key">Tab</span> - Navigate forward through focusable elements</li>
+                    <li><span class="key">Shift + Tab</span> - Navigate backward through focusable elements</li>
+                    <li><span class="key">Escape</span> - Close any open modal</li>
+                    <li><span class="key">Enter</span> or <span class="key">Space</span> - Activate buttons</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="test-section">
+            <h2 class="section-title">Accessibility Features Implemented</h2>
+            
+            <h3 style="color: var(--brand-primary, #C6158D); margin-bottom: 12px;">Recipe Card Modal</h3>
+            <ul class="accessibility-checklist">
+                <li>
+                    <span class="check-icon">✓</span>
+                    <span><strong>ARIA attributes:</strong> role="dialog", aria-modal="true", aria-labelledby, aria-describedby</span>
+                </li>
+                <li>
+                    <span class="check-icon">✓</span>
+                    <span><strong>Focus management:</strong> Auto-focus on close button, focus trap within modal</span>
+                </li>
+                <li>
+                    <span class="check-icon">✓</span>
+                    <span><strong>Keyboard navigation:</strong> Tab/Shift+Tab cycling, Escape to close</span>
+                </li>
+                <li>
+                    <span class="check-icon">✓</span>
+                    <span><strong>Focus restoration:</strong> Returns focus to trigger element on close</span>
+                </li>
+                <li>
+                    <span class="check-icon">✓</span>
+                    <span><strong>Screen reader support:</strong> Proper headings hierarchy, list semantics</span>
+                </li>
+                <li>
+                    <span class="check-icon">✓</span>
+                    <span><strong>Close button:</strong> Accessible label, visual × hidden from screen readers</span>
+                </li>
+            </ul>
+            
+            <h3 style="color: var(--brand-primary, #C6158D); margin: 24px 0 12px 0;">Signup Modal</h3>
+            <ul class="accessibility-checklist">
+                <li>
+                    <span class="check-icon">✓</span>
+                    <span><strong>ARIA attributes:</strong> role="dialog", aria-modal="true", form validation ARIA</span>
+                </li>
+                <li>
+                    <span class="check-icon">✓</span>
+                    <span><strong>Form accessibility:</strong> Proper labels, required field indicators, error associations</span>
+                </li>
+                <li>
+                    <span class="check-icon">✓</span>
+                    <span><strong>Error handling:</strong> Live regions for error announcements, visual error states</span>
+                </li>
+                <li>
+                    <span class="check-icon">✓</span>
+                    <span><strong>Focus management:</strong> Auto-focus on email field, focus trap</span>
+                </li>
+                <li>
+                    <span class="check-icon">✓</span>
+                    <span><strong>Real-time feedback:</strong> Errors clear as user types, validation on submit</span>
+                </li>
+                <li>
+                    <span class="check-icon">✓</span>
+                    <span><strong>Keyboard support:</strong> Full keyboard navigation, Escape to close</span>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="test-section">
+            <h2 class="section-title">Testing Checklist</h2>
+            <p>Use this checklist to validate accessibility manually or with tools:</p>
+            
+            <ul class="accessibility-checklist">
+                <li>
+                    <span class="check-icon">⚡</span>
+                    <span><strong>Screen Reader:</strong> Test with NVDA, JAWS, or VoiceOver</span>
+                </li>
+                <li>
+                    <span class="check-icon">⚡</span>
+                    <span><strong>Keyboard Only:</strong> Navigate using only keyboard</span>
+                </li>
+                <li>
+                    <span class="check-icon">⚡</span>
+                    <span><strong>Focus Indicators:</strong> Verify visible focus outlines</span>
+                </li>
+                <li>
+                    <span class="check-icon">⚡</span>
+                    <span><strong>Color Contrast:</strong> Check text contrast ratios</span>
+                </li>
+                <li>
+                    <span class="check-icon">⚡</span>
+                    <span><strong>Mobile Touch:</strong> Test on touch devices</span>
+                </li>
+                <li>
+                    <span class="check-icon">⚡</span>
+                    <span><strong>Zoom Testing:</strong> Test at 200% browser zoom</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Recipe Card Modal (Embedded) -->
+    <div id="recipe-card-modal" class="modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="recipe-title" aria-describedby="recipe-description">
+      <div class="modal-overlay" onclick="closeRecipeModal()" aria-hidden="true"></div>
+      <div class="modal-content recipe-card-content">
+        
+        <!-- Header Section with Gradient Background -->
+        <div class="recipe-header">
+          <button class="modal-close" onclick="closeRecipeModal()" aria-label="Close recipe modal">
+            <span aria-hidden="true">×</span>
+          </button>
+          <h1 class="recipe-title" id="recipe-title">Fluffy Protein Pancakes</h1>
+          
+          <div class="recipe-tags">
+            <span class="recipe-tag" id="recipe-category">RECOVERY</span>
+            <span class="recipe-tag" id="recipe-difficulty">Easy</span>
+            <span class="recipe-tag" id="recipe-servings">2 servings</span>
+          </div>
+          
+          <p class="recipe-description" id="recipe-description">
+            High-protein pancakes that support energy and recovery
+          </p>
+        </div>
+
+        <!-- Time Information -->
+        <div class="recipe-times">
+          <div class="time-card">
+            <div class="time-icon clock"></div>
+            <div class="time-label">Prep Time</div>
+            <div class="time-value" id="prep-time">10 minutes</div>
+          </div>
+          <div class="time-card">
+            <div class="time-icon flame"></div>
+            <div class="time-label">Cook Time</div>
+            <div class="time-value" id="cook-time">15 minutes</div>
+          </div>
+        </div>
+
+        <!-- Ingredients Section -->
+        <div class="ingredients-section">
+          <h3 class="ingredients-title" id="ingredients-heading">
+            <span class="ingredients-icon" aria-hidden="true"></span>
+            Ingredients
+          </h3>
+          <ul class="ingredients-list" id="ingredients-list" role="list" aria-labelledby="ingredients-heading">
+            <li>1 scoop vanilla protein powder</li>
+            <li>2 eggs</li>
+            <li>1/4 cup oat flour</li>
+            <li>1/4 cup cottage cheese</li>
+            <li>1/2 banana, mashed</li>
+            <li>1/2 tsp vanilla extract</li>
+            <li>1/4 tsp baking powder</li>
+          </ul>
+        </div>
+
+        <!-- Next Meal Info -->
+        <div class="next-meal" id="next-meal">
+          <span class="next-meal-time" id="next-meal-time">6:00 PM</span> - 
+          <span class="next-meal-name" id="next-meal-name">Gentle White Fish with Jasmine</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Signup Modal (Embedded) -->
+    <div id="signup-modal" class="modal" style="display:none;" role="dialog" aria-modal="true" aria-labelledby="signup-title" aria-describedby="signup-subtitle">
+      <div class="modal-overlay" onclick="closeSignupModal()" aria-hidden="true"></div>
+      <div class="modal-content signup-modal-content">
+        <div class="modal-header">
+          <h2 class="signup-title" id="signup-title">Almost there!</h2>
+          <p class="signup-subtitle" id="signup-subtitle">Just need your email to get started with <span id="selected-plan">Premium</span></p>
+          <button class="modal-close" onclick="closeSignupModal()" aria-label="Close signup modal">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+
+        <div id="signup-message-container"></div>
+
+        <form id="quick-signup-form" class="signup-form" novalidate>
+          <div class="form-group">
+            <label for="signup-email" class="form-label">Email Address</label>
+            <input type="email" id="signup-email" name="email" class="form-input" placeholder="your.email@example.com" required aria-required="true" aria-describedby="email-error">
+            <div id="email-error" class="error-message" role="alert" aria-live="polite"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-name" class="form-label">Name (Optional)</label>
+            <input type="text" id="signup-name" name="name" class="form-input" placeholder="Your name">
+          </div>
+
+          <button type="submit" class="form-submit" id="signup-submit">
+            Continue to Secure Checkout
+          </button>
+
+          <p class="signup-disclaimer">
+            After payment, we'll send setup instructions to your email. No account creation needed yet!
+          </p>
+        </form>
+
+        <div class="oauth-section">
+          <div class="auth-divider">
+            <span>or</span>
+          </div>
+          
+          <div class="oauth-notice" style="background:var(--teal-light);border:1px solid var(--teal);border-radius:8px;padding:12px;text-align:center;font-size:12px;color:var(--teal-dark)">
+            <strong>🔄 Google Sign-In:</strong> Available after initial setup is complete
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+        // Embedded JavaScript for both modals
+        let lastFocusedElement = null;
+        let selectedPlan = null;
+        let selectedPriceId = null;
+        let lastFocusedElementSignup = null;
+
+        // Recipe Modal Functions
+        function openRecipeModal(recipeData = {}) {
+          lastFocusedElement = document.activeElement;
+          const defaultRecipe = {
+            title: "Fluffy Protein Pancakes",
+            category: "RECOVERY",
+            difficulty: "Easy",
+            servings: "2 servings",
+            description: "High-protein pancakes that support energy and recovery",
+            prepTime: "10 minutes",
+            cookTime: "15 minutes",
+            ingredients: [
+              "1 scoop vanilla protein powder",
+              "2 eggs",
+              "1/4 cup oat flour", 
+              "1/4 cup cottage cheese",
+              "1/2 banana, mashed",
+              "1/2 tsp vanilla extract",
+              "1/4 tsp baking powder"
+            ],
+            nextMeal: {
+              time: "6:00 PM",
+              name: "Gentle White Fish with Jasmine"
+            }
+          };
+
+          const recipe = { ...defaultRecipe, ...recipeData };
+          document.getElementById('recipe-title').textContent = recipe.title;
+          document.getElementById('recipe-category').textContent = recipe.category;
+          document.getElementById('recipe-difficulty').textContent = recipe.difficulty;
+          document.getElementById('recipe-servings').textContent = recipe.servings;
+          document.getElementById('recipe-description').textContent = recipe.description;
+          document.getElementById('prep-time').textContent = recipe.prepTime;
+          document.getElementById('cook-time').textContent = recipe.cookTime;
+
+          const modal = document.getElementById('recipe-card-modal');
+          modal.style.display = 'flex';
+          
+          setTimeout(() => {
+            const closeButton = modal.querySelector('.modal-close');
+            closeButton.focus();
+          }, 100);
+          
+          document.body.style.overflow = 'hidden';
+        }
+
+        function closeRecipeModal() {
+          document.getElementById('recipe-card-modal').style.display = 'none';
+          document.body.style.overflow = 'auto';
+          if (lastFocusedElement) {
+            lastFocusedElement.focus();
+          }
+        }
+
+        function showSampleRecipe() {
+          openRecipeModal();
+        }
+
+        // Signup Modal Functions
+        function openSignupModal(planName, priceId) {
+          lastFocusedElementSignup = document.activeElement;
+          selectedPlan = planName;
+          selectedPriceId = priceId;
+          
+          document.getElementById('selected-plan').textContent = planName;
+          const modal = document.getElementById('signup-modal');
+          modal.style.display = 'flex';
+          
+          setTimeout(() => {
+            document.getElementById('signup-email').focus();
+          }, 100);
+          
+          document.body.style.overflow = 'hidden';
+        }
+
+        function closeSignupModal() {
+          document.getElementById('signup-modal').style.display = 'none';
+          document.body.style.overflow = 'auto';
+          
+          if (lastFocusedElementSignup) {
+            lastFocusedElementSignup.focus();
+          }
+        }
+
+        // Close modals on Escape key
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape') {
+            const recipeModal = document.getElementById('recipe-card-modal');
+            const signupModal = document.getElementById('signup-modal');
+            
+            if (recipeModal && recipeModal.style.display === 'flex') {
+              closeRecipeModal();
+            }
+            if (signupModal && signupModal.style.display === 'flex') {
+              closeSignupModal();
+            }
+          }
+        });
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
+          if (e.target.classList.contains('modal-overlay')) {
+            if (e.target.closest('#recipe-card-modal')) {
+              closeRecipeModal();
+            }
+            if (e.target.closest('#signup-modal')) {
+              closeSignupModal();
+            }
+          }
+        });
+    </script>
+</body>
+</html>

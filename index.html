@@ -3025,23 +3025,23 @@
       font-size: 2rem;
       cursor: pointer;
       transition: transform 0.2s ease, color 0.2s ease, opacity 0.2s ease;
-      opacity: 0.2;
-      color: var(--brand-gray-300);
+      opacity: 0.55;
+      color: #D6B45E;
       user-select: none;
     }
     .star:hover, .star.active {
       transform: scale(1.1);
       opacity: 1;
-      color: var(--brand-warning);
+      color: #B78B2C;
     }
     .star.selected {
       opacity: 1;
-      color: var(--brand-warning);
+      color: #B78B2C;
       transform: scale(1.05);
     }
     .star.empty {
-      opacity: 0.2;
-      color: var(--brand-gray-300);
+      opacity: 0.45;
+      color: #D6B45E;
     }
     .rating-labels {
       display: flex;
@@ -4636,40 +4636,43 @@
 
     #comprehensive-progress .header,
     #comprehensive-progress .sidebar {
-      background: var(--charcoal);
+      background: var(--brand-white);
     }
 
     /* Update sidebar for normal theme when on comprehensive-progress page */
     body.comprehensive-progress-active .sidebar {
-      background: var(--charcoal) !important;
+      background: var(--brand-white) !important;
+      border-right: 1px solid var(--brand-border-light) !important;
     }
 
     body.comprehensive-progress-active .header {
-      background: var(--charcoal) !important;
+      background: var(--brand-white) !important;
+      border-bottom: 1px solid var(--brand-border-light) !important;
     }
 
     /* Normal theme dropdown menus */
     body.comprehensive-progress-active .user-dropdown {
-      background: var(--charcoal) !important;
-      border: 1px solid var(--slate);
+      background: var(--brand-white) !important;
+      border: 1px solid var(--brand-border-light);
+      color: var(--brand-text-dark) !important;
     }
 
     body.comprehensive-progress-active .dropdown-item {
-      color: white;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--brand-text-dark);
+      border-bottom: 1px solid var(--brand-border-light);
     }
 
     body.comprehensive-progress-active .dropdown-item:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: var(--brand-gray-50);
     }
 
     /* Purple theme cards for comprehensive progress */
     body.comprehensive-progress-active .comprehensive-analytics .content-card {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(15px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: white;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      background: var(--brand-white);
+      backdrop-filter: none;
+      border: 1px solid var(--brand-border-light);
+      color: var(--brand-text-dark);
+      box-shadow: var(--brand-shadow-sm);
     }
 
     body.comprehensive-progress-active .comprehensive-analytics .premium-header {
@@ -4694,20 +4697,20 @@
 
     /* Purple theme for main content area */
     body.comprehensive-progress-active .main-content {
-      background: transparent;
+      background: var(--brand-background-light);
     }
 
     body.comprehensive-progress-active .view-header {
-      color: white;
+      color: var(--brand-text-dark);
     }
 
     body.comprehensive-progress-active .view-title {
-      color: white;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      color: var(--brand-text-dark);
+      text-shadow: none;
     }
 
     body.comprehensive-progress-active .view-subtitle {
-      color: rgba(255, 255, 255, 0.8);
+      color: var(--brand-text-gray);
     }
 
     body.comprehensive-progress-active .pro-badge {
@@ -5157,13 +5160,15 @@
     }
 
     /* Modal Styles */
+    /* Professional Modal System - Based on Recipe Card Design */
     .modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(27, 42, 74, 0.7);
+      backdrop-filter: blur(4px);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -5177,73 +5182,85 @@
       visibility: visible;
     }
     .modal-content {
-      background: var(--bg-primary);
-      color: var(--text);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      max-width: 600px;
+      background: var(--brand-white, #FCFBF9);
+      border-radius: 20px;
+      max-width: 480px;
       width: 90%;
       max-height: 90vh;
       overflow-y: auto;
       position: relative;
-      transform: scale(0.8);
-      transition: transform 0.3s ease;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      transform: translateY(20px) scale(0.95);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      opacity: 0;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      padding: 0;
+      animation: modalSlideIn 0.3s ease-out forwards;
     }
+    
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
     .modal-overlay.active .modal-content {
-      transform: scale(1);
+      opacity: 1;
+      transform: translateY(0) scale(1);
     }
+    /* Professional Modal Header with Gradient */
     .modal-header {
-      background: var(--bg-secondary);
-      color: var(--text);
-      padding: 2rem;
+      background: linear-gradient(135deg, var(--brand-primary, #C6158D) 0%, var(--brand-purple, #4F46E5) 100%);
+      color: white;
+      padding: 24px 24px 32px 24px;
+      border-radius: 20px 20px 0 0;
       text-align: center;
       position: relative;
-      border-radius: 16px 16px 0 0;
-      border-bottom: 1px solid var(--border-color);
     }
+    
     .modal-close, .close-btn {
       position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background: none;
+      top: 16px;
+      right: 16px;
+      background: rgba(255, 255, 255, 0.2);
       border: none;
-      color: var(--text-sec);
-      font-size: 1.5rem;
+      font-size: 24px;
+      color: white;
       cursor: pointer;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
+      width: 36px;
+      height: 36px;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.3s ease;
+      border-radius: 50%;
+      transition: background 0.2s ease;
     }
+    
     .modal-close:hover, .close-btn:hover {
-      background: var(--sand-light);
-      color: var(--text);
+      background: rgba(255, 255, 255, 0.3);
     }
     .modal-title {
-      font-size: 1.75rem;
-      font-family: var(--font-sans);
-      font-weight: var(--font-semibold);
-      margin: 0;
-      background: linear-gradient(135deg, var(--white), var(--accent-blue));
-      background-clip: text;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      line-height: 1.3;
-      letter-spacing: -0.01em;
+      font-family: var(--brand-font-display, 'DM Serif Display', Georgia, serif);
+      font-size: 28px;
+      color: white;
+      margin: 0 0 8px 0;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      font-weight: 400;
+      line-height: 1.2;
     }
     .modal-subtitle {
-      margin: 0.5rem 0 0 0;
-      color: var(--text-sec);
-      opacity: 0.9;
-      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 16px;
+      margin: 0;
+      line-height: 1.4;
     }
     .modal-body {
-      padding: 2rem;
-      color: var(--text);
+      padding: 24px;
+      color: var(--brand-text-dark, #1E2A44);
     }
     .modal-section {
       margin-bottom: 2rem;
@@ -5270,13 +5287,63 @@
     
     /* Modal Actions Styling */
     .modal-actions {
-      padding: 1.5rem 2rem 2rem 2rem;
       display: flex;
       gap: 1rem;
       justify-content: flex-end;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 0 0 16px 16px;
-      margin: 1rem -2rem -2rem -2rem;
+      margin-top: 2rem;
+      padding: 16px 24px;
+      border-top: 1px solid var(--brand-border-light, #E3DDD1);
+      background: var(--brand-gray-50, #F9FAFB);
+      border-radius: 0 0 20px 20px;
+      margin: 1rem -24px -24px -24px;
+    }
+    
+    /* Professional Icon Styles */
+    .time-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 8px auto;
+    }
+
+    .time-icon::before {
+      content: '';
+      width: 20px;
+      height: 20px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    .time-icon.clock::before {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%236B7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12 6v6l4 2m6-4a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z' /%3E%3C/svg%3E");
+    }
+
+    .time-icon.flame::before {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23EF4444'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.047 8.287 8.287 0 0 0 9 9.601a8.983 8.983 0 0 1 3.361-6.867 8.21 8.21 0 0 0 3 2.48Z' /%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12 18a3.75 3.75 0 0 0 .495-7.468 5.99 5.99 0 0 0-1.925 3.547 5.975 5.975 0 0 1-2.133-1.001A3.75 3.75 0 0 0 12 18Z' /%3E%3C/svg%3E");
+    }
+
+    .ingredients-icon {
+      font-size: 18px;
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ingredients-icon::before {
+      content: '';
+      width: 18px;
+      height: 18px;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%23C6158D'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M8.25 18.75a1.5 1.5 0 0 1-3 0V7.5a1.5 1.5 0 0 1 3 0v11.25Z' /%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 12a1.5 1.5 0 0 1-3 0V6.75a1.5 1.5 0 0 1 3 0V12Z' /%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M12 21.75a1.5 1.5 0 0 1-3 0V3a1.5 1.5 0 0 1 3 0v18.75Z' /%3E%3C/svg%3E");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
     }
     
     /* Modal text elements use theme colors */
@@ -5381,12 +5448,12 @@
       line-height: 1.6;
     }
     .modal-content .instruction-item {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: #F7F3EE;
+      border: 1px solid #E9DFD2;
       border-radius: var(--radius-small);
       padding: 1rem 1rem 1rem 4rem;
-      color: white;
-      backdrop-filter: blur(10px);
+      color: #1E2A44;
+      backdrop-filter: none;
     }
     .instruction-item::before {
       content: counter(step-counter);
@@ -5405,7 +5472,7 @@
       font-size: 0.875rem;
     }
     .modal-content .instruction-item::before {
-      background: linear-gradient(135deg, var(--accent-blue), var(--slate-dark));
+      background: linear-gradient(135deg, #C6158D, #4F46E5);
       left: 1rem;
       top: 50%;
       transform: translateY(-50%);
@@ -5417,22 +5484,22 @@
       gap: 1rem;
     }
     .nutrition-item {
-      background: rgba(255, 255, 255, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: #F7F3EE;
+      border: 1px solid #E9DFD2;
       border-radius: var(--radius-small);
       padding: 1rem;
       text-align: center;
-      backdrop-filter: blur(10px);
+      backdrop-filter: none;
     }
     .nutrition-value {
       font-size: 1.25rem;
       font-weight: 600;
-      color: white;
+      color: #1E2A44;
       margin-bottom: 0.25rem;
     }
     .nutrition-label {
       font-size: 0.875rem;
-      color: rgba(255, 255, 255, 0.8);
+      color: #5E667A;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       font-weight: 600;
@@ -5444,22 +5511,22 @@
       margin-top: 1rem;
     }
     .modal-content .recipe-tag {
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
+      background: #F7EAF3;
+      color: #A01273;
       padding: 0.25rem 0.75rem;
       border-radius: 20px;
       font-size: 0.75rem;
       font-weight: 600;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(10px);
+      border: 1px solid #EED8E7;
+      backdrop-filter: none;
     }
     
     /* Modal tag styling for all tag types */
     .modal-content .tag {
-      background: rgba(255, 255, 255, 0.2) !important;
-      color: white !important;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(10px);
+      background: #F7EAF3 !important;
+      color: #A01273 !important;
+      border: 1px solid #EED8E7;
+      backdrop-filter: none;
     }
     
     /* Specific tag colors for modals */
@@ -6451,8 +6518,8 @@
         z-index: 1001 !important;
         transition: left 0.3s ease !important;
         overflow-y: auto !important;
-        background: var(--charcoal) !important;
-        border-right: 1px solid var(--slate) !important;
+        background: var(--brand-white) !important;
+        border-right: 1px solid var(--brand-border-light) !important;
         box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3) !important;
       }
       
@@ -6577,8 +6644,8 @@
         left: -260px !important;
         position: fixed !important;
         z-index: 1001 !important;
-        background: var(--charcoal) !important;
-        border-right: 1px solid var(--slate) !important;
+        background: var(--brand-white) !important;
+        border-right: 1px solid var(--brand-border-light) !important;
         box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3) !important;
         transition: left 0.3s ease !important;
       }
@@ -7179,8 +7246,8 @@
       height: 100vh !important;
       z-index: 1001 !important;
       transition: left 0.3s ease !important;
-      background: var(--charcoal) !important;
-      border-right: 1px solid var(--slate) !important;
+      background: var(--brand-white) !important;
+      border-right: 1px solid var(--brand-border-light) !important;
       box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3) !important;
     }
     
@@ -7827,8 +7894,162 @@
   body.light-theme [style*="background: linear-gradient"][style*="var(--slate-dark)"][style*="white"] {
     background: #ffffff !important;
   }
+
+  /* FINAL RUNTIME SAFETY OVERRIDES
+     Keep this block last so postdoserx wins over legacy dark rules. */
+  html[data-theme="postdoserx"] body {
+    background-color: var(--brand-background-light) !important;
+    background-image: none !important;
+    color: var(--brand-text-dark) !important;
+  }
+
+  html[data-theme="postdoserx"] .header,
+  html[data-theme="postdoserx"] .sidebar,
+  html[data-theme="postdoserx"] .main-content,
+  html[data-theme="postdoserx"] .content-card,
+  html[data-theme="postdoserx"] .user-dropdown,
+  html[data-theme="postdoserx"] .dropdown-menu,
+  html[data-theme="postdoserx"] .modal-content {
+    background-color: var(--brand-white) !important;
+    background-image: none !important;
+    border-color: var(--brand-border-light) !important;
+    color: var(--brand-text-dark) !important;
+  }
+
+  html[data-theme="postdoserx"] .main-content {
+    background-color: var(--brand-background-light) !important;
+  }
+
+  html[data-theme="postdoserx"] .nav-link,
+  html[data-theme="postdoserx"] .dropdown-item,
+  html[data-theme="postdoserx"] .user-name,
+  html[data-theme="postdoserx"] .dropdown-user-name,
+  html[data-theme="postdoserx"] .dropdown-user-email,
+  html[data-theme="postdoserx"] .view-subtitle,
+  html[data-theme="postdoserx"] p,
+  html[data-theme="postdoserx"] span,
+  html[data-theme="postdoserx"] label {
+    color: var(--brand-text-dark) !important;
+  }
+
+  html[data-theme="postdoserx"] h1,
+  html[data-theme="postdoserx"] h2,
+  html[data-theme="postdoserx"] h3,
+  html[data-theme="postdoserx"] h4,
+  html[data-theme="postdoserx"] h5,
+  html[data-theme="postdoserx"] h6,
+  html[data-theme="postdoserx"] .view-title,
+  html[data-theme="postdoserx"] .card-title,
+  html[data-theme="postdoserx"] .section-title {
+    color: var(--brand-text-dark) !important;
+    background: none !important;
+    -webkit-text-fill-color: initial !important;
+    text-shadow: none !important;
+  }
+
+  html[data-theme="postdoserx"] .nav-icon,
+  html[data-theme="postdoserx"] .dropdown-icon,
+  html[data-theme="postdoserx"] .icon-professional {
+    background: var(--brand-primary) !important;
+    color: var(--brand-white) !important;
+    box-shadow: none !important;
+  }
+
+  html[data-theme="postdoserx"] [data-lucide] {
+    color: currentColor !important;
+    stroke: currentColor !important;
+  }
+
+  /* FINAL BRAND ENFORCEMENT - global visual language */
+  html[data-theme="postdoserx"] body {
+    background: #F6F3EE !important;
+    color: #1E2A44 !important;
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
+  }
+
+  html[data-theme="postdoserx"] h1,
+  html[data-theme="postdoserx"] h2,
+  html[data-theme="postdoserx"] h3,
+  html[data-theme="postdoserx"] h4,
+  html[data-theme="postdoserx"] h5,
+  html[data-theme="postdoserx"] h6,
+  html[data-theme="postdoserx"] .view-title,
+  html[data-theme="postdoserx"] .section-title {
+    color: #1E2A44 !important;
+    font-family: 'DM Serif Display', 'Source Serif 4', Georgia, serif !important;
+    font-weight: 400 !important;
+    background: none !important;
+    -webkit-text-fill-color: initial !important;
+  }
+
+  html[data-theme="postdoserx"] .view-subtitle,
+  html[data-theme="postdoserx"] p,
+  html[data-theme="postdoserx"] span,
+  html[data-theme="postdoserx"] label,
+  html[data-theme="postdoserx"] .metric-label,
+  html[data-theme="postdoserx"] .insight-text {
+    color: #5E667A !important;
+    font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif !important;
+  }
+
+  html[data-theme="postdoserx"] .header,
+  html[data-theme="postdoserx"] .sidebar,
+  html[data-theme="postdoserx"] .main-content {
+    background: #FCFBF9 !important;
+    border-color: #E3DDD1 !important;
+  }
+
+  html[data-theme="postdoserx"] .content-card,
+  html[data-theme="postdoserx"] .day-card,
+  html[data-theme="postdoserx"] .meal-slot,
+  html[data-theme="postdoserx"] .ingredient-item,
+  html[data-theme="postdoserx"] .insight-box,
+  html[data-theme="postdoserx"] .recommendation-item,
+  html[data-theme="postdoserx"] .history-item,
+  html[data-theme="postdoserx"] .progress-card,
+  html[data-theme="postdoserx"] .prediction-item,
+  html[data-theme="postdoserx"] .modal-content,
+  html[data-theme="postdoserx"] .modal-section {
+    background: #FCF9F5 !important;
+    border: 1px solid #E9DFD2 !important;
+    box-shadow: 0 14px 30px rgba(30, 42, 68, 0.10), 0 4px 10px rgba(30, 42, 68, 0.06) !important;
+    color: #1E2A44 !important;
+  }
+
+  html[data-theme="postdoserx"] .button-professional,
+  html[data-theme="postdoserx"] .modal-content .button-professional {
+    background: linear-gradient(135deg, #C6158D 0%, #D946AA 52%, #4F46E5 100%) !important;
+    color: #FFFFFF !important;
+    border: 0 !important;
+    box-shadow: 0 10px 22px rgba(198, 21, 141, 0.30) !important;
+  }
+
+  html[data-theme="postdoserx"] .button-professional:hover,
+  html[data-theme="postdoserx"] .modal-content .button-professional:hover {
+    background: linear-gradient(135deg, #A01273 0%, #B01380 52%, #3730A3 100%) !important;
+  }
+
+  html[data-theme="postdoserx"] .button-professional--outline,
+  html[data-theme="postdoserx"] .modal-cancel-btn {
+    background: #7A8EA9 !important;
+    color: #FFFFFF !important;
+    border: 0 !important;
+  }
+
+  html[data-theme="postdoserx"] .meal-tag.gentle,
+  html[data-theme="postdoserx"] .tag.gentle { background: #E3F2F0 !important; color: #2C7A73 !important; }
+  html[data-theme="postdoserx"] .meal-tag.protein,
+  html[data-theme="postdoserx"] .tag.protein,
+  html[data-theme="postdoserx"] .tag.glp1 { background: #F6EAF3 !important; color: #A01273 !important; }
+  html[data-theme="postdoserx"] .meal-tag.comfort,
+  html[data-theme="postdoserx"] .tag.comfort,
+  html[data-theme="postdoserx"] .tag.quick { background: #E9DBB5 !important; color: #7A6A3A !important; }
+  html[data-theme="postdoserx"] .meal-tag.light,
+  html[data-theme="postdoserx"] .tag.light,
+  html[data-theme="postdoserx"] .tag.hydrating { background: #DDE7F3 !important; color: #5D718C !important; }
   
   </style>
+  <link rel="stylesheet" href="styles/healthcare-revamp.css?v=1">
 </head>
 <body>
   <!-- Header -->
@@ -13039,12 +13260,6 @@
         targetView.classList.add('active');
         targetView.style.display = 'block';
         
-        // Apply Roboto font for comprehensive-progress page
-        if (viewId === 'comprehensive-progress') {
-          document.body.classList.add('comprehensive-progress-active');
-          document.documentElement.classList.add('comprehensive-progress-active');
-        }
-        
         // Update URL hash for browser navigation
         if (updateHash) {
           window.location.hash = viewId;
@@ -17279,11 +17494,24 @@ For clinical review and treatment optimization.`;
     });
 
     // User Modal Functions
+    let lastFocusedElement = null;
+    
     function openUserModal(modalId) {
+      // Store the currently focused element
+      lastFocusedElement = document.activeElement;
+      
       const modal = document.getElementById(modalId);
       if (modal) {
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
+        
+        // Focus the close button after modal opens
+        setTimeout(() => {
+          const closeButton = modal.querySelector('.modal-close');
+          if (closeButton) {
+            closeButton.focus();
+          }
+        }, 100);
         
         // Populate modal with user data if it's the profile modal
         if (modalId === 'profile-modal') {
@@ -17303,8 +17531,41 @@ For clinical review and treatment optimization.`;
       if (modal) {
         modal.classList.remove('active');
         document.body.style.overflow = '';
+        
+        // Return focus to the element that opened the modal
+        if (lastFocusedElement) {
+          lastFocusedElement.focus();
+        }
       }
     }
+    
+    // Keyboard event handling for modals
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        // Find any open modal and close it
+        const openModal = document.querySelector('.modal-overlay.active');
+        if (openModal) {
+          const modalId = openModal.id;
+          if (modalId === 'meal-modal') {
+            closeModal();
+          } else {
+            closeUserModal(modalId);
+          }
+        }
+      }
+    });
+    
+    // Close modals when clicking outside
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('modal-overlay')) {
+        const modalId = e.target.id;
+        if (modalId === 'meal-modal') {
+          closeModal();
+        } else {
+          closeUserModal(modalId);
+        }
+      }
+    });
     
     // Show success notification
     function showSuccessNotification(message) {
@@ -17608,9 +17869,12 @@ For clinical review and treatment optimization.`;
     }
     
     function initializeTheme() {
-      // Always use dark theme - remove any light theme classes
+      // Single source of truth: postdoserx theme via data attribute only.
       document.body.classList.remove('light-theme');
-      console.log('🌙 Dark theme initialized');
+      document.body.classList.remove('comprehensive-progress-active');
+      document.documentElement.classList.remove('comprehensive-progress-active');
+      document.documentElement.setAttribute('data-theme', 'postdoserx');
+      console.log('🎨 PostDoseRX theme initialized');
     }
     
     // Initialize theme on page load
@@ -18574,10 +18838,12 @@ For clinical review and treatment optimization.`;
   </script>
 
   <!-- Recipe/Nutrition Modal -->
-  <div id="meal-modal" class="modal-overlay">
+  <div id="meal-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-subtitle">
     <div class="modal-content">
       <div class="modal-header">
-        <button class="button-professional modal-close" onclick="closeModal()">&times;</button>
+        <button class="button-professional modal-close" onclick="closeModal()" aria-label="Close modal">
+          <span aria-hidden="true">&times;</span>
+        </button>
         <h3 class="modal-title" id="modal-title">Recipe Details</h3>
         <p class="modal-subtitle" id="modal-subtitle">Delicious and GLP-1 friendly</p>
       </div>
@@ -18588,12 +18854,14 @@ For clinical review and treatment optimization.`;
   </div>
 
   <!-- User Profile Modal -->
-  <div id="profile-modal" class="modal-overlay">
+  <div id="profile-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="profile-modal-title" aria-describedby="profile-modal-subtitle">
     <div class="modal-content">
       <div class="modal-header">
-        <button class="button-professional modal-close" onclick="closeUserModal('profile-modal')">&times;</button>
-        <h3 class="modal-title">Profile & Settings</h3>
-        <p class="modal-subtitle">Manage your account information and preferences</p>
+        <button class="button-professional modal-close" onclick="closeUserModal('profile-modal')" aria-label="Close profile modal">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h3 class="modal-title" id="profile-modal-title">Profile & Settings</h3>
+        <p class="modal-subtitle" id="profile-modal-subtitle">Manage your account information and preferences</p>
       </div>
       <div class="modal-body">
         <form id="profile-form">
@@ -18714,12 +18982,14 @@ For clinical review and treatment optimization.`;
   </div>
 
   <!-- Billing Management Modal -->
-  <div id="billing-modal" class="modal-overlay">
+  <div id="billing-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="billing-modal-title" aria-describedby="billing-modal-subtitle">
     <div class="modal-content">
       <div class="modal-header">
-        <button class="button-professional modal-close" onclick="closeUserModal('billing-modal')">&times;</button>
-        <h3 class="modal-title">Billing & Subscription</h3>
-        <p class="modal-subtitle">Manage your subscription and payment methods</p>
+        <button class="button-professional modal-close" onclick="closeUserModal('billing-modal')" aria-label="Close billing modal">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h3 class="modal-title" id="billing-modal-title">Billing & Subscription</h3>
+        <p class="modal-subtitle" id="billing-modal-subtitle">Manage your subscription and payment methods</p>
       </div>
       <div class="modal-body">
         <div class="billing-info">
