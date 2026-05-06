@@ -21,15 +21,24 @@ export default async function handler(req, res) {
 
   if (req.method === 'GET') {
     try {
+      // Debug: Return what environment variables we can see
+      const debug = {
+        GOOGLE_CLIENT_ID: !!process.env.GOOGLE_CLIENT_ID ? 'SET' : 'MISSING',
+        STRIPE_PUBLISHABLE_KEY: !!process.env.STRIPE_PUBLISHABLE_KEY ? 'SET' : 'MISSING',
+        NODE_ENV: process.env.NODE_ENV || 'not-set',
+        VERCEL: process.env.VERCEL || 'not-set'
+      };
+      
       // Return public configuration values
       const config = {
         googleClientId: process.env.GOOGLE_CLIENT_ID,
-        stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY, // If you have this
+        stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
+        debug: debug
       };
 
-      // Only include values that are actually set
+      // Only include values that are actually set (except debug)
       const filteredConfig = Object.fromEntries(
-        Object.entries(config).filter(([key, value]) => value)
+        Object.entries(config).filter(([key, value]) => value || key === 'debug')
       );
 
       return res.status(200).json(filteredConfig);
