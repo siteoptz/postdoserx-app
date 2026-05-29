@@ -31,8 +31,8 @@ export default async function handler(req, res) {
       
       // Return public configuration values
       const config = {
-        googleClientId: process.env.GOOGLE_CLIENT_ID,
-        stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY,
+        googleClientId: process.env.GOOGLE_CLIENT_ID?.trim(),
+        stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY?.trim(),
         debug: debug
       };
 
