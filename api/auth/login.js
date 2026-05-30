@@ -13,7 +13,7 @@ import { consumePendingPlan, peekPendingPlan } from '../../lib/postdoserx/pendin
 
 // Environment variables
 const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_KEY;
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const JWT_SECRET = process.env.JWT_SECRET || 'your-jwt-secret-key';
 
 // Initialize Supabase client
@@ -114,20 +114,15 @@ export default async function handler(req, res) {
             process.env.GHL_ALLOW_LOGIN_WHEN_CRM_UNAVAILABLE === 'true';
           if (!allowBypass) {
             if (!existingUser && !hasCheckoutContext) {
-              console.error(
-                `🛑 GHL lookup failed for new user ${email}; refusing JWT (fail-closed)`
+              console.warn(
+                `⚠️ GHL API failed for new user ${email} — allowing signup flow to continue, contact will be created downstream`
               );
-              return res.status(503).json({
-                success: false,
-                code: 'GHL_LOOKUP_FAILED',
-                error:
-                  'We could not verify your account. Please try again in a few minutes.',
-                retryable: true,
-              });
+              // Do NOT return error — fall through to Supabase user creation
+            } else if (existingUser) {
+              console.warn(
+                '⚠️ GHL lookup failed; existing DB user — allowing login (returning user)'
+              );
             }
-            console.warn(
-              '⚠️ GHL lookup failed; existing DB user — allowing login (returning user)'
-            );
           } else {
             console.warn(
               '⚠️ GHL lookup failed; bypass allowed (GHL_ALLOW_LOGIN_WHEN_CRM_UNAVAILABLE=true)'
